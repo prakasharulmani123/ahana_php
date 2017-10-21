@@ -524,7 +524,7 @@
                                                                                             {{ selectFreq('4', '3', item, item.item_key)}}
                                                                                         </span>
                                                                                     </div>
-                                                                                        <div id="freq_{{item.item_key}}_txt" class="freq_div_{{item.item_key}} freq_1_times hide" style="width: 75%; float:left">
+                                                                                    <div id="freq_{{item.item_key}}_txt" class="freq_div_{{item.item_key}} freq_1_times hide" style="width: 75%; float:left">
                                                                                         <span editable-text="item.frequency"
                                                                                               e-index ="{{item.item_key}}"
                                                                                               e-tabindex="2{{item.item_key}}3"
@@ -872,9 +872,9 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata                                   =                                   { };
+                                    <div class="row" ng-init="vitaldata     =     { };
                                         loadVitals();
-                                        vitaldata.formtype                  =                  'add'">
+                                        vitaldata.formtype   =   'add'">
                                         <div class="col-lg-12"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
@@ -1101,7 +1101,7 @@
 
                                                 </accordion-group>
                                                 <accordion-group is-open="status.open"  class="">
-                                                    <accordion-heading> Add Vitals<i class="pull-right fa fa-plus" ng-class="{'fa-minus': status.open, 'fa-plus': !status.open}"></i> </accordion-heading>
+                                                    <accordion-heading> <i class="pull-right fa fa-plus" ng-class="{'fa-minus': status.open, 'fa-plus': !status.open}"></i> Add Vitals </accordion-heading>
                                                     <div>
                                                         <form name="vitalForm" class="form-horizontal form-validation">
                                                             <div class="create-vitals">
@@ -1380,7 +1380,7 @@
                                                                 <label class="control-label"> Encounter #  </label>
                                                                 {{enc.selected.encounter_id}}
                                                             </div>
-                                                            <div class="col-sm-6">
+                                                            <div class="col-sm-3">
                                                                 <label class="control-label">Date of Consultant Visit * </label>
                                                                 <div class="input-group">
                                                                     <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0)">
@@ -1394,29 +1394,31 @@
                                                                     </ul>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-sm-4">
+                                                            <div class="col-sm-3">
                                                                 <label class="control-label">Consultant *</label> <br/>
                                                                 <select class="selectpicker" data-live-search="true" ng-model="consFormData.consultant_id" ng-options="doctor.user_id  as doctor.consult_speciality_name for doctor in doctors| orderBy: name" >
                                                                     <option value="">Select Consultant</option>
                                                                 </select>
                                                             </div>
+                                                            <div class="col-sm-4">
+                                                                <label class="control-label">Description  </label>
+                                                                <textarea placeholder="Description" class="form-control" ng-model="consFormData.notes"></textarea>
+                                                            </div>
+
                                                         </div>
 
                                                         <div class="form-group pull-in clearfix">
                                                             <div class="col-sm-2">
-                                                                <label class="control-label"> Privacy : </label>
+                                                                <label class="control-label"> Privacy &nbsp;&nbsp;</label>
                                                                 <label class="i-checks "> 
                                                                     <input type="checkbox" name="status" ng-true-value="'1'" ng-false-value="'0'" ng-model="consFormData.privacy"> 
                                                                     <i></i> 
                                                                 </label> &nbsp; &nbsp;
                                                             </div>
-                                                            <div class="col-sm-6">
-                                                                <label class="control-label">Description : </label>
-                                                                <textarea placeholder="Description" class="form-control" ng-model="consFormData.notes"></textarea>
-                                                            </div>
+
                                                             <div class="col-sm-3">
                                                                 <label> </label>
-                                                                <br/>
+                                                                
                                                                 <button class="btn m-b-xs  btn-success save-btn" ng-disabled="vital_enable_count" ng-click="saveConsultantForm(consFormData.formtype)">Save</button>
                                                                 &nbsp;
                                                                 <button class="btn m-b-xs  btn-dark" ng-click="resetconsultantForm()">
@@ -1430,7 +1432,7 @@
                                                     </div>
                                                 </form>
                                             </div>
-                                            
+
                                             <div class="line line-dashed b-b line-lg "></div>
 
                                             <div class="result-table" ng-init="loadConsultantsList();">
