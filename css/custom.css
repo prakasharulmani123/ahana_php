@@ -810,14 +810,23 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
     padding-bottom:0px;
 }
 
-.prescrip-dropdown2
-{
-    width:585px !important;
+.pres-top-pro{
+    width: 480px;
 }
 
+.prescrip-dropdown2
+{
+    width:480px !important;
+}
+
+.pres-top-actions{  width: 80px;}
+
+
+.pres-top-freq{
+    width: 120px;
+}
 .pre-freq-new1
 {
-
 }
 
 .pre-freq-new1 input
