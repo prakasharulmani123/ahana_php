@@ -517,50 +517,7 @@ out-patient-table .table > thead > tr > th label.i-checks {
 
 
 
-@media (max-width: 767px) {
-    .hidden-xs {
-        display: none !important;
-    }
-}
-@media (min-width: 768px) and (max-width: 991px) {
-    .prescription-field
-    {
-        width:580px;
-    }
 
-}
-@media (min-width: 992px) and (max-width: 1199px) {
-    .hidden-md {
-        display: none !important;
-    }
-
-    .out-patient-table th
-    {
-        font-family: 'Roboto Condensed', sans-serif;
-        font-weight: 400;
-
-    }
-
-    .prescription-1 .pres-inner
-    {
-      
-    }
-    .outpatient-2 .th-inner
-    {
-        width: 100px !important;
-        padding: 0px !important;
-    }
-
-    .outpatient-2 .th-inner .box{
-        padding: 0px !important; 
-    }
-
-    .outpatient-3 .th-inner
-    {
-        width: 100px !important;
-        padding: 0px !important;
-    }
-}
 
 .presc-heading {
     width: 100%;
@@ -982,3 +939,97 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 {
     width: 100% !important;
 }
+
+
+.top-product-search{
+    width:550px;
+}
+
+@media (max-width: 767px) {
+    .hidden-xs {
+        display: none !important;
+    }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+    .prescription-field
+    {
+        width:580px;
+    }
+
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+    .hidden-md {
+        display: none !important;
+    }
+
+    .out-patient-table th
+    {
+        font-family: 'Roboto Condensed', sans-serif;
+        font-weight: 400;
+
+    }
+
+    .prescription-1 .pres-inner
+    {
+      
+    }
+    .outpatient-2 .th-inner
+    {
+        width: 100px !important;
+        padding: 0px !important;
+    }
+
+    .outpatient-2 .th-inner .box{
+        padding: 0px !important; 
+    }
+
+    .outpatient-3 .th-inner
+    {
+        width: 100px !important;
+        padding: 0px !important;
+    }
+    
+    .pres-main-remarks {
+  width: 125px;
+}
+
+.pres-main-afbf {
+  width: 105px;
+}
+
+.freq_3_times, .freq_4_times, .freq_1_times {
+  width: 80.9% !important;
+}
+
+.pres-main-freq {
+  width: 145px;
+}
+
+.prescription-hightlight .btn {
+
+  padding: 5px;
+
+}
+
+.top-product-search{
+    width:480px;
+}
+
+.prescrip-dropdown2 {
+  width: 480px !important;
+}
+
+.pres-top-pro {
+  width: 480px;
+}
+
+.pres-top-freq {
+  width: 220px;
+}
+
+.pres-top-remarks {
+  width: 250px;
+}
+
+}
+
