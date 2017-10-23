@@ -820,7 +820,7 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
     padding: 0px;
 }
 
-.pres-top-actions{  width: 110px;}
+.pres-top-actions{  width: 111px;}
 
 
 .pres-top-freq{
@@ -955,17 +955,18 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 }
 
 .pres-main-noofdays{
-    width: 65px;
+    width: 45px;
+    line-height: 10px !important;
 }
 
 .pres-main-route{   width: 125px;}
 .pres-main-remarks{
-    width: 150px;
+    width: 152px;
 }
 
 .freq_3_times, .freq_4_times, .freq_1_times
 {
-    width: 90% !important;
+    width: 87.9% !important;
 }
 
 .freq_1_times > span
@@ -974,7 +975,7 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 }
 
 .pres-main-afbf{
-    width: 75px;
+    width: 85px;
 }
 
 .pres-remarks-field > span
