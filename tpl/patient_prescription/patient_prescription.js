@@ -1254,7 +1254,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.prescription_lists = {};
 
         $scope.$watch('prescription', function (newValue, oldValue) {
-            if (newValue != '' && newValue.length > 1) {
+            if (newValue != '' && newValue.length > 1 && !$scope.pickProduct) {
                 if (changeTimer !== false)
                     clearTimeout(changeTimer);
 
@@ -1262,7 +1262,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     _data = {};
                     _data['search'] = newValue;
 
-                    if ($scope.lastSelected) {
+                    if (!jQuery.isEmptyObject($scope.lastSelected) && $scope.lastSelected) {
                         _data['product_id'] = $scope.lastSelected.product_id;
 
                         if (typeof $scope.lastSelected.route_id != 'undefined')
@@ -1287,7 +1287,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     changeTimer = false;
                 }, 300);
             } else {
+                if (newValue != oldValue) {
+                    $scope.pickProduct = false;
+                }
                 $scope.prescription_lists = {};
+                $scope.pickProduct = false;
             }
         }, true);
 
@@ -2180,11 +2184,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         //Set global search li value assign to variable
+        $scope.pickProduct = false;
         $scope.pick = function (e) {
             $scope.prescription_lists = {};
             $scope.lastSelected = {};
             $scope.prescription = e.prescription;
+            $('#globalDataFreq').find('input:first').focus();
             $scope.globalData.globalprescription = e;
+            $scope.pickProduct = true;
         }
 
         //Load tab all vital list
@@ -2802,7 +2809,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         callback(response);
                     });
         }
-        
+
         $scope.savemedicalForm = function () {
             _data = $('#xmlform').serializeArray();
             console.log(_data);

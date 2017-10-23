@@ -103,6 +103,7 @@
                                                                                id="prescription_global_search"
                                                                                class="form-control prescription_search_input" 
                                                                                placeholder="Enter Your Prescription" 
+                                                                               select-on-click=""
                                                                                ng-model='prescription'
                                                                                />
 
@@ -252,7 +253,7 @@
                                                                 </div>
                                                             </td>
                                                             <td align="left" valign="top">
-                                                                <div class="pre-freq-new1">
+                                                                <div class="pre-freq-new1" id="globalDataFreq">
                                                                     <input autocomplete="off" 
                                                                            ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null"
                                                                            type="text" 
