@@ -3,6 +3,7 @@
 namespace IRISORG\modules\v1\controllers;
 
 use common\models\PatBillingOtherCharges;
+use common\models\CoChargePerCategory;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -90,5 +91,14 @@ class PatientbillingotherchargeController extends ActiveController {
             return ['success' => false, 'message' => Html::errorSummary($model)];
         }
     }
+    
+    public function actionGetotherchargeamount() {
+        $post = Yii::$app->getRequest()->post();
+        if($post['encounter_type']=='IP')
+            $category = $post['room_category'];
+        else
+            $category = $post['pat_category'];
+        return $charge_amount = CoChargePerCategory::getChargeAmount($post['charge_category'], 'C', $post['charge_sub_category'], $post['encounter_type'], $category);
+    } 
 
 }

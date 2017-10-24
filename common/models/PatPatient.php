@@ -584,6 +584,9 @@ class PatPatient extends RActiveRecord {
             'current_room' => function ($model) {
                 return $model->current_room;
             },
+            'current_room_type_id' => function ($model) {
+                return $model->current_room_Type;
+            },        
             'last_consultant_id' => function ($model) {
                 return isset($model->patLastAppointment) ? $model->patLastAppointment->consultant_id : '';
             },
@@ -713,6 +716,15 @@ class PatPatient extends RActiveRecord {
         if (isset($this->patActiveIp)) {
             $admission = $this->patActiveIp->patCurrentAdmission;
             return "{$admission->floor->floor_name} > {$admission->ward->ward_name} > {$admission->room->bed_name} ({$admission->roomType->room_type_name})";
+        } else {
+            return '-';
+        }
+    }
+    
+    public function getCurrent_room_type() {
+        if (isset($this->patActiveIp)) {
+            $admission = $this->patActiveIp->patCurrentAdmission;
+            return "{$admission->roomType->room_type_id}";
         } else {
             return '-';
         }
