@@ -306,8 +306,8 @@ class XmlController extends Controller {
     }
 
     public function actionRbtocb() {
-        //$xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='TextBoxDDL' and @id='duration_of_relationship']";
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='TextBoxDDL' and @id='total_duration']";
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='TextBoxDDL' and @id='duration_of_relationship']";
+        //$xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='TextBoxDDL' and @id='total_duration']";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
