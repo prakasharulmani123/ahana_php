@@ -2232,51 +2232,51 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.tem_graph_data = [];
                         $scope.tem_graph_tick = [];
                         var tem_Going = true;
-                        var tem = 1;
+                        var tem = 5;
 
                         //Weight Variable
                         $scope.weight_graph_data = [];
                         $scope.weight_graph_tick = [];
                         var weight_Going = true;
-                        var wht = 1;
+                        var wht = 5;
 
                         //Height Variable
                         $scope.height_graph_data = [];
                         $scope.height_graph_tick = [];
                         var height_Going = true;
-                        var hgt = 1;
+                        var hgt = 5;
 
                         //pulse Variable
                         $scope.pulse_graph_data = [];
                         $scope.pulse_graph_tick = [];
                         var pulse_Going = true;
-                        var pul = 1;
+                        var pul = 5;
 
                         //sp02 Variable
                         $scope.sp02_graph_data = [];
                         $scope.sp02_graph_tick = [];
                         var sp02_Going = true;
-                        var sp = 1;
+                        var sp = 5;
 
                         //pain_score Variable
                         $scope.pain_graph_data = [];
                         $scope.pain_graph_tick = [];
                         var pain_Going = true;
-                        var pain = 1;
+                        var pain = 5;
 
                         //Blood pressure Variable
                         $scope.bps_graph_data = [];
                         $scope.bpd_graph_data = [];
                         $scope.bp_graph_tick = [];
                         var bp_Going = true;
-                        var bp = 1;
+                        var bp = 5;
 
                         angular.forEach(vitals.data, function (row) {
                             if (tem_Going) {            //Set Temperature variable
                                 if (row.temperature) {
                                     $scope.tem_graph_data.push([tem, row.temperature]);
                                     $scope.tem_graph_tick.push([tem, moment(row.vital_time).format('DD-MM-YY')]);
-                                    tem++;
+                                    tem--;
                                 }
                             }
                             if ($scope.tem_graph_data.length == 5)
@@ -2289,7 +2289,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                     if (row.blood_pressure_diastolic)
                                         $scope.bpd_graph_data.push([bp, row.blood_pressure_diastolic]);
                                     $scope.bp_graph_tick.push([bp, moment(row.vital_time).format('DD-MM-YY')]);
-                                    bp++;
+                                    bp--;
                                 }
                             }
                             if (($scope.bps_graph_data.length == 5) || ($scope.bpd_graph_data.length == 5))
@@ -2299,7 +2299,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 if (row.weight) {
                                     $scope.weight_graph_data.push([wht, row.weight]);
                                     $scope.weight_graph_tick.push([wht, moment(row.vital_time).format('DD-MM-YY')]);
-                                    wht++;
+                                    wht--;
                                 }
                             }
                             if ($scope.weight_graph_data.length == 5)
@@ -2309,7 +2309,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 if (row.height) {
                                     $scope.height_graph_data.push([hgt, row.height]);
                                     $scope.height_graph_tick.push([hgt, moment(row.vital_time).format('DD-MM-YY')]);
-                                    hgt++;
+                                    hgt--;
                                 }
                             }
                             if ($scope.height_graph_data.length == 5)
@@ -2319,7 +2319,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 if (row.pulse_rate) {
                                     $scope.pulse_graph_data.push([pul, row.pulse_rate]);
                                     $scope.pulse_graph_tick.push([pul, moment(row.vital_time).format('DD-MM-YY')]);
-                                    pul++;
+                                    pul--;
                                 }
                             }
                             if ($scope.pulse_graph_data.length == 5)
@@ -2329,7 +2329,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 if (row.pain_score) {
                                     $scope.pain_graph_data.push([pain, row.pain_score]);
                                     $scope.pain_graph_tick.push([pain, moment(row.vital_time).format('DD-MM-YY')]);
-                                    pain++;
+                                    pain--;
                                 }
                             }
                             if ($scope.height_graph_data.length == 5)
@@ -2339,7 +2339,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 if (row.sp02) {
                                     $scope.sp02_graph_data.push([sp, row.sp02]);
                                     $scope.sp02_graph_tick.push([sp, moment(row.vital_time).format('DD-MM-YY')]);
-                                    sp++;
+                                    sp--;
                                 }
                             }
                             if ($scope.sp02_graph_data.length == 5)
@@ -2814,6 +2814,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             _data = $('#xmlform').serializeArray();
             console.log(_data);
             return false;
+        }
+        
+        $scope.Setempty_tab = function () {
+            $scope.errorData = '';
+            $scope.successMessage = '';
+            $scope.msg.successMessage = '';
+            $scope.msg.errorMessage = '';
         }
 
         //Not Used

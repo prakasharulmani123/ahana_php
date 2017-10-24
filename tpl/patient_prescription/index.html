@@ -17,14 +17,14 @@
                         <div class="tab-container">
                             <ul class="nav nav-tabs">
                                 <li ng-show="(prescription_tab.PTP == 1)" ng-class="{active:tab == 1}">
-                                    <a href ng-click="tab = 1">
+                                    <a href ng-click="Setempty_tab();tab = 1">
                                         <tab-heading > 
                                             <i class="fa fa-medkit" aria-hidden="true"></i> Prescription
                                         </tab-heading>
                                     </a>
                                 </li>
                                 <li ng-show="(prescription_tab.PTM == 1)" ng-class="{active:tab == 2}">
-                                    <a href ng-click="tab = 2">
+                                    <a href ng-click="Setempty_tab();tab = 2">
                                         <tab-heading > 
                                             <i class="fa fa-history" aria-hidden="true"></i> 
                                             Medical Case History
@@ -32,7 +32,7 @@
                                     </a>
                                 </li>
                                 <li ng-show="(prescription_tab.PTV == 1)" ng-class="{active:tab == 3}">
-                                    <a href ng-click="tab = 3">
+                                    <a href ng-click="Setempty_tab();tab = 3">
                                         <tab-heading> 
                                             <i class="fa fa-heartbeat" aria-hidden="true"></i> 
                                             Vitals <span class="badge bg-success badge-sm m-l-xs" ng-show="unseen_vitals_count > 0">
@@ -42,14 +42,14 @@
                                     </a>
                                 </li>
                                 <li ng-show="(prescription_tab.PTR == 1)" ng-class="{active:tab == 4}">
-                                    <a href ng-click="tab = 4">
+                                    <a href ng-click="Setempty_tab();tab = 4">
                                         <tab-heading> 
                                             <i class="fa fa-file-text" aria-hidden="true"></i> Results 
                                         </tab-heading>
                                     </a>
                                 </li>
                                 <li ng-show="(prescription_tab.PTN == 1)" ng-class="{active:tab == 5}">
-                                    <a href ng-click="tab = 5">
+                                    <a href ng-click="Setempty_tab();tab = 5">
                                         <tab-heading> 
                                             <i class="fa fa-pencil" aria-hidden="true"></i> Notes
                                         </tab-heading>
@@ -951,9 +951,9 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata         =         { };
+                                    <div class="row" ng-init="vitaldata = { };
                                         loadVitals();
-                                        vitaldata.formtype     =     'add'">
+                                        vitaldata.formtype='add'">
                                         <div class="col-lg-12"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
