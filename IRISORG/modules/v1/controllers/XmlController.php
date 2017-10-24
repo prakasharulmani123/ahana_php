@@ -306,7 +306,8 @@ class XmlController extends Controller {
     }
 
     public function actionRbtocb() {
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadioButtonList' and @id='relationship']";
+        //$xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='TextBoxDDL' and @id='duration_of_relationship']";
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='TextBoxDDL' and @id='total_duration']";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -323,8 +324,7 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            $target['type'] = 'CheckBoxList';
-                            $target->PROPERTIES->PROPERTY = $target->PROPERTIES->PROPERTY . '[]';
+                            $target->PROPERTIES->PROPERTY[3]= 'return isNumericDotKeyStroke(event)';
                         }
                     }
                     $xml->asXML($files);
