@@ -89,7 +89,7 @@
                                                         <tr>
                                                             <th  align="left" class="pres-top-pro" valign="top" >Products </th>
                                                             <th  align="left" class="pres-top-freq" valign="top" >Frequency</th>
-                                                            <th align="left" class="pres-top-qty" valign="top">Qty</th>
+                                                            <th align="left" class="pres-top-qty" valign="top">No.Of Days</th>
                                                             <th  align="left" class="pres-top-remarks" valign="top">Remarks</th>
                                                             <th  align="left" class="pres-top-actions" valign="top">Actions</th>
                                                         </tr>
@@ -361,7 +361,7 @@
                                                                 </div>
 
                                                             </td>
-                                                            <td align="left" valign="top"><input name="" ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null" ng-model="globalData.quantity" type="text"  class="form-control"></td>
+                                                            <td align="left" valign="top"><input name="" ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null" ng-model="globalData.no_of_days" type="text"  class="form-control"></td>
                                                             <td align="left" valign="top"><input name="" ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null" ng-model="globalData.remarks" type="text"  class="form-control"></td>
                                                             <td align="left" valign="top" style="width:100px;" class="top-prescription-buttons">
                                                                 <button class="btn m-b-xs  btn-success" ng-click="addGlobalForm()"><i class="fa fa-plus" aria-hidden="true"></i></button>
@@ -744,22 +744,6 @@
                                                                                                                                             {{ item.price}}
                                                                                                                                         </td>-->
                                                                                 <td>
-                                                                                    <!--                                                            <div class="m-t m-b">
-                                                                                                                                                    <div class="btn-group">
-                                                                                                                                                        <span editable-radiolist="item.food_type" 
-                                                                                                                                                              e-index ="{{item.item_key}}"
-                                                                                                                                                              e-name="food_type"
-                                                                                                                                                              e-class="btn btn-success"
-                                                                                                                                                              ng-model='food_type'
-                                                                                                                                                              e-form="tableform"
-                                                                                                                                                              e-id="food_type"
-                                                                                                                                                              e-ng-options="food.value as food.label for food in Foodtypes"
-                                                                                                                                                              btn-radio="Foodtypes"
-                                                                                                                                                              >
-                                                                                                                                                            {{ item.food_type || 'empty' }}    
-                                                                                                                                                        </span>
-                                                                                                                                                    </div>
-                                                                                                                                                </div>-->
                                                                                     <div class="m-b">
                                                                                         <div class="btn-group">
                                                                                             <label class="btn btn-xs btn-success" name="food_type_{{item.item_key}}" id="food_type_{{item.item_key}}" ng-model="item.food_type" btn-radio="'AF'">AF</label>

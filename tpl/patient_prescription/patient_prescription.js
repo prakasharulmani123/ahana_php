@@ -2101,10 +2101,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         .success(function (product) {
                             $scope.getRelatedProducts(globalPrescription.generic_id).then(function () {
                                 globalPrescription.frequency = $scope.globalData.frequency_3_0 + '-' + $scope.globalData.frequency_3_1 + '-' + $scope.globalData.frequency_3_2;
-                                qty_count = $scope.calculate_qty(globalPrescription.frequency, 1, product.product_description_id, product.description_name);
+                                qty_count = $scope.calculate_qty(globalPrescription.frequency, $scope.globalData.no_of_days, product.product_description_id, product.description_name);
                                 if (qty_count > 0) {
-                                    var no_of_days = $scope.data.number_of_days;
-                                    if (!$scope.data.number_of_days) {
+                                    var no_of_days = $scope.globalData.no_of_days;
+                                    if (!$scope.globalData.no_of_days) {
                                         var no_of_days = 0;
                                     }
                                     if (globalPrescription.route) {
@@ -2135,7 +2135,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         'available_quantity': product.availableQuantity,
                                         'item_key': $scope.data.prescriptionItems.length,
                                         'all_products': $scope.products,
-                                        'qty': $scope.globalData.quantity,
+                                        'qty': qty_count,
                                         'product_description_id': product.product_description_id,
                                         'description_name': product.description_name,
                                         'in_stock': (parseInt(product.availableQuantity) > parseInt(qty_count)),
