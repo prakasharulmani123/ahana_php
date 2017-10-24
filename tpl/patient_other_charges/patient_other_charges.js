@@ -125,7 +125,7 @@ app.controller('BillingOtherChargeController', ['$rootScope', '$scope', '$timeou
                 else
                     $scope.errorData = data.message;
             });
-            
+
         };
 
         //Delete
@@ -174,4 +174,22 @@ app.controller('BillingOtherChargeController', ['$rootScope', '$scope', '$timeou
                 }
             });
         };
+
+        $scope.updateChargeamount = function () {
+            var charge_category_id = _that.data.charge_cat_id;
+            var encounter_type = $scope.patientObj.encounter_type;
+            var pat_category = $scope.patientObj.patient_category_id;
+            var room_category_id = $scope.patientObj.current_room_type_id;
+            var charge_sub_category = _that.data.charge_subcat_id;
+            
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/patientbillingothercharge/getotherchargeamount",
+                method: "POST",
+                data: {encounter_type: encounter_type, pat_category: pat_category, charge_sub_category: charge_sub_category, charge_category:charge_category_id, room_category : room_category_id}
+            }).then(
+                    function (response) {
+                        $scope.data.charge_amount = response.data;
+                    }
+            )
+        }
     }]);

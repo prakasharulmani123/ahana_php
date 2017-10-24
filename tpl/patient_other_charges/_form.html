@@ -22,7 +22,7 @@
         <div class="form-group">
             <label class="col-lg-3 control-label">Charge Subcategory*</label>
             <div class="col-lg-6">
-                <select class="form-control" ng-model="data.charge_subcat_id" ng-options="subCategory.value as subCategory.label for subCategory in availableSubcategory| orderBy: charge_subcat_name">
+                <select class="form-control" ng-model="data.charge_subcat_id" ng-options="subCategory.value as subCategory.label for subCategory in availableSubcategory| orderBy: charge_subcat_name" ng-change="updateChargeamount();">
                     <option value="">Select Charge Type</option>
                 </select>
             </div>
