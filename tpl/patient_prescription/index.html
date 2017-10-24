@@ -17,14 +17,14 @@
                         <div class="tab-container">
                             <ul class="nav nav-tabs">
                                 <li ng-show="(prescription_tab.PTP == 1)" ng-class="{active:tab == 1}">
-                                    <a href ng-click="Setempty_tab();tab = 1">
+                                    <a href ng-click="Setempty_tab(); tab = 1">
                                         <tab-heading > 
                                             <i class="fa fa-medkit" aria-hidden="true"></i> Prescription
                                         </tab-heading>
                                     </a>
                                 </li>
                                 <li ng-show="(prescription_tab.PTM == 1)" ng-class="{active:tab == 2}">
-                                    <a href ng-click="Setempty_tab();tab = 2">
+                                    <a href ng-click="Setempty_tab(); tab = 2">
                                         <tab-heading > 
                                             <i class="fa fa-history" aria-hidden="true"></i> 
                                             Medical Case History
@@ -32,7 +32,7 @@
                                     </a>
                                 </li>
                                 <li ng-show="(prescription_tab.PTV == 1)" ng-class="{active:tab == 3}">
-                                    <a href ng-click="Setempty_tab();tab = 3">
+                                    <a href ng-click="Setempty_tab(); tab = 3">
                                         <tab-heading> 
                                             <i class="fa fa-heartbeat" aria-hidden="true"></i> 
                                             Vitals <span class="badge bg-success badge-sm m-l-xs" ng-show="unseen_vitals_count > 0">
@@ -42,14 +42,14 @@
                                     </a>
                                 </li>
                                 <li ng-show="(prescription_tab.PTR == 1)" ng-class="{active:tab == 4}">
-                                    <a href ng-click="Setempty_tab();tab = 4">
+                                    <a href ng-click="Setempty_tab(); tab = 4">
                                         <tab-heading> 
                                             <i class="fa fa-file-text" aria-hidden="true"></i> Results 
                                         </tab-heading>
                                     </a>
                                 </li>
                                 <li ng-show="(prescription_tab.PTN == 1)" ng-class="{active:tab == 5}">
-                                    <a href ng-click="Setempty_tab();tab = 5">
+                                    <a href ng-click="Setempty_tab(); tab = 5">
                                         <tab-heading> 
                                             <i class="fa fa-pencil" aria-hidden="true"></i> Notes
                                         </tab-heading>
@@ -281,83 +281,83 @@
                                                                            class="form-control"
                                                                            number-mask=""
                                                                            maxlength="4">
-<!--                                                                    <div style="width: 20px; float:left">
-                                                                        <div class="input-group-btn dropdown">
-                                                                            <button class="btn btn-default dropdown-toggle" ng-click="checkProducttype(item.description_name)" type="button" data-toggle="dropdown">
-                                                                                <span class="fa fa-ellipsis-v"></span>
-                                                                            </button>
-                                                                            <ul class="dropdown-menu curPrescFreq">
-                                                                                 Mask 3 
-                                                                                <li ng-repeat="consFreq in currPresMask3| limitTo:3">
-                                                                                    <div class="row">
-                                                                                        <div class="col-sm-12">
-                                                                                            <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
-                                                                                            <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </li>
-                                                                                <li class="dropdown-submenu" ng-if="currPresMask3.length > 3">
-                                                                                    <a tabindex="-1" href="#">More</a>
-                                                                                    <ul class="dropdown-menu">
-                                                                                        <li ng-repeat="consFreq in currPresMask3| limitTo:(3 - currPresMask3.length)">
-                                                                                            <div class="row">
-                                                                                                <div class="col-sm-12">
-                                                                                                    <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
-                                                                                                    <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </li>
-                                                                                    </ul>
-                                                                                </li>
-                                                                                <li class="divider"></li>
-                                                                                 Mask 4 
-                                                                                <li ng-repeat="consFreq in currPresMask4| limitTo:3">
-                                                                                    <div class="row">
-                                                                                        <div class="col-sm-12">
-                                                                                            <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
-                                                                                            <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </li>
-                                                                                <li class="dropdown-submenu" ng-if="currPresMask4.length > 3">
-                                                                                    <a tabindex="-1" href="#">More</a>
-                                                                                    <ul class="dropdown-menu">
-                                                                                        <li ng-repeat="consFreq in currPresMask4| limitTo:(3 - currPresMask4.length)">
-                                                                                            <div class="row">
-                                                                                                <div class="col-sm-12">
-                                                                                                    <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
-                                                                                                    <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </li>
-                                                                                    </ul>
-                                                                                </li>
-                                                                                <li class="divider"></li>
-                                                                                 Mask Txt 
-                                                                                <li ng-repeat="consFreq in currPresMaskTxt| limitTo:3">
-                                                                                    <div class="row">
-                                                                                        <div class="col-sm-12">
-                                                                                            <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
-                                                                                            <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </li>
-                                                                                <li class="dropdown-submenu" ng-if="currPresMaskTxt.length > 3">
-                                                                                    <a tabindex="-1" href="#">More</a>
-                                                                                    <ul class="dropdown-menu">
-                                                                                        <li ng-repeat="consFreq in currPresMaskTxt| limitTo:(3 - currPresMaskTxt.length)">
-                                                                                            <div class="row">
-                                                                                                <div class="col-sm-12">
-                                                                                                    <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
-                                                                                                    <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </li>
-                                                                                    </ul>
-                                                                                </li>
-                                                                            </ul>
-                                                                        </div>
-                                                                    </div>-->
+                                                                    <!--                                                                    <div style="width: 20px; float:left">
+                                                                                                                                            <div class="input-group-btn dropdown">
+                                                                                                                                                <button class="btn btn-default dropdown-toggle" ng-click="checkProducttype(item.description_name)" type="button" data-toggle="dropdown">
+                                                                                                                                                    <span class="fa fa-ellipsis-v"></span>
+                                                                                                                                                </button>
+                                                                                                                                                <ul class="dropdown-menu curPrescFreq">
+                                                                                                                                                     Mask 3 
+                                                                                                                                                    <li ng-repeat="consFreq in currPresMask3| limitTo:3">
+                                                                                                                                                        <div class="row">
+                                                                                                                                                            <div class="col-sm-12">
+                                                                                                                                                                <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                                                                                                <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+                                                                                                                                                    </li>
+                                                                                                                                                    <li class="dropdown-submenu" ng-if="currPresMask3.length > 3">
+                                                                                                                                                        <a tabindex="-1" href="#">More</a>
+                                                                                                                                                        <ul class="dropdown-menu">
+                                                                                                                                                            <li ng-repeat="consFreq in currPresMask3| limitTo:(3 - currPresMask3.length)">
+                                                                                                                                                                <div class="row">
+                                                                                                                                                                    <div class="col-sm-12">
+                                                                                                                                                                        <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                                                                                                        <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
+                                                                                                                                                                    </div>
+                                                                                                                                                                </div>
+                                                                                                                                                            </li>
+                                                                                                                                                        </ul>
+                                                                                                                                                    </li>
+                                                                                                                                                    <li class="divider"></li>
+                                                                                                                                                     Mask 4 
+                                                                                                                                                    <li ng-repeat="consFreq in currPresMask4| limitTo:3">
+                                                                                                                                                        <div class="row">
+                                                                                                                                                            <div class="col-sm-12">
+                                                                                                                                                                <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                                                                                                <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+                                                                                                                                                    </li>
+                                                                                                                                                    <li class="dropdown-submenu" ng-if="currPresMask4.length > 3">
+                                                                                                                                                        <a tabindex="-1" href="#">More</a>
+                                                                                                                                                        <ul class="dropdown-menu">
+                                                                                                                                                            <li ng-repeat="consFreq in currPresMask4| limitTo:(3 - currPresMask4.length)">
+                                                                                                                                                                <div class="row">
+                                                                                                                                                                    <div class="col-sm-12">
+                                                                                                                                                                        <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                                                                                                        <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
+                                                                                                                                                                    </div>
+                                                                                                                                                                </div>
+                                                                                                                                                            </li>
+                                                                                                                                                        </ul>
+                                                                                                                                                    </li>
+                                                                                                                                                    <li class="divider"></li>
+                                                                                                                                                     Mask Txt 
+                                                                                                                                                    <li ng-repeat="consFreq in currPresMaskTxt| limitTo:3">
+                                                                                                                                                        <div class="row">
+                                                                                                                                                            <div class="col-sm-12">
+                                                                                                                                                                <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                                                                                                <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+                                                                                                                                                    </li>
+                                                                                                                                                    <li class="dropdown-submenu" ng-if="currPresMaskTxt.length > 3">
+                                                                                                                                                        <a tabindex="-1" href="#">More</a>
+                                                                                                                                                        <ul class="dropdown-menu">
+                                                                                                                                                            <li ng-repeat="consFreq in currPresMaskTxt| limitTo:(3 - currPresMaskTxt.length)">
+                                                                                                                                                                <div class="row">
+                                                                                                                                                                    <div class="col-sm-12">
+                                                                                                                                                                        <a href ng-click="curPrescFreqSele(consFreq.freq_name, consFreq.freq_type, item, item.item_key, 'select')" class="col-sm-9">{{consFreq.freq_name}}</a>
+                                                                                                                                                                        <a class="col-sm-3" title='Clear' ng-click="clearCache(consFreq.freq_id)">X</a>
+                                                                                                                                                                    </div>
+                                                                                                                                                                </div>
+                                                                                                                                                            </li>
+                                                                                                                                                        </ul>
+                                                                                                                                                    </li>
+                                                                                                                                                </ul>
+                                                                                                                                            </div>
+                                                                                                                                        </div>-->
                                                                 </div>
 
                                                             </td>
@@ -951,9 +951,9 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata = { };
+                                    <div class="row" ng-init="vitaldata   =   { };
                                         loadVitals();
-                                        vitaldata.formtype='add'">
+                                        vitaldata.formtype = 'add'">
                                         <div class="col-lg-12"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
@@ -1464,7 +1464,7 @@
                                                                 <div class="input-group">
                                                                     <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0)">
                                                                         <div class="input-group">
-                                                                            <input type="text" class="form-control" data-ng-model="data.consult_date" data-date-time-input="YYYY-MM-DD hh:mm A" />
+                                                                            <input type="text" class="form-control" data-ng-model="consFormData.consult_date" data-date-time-input="YYYY-MM-DD hh:mm A" />
                                                                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                                                         </div>
                                                                     </a>
@@ -1549,7 +1549,7 @@
                                                                     <span class="label bg-light dk">{{patConsultant.consult_date| moment:'hh:mm A'}}</span> 
                                                                 </td>
                                                                 <td> {{patConsultant.consultant_name}} </td>
-                                                                <td valign="middle"> {{patConsultant.short_notes}} </td>
+                                                                <td valign="middle"><div tooltip-placement="left" tooltip="{{patConsultant.notes}}"> {{patConsultant.short_notes}} </div></td>
                                                                 <td>
                                                                     <div ng-if="patConsultant.tenant_id != null && patConsultant.encounter_status">
                                                                         <a data-button="patient.consultantUpdate({id: '{{$state.params.id}}', vital_id: '{{patConsultant.pat_consult_id}}'})" check-access-custom class="label bg-info dk" title="Edit" ng-click="updateconsulRow(patConsultant.pat_consult_id)">

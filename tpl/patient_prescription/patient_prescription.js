@@ -2627,6 +2627,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.initConsultantForm = function () {
             $scope.consFormData = {};
             $scope.consFormData.formtype = 'add';
+            $scope.consFormData.consult_date = moment().format('YYYY-MM-DD HH:mm:ss');
         };
 
         $scope.saveConsultantForm = function (mode) {
