@@ -214,7 +214,7 @@
                                 </td>
                                 <td class="v-middle">
                                     <span editable-textarea="row.notes" e-name="notes" e-form="rowform" onbeforesave="checkName($data)" e-required>
-                                        {{ row.notes || 'empty' }}
+                                        <div tooltip-placement="top" data-tooltip-html-unsafe="{{row.concatenate_notes ? row.full_notes : ''}}"> <span ng-bind-html="row.short_notes"></span> </div>
                                     </span>
                                 </td>
                                 <td class="v-middle">
