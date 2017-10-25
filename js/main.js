@@ -1511,6 +1511,20 @@ angular.module('app').filter('unsafe', ['$sce', function ($sce) {
         };
     }]);
 
+angular.module('app').run(function ($window, $rootScope) {
+    $rootScope.online = navigator.onLine;
+    $window.addEventListener("offline", function () {
+        $rootScope.$apply(function () {
+            $rootScope.online = false;
+        });
+    }, false);
+    $window.addEventListener("online", function () {
+        $rootScope.$apply(function () {
+            $rootScope.online = true;
+        });
+    }, false);
+});
+
 angular.module("template/popover/popover.html", []).run(["$templateCache", function ($templateCache) {
         $templateCache.put("template/popover/popover.html",
                 "<div class=\"popover {{placement}}\" ng-class=\"{ in: isOpen(), fade: animation() }\">\n" +

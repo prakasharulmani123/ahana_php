@@ -33,9 +33,9 @@
                                     </div>
                                     <div class="col-xs-12 col-sm-5 col-md-6">
                                         <div class="row ng-binding">
-                                            <a ng-if="patient.same_branch == true && patient.same_org == true" tooltip="{{patient.Patient.fullcurrentaddress || patient.Patient.fullpermanentaddress}}" ng-bind-html="patient.Patient.fullname | highlight:patientselected" href="javascript:void(0)" ng-click="goToPatient(patient.Patient.patient_guid)" class="ng-binding">
+                                            <a ng-if="patient.same_branch == true && patient.same_org == true" tooltip="{{patient.Patient.fullcurrentaddress|| patient.Patient.fullpermanentaddress}}" ng-bind-html="patient.Patient.fullname | highlight:patientselected" href="javascript:void(0)" ng-click="goToPatient(patient.Patient.patient_guid)" class="ng-binding">
                                             </a>
-                                            <a ng-if="patient.same_branch == false && patient.same_org == true" tooltip="{{patient.Patient.fullcurrentaddress || patient.Patient.fullpermanentaddress}}" ng-bind-html="patient.Patient.fullname | highlight:patientselected" href="javascript:void(0)" ng-click="importViewPatient(patient.Patient.patient_global_guid, key)" class="ng-binding">
+                                            <a ng-if="patient.same_branch == false && patient.same_org == true" tooltip="{{patient.Patient.fullcurrentaddress|| patient.Patient.fullpermanentaddress}}" ng-bind-html="patient.Patient.fullname | highlight:patientselected" href="javascript:void(0)" ng-click="importViewPatient(patient.Patient.patient_global_guid, key)" class="ng-binding">
                                             </a>
                                             <b ng-if="patient.Patient.patient_age_ym">({{patient.Patient.patient_age_ym}}) </b>
                                             <br>
@@ -100,23 +100,23 @@
 
         <!-- link and dropdown -->
         <ul class="nav navbar-nav hidden-sm">
-            
+
             <li class="{{(currentPage == 'myworks' ? 'topactive' : '')}}" ui-sref-active="active">
                 <a ui-sref="myworks.dashboard" check-access> My Works</a>
             </li>
-            
+
             <li class="{{(currentPage == 'IP' ? 'topactive' : '')}}" ui-sref-active="active">
                 <a ui-sref="patient.inPatients" check-access>In-Patient</a>
             </li>
-            
+
             <li class="{{(currentPage == 'OP' ? 'topactive' : '')}}" ui-sref-active="active">
                 <a ui-sref="patient.outPatients" check-access>Out-Patients</a>
             </li>
-            
+
             <li class="{{(currentPage == 'pharmacy' ? 'topactive' : '')}}" ui-sref-active="active">
                 <a ui-sref="pharmacy.purchaseCreate" check-access> Pharmacy</a>
             </li>
-            
+
             <li class="{{(currentPage == 'configuration' ? 'topactive' : '')}}" ui-sref-active="active">
                 <a ui-sref="configuration.organization" check-access> Configuration</a>
             </li>
@@ -125,6 +125,9 @@
             <select class="form-control" ng-model="branch_switch.branch_id" ng-options="branch_id as branch_name for (branch_id,branch_name) in switched_branches_list | orderBy: branch_name" ng-change="switchBranch()">
             </select>
         </div>
+        <div class="navbar-header-branchswitch alert alert-info" type="info" ng-if="!online">
+            Check Your Internet connection
+        </div> 
         <!-- / link and dropdown -->
 
         <!-- nabar right -->
