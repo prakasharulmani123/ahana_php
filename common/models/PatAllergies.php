@@ -62,9 +62,35 @@ class PatAllergies extends RActiveRecord {
             'deleted_at' => 'Deleted At',
         ];
     }
-    
+
     public function fields() {
         $extend = [
+            'short_notes' => function ($model) {
+                if (isset($model->notes)) {
+                    if (strlen($model->notes) > 40) {
+                        $notes = substr($model->notes, 0, 40) . '...';
+                    } else {
+                        $notes = $model->notes;
+                    }
+                    return nl2br($notes);
+                } else {
+                    return '-';
+                }
+            },
+            'full_notes' => function ($model) {
+                return nl2br($model->notes);
+            },
+            'concatenate_notes' => function ($model) {
+                if (isset($model->notes)) {
+                    if (strlen($model->notes) > 40) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            },
             'created_by' => function ($model) {
                 return $model->createdUser->name;
             }

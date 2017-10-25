@@ -159,9 +159,23 @@ class PatConsultant extends RActiveRecord {
                     } else {
                         $notes = $model->notes;
                     }
-                    return $notes;
+                    return nl2br($notes);
                 } else {
                     return '-';
+                }
+            },
+            'full_notes' => function ($model) {
+                return nl2br($model->notes);
+            },
+            'concatenate_notes' => function ($model) {
+                if (isset($model->notes)) {
+                    if (strlen($model->notes) > 40) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
                 }
             },
             'consultant_name' => function ($model) {

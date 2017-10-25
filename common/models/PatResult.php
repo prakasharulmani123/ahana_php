@@ -97,6 +97,32 @@ class PatResult extends RActiveRecord {
 
     public function fields() {
         $extend = [
+            'short_results' => function ($model) {
+                if (isset($model->results)) {
+                    if (strlen($model->results) > 40) {
+                        $results = substr($model->results, 0, 40) . '...';
+                    } else {
+                        $results = $model->results;
+                    }
+                    return nl2br($results);
+                } else {
+                    return '-';
+                }
+            },
+            'full_results' => function ($model) {
+                return nl2br($model->results);
+            },
+            'concatenate_results' => function ($model) {
+                if (isset($model->results)) {
+                    if (strlen($model->results) > 40) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            },
             'created_by' => function ($model) {
                 return $model->createdUser->name;
             }

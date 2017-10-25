@@ -226,6 +226,32 @@ class PatProcedure extends RActiveRecord {
             'encounter_status' => function ($model) {
                 return $model->encounter->isActiveEncounter();
             },
+            'short_description' => function ($model) {
+                if (isset($model->proc_description)) {
+                    if (strlen($model->proc_description) > 40) {
+                        $description = substr($model->proc_description, 0, 40) . '...';
+                    } else {
+                        $description = $model->proc_description;
+                    }
+                    return nl2br($description);
+                } else {
+                    return '-';
+                }
+            },
+            'full_description' => function ($model) {
+                return nl2br($model->proc_description);
+            },
+            'concatenate_description' => function ($model) {
+                if (isset($model->proc_description)) {
+                    if (strlen($model->proc_description) > 40) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            },
         ];
 
         $parent_fields = parent::fields();
@@ -233,7 +259,7 @@ class PatProcedure extends RActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'procedurelist':
-                    $addt_keys = ['procedure_name', 'doctors', 'encounter_id', 'encounter_status'];
+                    $addt_keys = ['procedure_name', 'doctors', 'encounter_id', 'encounter_status', 'short_description', 'full_description', 'concatenate_description'];
                     $parent_fields = [
                         'tenant_id' => 'tenant_id',
                         'proc_id' => 'proc_id',

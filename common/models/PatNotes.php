@@ -39,10 +39,10 @@ class PatNotes extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['notes'], 'required'],
-            [['tenant_id', 'encounter_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
-            [['notes', 'status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe']
+                [['notes'], 'required'],
+                [['tenant_id', 'encounter_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
+                [['notes', 'status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe']
         ];
     }
 
@@ -116,9 +116,23 @@ class PatNotes extends RActiveRecord {
                     } else {
                         $notes = $model->notes;
                     }
-                    return $notes;
+                    return nl2br($notes);
                 } else {
                     return '-';
+                }
+            },
+            'full_notes' => function ($model) {
+                return nl2br($model->notes);
+            },
+            'concatenate_notes' => function ($model) {
+                if (isset($model->notes)) {
+                    if (strlen($model->notes) > 40) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
                 }
             },
             'created_by_name' => function ($model) {
@@ -140,7 +154,7 @@ class PatNotes extends RActiveRecord {
                 return $model->encounter->isActiveEncounter();
             },
             'created_date' => function ($model) {
-                return date('Y-m-d',strtotime($model->created_at));
+                return date('Y-m-d', strtotime($model->created_at));
             },
         ];
         $fields = array_merge(parent::fields(), $extend);
@@ -161,7 +175,7 @@ class PatNotes extends RActiveRecord {
         }
         PatTimeline::insertTimeLine($this->patient_id, $this->created_at, 'Notes', '', $message, 'NOTES', $this->encounter_id);
         CoAuditLog::insertAuditLog(PatNotes::tableName(), $this->pat_note_id, $activity);
-        
+
         return parent::afterSave($insert, $changedAttributes);
     }
 
