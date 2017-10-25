@@ -942,7 +942,7 @@
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
                                                 <accordion-group is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled">
-                                                    <accordion-heading> Graph<i class="pull-right fa fa-minus" ng-class="{'fa-minus': status.isFirstOpen, 'fa-plus': !status.isFirstOpen}"></i> </accordion-heading>
+                                                    <accordion-heading><i class="fa fa-minus" ng-class="{'fa-minus': status.isFirstOpen, 'fa-plus': !status.isFirstOpen}"></i> &nbsp;&nbsp;Graph</accordion-heading>
                                                     <div class="row">
                                                         <div class="col-md-6 graph1" ng-show="(vitalcong.Temperature == 1)">
                                                             <div class="panel panel-default">
@@ -1164,7 +1164,7 @@
 
                                                 </accordion-group>
                                                 <accordion-group is-open="status.open"  class="">
-                                                    <accordion-heading> <i class="pull-right fa fa-plus" ng-class="{'fa-minus': status.open, 'fa-plus': !status.open}"></i> Add Vitals </accordion-heading>
+                                                    <accordion-heading> <i class="fa fa-plus" ng-class="{'fa-minus': status.open, 'fa-plus': !status.open}"></i> &nbsp;&nbsp;Add Vitals </accordion-heading>
                                                     <div>
                                                         <form name="vitalForm" class="form-horizontal form-validation">
                                                             <div class="create-vitals">
