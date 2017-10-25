@@ -233,7 +233,7 @@ class PatProcedure extends RActiveRecord {
                     } else {
                         $description = $model->proc_description;
                     }
-                    return nl2br($description);
+                    return $description;
                 } else {
                     return '-';
                 }

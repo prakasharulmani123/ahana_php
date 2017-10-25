@@ -104,7 +104,7 @@ class PatResult extends RActiveRecord {
                     } else {
                         $results = $model->results;
                     }
-                    return nl2br($results);
+                    return $results;
                 } else {
                     return '-';
                 }

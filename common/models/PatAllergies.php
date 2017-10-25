@@ -72,7 +72,7 @@ class PatAllergies extends RActiveRecord {
                     } else {
                         $notes = $model->notes;
                     }
-                    return nl2br($notes);
+                    return $notes;
                 } else {
                     return '-';
                 }
