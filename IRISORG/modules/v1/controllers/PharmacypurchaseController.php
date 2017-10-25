@@ -530,11 +530,11 @@ class PharmacypurchaseController extends ActiveController {
             $purchaseQuantity = ($model->quantity * $model->package_unit) + ($model->free_quantity * $model->free_quantity_package_unit);
 
             if ($purchaseQuantity > $batchAvailableQuantity) {
-                return ['success' => false, 'message' => "Sorry, you can't delete this purchase item"];
+                return ['success' => false, 'message' => "Sorry, you can't delete this purchase item, Because this purchase item already returned"];
             } else
                 return ['success' => true];
         } else {
-            return ['success' => false, 'message' => "Sorry, you can't delete this purchase item"];
+            return ['success' => false, 'message' => "Sorry, you can't delete this purchase item, Because no available quantity in stock"];
         }
     }
 
