@@ -121,7 +121,9 @@
                                                 <xsl:value-of select="@label"/>
                                             </label>
                                             <div class="col-sm-9">
-                                                <xsl:value-of select="VALUE"/>
+                                                <xsl:call-template name="LFsToBRs">
+                                                    <xsl:with-param name="input" select="VALUE"/>
+                                                </xsl:call-template>
                                             </div>
                                         </div>
                                         <div class="line line-dashed b-b line-lg "/>
@@ -686,7 +688,9 @@
                                                                     <xsl:value-of select="@label"/>
                                                                 </label>
                                                                 <div class="col-sm-9">
-                                                                    <xsl:value-of select="VALUE"/>
+                                                                    <xsl:call-template name="LFsToBRs">
+                                                                        <xsl:with-param name="input" select="VALUE"/>
+                                                                    </xsl:call-template>
                                                                 </div>
                                                             </div>
                                                             <div class="line line-dashed b-b line-lg "/>
@@ -762,12 +766,12 @@
                                                                                     
                                                                                     <xsl:when test="@type='CheckBoxList'">
                                                                                         <xsl:value-of select="@label"/>
-                                                                                            <xsl:for-each select="LISTITEMS/LISTITEM[@Selected = 'true']">
-                                                                                                <xsl:if test="@Selected = 'true'">
-                                                                                                        <xsl:value-of select="concat(' ' , @value)"/>
-                                                                                                        <xsl:if test="not(position() = last())">,</xsl:if>
-                                                                                                </xsl:if>
-                                                                                            </xsl:for-each>
+                                                                                        <xsl:for-each select="LISTITEMS/LISTITEM[@Selected = 'true']">
+                                                                                            <xsl:if test="@Selected = 'true'">
+                                                                                                <xsl:value-of select="concat(' ' , @value)"/>
+                                                                                                <xsl:if test="not(position() = last())">,</xsl:if>
+                                                                                            </xsl:if>
+                                                                                        </xsl:for-each>
                                                                                     </xsl:when>
                                                                                     
                                                                                 </xsl:choose>
@@ -1125,7 +1129,9 @@
                                                                     <xsl:value-of select="@label"/>
                                                                 </label>
                                                                 <div class="col-sm-9">
-                                                                    <xsl:value-of select="VALUE"/>
+                                                                    <xsl:call-template name="LFsToBRs">
+                                                                        <xsl:with-param name="input" select="VALUE"/>
+                                                                    </xsl:call-template>
                                                                 </div>
                                                             </div>
                                                             <div class="line line-dashed b-b line-lg "/>
@@ -1240,4 +1246,21 @@
             </div>
         </xsl:for-each>
     </xsl:template>
+    
+    <xsl:template name="LFsToBRs">
+        <xsl:param name="input" />
+        <xsl:choose>
+            <xsl:when test="contains($input, '&#10;')">
+                <xsl:value-of select="substring-before($input, '&#10;')" />
+                <br />
+                <xsl:call-template name="LFsToBRs">
+                    <xsl:with-param name="input" select="substring-after($input, '&#10;')" />
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$input" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
 </xsl:stylesheet>

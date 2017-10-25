@@ -46,7 +46,9 @@
                                                     <tr>
                                                         <xsl:apply-templates select = "@label" />
                                                         <td width="63%" align="left" valign="top">
-                                                            <xsl:value-of select="VALUE"></xsl:value-of>
+                                                            <xsl:call-template name="LFsToBRs">
+                                                                <xsl:with-param name="input" select="VALUE"/>
+                                                            </xsl:call-template> 
                                                         </td>
                                                     </tr>
                                                 </xsl:if>
@@ -470,7 +472,9 @@
                                                             <tr>
                                                                 <xsl:apply-templates select = "@label" />
                                                                 <td width="70%" align="left" valign="middle">
-                                                                    <xsl:value-of select="VALUE"></xsl:value-of>
+                                                                    <xsl:call-template name="LFsToBRs">
+                                                                        <xsl:with-param name="input" select="VALUE"/>
+                                                                    </xsl:call-template>
                                                                 </td>
                                                             </tr>
                                                         </xsl:if>
@@ -729,7 +733,9 @@
                                                             <strong>
                                                                 <xsl:value-of select="@label" /> :
                                                             </strong>
-                                                            <xsl:value-of select="VALUE"></xsl:value-of>
+                                                            <xsl:call-template name="LFsToBRs">
+                                                                <xsl:with-param name="input" select="VALUE"/>
+                                                            </xsl:call-template>
                                                         </td>
                                                     </tr>
                                                 </xsl:if>
@@ -859,7 +865,9 @@
                                                             <strong>
                                                                 <xsl:value-of select="@label" /> :
                                                             </strong>
-                                                            <xsl:value-of select="VALUE"></xsl:value-of>
+                                                            <xsl:call-template name="LFsToBRs">
+                                                                <xsl:with-param name="input" select="VALUE"/>
+                                                            </xsl:call-template>
                                                         </td>
                                                     </tr>
                                                 </xsl:if>
@@ -1388,7 +1396,9 @@
                                         <td colspan="4" align="left" valign="top" class="notes">
                                             <strong>
                                                 <xsl:value-of select="@label"/> : </strong>
-                                            <xsl:value-of select="VALUE"/>
+                                            <xsl:call-template name="LFsToBRs">
+                                                <xsl:with-param name="input" select="VALUE"/>
+                                            </xsl:call-template>
                                         </td>
                                     </tr>
                                 </xsl:if>
@@ -1671,7 +1681,9 @@
                                     <strong>
                                         Notes: 
                                     </strong>
-                                    <xsl:value-of select="VALUE"></xsl:value-of>
+                                    <xsl:call-template name="LFsToBRs">
+                                        <xsl:with-param name="input" select="VALUE"/>
+                                    </xsl:call-template>
                                 </td>
                             </tr>
                         </xsl:if>
@@ -1822,7 +1834,9 @@
                                     <tr>
                                         <td colspan="4" align="left" valign="top" class="notes">
                                             <strong> Notes : </strong>
-                                            <xsl:value-of select="VALUE"/>
+                                            <xsl:call-template name="LFsToBRs">
+                                                <xsl:with-param name="input" select="VALUE"/>
+                                            </xsl:call-template>
                                         </td>
                                     </tr>
                                 </xsl:if>
@@ -1918,7 +1932,9 @@
                                     <tr>
                                         <td colspan="4" align="left" valign="top" class="notes">
                                             <strong> Notes : </strong>
-                                            <xsl:value-of select="VALUE"/>
+                                            <xsl:call-template name="LFsToBRs">
+                                                <xsl:with-param name="input" select="VALUE"/>
+                                            </xsl:call-template>
                                         </td>
                                     </tr>
                                 </xsl:if>
@@ -2034,7 +2050,9 @@
                                     <tr>
                                         <td colspan="4" align="left" valign="top" class="notes">
                                             <strong> Notes : </strong>
-                                            <xsl:value-of select="VALUE"/>
+                                            <xsl:call-template name="LFsToBRs">
+                                                <xsl:with-param name="input" select="VALUE"/>
+                                            </xsl:call-template>
                                         </td>
                                     </tr>
                                 </xsl:if>
@@ -2281,7 +2299,9 @@
                                     <tr>
                                         <td colspan="4" align="left" valign="top" class="notes">
                                             <strong> Notes : </strong>
-                                            <xsl:value-of select="VALUE"/>
+                                            <xsl:call-template name="LFsToBRs">
+                                                <xsl:with-param name="input" select="VALUE"/>
+                                            </xsl:call-template>
                                         </td>
                                     </tr>
                                 </xsl:if>
@@ -2375,7 +2395,7 @@
                                                                                                         <xsl:when test="@type='TextBox'">
                                                                                                             <xsl:for-each select="PROPERTIES/PROPERTY">
                                                                                                                 <xsl:if test="@name='value'">
-                                                                                                                   [  <xsl:value-of select="current()"></xsl:value-of> ]
+                                                                                                                    [  <xsl:value-of select="current()"></xsl:value-of> ]
                                                                                                                 </xsl:if>
                                                                                                             </xsl:for-each>
                                                                                                         </xsl:when>
@@ -2446,7 +2466,9 @@
                                     <tr>
                                         <td colspan="4" align="left" valign="top" class="notes">
                                             <strong> Notes : </strong>
-                                            <xsl:value-of select="VALUE"/>
+                                            <xsl:call-template name="LFsToBRs">
+                                                <xsl:with-param name="input" select="VALUE"/>
+                                            </xsl:call-template>
                                         </td>
                                     </tr>
                                 </xsl:if>
@@ -2501,7 +2523,9 @@
                                     <tr>
                                         <td colspan="4" align="left" valign="top" class="notes">
                                             <strong> Notes : </strong>
-                                            <xsl:value-of select="VALUE"/>
+                                            <xsl:call-template name="LFsToBRs">
+                                                <xsl:with-param name="input" select="VALUE"/>
+                                            </xsl:call-template>
                                         </td>
                                     </tr>
                                 </xsl:if>
@@ -2760,7 +2784,9 @@
                                                                             <span class="colon"> : </span>
                                                                         </td>
                                                                         <td width="30%" align="left" valign="top">
-                                                                            <xsl:value-of select="VALUE"/>
+                                                                            <xsl:call-template name="LFsToBRs">
+                                                                                <xsl:with-param name="input" select="VALUE"/>
+                                                                            </xsl:call-template>
                                                                         </td>
                                                                     </xsl:if>
                                                                 </xsl:when>
@@ -3024,7 +3050,9 @@
                                                                                 <strong>
                                                                                     <xsl:value-of select="@label" />
                                                                                 </strong>
-                                                                                <xsl:value-of select="VALUE"></xsl:value-of>
+                                                                                <xsl:call-template name="LFsToBRs">
+                                                                                    <xsl:with-param name="input" select="VALUE"/>
+                                                                                </xsl:call-template>
                                                                             </td>
                                                                         </tr>
                                                                     </xsl:if>
@@ -3088,7 +3116,9 @@
                                                                             <span class="colon"> : </span>
                                                                         </td>
                                                                         <td width="25%" align="left" valign="top">
-                                                                            <xsl:value-of select="VALUE"></xsl:value-of>
+                                                                            <xsl:call-template name="LFsToBRs">
+                                                                                <xsl:with-param name="input" select="VALUE"/>
+                                                                            </xsl:call-template>
                                                                         </td>
                                                                     </xsl:if>
                                                                 </xsl:when>
@@ -3254,7 +3284,9 @@
                                                                             <td colspan="4" align="left" valign="top" class="notes">
                                                                                 <strong>
                                                                                     <xsl:value-of select="@label"/> : </strong>
-                                                                                <xsl:value-of select="VALUE"/>
+                                                                                <xsl:call-template name="LFsToBRs">
+                                                                                    <xsl:with-param name="input" select="VALUE"/>
+                                                                                </xsl:call-template>
                                                                             </td>
                                                                         </tr>
                                                                     </xsl:if>
@@ -3382,7 +3414,9 @@
                                 <tr>
                                     <td colspan="4" align="left" valign="top" class="notes">
                                         <strong>Comments : </strong>
-                                        <xsl:value-of select="VALUE"/>
+                                        <xsl:call-template name="LFsToBRs">
+                                            <xsl:with-param name="input" select="VALUE"/>
+                                        </xsl:call-template>
                                     </td>
                                 </tr>
                             </xsl:if>
@@ -3399,6 +3433,22 @@
             <xsl:value-of select="." /> 
             <span class="colon"> : </span>
         </td>
+    </xsl:template>
+    
+    <xsl:template name="LFsToBRs">
+        <xsl:param name="input" />
+        <xsl:choose>
+            <xsl:when test="contains($input, '&#10;')">
+                <xsl:value-of select="substring-before($input, '&#10;')" />
+                <br />
+                <xsl:call-template name="LFsToBRs">
+                    <xsl:with-param name="input" select="substring-after($input, '&#10;')" />
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$input" />
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     
     
