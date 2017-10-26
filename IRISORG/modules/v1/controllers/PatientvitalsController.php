@@ -219,8 +219,8 @@ class PatientvitalsController extends ActiveController {
                 ->limit(5)
                 ->all();
         $sp02 = PatVitals::find()->tenant()->active()->status()->andWhere(['patient_id' => $patient_id])
-                ->andWhere(['not', ['height' => null]])
-                ->orderBy(['sp02' => SORT_DESC])
+                ->andWhere(['not', ['sp02' => null]])
+                ->orderBy(['vital_id' => SORT_DESC])
                 ->limit(5)
                 ->all();
         $painScore = PatVitals::find()->tenant()->active()->status()->andWhere(['patient_id' => $patient_id])
