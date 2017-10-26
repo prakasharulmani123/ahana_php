@@ -188,14 +188,48 @@ class PatientvitalsController extends ActiveController {
         $get = Yii::$app->request->get();
         $patient = PatPatient::getPatientByGuid($get['patient_id']);
         $patient_id = $patient->patient_id;
-        $data = PatVitals::find()
-                ->tenant()
-                ->active()
-                ->status()
-                ->andWhere(['patient_id' => $patient_id])
+
+        $temperature = PatVitals::find()->tenant()->active()->status()->andWhere(['patient_id' => $patient_id])
+                ->andWhere(['not', ['temperature' => null]])
                 ->orderBy(['vital_id' => SORT_DESC])
+                ->limit(5)
                 ->all();
-        return ['success' => true,'data' => $data];
+        $bp = PatVitals::find()->tenant()->active()->status()
+                ->andWhere(['patient_id' => $patient_id])
+                ->andWhere(['or',
+                        ['not', ['blood_pressure_systolic' => null]],
+                        ['not', ['blood_pressure_diastolic' => null]],
+                ])
+                ->orderBy(['vital_id' => SORT_DESC])
+                ->limit(5)
+                ->all();
+        $pulse = PatVitals::find()->tenant()->active()->status()->andWhere(['patient_id' => $patient_id])
+                ->andWhere(['not', ['pulse_rate' => null]])
+                ->orderBy(['vital_id' => SORT_DESC])
+                ->limit(5)
+                ->all();
+        $weight = PatVitals::find()->tenant()->active()->status()->andWhere(['patient_id' => $patient_id])
+                ->andWhere(['not', ['weight' => null]])
+                ->orderBy(['vital_id' => SORT_DESC])
+                ->limit(5)
+                ->all();
+        $height = PatVitals::find()->tenant()->active()->status()->andWhere(['patient_id' => $patient_id])
+                ->andWhere(['not', ['height' => null]])
+                ->orderBy(['vital_id' => SORT_DESC])
+                ->limit(5)
+                ->all();
+        $sp02 = PatVitals::find()->tenant()->active()->status()->andWhere(['patient_id' => $patient_id])
+                ->andWhere(['not', ['height' => null]])
+                ->orderBy(['sp02' => SORT_DESC])
+                ->limit(5)
+                ->all();
+        $painScore = PatVitals::find()->tenant()->active()->status()->andWhere(['patient_id' => $patient_id])
+                ->andWhere(['not', ['pain_score' => null]])
+                ->orderBy(['vital_id' => SORT_DESC])
+                ->limit(5)
+                ->all();
+        return ['success' => true, 'temperature' => $temperature, 'bp' => $bp, 'pulse' => $pulse,
+            'weight' => $weight, 'height' => $height, 'sp02' => $sp02, 'painScore' => $painScore];
     }
 
 }

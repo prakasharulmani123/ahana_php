@@ -613,7 +613,7 @@ class XmlController extends Controller {
 
                     $fileContent = file_get_contents($files);
                     //PatDocumentTypes::updateAllCounters(["document_xml" => $fileContent]);
-                    $docModel = PatDocumentTypes::find()->all();
+                    $docModel = PatDocumentTypes::find()->andWhere(['doc_type'=>'CH'])->all();
                     foreach ($docModel as $doc) {
                         if (basename($files) == 'case_history.xml') {
                             $doc->document_xml = $fileContent;
