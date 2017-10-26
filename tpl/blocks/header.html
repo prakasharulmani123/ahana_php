@@ -125,9 +125,7 @@
             <select class="form-control" ng-model="branch_switch.branch_id" ng-options="branch_id as branch_name for (branch_id,branch_name) in switched_branches_list | orderBy: branch_name" ng-change="switchBranch()">
             </select>
         </div>
-        <div class="navbar-header-branchswitch alert alert-info" type="info" ng-if="!online">
-            Check Your Internet connection
-        </div> 
+
         <!-- / link and dropdown -->
 
         <!-- nabar right -->
@@ -138,6 +136,9 @@
     </div>
     <!-- / navbar collapse -->
 </header>
+<div class="alert alert-warning network-mgs" type="info" ng-if="!online">
+    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>  <span> Not connected.</span> Check Your Internet connection
+</div> 
 <!-- / header -->
 <script>
     $(function () {

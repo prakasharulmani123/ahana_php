@@ -980,7 +980,26 @@ width:85.5%;
 .document-filters select{
     margin-bottom: 0px;
 }
+.network-mgs {
+    width: 295px;
+    position: relative;
+    z-index: 9999;
+    margin: 1px auto;
+    padding: 7px;
+    text-align: center;
+    color: #222222;
+    border-radius: 0px;
+    -webkit-box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.4);
+-moz-box-shadow:    0px 5px 15px 0px rgba(0, 0, 0, 0.4);
+box-shadow:         0px 5px 15px 0px rgba(0, 0, 0, 0.4);
+border:#f0c36d solid 1px;
+background: #f9edbe;
+}
 
+.network-mgs span
+{
+    font-weight:600;
+}
 
 
 
