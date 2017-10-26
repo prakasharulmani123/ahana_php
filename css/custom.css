@@ -809,6 +809,17 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
     float:left;
 }
 
+#frequency_4  input
+{
+     width:20.5%;
+    float:left;
+}
+
+#frequency_txt input
+{
+width:85.5%;
+}
+
 
 
 .prescription-hightlight table td
@@ -945,6 +956,51 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
     width:550px;
 }
 
+
+
+
+
+.legend table {
+    position: absolute;
+    bottom: -51px;
+    right: 0px;
+}
+
+
+.legend > div{
+    display: none;
+}
+
+
+
+.document-filters .form-inline .form-control{
+    vertical-align: top
+}
+
+.document-filters select{
+    margin-bottom: 0px;
+}
+
+
+
+
+
+@media (min-width: 1280px) {
+  
+    .pre-freq-new1 input {
+    width: 27%;
+    float: left;
+}
+
+
+#frequency_txt input
+{
+width:83.5%;
+}
+
+
+}
+
 @media (max-width: 767px) {
     .hidden-xs {
         display: none !important;
@@ -958,6 +1014,23 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 
 }
 @media (min-width: 992px) and (max-width: 1199px) {
+    
+    .pre-freq-new1 input {
+  float: left;
+  width: 26.4%;
+}
+#frequency_4 input {
+  float: left;
+  width: 19.8%;
+  padding:6px 0px !important;
+  text-align: center;
+}
+
+#frequency_txt input {
+  width: 79.2%;
+}
+
+
     .hidden-md {
         display: none !important;
     }

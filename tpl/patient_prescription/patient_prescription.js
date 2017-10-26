@@ -37,6 +37,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.app.settings.patientFooterClass = 'app-footer';
         $scope.today = new Date();
         $scope.globalData = {};
+        $scope.globalData.freq_type = 3;
         $scope.prescription_tab = {};
         $scope.prescription_print = {};
 
@@ -2075,9 +2076,23 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.errorData = 'Prescription cannot be empty';
                 return false;
             }
-            if ((!$scope.globalData.frequency_3_0) && (!$scope.globalData.frequency_3_1) && (!$scope.globalData.frequency_3_2)) {
-                $scope.errorData = 'Frequency cannot be empty';
-                return false;
+            if ($scope.globalData.freq_type == 'txt') {
+                if ((!$scope.globalData.frequency_txt)) {
+                    $scope.errorData = 'Frequency cannot be empty';
+                    return false;
+                }
+            }
+            if ($scope.globalData.freq_type == '3') {
+                if ((!$scope.globalData.frequency_3_0) && (!$scope.globalData.frequency_3_1) && (!$scope.globalData.frequency_3_2)) {
+                    $scope.errorData = 'Frequency cannot be empty';
+                    return false;
+                }
+            }
+            if ($scope.globalData.freq_type == '4') {
+                if ((!$scope.globalData.frequency_4_0) && (!$scope.globalData.frequency_4_1) && (!$scope.globalData.frequency_4_2) && (!$scope.globalData.frequency_4_3)) {
+                    $scope.errorData = 'Frequency cannot be empty';
+                    return false;
+                }
             }
 
             var result = $filter('filter')($scope.data.prescriptionItems, {product_id: parseInt(globalPrescription.product_id)}, true);
@@ -2100,13 +2115,20 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + product.product_id + '?fields=' + Fields)
                         .success(function (product) {
                             $scope.getRelatedProducts(globalPrescription.generic_id).then(function () {
-                                globalPrescription.frequency = $scope.globalData.frequency_3_0 + '-' + $scope.globalData.frequency_3_1 + '-' + $scope.globalData.frequency_3_2;
+                                var no_of_days = $scope.globalData.no_of_days;
+                                if (!$scope.globalData.no_of_days) {
+                                    var no_of_days = 0;
+                                    $scope.globalData.no_of_days = 1;
+                                }
+                                if ($scope.globalData.freq_type == 'txt')
+                                    globalPrescription.frequency = $scope.globalData.frequency_txt;
+                                else if ($scope.globalData.freq_type == '4')
+                                    globalPrescription.frequency = $scope.globalData.frequency_4_0 + '-' + $scope.globalData.frequency_4_1 + '-' + $scope.globalData.frequency_4_2 + '-' + $scope.globalData.frequency_4_3;
+                                else
+                                    globalPrescription.frequency = $scope.globalData.frequency_3_0 + '-' + $scope.globalData.frequency_3_1 + '-' + $scope.globalData.frequency_3_2;
                                 qty_count = $scope.calculate_qty(globalPrescription.frequency, $scope.globalData.no_of_days, product.product_description_id, product.description_name);
                                 if (qty_count > 0) {
-                                    var no_of_days = $scope.globalData.no_of_days;
-                                    if (!$scope.globalData.no_of_days) {
-                                        var no_of_days = 0;
-                                    }
+
                                     if (globalPrescription.route) {
                                         route = globalPrescription.route;
                                     } else {
@@ -2139,7 +2161,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         'product_description_id': product.product_description_id,
                                         'description_name': product.description_name,
                                         'in_stock': (parseInt(product.availableQuantity) > parseInt(qty_count)),
-                                        'freqType': '3',
+                                        'freqType': $scope.globalData.freq_type,
                                         'remarks': $scope.globalData.remarks,
                                     };
                                     //Multiple entries created, Check duplicate once again 
@@ -2167,6 +2189,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                     $scope.lastSelected = {};
                                     $scope.prescription = '';
                                     $scope.globalData = {};
+                                    $scope.globalData.freq_type = 3;
                                 } else {
                                     alert('Quantity is not available');
                                     return false;
@@ -2176,9 +2199,24 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
         }
 
+        $scope.TopFreqSele = function (freq, ftype) {
+            $scope.globalData.freq_type = ftype;
+            if (ftype == 'txt') {
+                $scope.globalData['frequency_' + ftype] = freq;
+            } else {
+                var result = freq.split('-');
+                if (result.length > 0) {
+                    angular.forEach(result, function (topfreqvalue, topfreqkey) {
+                        $scope.globalData['frequency_' + ftype + '_' + topfreqkey] = topfreqvalue;
+                    });
+                }
+            }
+        }
+
         //New prescription top form reset the value
         $scope.resetGlobalForm = function () {
             $scope.globalData = {};
+            $scope.globalData.freq_type = 3;
             $scope.prescription = '';
             $scope.errorData = '';
         }
@@ -2215,6 +2253,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.vitalCollection = vitals.result;
                         $scope.vitaldisplayedCollection = [].concat($scope.vitalCollection);
                         $scope.HaveActEnc = vitals.HaveActEnc;
+                        angular.forEach($scope.vitalCollection, function (row) {
+                            angular.forEach(row.all, function (all) {
+                                if (!row.encounter_id)
+                                    row.encounter_id = all.encounter_id;
+                            });
+                        });
                         $scope.setvitalgraph();
                         $scope.$broadcast('refreshDatepickers');
                     })
@@ -2228,123 +2272,102 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             url = $rootScope.IRISOrgServiceUrl + '/patientvitals/getvitalsgraph?addtfields=eprvitals&patient_id=' + $state.params.id;
             $http.get(url)
                     .success(function (vitals) {
-                        //Temperature variable
+
+                        //Temperature chart data
                         $scope.tem_graph_data = [];
                         $scope.tem_graph_tick = [];
-                        var tem_Going = true;
-                        var tem = 5;
+                        var tem = vitals.temperature.length;
 
-                        //Weight Variable
+                        angular.forEach(vitals.temperature, function (row) {
+                            if (row.temperature) {
+                                $scope.tem_graph_data.push([tem, row.temperature]);
+                                $scope.tem_graph_tick.push([tem, moment(row.vital_time).format('DD-MM-YY')]);
+                                tem--;
+                            }
+                        });
+
+                        //Weight chart data
                         $scope.weight_graph_data = [];
                         $scope.weight_graph_tick = [];
-                        var weight_Going = true;
-                        var wht = 5;
+                        var wht = vitals.weight.length;
 
-                        //Height Variable
+                        angular.forEach(vitals.weight, function (row) {
+                            if (row.weight) {
+                                $scope.weight_graph_data.push([wht, row.weight]);
+                                $scope.weight_graph_tick.push([wht, moment(row.vital_time).format('DD-MM-YY')]);
+                                wht--;
+                            }
+                        });
+
+                        //Height chart data
                         $scope.height_graph_data = [];
                         $scope.height_graph_tick = [];
-                        var height_Going = true;
-                        var hgt = 5;
+                        var hgt = vitals.height.length;
 
-                        //pulse Variable
+                        angular.forEach(vitals.height, function (row) {
+                            if (row.height) {
+                                $scope.height_graph_data.push([hgt, row.height]);
+                                $scope.height_graph_tick.push([hgt, moment(row.vital_time).format('DD-MM-YY')]);
+                                hgt--;
+                            }
+                        });
+
+                        //Pulse chart data
                         $scope.pulse_graph_data = [];
                         $scope.pulse_graph_tick = [];
-                        var pulse_Going = true;
-                        var pul = 5;
+                        var pul = vitals.pulse.length;
 
-                        //sp02 Variable
+                        angular.forEach(vitals.pulse, function (row) {
+                            if (row.pulse) {
+                                $scope.pulse_graph_data.push([pul, row.pulse]);
+                                $scope.pulse_graph_tick.push([pul, moment(row.vital_time).format('DD-MM-YY')]);
+                                pul--;
+                            }
+                        });
+
+                        //Sp02 chart data
                         $scope.sp02_graph_data = [];
                         $scope.sp02_graph_tick = [];
-                        var sp02_Going = true;
-                        var sp = 5;
+                        var sp = vitals.sp02.length;
 
-                        //pain_score Variable
+                        angular.forEach(vitals.sp02, function (row) {
+                            if (row.sp02) {
+                                $scope.pulse_graph_data.push([sp, row.sp02]);
+                                $scope.pulse_graph_tick.push([sp, moment(row.vital_time).format('DD-MM-YY')]);
+                                sp--;
+                            }
+                        });
+
+                        //Pain Score chart data
                         $scope.pain_graph_data = [];
                         $scope.pain_graph_tick = [];
-                        var pain_Going = true;
-                        var pain = 5;
+                        var pain = vitals.painScore.length;
 
-                        //Blood pressure Variable
+                        angular.forEach(vitals.painScore, function (row) {
+                            if (row.painScore) {
+                                $scope.pain_graph_data.push([pain, row.sp02]);
+                                $scope.pain_graph_tick.push([pain, moment(row.vital_time).format('DD-MM-YY')]);
+                                pain--;
+                            }
+                        });
+
+                        //Blood pressure chart data
                         $scope.bps_graph_data = [];
                         $scope.bpd_graph_data = [];
                         $scope.bp_graph_tick = [];
-                        var bp_Going = true;
-                        var bp = 5;
+                        var bp = vitals.bp.length;
 
-                        angular.forEach(vitals.data, function (row) {
-                            if (tem_Going) {            //Set Temperature variable
-                                if (row.temperature) {
-                                    $scope.tem_graph_data.push([tem, row.temperature]);
-                                    $scope.tem_graph_tick.push([tem, moment(row.vital_time).format('DD-MM-YY')]);
-                                    tem--;
-                                }
+                        angular.forEach(vitals.bp, function (row) {
+                            if ((row.blood_pressure_systolic) || (row.blood_pressure_diastolic)) {
+                                if (row.blood_pressure_systolic)
+                                    $scope.bps_graph_data.push([bp, row.blood_pressure_systolic]);
+                                if (row.blood_pressure_diastolic)
+                                    $scope.bpd_graph_data.push([bp, row.blood_pressure_diastolic]);
+                                $scope.bp_graph_tick.push([bp, moment(row.vital_time).format('DD-MM-YY')]);
+                                bp--;
                             }
-                            if ($scope.tem_graph_data.length == 5)
-                                tem_Going = false;
-
-                            if (bp_Going) {            //Set Blood Pressure variable
-                                if ((row.blood_pressure_systolic) || (row.blood_pressure_diastolic)) {
-                                    if (row.blood_pressure_systolic)
-                                        $scope.bps_graph_data.push([bp, row.blood_pressure_systolic]);
-                                    if (row.blood_pressure_diastolic)
-                                        $scope.bpd_graph_data.push([bp, row.blood_pressure_diastolic]);
-                                    $scope.bp_graph_tick.push([bp, moment(row.vital_time).format('DD-MM-YY')]);
-                                    bp--;
-                                }
-                            }
-                            if (($scope.bps_graph_data.length == 5) || ($scope.bpd_graph_data.length == 5))
-                                bp_Going = false;
-
-                            if (weight_Going) {         //Set Weight variable
-                                if (row.weight) {
-                                    $scope.weight_graph_data.push([wht, row.weight]);
-                                    $scope.weight_graph_tick.push([wht, moment(row.vital_time).format('DD-MM-YY')]);
-                                    wht--;
-                                }
-                            }
-                            if ($scope.weight_graph_data.length == 5)
-                                weight_Going = false;
-
-                            if (height_Going) {         //Set Height variable
-                                if (row.height) {
-                                    $scope.height_graph_data.push([hgt, row.height]);
-                                    $scope.height_graph_tick.push([hgt, moment(row.vital_time).format('DD-MM-YY')]);
-                                    hgt--;
-                                }
-                            }
-                            if ($scope.height_graph_data.length == 5)
-                                height_Going = false;
-
-                            if (pulse_Going) {         //Set Pluse variable
-                                if (row.pulse_rate) {
-                                    $scope.pulse_graph_data.push([pul, row.pulse_rate]);
-                                    $scope.pulse_graph_tick.push([pul, moment(row.vital_time).format('DD-MM-YY')]);
-                                    pul--;
-                                }
-                            }
-                            if ($scope.pulse_graph_data.length == 5)
-                                pulse_Going = false;
-
-                            if (pain_Going) {         //Set Pain score variable
-                                if (row.pain_score) {
-                                    $scope.pain_graph_data.push([pain, row.pain_score]);
-                                    $scope.pain_graph_tick.push([pain, moment(row.vital_time).format('DD-MM-YY')]);
-                                    pain--;
-                                }
-                            }
-                            if ($scope.height_graph_data.length == 5)
-                                pain_Going = false;
-
-                            if (sp02_Going) {         //Set spo2 variable
-                                if (row.sp02) {
-                                    $scope.sp02_graph_data.push([sp, row.sp02]);
-                                    $scope.sp02_graph_tick.push([sp, moment(row.vital_time).format('DD-MM-YY')]);
-                                    sp--;
-                                }
-                            }
-                            if ($scope.sp02_graph_data.length == 5)
-                                sp02_Going = false;
                         });
+
                     })
         }
 
@@ -2813,10 +2836,34 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.savemedicalForm = function () {
             _data = $('#xmlform').serializeArray();
-            console.log(_data);
+            _data.push({
+                name: 'encounter_id',
+                value: $scope.data.encounter_id,
+            }, {
+                name: 'patient_id',
+                value: $state.params.id,
+            });
+
+            $scope.loadbar('show');
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/patientprescription/savemedicaldocument",
+                method: "POST",
+                data: _data,
+            }).then(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        if (response.data.success == true) {
+                            $scope.msg.successMessage = 'Document Saved Successfully';
+                            $state.go('patient.document', {id: $state.params.id});
+                        } else {
+                            $scope.errorData = response.data.message;
+                            $anchorScroll();
+                        }
+                    }
+            );
             return false;
         }
-        
+
         $scope.Setempty_tab = function () {
             $scope.errorData = '';
             $scope.successMessage = '';
