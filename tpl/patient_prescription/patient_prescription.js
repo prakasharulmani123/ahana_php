@@ -2332,8 +2332,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                         angular.forEach(vitals.sp02, function (row) {
                             if (row.sp02) {
-                                $scope.pulse_graph_data.push([sp, row.sp02]);
-                                $scope.pulse_graph_tick.push([sp, moment(row.vital_time).format('DD-MM-YY')]);
+                                $scope.sp02_graph_data.push([sp, row.sp02]);
+                                $scope.sp02_graph_tick.push([sp, moment(row.vital_time).format('DD-MM-YY')]);
                                 sp--;
                             }
                         });
@@ -2344,8 +2344,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         var pain = vitals.painScore.length;
 
                         angular.forEach(vitals.painScore, function (row) {
-                            if (row.painScore) {
-                                $scope.pain_graph_data.push([pain, row.sp02]);
+                            if (row.pain_score) {
+                                $scope.pain_graph_data.push([pain, row.pain_score]);
                                 $scope.pain_graph_tick.push([pain, moment(row.vital_time).format('DD-MM-YY')]);
                                 pain--;
                             }
