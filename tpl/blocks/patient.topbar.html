@@ -11,35 +11,76 @@
             </div>
             <img ng-hide="true" id="ahana_print_logo" src="img/ahanalogo.jpg"/>
             <div class="col-md-11 paitent-details2">
-                <div class="header-new">
-                    <i aria-hidden="true" class="fa fa-user"></i>
+            
+            <div class="paitent-details2-newleft">
+            
+            <div class="paitent-details2-newleft-row1"> 
+             <i aria-hidden="true" class="fa fa-user"></i>
                     <b class="patient-name">{{patientObj.fullname}}</b>
                     ({{patientObj.patient_global_int_code}})
 
-                    <i class="fa fa-venus-mars"></i>
+                   
+            
+            </div>
+            
+            
+            <div class="paitent-details2-newleft-row2">
+          
+           <i class="fa fa-venus-mars"></i>
                     {{app.patientDetail.patientSex}}
                     <span ng-if="patientObj.patient_age_ym">({{patientObj.patient_age_ym}})</span>
 
-                    <i aria-hidden="true"></i>
-                    <span ng-if="patientObj.hasallergies"><b>Allergies : </b> {{patientObj.allergies}}</span>
+         
+                
+                
+                <i class="fa fa-mobile" aria-hidden="true"></i>  {{patientObj.patient_mobile}}
+            
+            </div>
+            
+            
+            
+            <div class="header-new">
+                   
+                    
+                </div>
+            
+             </div>
+            
+            
+            <div class="paitent-details2-newright"> 
+             
+                
+                
+            
+                    <span class="alleries-txt" ng-if="patientObj.hasallergies"><b>Allergies : </b> {{patientObj.allergies}}</span>
                     <b ng-show="false"> Allergies : </b>
 
                     <i aria-hidden="true" class="fa fa-ban" ng-show="false"></i>
                     <!--                    <div class="pati-cate" ng-show="patientObj.have_encounter">{{patientObj.encounter_type}}</div>-->
-                </div>
+                    
+                    <br/> <span ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="category_badge header-badge category_icon" tooltip="{{patientObj.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom">
+                    {{patientObj.patient_category| uppercase}}
+                </span> 
+                
+                 <span ng-show="patientObj.patActiveIp">
+                    <i class="fa fa-calendar"></i>
+                    {{patientObj.doa}}
+                </span>   
+                    
+                    
+                    
+                   
+            
+            </div>
+                
 
                 <br/>
 
-                <span ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="category_badge header-badge category_icon" tooltip="{{patientObj.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom">
-                    {{patientObj.patient_category| uppercase}}
-                </span>
+                
 
-                <span ng-show="patientObj.patActiveIp">
-                    <i class="fa fa-calendar"></i>
-                    {{patientObj.doa}}
-                </span>
+                
 
-                <i class="fa fa-phone"></i>  {{patientObj.patient_mobile}}
+               
 
                 <div class="headerbg2">
                     <div class="patient-details-part patinet-id" ng-if="patientObj.activeCasesheetno">

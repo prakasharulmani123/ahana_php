@@ -644,15 +644,12 @@ button.label {
 	padding-top:0px;
 	padding-bottom:5px;
 }
-
-pati-thumb
-{
+pati-thumb {
 	width:125px;
 	float:left;
 }
-
 .paitent-details2 i {
-	margin-left:40px;
+	margin-left:15px;
 }
 .prescrip-dropdown {
 	min-width:650px;
@@ -745,7 +742,7 @@ pati-thumb
 	float:left;
 	text-align:center;
 	margin-top:10px;
-        font-size: 13px;
+	font-size: 13px;
 }
 .vitals-table {
 	width:100%;
@@ -794,7 +791,7 @@ pati-thumb
 	margin-right:0px;
 }
 .pres-table th {
-	/*text-align:center;*/
+/*text-align:center;*/
 }
 .txt-left {
 	text-align:left !important;
@@ -815,8 +812,7 @@ pati-thumb
 }
 .header-new {
 	width:100%;
-	float:left;
-	/*margin-bottom:20px;*/
+	float:left;/*margin-bottom:20px;*/
 }
 .headerbg2 i {
 	margin-left: 0px;
@@ -851,23 +847,14 @@ pati-thumb
 	/*    width: 100%;*/
     margin-bottom: 0px;
 }
-
-
-
 /*29-06-2017*/
 
-.prescription-plus
-{
+.prescription-plus {
 	text-align:right;
 }
-
-
 .form-horizontal .control-label {
 	text-align: left;
 }
-
-
-
 /*
 
 
@@ -881,37 +868,55 @@ select.form-control {
 .form-control {
 	padding: 6px 6px 6px 6px !important;
 }
-
-
-
 .form-horizontal .control-label {
 	padding-top: 0px !important;
 }
-
-
-
-.gsd-nopad
-{
+.gsd-nopad {
 	padding:0px !important;
 }
-
-
-.sales-gst-table
-{
+.sales-gst-table {
 }
-
-.sales-gst-table th
-{
+.sales-gst-table th {
 	padding:5px;
 	background:#dddddd;
 }
-
-.sales-gst-table td
-{
+.sales-gst-table td {
 	padding:5px;
 }
-
-.sales-table-heading
-{
+.sales-table-heading {
 	background:#dde5e6 !important;
+}
+
+
+.paitent-details2-newleft
+{
+	width:35%;
+	float:left;
+	background:#fcf1a2;
+}
+
+
+.paitent-details2-newright
+{
+	width:65%;
+	float:left;
+}
+
+.paitent-details2-newleft-row1
+{
+	width:100%;
+	float:left;
+}
+
+.paitent-details2-newleft-row2
+{
+	width:100%;
+	float:left;
+	margin-top:6px;
+	margin-bottom:6px;
+}
+
+.alleries-txt
+{
+	margin-left:10px;
 }
