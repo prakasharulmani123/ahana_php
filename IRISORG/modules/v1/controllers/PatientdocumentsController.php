@@ -87,24 +87,28 @@ class PatientdocumentsController extends ActiveController {
     //Index Function
     public function actionGetpatientdocuments() {
         $get = Yii::$app->getRequest()->get();
-        //print_r($get); die;
         if (isset($get['patient_id'])) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
+
+            $all_patient_id = PatPatient::find()
+                    ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                    ->where(['patient_global_guid' => $patient->patient_global_guid])
+                    ->one();
+            
             if (!empty($get['date'])) {
                 $condition = [
-                    'patient_id' => $patient->patient_id,
                     'deleted_at' => '0000-00-00 00:00:00',
                     'DATE(date_time)' => $get['date'],
                 ];
             } else {
                 $condition = [
-                    'patient_id' => $patient->patient_id,
                     'deleted_at' => '0000-00-00 00:00:00',
                 ];
             }
 
             $data = VDocuments::find()
                     ->where($condition)
+                    ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                     ->groupBy('encounter_id')
                     ->orderBy(['encounter_id' => SORT_DESC])
                     ->asArray()
@@ -112,7 +116,8 @@ class PatientdocumentsController extends ActiveController {
 
             foreach ($data as $key => $value) {
                 $details = VDocuments::find()
-                        ->where(['encounter_id' => $value['encounter_id']])
+                        ->where(['encounter_id' => $value['encounter_id'],
+                            'tenant_id' => $value['tenant_id']])
                         ->andWhere($condition)
                         ->orderBy(['date_time' => SORT_DESC])
                         ->asArray()
@@ -182,9 +187,9 @@ class PatientdocumentsController extends ActiveController {
         ];
         $attr = array_merge($post, $attr);
         $patient_document->attributes = $attr;
-        
+
         $encounter = PatEncounter::findOne(['encounter_id' => $post['encounter_id']]);
-        if($encounter->patient_id != $patient->patient_id) {
+        if ($encounter->patient_id != $patient->patient_id) {
             return ['success' => false];
         }
 
@@ -1741,7 +1746,7 @@ class PatientdocumentsController extends ActiveController {
                                     $field1->addAttribute('type', 'DropDowntextbox');
                                     $field1->addAttribute('Backcontrols', 'hide');
                                     $field1->addAttribute('Backdivid', $back_div);
-                                    
+
                                     $subfield = $field1->addChild('FIELD');
                                     $subfield->addAttribute('id', $text_box1);
                                     $subfield->addAttribute('type', 'TextBox');

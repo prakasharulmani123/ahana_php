@@ -212,15 +212,19 @@ class EncounterController extends ActiveController {
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
         if (isset($GET['id'])) {
-            $condition['patient_guid'][$GET['id']] = $GET['id'];
+            $patient = PatPatient::getPatientByGuid($GET['id']);
 
+            $all_patient_id = PatPatient::find()
+                    ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                    ->where(['patient_global_guid' => $patient->patient_global_guid])
+                    ->one();
+
+            $encounter = VEncounter::find()
+                    ->where("patient_id IN ($all_patient_id->allpatient)");
             if (isset($GET['date'])) {
-                $condition['DATE(date)'] = $GET['date'];
+                $encounter->andWhere(['DATE(date)' => $GET['date']]);
             }
-
-            $data = VEncounter::find()
-                    ->where($condition)
-                    ->orderBy(['encounter_id' => SORT_DESC, 'id' => SORT_ASC])
+            $data = $encounter->orderBy(['encounter_id' => SORT_DESC, 'id' => SORT_ASC])
                     ->asArray()
                     ->all();
 
@@ -862,14 +866,14 @@ class EncounterController extends ActiveController {
                 ])->all();
         return $patient;
     }
-    
+
     public function actionGetpendingamount() {
         $get = Yii::$app->getRequest()->get();
         $encounters = VEncounter::find()
-                    ->where(['encounter_id'=>$get['encounter_id']])
-                    ->groupBy('encounter_id')
-                    ->orderBy(['encounter_id' => SORT_DESC])
-                    ->all();
+                ->where(['encounter_id' => $get['encounter_id']])
+                ->groupBy('encounter_id')
+                ->orderBy(['encounter_id' => SORT_DESC])
+                ->all();
         foreach ($encounters as $k => $e) {
             $calculation = $e->encounter->viewChargeCalculation;
         }
