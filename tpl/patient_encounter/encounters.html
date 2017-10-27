@@ -96,6 +96,7 @@
                             </td>
                             <td colspan="6">
                                 <b>
+                                    <span class="badge bg-success">Branch: {{encounter.tenant}}</span>
                                     <span class="badge bg-primary">Encounter: {{encounter.encounter_id}}</span>&nbsp; &nbsp;
                                     <span class="badge bg-black">Date: {{encounter.date| moment:'DD/MM/YYYY'}}</span>&nbsp; &nbsp;
                                     <span class="badge bg-success">{{encounter.encounter_type}}</span>&nbsp; &nbsp;
@@ -105,7 +106,7 @@
                         </tr>
                         <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, item) in encounter.all">
                             <td>
-                                <label ng-show="(item.status == 1 || item.type == 'Seen') && encounter.last_row_sts != 'CD'" class="i-checks m-b-none"><input id="enc_{{item.encounter_id}}{{key}}" class="enc_chk enc_chk_{{item.encounter_id}}" type="checkbox" name="b[]" ng-click="moreOptions(key, item.encounter_id, item.encounter_type, item.row_sts, item.id, item.status, item.is_swap)"><i></i></label>
+                                <label ng-if="item.tenant_id ==app.logged_tenant_id" ng-show="(item.status == 1 || item.type == 'Seen') && encounter.last_row_sts != 'CD'" class="i-checks m-b-none"><input id="enc_{{item.encounter_id}}{{key}}" class="enc_chk enc_chk_{{item.encounter_id}}" type="checkbox" name="b[]" ng-click="moreOptions(key, item.encounter_id, item.encounter_type, item.row_sts, item.id, item.status, item.is_swap)"><i></i></label>
                             </td>
                             <td> {{encounter.encounter_id}} </td>
                             <td>
@@ -167,8 +168,10 @@
                                         </button>
                                     </form>
                                     <div class="buttons" ng-show="!rowform.$visible">
-                                        <a ng-click="rowform.$show();
-                                                    setTimings(key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a><br />
+                                        <a ng-if="item.tenant_id == app.logged_tenant_id" ng-click="rowform.$show();
+                                                    setTimings(key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a>
+                                                    <span ng-if="item.tenant_id != app.logged_tenant_id"> Booked </span>
+                                                    <br />
                                         <!--<span class="text-danger-dk">Waiting!</span>-->
                                     </div>
                                 </div>
@@ -186,7 +189,8 @@
                                         </button>
                                     </form>
                                     <div class="buttons" ng-show="!rowform.$visible">
-                                        <a ng-click="rowform.$show();" class="ng-scope ng-binding editable editable-click"> Arrived </a><br />
+                                        <a ng-if="item.tenant_id == app.logged_tenant_id" ng-click="rowform.$show();" class="ng-scope ng-binding editable editable-click"> Arrived </a>
+                                        <span ng-if="item.tenant_id != app.logged_tenant_id"> Arrived </span><br />
                                     </div>
                                 </div>
                             </td>
@@ -200,7 +204,7 @@
                                     <i class="fa fa-print"></i>
                                 </button>
 
-                                <a check-access-custom3 tooltip="Cancel Clinical Discharge" class="label bg-danger dk" ng-show="(item.status == 1 && item.row_sts == 'CD')"  ng-click="cancelAdmission(item.encounter_id, item.id, item.row_sts)" data-url='patient.cancelLastEncounter'>
+                                <a ng-if="item.tenant_id ==app.logged_tenant_id" check-access-custom3 tooltip="Cancel Clinical Discharge" class="label bg-danger dk" ng-show="(item.status == 1 && item.row_sts == 'CD')"  ng-click="cancelAdmission(item.encounter_id, item.id, item.row_sts)" data-url='patient.cancelLastEncounter'>
                                     <i class="fa fa-remove"></i>
                                 </a>
                             </td>

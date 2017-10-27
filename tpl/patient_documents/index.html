@@ -87,14 +87,15 @@
                             </button>
                         </td>
                         <td colspan="6">
-                            <b> 
-                                <span class="badge bg-primary">Encounter: {{value.encounter_id}}</span>&nbsp; &nbsp; 
+                            <b>
+                                <span class="badge bg-primary">Branch: {{value.tenant_name}}</span>&nbsp; &nbsp;
+                                <span class="badge bg-black">Encounter: {{value.encounter_id}}</span>&nbsp; &nbsp; 
                             </b>
                         </td>
                     </tr>
                     <tr ng-repeat-end ng-show="expanded" ng-repeat="(doc_key, doc) in value.all">
                         <td align="center" valign="middle"></td>
-                        <td valign="middle"> {{doc.date_time| moment:'DD/MM/YYYY - hh:mm A'}} </td>
+                        <td valign="middle"> {{doc.date_time| moment:'DD/MM/YYYY - hh:mm A'}}</td>
                         <td valign="middle"> 
                             <span ng-if="doc.doc_type == 'CH' && doc.status == '0'">
                                 <img ng-src="img/incomplete.gif" title="InComplete"  alt="InComplete" width="" height="" />
@@ -109,11 +110,11 @@
                                     <i class="fa fa-eye"></i>
                                 </a>
                                 &nbsp;&nbsp;&nbsp;
-                                <a class="label bg-dark" title="Edit" check-access  ui-sref="patient.editDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}'})">
+                                <a ng-if="doc.tenant_id ==app.logged_tenant_id" class="label bg-dark" title="Edit" check-access  ui-sref="patient.editDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}'})">
                                     <i class="fa fa-pencil"></i>
                                 </a>
                                 &nbsp;&nbsp;&nbsp;
-                                <button type="button" title="Delete"  ng-click="deleteDocument(doc.doc_id, 'CH')" class="label bg-dark">
+                                <button ng-if="doc.tenant_id ==app.logged_tenant_id" type="button" title="Delete"  ng-click="deleteDocument(doc.doc_id, 'CH')" class="label bg-dark">
                                     <i class="fa fa-trash"></i>
                                 </button>
                                 &nbsp;&nbsp;&nbsp;
@@ -126,11 +127,11 @@
                                     <i class="fa fa-eye"></i>
                                 </a>
                                 &nbsp;&nbsp;&nbsp;
-                                <a class="label bg-dark" title="Edit" check-access  ui-sref="patient.editOtherDocument({id: '{{$state.params.id}}', other_doc_id: '{{doc.doc_id}}'})">
+                                <a class="label bg-dark" ng-if="doc.tenant_id ==app.logged_tenant_id" title="Edit" check-access  ui-sref="patient.editOtherDocument({id: '{{$state.params.id}}', other_doc_id: '{{doc.doc_id}}'})">
                                     <i class="fa fa-pencil"></i>
                                 </a>
                                 &nbsp;&nbsp;&nbsp;
-                                <button type="button" title="Delete"  ng-click="deleteDocument(doc.doc_id, 'OD')" class="label bg-dark">
+                                <button type="button" ng-if="doc.tenant_id ==app.logged_tenant_id" title="Delete"  ng-click="deleteDocument(doc.doc_id, 'OD')" class="label bg-dark">
                                     <i class="fa fa-trash"></i>
                                 </button>
                                 &nbsp;&nbsp;&nbsp;
@@ -144,7 +145,7 @@
                                     <i class="fa fa-download"></i>
                                 </button>
                                 &nbsp;&nbsp;&nbsp;                        
-                                <button type="button" title="Delete"  ng-click="deleteDocument(doc.doc_id, 'SD')" class="label bg-dark">
+                                <button type="button" ng-if="doc.tenant_id ==app.logged_tenant_id" title="Delete"  ng-click="deleteDocument(doc.doc_id, 'SD')" class="label bg-dark">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </span>

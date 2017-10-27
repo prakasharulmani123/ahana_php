@@ -62,8 +62,9 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                         row.doctor = data.doctor;
                                         row.date = data.date;
                                         row.status = data.status;
+                                        row.tenant = data.tenant_name
                                     }
-                                    if (!$scope.activeEncounter && data.status == '1') {
+                                    if (!$scope.activeEncounter && data.status == '1' && data.tenant_id == $scope.app.logged_tenant_id) {
                                         $scope.activeEncounter = data;
                                         if (data.encounter_type == 'OP') {
                                             $scope.activeOPEncounter = $scope.activeEncounter;
@@ -71,6 +72,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                             $scope.activeIPEncounter = $scope.activeEncounter;
                                         }
                                     }
+
                                     row.last_row_sts = data.row_sts;
                                 });
                             });
