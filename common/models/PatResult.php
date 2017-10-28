@@ -125,7 +125,10 @@ class PatResult extends RActiveRecord {
             },
             'created_by' => function ($model) {
                 return $model->createdUser->name;
-            }
+            },
+            'branch_name' => function ($model) {
+                return (isset($model->tenant) ? $model->tenant->tenant_name : '-');
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;

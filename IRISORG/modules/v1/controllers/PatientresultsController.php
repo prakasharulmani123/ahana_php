@@ -54,27 +54,34 @@ class PatientresultsController extends ActiveController {
 
     public function actionGetpatientresults() {
         $get = Yii::$app->getRequest()->get();
-        $user_id = Yii::$app->user->identity->user->user_id;
-
+        
         if (!empty($get)) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
-            $condition = [
-                'patient_id' => $patient->patient_id,
-            ];
 
-            if (isset($get['date'])) {
-                $condition = [
-                    'patient_id' => $patient->patient_id,
-                    'DATE(created_at)' => $get['date'],
-                ];
-            }
-            $result = PatResult::find()
-                    ->tenant()
+            $all_patient_id = PatPatient::find()
+                    ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                    ->where(['patient_global_guid' => $patient->patient_global_guid])
+                    ->one();
+
+            $result = [];
+            $data = PatResult::find()
                     ->active()
-                    ->andWhere($condition)
+                    ->status()
+                    ->where("patient_id IN ($all_patient_id->allpatient)")
+                    ->groupBy('encounter_id')
                     ->orderBy(['encounter_id' => SORT_DESC])
                     ->all();
 
+            foreach ($data as $key => $value) {
+                $details = PatResult::find()
+                        ->active()
+                        ->status()
+                        ->where("patient_id IN ($all_patient_id->allpatient)")
+                        ->andWhere(['encounter_id' => $value->encounter_id])
+                        ->orderBy(['pat_result_id' => SORT_DESC])
+                        ->all();
+                $result[$key] = ['data' => $value, 'all' => $details];
+            }
             return ['success' => true, 'result' => $result];
         }
     }
