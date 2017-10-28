@@ -180,6 +180,10 @@ class PatEncounter extends RActiveRecord {
         return $this->hasMany(PatAppointment::className(), ['encounter_id' => 'encounter_id']);
     }
 
+    public function getPatAppointmentCancel() {
+        return $this->hasOne(PatAppointment::className(), ['encounter_id' => 'encounter_id'])->andWhere(['IN', 'appt_status', ['C']])->orderBy(['created_at' => SORT_DESC]);
+    }
+
     /**
      * @return ActiveQuery
      */
@@ -277,7 +281,7 @@ class PatEncounter extends RActiveRecord {
     }
 
     public function getPatVitals() {
-        return $this->hasOne(PatVitals::className(), ['encounter_id' => 'encounter_id','patient_id' => 'patient_id'])->orderBy(['created_at' => SORT_DESC]);
+        return $this->hasOne(PatVitals::className(), ['encounter_id' => 'encounter_id', 'patient_id' => 'patient_id'])->orderBy(['created_at' => SORT_DESC]);
     }
 
     /**
@@ -483,6 +487,12 @@ class PatEncounter extends RActiveRecord {
             'encounter_status' => function ($model) {
                 return $this->isActiveEncounter();
             },
+            'cancel_appoitment' => function ($model) {
+                return $this->isCancelappointEncounter();
+            },
+            'cancel_admission' => function ($model) {
+                return $this->isCanceladmissionEncounter();
+            },
             'searchEncData' => function ($model) {
                 if (isset($model)) {
                     $isAppointment = $model->getPatLiveAppointmentBooking()->exists();
@@ -525,8 +535,8 @@ class PatEncounter extends RActiveRecord {
                     $parent_fields = ['encounter_id' => 'encounter_id'];
                     break;
                 case 'sale_encounter_id':
-                    $addt_keys = false;
-                    $parent_fields = ['encounter_id' => 'encounter_id'];
+                    $addt_keys = ['cancel_appoitment','cancel_admission'];
+                    $parent_fields = ['encounter_id' => 'encounter_id','encounter_type'=>'encounter_type'];
                     break;
                 case 'encounter_details':
                     $addt_keys = false;
@@ -761,6 +771,14 @@ class PatEncounter extends RActiveRecord {
 
     public function isActiveEncounter() {
         return ((empty($this->patAdmissionDischarge) && empty($this->patAdmissionCancel) && $this->encounter_type == 'IP') || $this->status == '1') ? 1 : 0;
+    }
+
+    public function isCancelappointEncounter() {
+        return (empty($this->patAppointmentCancel) && $this->encounter_type == 'OP') ? false : true;
+    }
+
+    public function isCanceladmissionEncounter() {
+        return (empty($this->patAdmissionCancel) && $this->encounter_type == 'IP') ? false : true;
     }
 
 }
