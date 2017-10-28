@@ -87,33 +87,32 @@ class ProcedureController extends ActiveController {
         if (!empty($get)) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
 
-            $condition = [
-                'patient_id' => $patient->patient_id,
-            ];
+            $all_patient_id = PatPatient::find()
+                    ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                    ->where(['patient_global_guid' => $patient->patient_global_guid])
+                    ->one();
 
-            if (isset($get['date'])) {
-                $condition = [
-                    'patient_id' => $patient->patient_id,
-                    'DATE(proc_date)' => $get['date'],
-                ];
-            }
             $result = [];
-            $data = PatProcedure::find()
-                    ->tenant()
+            $procedure = PatProcedure::find()
                     ->active()
                     ->status()
-                    ->andWhere($condition)
-                    ->groupBy('encounter_id')
+                    ->where("patient_id IN ($all_patient_id->allpatient)");
+            if (isset($get['date'])) {
+                $procedure->andWhere(['DATE(proc_date)' => $get['date']]);
+            }
+            $data = $procedure->groupBy('encounter_id')
                     ->orderBy(['encounter_id' => SORT_DESC])
                     ->all();
 
             foreach ($data as $key => $value) {
-                $details = PatProcedure::find()
-                        ->tenant()
+                $procedure_details = PatProcedure::find()
                         ->active()
                         ->status()
-                        ->andWhere($condition)
-                        ->andWhere(['encounter_id' => $value->encounter_id])
+                        ->where("patient_id IN ($all_patient_id->allpatient)");
+                if (isset($get['date'])) {
+                    $procedure_details->andWhere(['DATE(proc_date)' => $get['date']]);
+                }
+                $details = $procedure_details->andWhere(['encounter_id' => $value->encounter_id])
                         ->orderBy(['proc_date' => SORT_DESC])
                         ->all();
 
@@ -170,7 +169,7 @@ class ProcedureController extends ActiveController {
                     ->andWhere(['encounter_id' => $post['enc_id']])
                     ->orderBy(['proc_date' => SORT_DESC])
                     ->all();
-            return ['procedure'=> $procedure];
+            return ['procedure' => $procedure];
         }
     }
 

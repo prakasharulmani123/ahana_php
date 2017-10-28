@@ -252,6 +252,9 @@ class PatProcedure extends RActiveRecord {
                     return false;
                 }
             },
+            'branch_name' => function ($model) {
+                return (isset($model->tenant) ? $model->tenant->tenant_name : '-');
+            },
         ];
 
         $parent_fields = parent::fields();
@@ -259,7 +262,7 @@ class PatProcedure extends RActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'procedurelist':
-                    $addt_keys = ['procedure_name', 'doctors', 'encounter_id', 'encounter_status', 'short_description', 'full_description', 'concatenate_description'];
+                    $addt_keys = ['procedure_name', 'doctors', 'encounter_id', 'encounter_status', 'short_description', 'full_description', 'concatenate_description', 'branch_name'];
                     $parent_fields = [
                         'tenant_id' => 'tenant_id',
                         'proc_id' => 'proc_id',

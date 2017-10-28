@@ -62,33 +62,32 @@ class PatientnotesController extends ActiveController {
         if (!empty($get)) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
 
-            $condition = [
-                'patient_id' => $patient->patient_id,
-            ];
+            $all_patient_id = PatPatient::find()
+                    ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                    ->where(['patient_global_guid' => $patient->patient_global_guid])
+                    ->one();
 
-            if (isset($get['date'])) {
-                $condition = [
-                    'patient_id' => $patient->patient_id,
-                    'DATE(created_at)' => $get['date'],
-                ];
-            }
             $result = [];
-            $data = PatNotes::find()
-                    ->tenant()
+            $notes = PatNotes::find()
                     ->active()
                     ->status()
-                    ->andWhere($condition)
-                    ->groupBy('encounter_id')
+                    ->where("patient_id IN ($all_patient_id->allpatient)");
+            if (isset($get['date'])) {
+                $notes->andWhere(['DATE(created_at)' => $get['date']]);
+            }
+            $data = $notes->groupBy('encounter_id')
                     ->orderBy(['encounter_id' => SORT_DESC])
                     ->all();
 
             foreach ($data as $key => $value) {
-                $details = PatNotes::find()
-                        ->tenant()
+                $notes_details = PatNotes::find()
                         ->active()
                         ->status()
-                        ->andWhere($condition)
-                        ->andWhere(['encounter_id' => $value->encounter_id])
+                        ->where("patient_id IN ($all_patient_id->allpatient)");
+                if (isset($get['date'])) {
+                    $notes_details->andWhere(['DATE(created_at)' => $get['date']]);
+                }
+                $details = $notes_details->andWhere(['encounter_id' => $value->encounter_id])
                         ->orderBy(['pat_note_id' => SORT_DESC])
                         ->all();
                 $result[$key] = ['data' => $value, 'all' => $details];

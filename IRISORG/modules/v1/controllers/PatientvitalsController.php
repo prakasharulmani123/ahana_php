@@ -72,27 +72,29 @@ class PatientvitalsController extends ActiveController {
         $user_id = Yii::$app->user->identity->user->user_id;
 
         if (!empty($GET)) {
+
             $patient = PatPatient::getPatientByGuid($GET['patient_id']);
+
+            $all_patient_id = PatPatient::find()
+                    ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                    ->where(['patient_global_guid' => $patient->patient_global_guid])
+                    ->one();
+
             $only = $result = $uservitals = [];
             $HaveActEnc = false;
             if (isset($GET['only'])) {
                 $only = explode(',', $GET['only']);
             }
 
-
-            $condition['patient_id'] = $patient->patient_id;
-            if (isset($GET['date'])) {
-                $condition['DATE(vital_time)'] = $GET['date'];
-            }
             if (!$only || in_array('result', $only)) {
-                $data = PatVitals::find()
-                        ->tenant()
+                $vitals = PatVitals::find()
+                        ->where("patient_id IN ($all_patient_id->allpatient)")
                         ->active()
-                        ->status()
-                        ->andWhere($condition)
-//                    ->groupBy('encounter_id')
-                        //->orderBy(['encounter_id' => SORT_DESC])
-                        ->orderBy(['vital_id' => SORT_DESC])
+                        ->status();
+                if (isset($GET['date'])) {
+                    $vitals->andWhere(['DATE(vital_time)' => $GET['date']]);
+                }
+                $data = $vitals->orderBy(['vital_id' => SORT_DESC])
                         ->all();
 
                 $result = array_values(\yii\helpers\ArrayHelper::index($data, null, ['encounter_id', function($element) {

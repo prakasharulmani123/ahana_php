@@ -86,23 +86,20 @@ class PatientconsultantController extends ActiveController {
         if (!empty($get)) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
 
-            $condition = [
-                'patient_id' => $patient->patient_id,
-            ];
+            $all_patient_id = PatPatient::find()
+                    ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                    ->where(['patient_global_guid' => $patient->patient_global_guid])
+                    ->one();
 
-            if (isset($get['date'])) {
-                $condition = [
-                    'patient_id' => $patient->patient_id,
-                    'DATE(consult_date)' => $get['date'],
-                ];
-            }
             $result = [];
-            $data = PatConsultant::find()
-                    ->tenant()
+            $consultant = PatConsultant::find()
                     ->active()
                     ->status()
-                    ->andWhere($condition)
-                    ->andWhere(['or',
+                    ->where("patient_id IN ($all_patient_id->allpatient)");
+            if (isset($get['date'])) {
+                $consultant->andWhere(['DATE(consult_date)' => $get['date']]);
+            }
+            $data = $consultant->andWhere(['or',
                             ['=', 'consultant_id', Yii::$app->user->identity->user_id],
                             ['=', 'created_by', Yii::$app->user->identity->user_id],
                             ['privacy' => '0'],
@@ -112,13 +109,15 @@ class PatientconsultantController extends ActiveController {
                     ->all();
 
             foreach ($data as $key => $value) {
-                $details = PatConsultant::find()
-                        ->tenant()
+                $consultant_details = PatConsultant::find()
                         ->active()
                         ->status()
-                        ->andWhere(['encounter_id' => $value->encounter_id])
-                        ->andWhere($condition)
-                        ->andWhere(['or',
+                        ->where("patient_id IN ($all_patient_id->allpatient)")
+                        ->andWhere(['encounter_id' => $value->encounter_id]);
+                if (isset($get['date'])) {
+                    $consultant_details->andWhere(['DATE(consult_date)' => $get['date']]);
+                }
+                $details = $consultant_details->andWhere(['or',
                                 ['=', 'consultant_id', Yii::$app->user->identity->user_id],
                                 ['=', 'created_by', Yii::$app->user->identity->user_id],
                                 ['privacy' => '0'],

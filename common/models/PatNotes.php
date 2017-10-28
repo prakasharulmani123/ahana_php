@@ -156,6 +156,9 @@ class PatNotes extends RActiveRecord {
             'created_date' => function ($model) {
                 return date('Y-m-d', strtotime($model->created_at));
             },
+            'branch_name' => function ($model) {
+                return (isset($model->tenant) ? $model->tenant->tenant_name : '-');
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;

@@ -185,6 +185,9 @@ class PatConsultant extends RActiveRecord {
             'encounter_status' => function ($model) {
                 return $model->encounter->isActiveEncounter();
             },
+            'branch_name' => function ($model) {
+                return (isset($model->tenant) ? $model->tenant->tenant_name : '-');
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;

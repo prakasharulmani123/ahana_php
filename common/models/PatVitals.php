@@ -135,6 +135,9 @@ class PatVitals extends RActiveRecord {
             'created_date' => function ($model) {
                 return date('Y-m-d', strtotime($model->created_at));
             },
+            'branch_name' => function ($model) {
+                return (isset($model->tenant) ? $model->tenant->tenant_name : '-');
+            },
         ];
 
         $parent_fields = parent::fields();
@@ -159,7 +162,7 @@ class PatVitals extends RActiveRecord {
                         'status' => 'status',
                         'created_at' => 'created_at',
                     ];
-                    $addt_keys = ['encounter_status', 'created_date'];
+                    $addt_keys = ['encounter_status', 'created_date','branch_name'];
                     break;
             endswitch;
         }
