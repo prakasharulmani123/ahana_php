@@ -987,9 +987,9 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata = {};
+                                    <div class="row" ng-init="vitaldata   =   {};
                                         loadVitals();
-                                        vitaldata.formtype = 'add'">
+                                        vitaldata.formtype  =  'add'">
                                         <div class="col-lg-12"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
@@ -1433,7 +1433,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody ng-hide="isLoading">
-                                                            <tr ng-repeat-start="(key, value) in resultdisplayedCollection | groupBy:'encounter_id'" ng-init="expanded = (key == 0) ? true : false;">
+                                                            <tr ng-repeat-start="(key, value) in resultdisplayedCollection" ng-init="expanded = (key == 0) ? true : false;">
                                                                 <td>
                                                                     <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
                                                                         <i ng-if="!expanded" class="fa fa-plus text"></i>
@@ -1442,12 +1442,13 @@
                                                                 </td>
                                                                 <td colspan="4">
                                                                     <b> 
-                                                                        <span class="badge bg-primary">Encounter: {{key}}</span>&nbsp; &nbsp; 
+                                                                        <span class="badge bg-success">Branch: {{value.data.branch_name}}</span>&nbsp; &nbsp;
+                                                                        <span class="badge bg-primary">Encounter: {{value.data.encounter_id}}</span>&nbsp; &nbsp; 
                                                                     </b>
                                                                 </td>
                                                             </tr>
                                                             <!-- | orderBy: pat_note_id:reverse -->
-                                                            <tr ng-repeat-end ng-show="expanded" ng-repeat="result in value">
+                                                            <tr ng-repeat-end ng-show="expanded" ng-repeat="result in value.all">
                                                                 <td align="center" valign="middle"></td>
                                                                 <td valign="middle">
                                                                     <span class="label bg-info">  {{result.created_by}} </span>
@@ -1457,10 +1458,10 @@
                                                                     <div tooltip-placement="left" data-tooltip-html-unsafe="{{result.concatenate_results ? result.full_results : ''}}"> <span ng-bind-html="result.short_results"></span> </div>
                                                                 </td>
                                                                 <td valign="middle">
-                                                                    <a class="label bg-dark" title="Edit" ng-click="updateResultFormRow(result.pat_result_id)">
+                                                                    <a ng-show="result.tenant_id == app.logged_tenant_id" class="label bg-dark" title="Edit" ng-click="updateResultFormRow(result.pat_result_id)">
                                                                         <i class="fa fa-pencil"></i>
                                                                     </a>&nbsp;&nbsp;&nbsp;
-                                                                    <a data-button="patient.noteDelete" check-access-custom class="label bg-dark" title="Delete" ng-click="removeresultRow(result.pat_result_id)">
+                                                                    <a ng-show="result.tenant_id == app.logged_tenant_id" data-button="patient.noteDelete" check-access-custom class="label bg-dark" title="Delete" ng-click="removeresultRow(result.pat_result_id)">
                                                                         <i class="fa fa-trash"></i>
                                                                     </a>
                                                                 </td>

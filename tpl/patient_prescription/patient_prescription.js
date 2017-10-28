@@ -2563,6 +2563,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.isLoading = false;
                         $scope.resultCollection = notes.result;
                         $scope.resultdisplayedCollection = [].concat($scope.resultCollection);
+
+                        angular.forEach($scope.resultCollection, function (row) {
+                            angular.forEach(row.all, function (all) {
+                                var result = $filter('filter')($scope.enabled_dates, moment(all.created_at).format('YYYY-MM-DD'));
+                                if (result.length == 0)
+                                    $scope.enabled_dates.push(moment(all.created_at).format('YYYY-MM-DD'));
+                            });
+                        });
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading patientnote!";
