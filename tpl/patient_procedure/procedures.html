@@ -1,4 +1,4 @@
-<div ng-controller="ProcedureController" ng-init="initProcedureIndex()">
+<div ng-controller="ProcedureController" ng-init="initProcedureIndex(); loadProceduresList();">
 
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n h3">Procedures</h1>
@@ -68,7 +68,8 @@
                                     <i ng-if="expanded" class="fa fa-minus text"></i>
                                 </button>
                             </td>
-                            <td colspan="5"> 
+                            <td colspan="5">
+                                <span class="badge bg-success">Branch: {{value.data.branch_name}}</span>&nbsp; &nbsp; 
                                 <span class="badge bg-primary">Encounter: {{value.data.encounter_id}}</span>&nbsp; &nbsp; 
                             </td>
                         </tr>
@@ -89,10 +90,10 @@
                             <td>
                                 <!--ng-show="enc.selected.status == '1' && enc.selected.encounter_id == value.data.encounter_id"-->
                                 <div ng-if="patProcedure.tenant_id != null && patProcedure.encounter_status">
-                                    <a title="Edit" check-access  ui-sref="patient.edit_procedure({id: $state.params.id, proc_id : patProcedure.proc_id})" class="label bg-info dk">
+                                    <a ng-show="patProcedure.tenant_id == app.logged_tenant_id" title="Edit" check-access  ui-sref="patient.edit_procedure({id: $state.params.id, proc_id : patProcedure.proc_id})" class="label bg-info dk">
                                         <i class="fa fa-pencil"></i>
                                     </a>&nbsp;&nbsp;&nbsp;
-                                    <a data-button="patient.delete_procedure" check-access-custom title="Delete" ng-click="removeRow(patProcedure.proc_id)" class="label bg-dark dk">
+                                    <a ng-show="patProcedure.tenant_id == app.logged_tenant_id" data-button="patient.delete_procedure" check-access-custom title="Delete" ng-click="removeRow(patProcedure.proc_id)" class="label bg-dark dk">
                                         <i class="fa fa-trash"></i>
                                     </a>
                                 </div>

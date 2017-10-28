@@ -60,6 +60,7 @@
                             </button>
                         </td>
                         <td colspan="10">
+                            <span class="badge bg-success">Branch: {{value.branch_name}}</span>&nbsp; &nbsp;
                             <span class="badge bg-primary">Encounter: {{value.encounter_id}}</span>&nbsp; &nbsp;
                         </td>
                     </tr>
@@ -77,10 +78,10 @@
                         <td> {{vital.pain_score || '-'}} </td>
                         <td>
                             <div ng-if="vital.tenant_id != null && vital.encounter_status">
-                                <a class="label bg-info dk" title="Edit" check-access  ui-sref="patient.vitalUpdate({id: '{{$state.params.id}}', vital_id: '{{vital.vital_id}}'})">
+                                <a ng-show="vital.tenant_id == app.logged_tenant_id" class="label bg-info dk" title="Edit" check-access  ui-sref="patient.vitalUpdate({id: '{{$state.params.id}}', vital_id: '{{vital.vital_id}}'})">
                                     <i class="fa fa-pencil"></i>
                                 </a>&nbsp;&nbsp;&nbsp;
-                                <a title="Delete" ng-click="removeRow(vital)" class="label bg-dark dk">
+                                <a ng-show="vital.tenant_id == app.logged_tenant_id" title="Delete" ng-click="removeRow(vital)" class="label bg-dark dk">
                                     <i class="fa fa-trash"></i>
                                 </a>
                             </div>

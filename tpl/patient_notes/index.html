@@ -58,6 +58,7 @@
                         </td>
                         <td colspan="4">
                             <b> 
+                                <span class="badge bg-success">Branch: {{value.data.branch_name}}</span>&nbsp; &nbsp;
                                 <span class="badge bg-primary">Encounter: {{value.data.encounter_id}}</span>&nbsp; &nbsp; 
                             </b>
                         </td>
@@ -75,10 +76,10 @@
                             <a class="label bg-dark" title="View" check-access  ui-sref="patient.noteView({id: '{{$state.params.id}}', note_id: '{{note.pat_note_id}}'})">
                                 <i class="fa fa-eye"></i>
                             </a>&nbsp;&nbsp;&nbsp;
-                            <a class="label bg-dark" title="Edit" check-access  ui-sref="patient.noteUpdate({id: '{{$state.params.id}}', note_id: '{{note.pat_note_id}}'})">
+                            <a ng-show="note.tenant_id == app.logged_tenant_id" class="label bg-dark" title="Edit" check-access  ui-sref="patient.noteUpdate({id: '{{$state.params.id}}', note_id: '{{note.pat_note_id}}'})">
                                 <i class="fa fa-pencil"></i>
                             </a>&nbsp;&nbsp;&nbsp;
-                            <a data-button="patient.noteDelete" check-access-custom class="label bg-dark" title="Delete" ng-click="removeRow(note.pat_note_id)">
+                            <a ng-show="note.tenant_id == app.logged_tenant_id" data-button="patient.noteDelete" check-access-custom class="label bg-dark" title="Delete" ng-click="removeRow(note.pat_note_id)">
                                 <i class="fa fa-trash"></i>
                             </a>
                             <!--                            </div>-->

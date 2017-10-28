@@ -2257,6 +2257,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             angular.forEach(row.all, function (all) {
                                 if (!row.encounter_id)
                                     row.encounter_id = all.encounter_id;
+                                if (!row.branch_name)
+                                    row.branch_name = all.branch_name;
                             });
                         });
                         $scope.setvitalgraph();
