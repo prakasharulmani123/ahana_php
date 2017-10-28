@@ -41,9 +41,12 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 if (newValue != '') {
                     $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
                         angular.forEach(response, function (resp) {
+                            if(((resp.encounter_type=='IP') && (!resp.cancel_admission)) || ((resp.encounter_type=='OP') && (!resp.cancel_appoitment))) {
+                                $scope.encounters_list.push(resp);
+                            }
                             resp.encounter_id = resp.encounter_id.toString();
                         });
-                        $scope.encounters_list = response;
+                        //$scope.encounters_list = response;
                         if (response != '')
                             $scope.add_doc_encounter_id = response[0].encounter_id;
                     }, 'sale_encounter_id');
