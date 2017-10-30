@@ -67,7 +67,7 @@ class PatientdocumentsController extends ActiveController {
     public function actionGetdocument() {
         $get = Yii::$app->getRequest()->get();
         if (!empty($get)) {
-            $result = PatDocuments::find()->tenant()->andWhere(['doc_id' => $get['doc_id']])->one();
+            $result = PatDocuments::find()->andWhere(['doc_id' => $get['doc_id']])->one();
             return ['success' => true, 'result' => $result];
         }
     }
