@@ -154,7 +154,7 @@ class PatPrescription extends RActiveRecord {
                 if (isset($model->diagnosis)) {
                     $result = '';
                     if ($model->diagnosis->diag_name != '') {
-                        $result .= $model->diagnosis->diag_name.' - ';
+                        $result .= $model->diagnosis->diag_name . ' - ';
                     }
                     if ($model->diagnosis->diag_description != '') {
                         $result .= $model->diagnosis->diag_description;
@@ -164,7 +164,10 @@ class PatPrescription extends RActiveRecord {
             },
             'allergies' => function ($model) {
                 return (isset($model->allergies) ? $model->allergies->notes : '');
-            }
+            },
+            'branch_name' => function ($model) {
+                return (isset($model->tenant) ? $model->tenant->tenant_name : '-');
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;

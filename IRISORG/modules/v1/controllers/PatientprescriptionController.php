@@ -134,18 +134,62 @@ class PatientprescriptionController extends ActiveController {
             $offset = abs($get['pageIndex'] - 1) * $get['pageSize'];
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
 
+            $all_patient_id = PatPatient::find()
+                    ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                    ->where(['patient_global_guid' => $patient->patient_global_guid])
+                    ->one();
+
             if (isset($get['encounter_id'])) {
                 $encounter_id = $get['encounter_id'];
-                $data = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $encounter_id])->orderBy(['created_at' => SORT_DESC])->limit($get['pageSize'])->offset($offset)->all();
-                $totalCount = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $encounter_id])->orderBy(['created_at' => SORT_DESC])->limit($get['pageSize'])->offset($offset)->count();
+                $data = PatPrescription::find()->tenant()
+                        ->active()
+                        ->where("patient_id IN ($all_patient_id->allpatient)")
+                        ->andWhere(['encounter_id' => $encounter_id])
+                        ->orderBy(['created_at' => SORT_DESC])->limit($get['pageSize'])
+                        ->offset($offset)
+                        ->all();
+                $totalCount = PatPrescription::find()->tenant()
+                        ->active()
+                        ->where("patient_id IN ($all_patient_id->allpatient)")
+                        ->andWhere(['encounter_id' => $encounter_id])
+                        ->orderBy(['created_at' => SORT_DESC])
+                        ->limit($get['pageSize'])
+                        ->offset($offset)
+                        ->count();
             } else {
                 if (isset($get['date']) && $get['date'] != "") {
                     $pres_date = $get['date'];
-                    $data = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id, 'DATE(pres_date)' => $pres_date])->orderBy(['created_at' => SORT_DESC])->limit($get['pageSize'])->offset($offset)->all();
-                    $totalCount = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id, 'DATE(pres_date)' => $pres_date])->orderBy(['created_at' => SORT_DESC])->limit($get['pageSize'])->offset($offset)->count();
+                    $data = PatPrescription::find()->tenant()
+                            ->active()
+                            ->where("patient_id IN ($all_patient_id->allpatient)")
+                            ->andWhere(['DATE(pres_date)' => $pres_date])
+                            ->orderBy(['created_at' => SORT_DESC])
+                            ->limit($get['pageSize'])
+                            ->offset($offset)
+                            ->all();
+                    $totalCount = PatPrescription::find()->tenant()
+                            ->active()
+                            ->where("patient_id IN ($all_patient_id->allpatient)")
+                            ->andWhere(['DATE(pres_date)' => $pres_date])
+                            ->orderBy(['created_at' => SORT_DESC])
+                            ->limit($get['pageSize'])
+                            ->offset($offset)
+                            ->count();
                 } else {
-                    $data = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id])->orderBy(['created_at' => SORT_DESC])->limit($get['pageSize'])->offset($offset)->all();
-                    $totalCount = PatPrescription::find()->tenant()->active()->andWhere(['patient_id' => $patient->patient_id])->orderBy(['created_at' => SORT_DESC])->limit($get['pageSize'])->offset($offset)->count();
+                    $data = PatPrescription::find()->tenant()
+                            ->active()
+                            ->where("patient_id IN ($all_patient_id->allpatient)")
+                            ->orderBy(['created_at' => SORT_DESC])
+                            ->limit($get['pageSize'])
+                            ->offset($offset)
+                            ->all();
+                    $totalCount = PatPrescription::find()->tenant()
+                            ->active()
+                            ->where("patient_id IN ($all_patient_id->allpatient)")
+                            ->orderBy(['created_at' => SORT_DESC])
+                            ->limit($get['pageSize'])
+                            ->offset($offset)
+                            ->count();
                 }
             }
             return ['success' => true, 'prescriptions' => $data, 'totalCount' => $totalCount];

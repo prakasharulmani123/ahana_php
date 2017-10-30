@@ -260,6 +260,15 @@ class PatPatient extends RActiveRecord {
         return $this->hasOne(PatGlobalPatient::className(), ['patient_global_guid' => 'patient_global_guid']);
     }
 
+    public function getPatatleastoneencounter() {
+        $all_patient_id = PatPatient::find()
+                ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                ->where(['patient_global_guid' => $this->patient_global_guid])
+                ->one();
+        return PatEncounter::find()
+                        ->where("patient_id IN ($all_patient_id->allpatient)")->count();
+    }
+
     public function beforeSave($insert) {
         if (!empty($this->patient_dob))
             $this->patient_dob = date('Y-m-d', strtotime(str_replace("/", "-", $this->patient_dob)));
@@ -587,7 +596,7 @@ class PatPatient extends RActiveRecord {
             },
             'current_room_type_id' => function ($model) {
                 return $model->current_room_Type;
-            },        
+            },
             'last_consultant_id' => function ($model) {
                 return isset($model->patLastAppointment) ? $model->patLastAppointment->consultant_id : '';
             },
@@ -609,7 +618,11 @@ class PatPatient extends RActiveRecord {
                 return (isset($model->patHaveEncounter));
             },
             'have_atleast_encounter' => function($model) {
-                return (isset($model->patHaveOneEncounter));
+                if ($model->patatleastoneencounter == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
             },
             'encounter_type' => function($model) {
                 return (isset($model->patHaveEncounter)) ? $model->patHaveEncounter->encounter_type : '';
@@ -698,6 +711,7 @@ class PatPatient extends RActiveRecord {
     public function getHasalert() {
         return (!empty($this->activePatientAlert)) ? true : false;
     }
+
     public function getHasallergies() {
         return (!empty($this->activePatientAllergies)) ? true : false;
     }
@@ -721,7 +735,7 @@ class PatPatient extends RActiveRecord {
             return '-';
         }
     }
-    
+
     public function getCurrent_room_type() {
         if (isset($this->patActiveIp)) {
             $admission = $this->patActiveIp->patCurrentAdmission;
