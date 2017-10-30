@@ -572,6 +572,9 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $this.parents("span").remove();
                         //$this.parents("div").remove();
                     }
+                    if ($this.text().trim()== '|') {
+                        $this.parents("span").remove();
+                    }
                 });
 
                 //Header2
