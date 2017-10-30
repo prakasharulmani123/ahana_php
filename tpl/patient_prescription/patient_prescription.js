@@ -85,7 +85,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         resp.encounter_id = resp.encounter_id.toString();
                     });
                     $scope.encounters = response;
-                    if (response != null) {
+                    if (response.length > 0) {
                         $scope.spinnerbar('hide');
                         $scope.enc.selected = $scope.encounters[0];
                         if ($scope.encounters[0].encounter_type == 'IP') {
@@ -99,6 +99,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.all_encounters = actEnc;
                         $scope.data.encounter_id = $scope.enc.selected.encounter_id;
                         $scope.default_encounter_id = $scope.data.encounter_id;
+                        $scope.checkVitalaccess();
+                    } else {
+                        $scope.spinnerbar('hide');
+                        $scope.getConsultantFreq();
+                        $scope.loadPrevPrescriptionsList();
                         $scope.checkVitalaccess();
                     }
                 }, 'prescription');
@@ -1285,57 +1290,59 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                 });
                                                 $scope.data.prescriptionItems = typed_prescription;
                                             } else {
-                                                var loop_total = $scope.rowCollection[0].items.length;
-                                                var loop_start = 0;
-                                                angular.forEach($scope.rowCollection[0].items, function (item, k) {
-                                                    $scope.getRelatedProducts(item.generic_id).then(function () {
-                                                        qty_count = $scope.calculate_qty(item.frequency_name, item.number_of_days, item.product.product_description_id, item.product.description_name);
-                                                        items = {
-                                                            'product_id': item.product_id,
-                                                            'product_name': item.product.full_name,
-                                                            'generic_id': item.generic_id,
-                                                            'generic_name': item.generic_name,
-                                                            'drug_class_id': item.drug_class_id,
-                                                            'drug_name': item.drug_name,
-                                                            'manual_textbox': false,
-                                                            'route': item.route_name,
-                                                            'frequency': item.frequency_name,
-                                                            'number_of_days': 0,
-                                                            'food_type': item.food_type,
-                                                            'is_favourite': 0,
-                                                            'route_id': item.route_id,
-                                                            'description_routes': item.product.description_routes,
-                                                            'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
-                                                            'price': item.product.latest_price,
-                                                            'total': $scope.calculate_price(qty_count, item.product.latest_price),
-                                                            'freqMask': '9-9-9-9',
-                                                            'freqMaskCount': 4,
-                                                            'available_quantity': item.product.availableQuantity,
-                                                            'item_key': k,
-                                                            'all_products': $scope.products,
-                                                            'qty': qty_count,
-                                                            'product_description_id': item.product.product_description_id,
-                                                            'description_name': item.product.description_name,
-                                                            'in_stock': (parseInt(item.product.availableQuantity) > parseInt(qty_count)),
-                                                            'freqType': item.freqType
-                                                        };
-                                                        var fav = $filter('filter')($scope.child.favourites, {product_id: item.product_id});
-                                                        if (fav.length > 0) {
-                                                            angular.extend(items, {is_favourite: 1});
-                                                        }
+                                                if ($scope.rowCollection[0].tenant_id == $scope.app.logged_tenant_id) {
+                                                    var loop_total = $scope.rowCollection[0].items.length;
+                                                    var loop_start = 0;
+                                                    angular.forEach($scope.rowCollection[0].items, function (item, k) {
+                                                        $scope.getRelatedProducts(item.generic_id).then(function () {
+                                                            qty_count = $scope.calculate_qty(item.frequency_name, item.number_of_days, item.product.product_description_id, item.product.description_name);
+                                                            items = {
+                                                                'product_id': item.product_id,
+                                                                'product_name': item.product.full_name,
+                                                                'generic_id': item.generic_id,
+                                                                'generic_name': item.generic_name,
+                                                                'drug_class_id': item.drug_class_id,
+                                                                'drug_name': item.drug_name,
+                                                                'manual_textbox': false,
+                                                                'route': item.route_name,
+                                                                'frequency': item.frequency_name,
+                                                                'number_of_days': 0,
+                                                                'food_type': item.food_type,
+                                                                'is_favourite': 0,
+                                                                'route_id': item.route_id,
+                                                                'description_routes': item.product.description_routes,
+                                                                'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
+                                                                'price': item.product.latest_price,
+                                                                'total': $scope.calculate_price(qty_count, item.product.latest_price),
+                                                                'freqMask': '9-9-9-9',
+                                                                'freqMaskCount': 4,
+                                                                'available_quantity': item.product.availableQuantity,
+                                                                'item_key': k,
+                                                                'all_products': $scope.products,
+                                                                'qty': qty_count,
+                                                                'product_description_id': item.product.product_description_id,
+                                                                'description_name': item.product.description_name,
+                                                                'in_stock': (parseInt(item.product.availableQuantity) > parseInt(qty_count)),
+                                                                'freqType': item.freqType
+                                                            };
+                                                            var fav = $filter('filter')($scope.child.favourites, {product_id: item.product_id});
+                                                            if (fav.length > 0) {
+                                                                angular.extend(items, {is_favourite: 1});
+                                                            }
 
-                                                        PrescriptionService.addPrescriptionItem(items);
-                                                        loop_start = parseFloat(loop_start) + parseFloat(1);
-                                                        if (loop_total == loop_start) {
-                                                            $timeout(function () {
-                                                                $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
-                                                            }, 1000);
-                                                            $timeout(function () {
-                                                                $scope.showOrhideFrequency();
-                                                            }, 2000);
-                                                        }
+                                                            PrescriptionService.addPrescriptionItem(items);
+                                                            loop_start = parseFloat(loop_start) + parseFloat(1);
+                                                            if (loop_total == loop_start) {
+                                                                $timeout(function () {
+                                                                    $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+                                                                }, 1000);
+                                                                $timeout(function () {
+                                                                    $scope.showOrhideFrequency();
+                                                                }, 2000);
+                                                            }
+                                                        });
                                                     });
-                                                });
+                                                }
                                             }
                                         }
                                     } else {

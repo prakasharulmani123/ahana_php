@@ -9,6 +9,7 @@
             </th>
             <th>&nbsp;</th>
             <th>Prescription Date</th>
+            <th>Branch Name</th>
             <th>Consultant Name</th>
             <th>Next Visit</th>
             <th style="width: 20%">Diagnosis</th>
@@ -26,12 +27,13 @@
                 </button>
             </td>
             <td>
-                <label class="i-checks"> 
+                <label ng-if="value.tenant_id == app.logged_tenant_id" class="i-checks"> 
                     <input ng-model="row.selected" ng-true-value="'1'" ng-false-value="'0'" ng-checked="value.selected == '1'"  type="checkbox" name="checkall" class="prevprescheckbox prevprescheckbox_{{pres_key}}" ng-click="updateCheckbox(row, pres_key)"> 
                     <i></i> 
                 </label>&nbsp; &nbsp;
             </td>
             <td>{{value.pres_date}}</td>
+            <td>{{value.branch_name}}</td>
             <td>{{value.consultant_name}}</td>
             <td>{{value.next_visit}}</td>
             <td>{{value.diag_name}}</td>
@@ -40,7 +42,7 @@
                 <button tooltip="Print Bill"  class="label bg-primary dk" ng-click="printPres(value.pres_id)">
                     <i class="fa fa-print"></i>
                 </button>
-                <a data-button="patient.prescriptionDelete" check-access-custom title="Delete Prescription" ng-click="removeRow(value.pres_id)" class="label bg-dark dk">
+                <a ng-if="value.tenant_id == app.logged_tenant_id" data-button="patient.prescriptionDelete" check-access-custom title="Delete Prescription" ng-click="removeRow(value.pres_id)" class="label bg-dark dk">
                     <i class="fa fa-trash"></i>
                 </a>
             </td>
@@ -65,7 +67,7 @@
                     <tbody>
                         <tr ng-repeat="(gKey, row) in value.items | orderBy: prescriptionitem" class="tr_prevprescheckbox tr_prevprescheckbox_{{pres_key}}">
                             <td>
-                                <label class="i-checks"> 
+                                <label ng-if="value.tenant_id == app.logged_tenant_id" class="i-checks"> 
                                     <input ng-model="row.selected" ng-true-value="'1'" ng-false-value="'0'" ng-checked="row.selected == '1'" class="prevprescheckbox prevprescheckbox_{{pres_key}}" id="prevpres_{{pres_key}}_{{gKey}}" type="checkbox" name="status" ng-click="moreOptions(pres_key, gKey, row)"> 
                                     <i></i> 
                                 </label>
