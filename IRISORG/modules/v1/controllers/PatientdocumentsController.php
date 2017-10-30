@@ -837,7 +837,7 @@ class PatientdocumentsController extends ActiveController {
                             foreach ($list_referral_details as $list_value) {
                                 if (in_array($list_value, $post_referral_details)) {
                                     $list_value->attributes()['Selected'] = 'true';
-                                    if ($list_value == 'Others' || $list_value == 'Personal' || $list_value == 'Social' || $list_value == 'Test' || $list_value == 'Immediate' || $list_value == 'Recent' || $list_value == 'Remote' || $list_value == 'Catatonic') {
+                                    if ($list_value == 'Others' || $key == 'referral_details' || $list_value == 'Personal' || $list_value == 'Social' || $list_value == 'Test' || $list_value == 'Immediate' || $list_value == 'Recent' || $list_value == 'Remote' || $list_value == 'Catatonic') {
                                         $x->attributes()['Backcontrols'] = 'show';
                                     }
                                 } else {
