@@ -627,7 +627,7 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 	margin-right:-1px;
 	margin-bottom: -1px;
 }
-.prescription-new li:last-child a {
+.prescription-new .nav-tabs > li:last-child a {
 	padding:11px 5px 10px 5px
 }
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
