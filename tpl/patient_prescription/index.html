@@ -935,8 +935,7 @@
                                                             <button class="btn m-b-xs btn-grey"  ng-disabled=" (day && month && year) ? false : true" ng-click="loadPrevPrescriptionsList(year + '-' + month + '-' + day)">
                                                                 &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
                                                             </button>
-                                                            <button ng-click="filterdate = '';
-                                                                loadPrevPrescriptionsList()" class="btn m-b-xs  btn-dark">  
+                                                            <button ng-click="day = ''; month = ''; year = '';loadPrevPrescriptionsList()" class="btn m-b-xs  btn-dark">  
                                                                 <i class="fa fa-times"></i> 
                                                             </button>
                                                         </div>    
