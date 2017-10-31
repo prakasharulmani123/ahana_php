@@ -7,50 +7,50 @@
         <div class="row wrapper">
             <div class="col-sm-6">
                 <div class="form-inline">
-                    
-                     <div class="input-group">
-                                <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatDocumentsList(filterdate);"/>
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                </span>
-                            </div>
-                            
-                        
-                            <button title="Clear" ng-click="filterdate = '';
-                                    loadPatDocumentsList()" class="btn btn-dark">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        
-                    
+                    <!--                    <div class="input-group">
+                                            <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatDocumentsList(filterdate);"/>
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                            </span>
+                                        </div>-->
+                    <select class="form-control search-dropdown" ng-model="day" ng-options="day.value as day.label for day in days">
+                        <option value="">DD</option>
+                    </select>
+                    <select class="form-control search-dropdown" ng-model="month" ng-options="month.value as month.label for month in months">
+                        <option value="">MM</option>
+                    </select>
+                    <select class="form-control search-dropdown" ng-model="year" ng-options="year.value as year.label for year in years">
+                        <option value="">YYYY</option>
+                    </select>
+                    <button class="btn m-b-xs btn-grey"  ng-disabled=" (day&&month&&year) ?  false : true" ng-click="loadPatDocumentsList(year+'-'+month+'-'+day)">
+                            &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
+                        </button>
+                    <button title="Clear" ng-click="day='';month='';year='';loadPatDocumentsList()" class="btn btn-dark">
+                        <i class="fa fa-times"></i>
+                    </button>
+
                 </div>
-               
-                        
-                
+
                 <div class="form-horizontal">
-                    
+
                 </div>
             </div>
-            
+
             <div class="col-sm-6   text-right"> 
-            
-            <form role="form" class="form-inline" name="createForm" novalidate>
-                            
-                       
-                            <!--<label><b> Encounter # :</b></label>-->
-                            <select class="selectpicker" data-live-search="true" ng-model="add_doc_encounter_id" ng-options="encounter_list.encounter_id as encounter_list.encounter_id for encounter_list in encounters_list" required>
-                                <option value="">Select Encounter Id</option>
-                            </select>
-                      
-                       
-<!--                            <label><b> Document Type : </b></label>-->
-                            <select class="form-control" name="add_document" ng-model="add_document" ng-options="document.value as document.label for document in documents" required>
-                            <option value="">Document Type </option>
-                            </select> 
-                       
-                        <button class="btn btn-info" ng-disabled="createForm.$invalid"  ng-click="switchAddDocument()"> 
-                            <i class="fa fa-plus"></i> Create Document 
-                        </button>
-                    </form>
+                <form role="form" class="form-inline" name="createForm" novalidate>
+                    <!--<label><b> Encounter # :</b></label>-->
+                    <select class="selectpicker" data-live-search="true" ng-model="add_doc_encounter_id" ng-options="encounter_list.encounter_id as encounter_list.encounter_id for encounter_list in encounters_list" required>
+                        <option value="">Select Encounter Id</option>
+                    </select>
+                    <!--                            <label><b> Document Type : </b></label>-->
+                    <select class="form-control" name="add_document" ng-model="add_document" ng-options="document.value as document.label for document in documents" required>
+                        <option value="">Document Type </option>
+                    </select> 
+
+                    <button class="btn btn-info" ng-disabled="createForm.$invalid"  ng-click="switchAddDocument()"> 
+                        <i class="fa fa-plus"></i> Create Document 
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -110,16 +110,16 @@
                                     <i class="fa fa-eye"></i>
                                 </a>
                                 &nbsp;&nbsp;&nbsp;
-                                <a ng-if="doc.tenant_id ==app.logged_tenant_id" class="label bg-dark" title="Edit" check-access  ui-sref="patient.editDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}'})">
+                                <a ng-if="doc.tenant_id == app.logged_tenant_id" class="label bg-dark" title="Edit" check-access  ui-sref="patient.editDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}'})">
                                     <i class="fa fa-pencil"></i>
                                 </a>
                                 &nbsp;&nbsp;&nbsp;
-                                <button ng-if="doc.tenant_id ==app.logged_tenant_id" type="button" title="Delete"  ng-click="deleteDocument(doc.doc_id, 'CH')" class="label bg-dark">
+                                <button ng-if="doc.tenant_id == app.logged_tenant_id" type="button" title="Delete"  ng-click="deleteDocument(doc.doc_id, 'CH')" class="label bg-dark">
                                     <i class="fa fa-trash"></i>
                                 </button>
                                 &nbsp;&nbsp;&nbsp;
                                 <button title="Print"  class="label bg-dark" ng-click="printCasedocument(doc.doc_id)">
-                                <i class="fa fa-print"></i>
+                                    <i class="fa fa-print"></i>
                                 </button>
                             </span>
                             <span ng-if="doc.doc_type == 'OD'">
@@ -127,16 +127,16 @@
                                     <i class="fa fa-eye"></i>
                                 </a>
                                 &nbsp;&nbsp;&nbsp;
-                                <a class="label bg-dark" ng-if="doc.tenant_id ==app.logged_tenant_id" title="Edit" check-access  ui-sref="patient.editOtherDocument({id: '{{$state.params.id}}', other_doc_id: '{{doc.doc_id}}'})">
+                                <a class="label bg-dark" ng-if="doc.tenant_id == app.logged_tenant_id" title="Edit" check-access  ui-sref="patient.editOtherDocument({id: '{{$state.params.id}}', other_doc_id: '{{doc.doc_id}}'})">
                                     <i class="fa fa-pencil"></i>
                                 </a>
                                 &nbsp;&nbsp;&nbsp;
-                                <button type="button" ng-if="doc.tenant_id ==app.logged_tenant_id" title="Delete"  ng-click="deleteDocument(doc.doc_id, 'OD')" class="label bg-dark">
+                                <button type="button" ng-if="doc.tenant_id == app.logged_tenant_id" title="Delete"  ng-click="deleteDocument(doc.doc_id, 'OD')" class="label bg-dark">
                                     <i class="fa fa-trash"></i>
                                 </button>
                                 &nbsp;&nbsp;&nbsp;
                                 <button title="Print"  class="label bg-dark" id="print" ng-click="printOtherdocument(doc.doc_id)">
-                                <i class="fa fa-print"></i>
+                                    <i class="fa fa-print"></i>
                                 </button>
                             </span>
                             <span ng-if="doc.doc_type == 'SD'">
@@ -145,7 +145,7 @@
                                     <i class="fa fa-download"></i>
                                 </button>
                                 &nbsp;&nbsp;&nbsp;                        
-                                <button type="button" ng-if="doc.tenant_id ==app.logged_tenant_id" title="Delete"  ng-click="deleteDocument(doc.doc_id, 'SD')" class="label bg-dark">
+                                <button type="button" ng-if="doc.tenant_id == app.logged_tenant_id" title="Delete"  ng-click="deleteDocument(doc.doc_id, 'SD')" class="label bg-dark">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </span>

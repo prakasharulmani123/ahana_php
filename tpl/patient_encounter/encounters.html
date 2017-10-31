@@ -45,23 +45,29 @@
                 </div>
 
                 <div class="{{class3}}" ng-hide="isLoading">
-                    <div class="row">
-                        <div class="col-sm-9">
-                            <div class="input-group">
-                                <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatientEncounters('Current', filterdate);"/>
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                </span>
-                            </div>
-                        </div>
+                    <!--                            <div class="input-group">
+                                                    <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatientEncounters('Current', filterdate);"/>
+                                                    <span class="input-group-btn">
+                                                        <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                                    </span>
+                                                </div>-->
+                    <select class="form-control search-dropdown" ng-model="day" ng-options="day.value as day.label for day in days">
+                        <option value="">DD</option>
+                    </select>
+                    <select class="form-control search-dropdown" ng-model="month" ng-options="month.value as month.label for month in months">
+                        <option value="">MM</option>
+                    </select>
+                    <select class="form-control search-dropdown" ng-model="year" ng-options="year.value as year.label for year in years">
+                        <option value="">YYYY</option>
+                    </select>
+                    <button class="btn m-b-xs btn-grey"  ng-disabled=" (day && month && year) ? false : true" ng-click="loadPatientEncounters('Current', year + '-' + month + '-' + day)">
+                        &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
+                    </button>
 
-                        <div class="col-sm-3">
-                            <button title="Clear" ng-click="filterdate = '';
-                                    loadPatientEncounters('Current')" class="btn m-b-xs  btn-dark">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
+                    <button title="Clear" ng-click="day = ''; month = ''; year = ''; loadPatientEncounters('Current')" class="btn m-b-xs  btn-dark">
+                        <i class="fa fa-times"></i>
+                    </button>
+
                 </div>
             </div>
 
@@ -106,7 +112,7 @@
                         </tr>
                         <tr ng-repeat-end ng-show="expanded" ng-repeat="(key, item) in encounter.all">
                             <td>
-                                <label ng-if="item.tenant_id ==app.logged_tenant_id" ng-show="(item.status == 1 || item.type == 'Seen') && encounter.last_row_sts != 'CD'" class="i-checks m-b-none"><input id="enc_{{item.encounter_id}}{{key}}" class="enc_chk enc_chk_{{item.encounter_id}}" type="checkbox" name="b[]" ng-click="moreOptions(key, item.encounter_id, item.encounter_type, item.row_sts, item.id, item.status, item.is_swap)"><i></i></label>
+                                <label ng-if="item.tenant_id == app.logged_tenant_id" ng-show="(item.status == 1 || item.type == 'Seen') && encounter.last_row_sts != 'CD'" class="i-checks m-b-none"><input id="enc_{{item.encounter_id}}{{key}}" class="enc_chk enc_chk_{{item.encounter_id}}" type="checkbox" name="b[]" ng-click="moreOptions(key, item.encounter_id, item.encounter_type, item.row_sts, item.id, item.status, item.is_swap)"><i></i></label>
                             </td>
                             <td> {{encounter.encounter_id}} </td>
                             <td>
@@ -163,15 +169,15 @@
                                             <span class="glyphicon glyphicon-ok"></span>
                                         </button>
                                         <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel();
-                                                    setTimings(key, 'unset')" class="btn btn-default btn-sm">
+                                            setTimings(key, 'unset')" class="btn btn-default btn-sm">
                                             <span class="glyphicon glyphicon-remove"></span>
                                         </button>
                                     </form>
                                     <div class="buttons" ng-show="!rowform.$visible">
                                         <a ng-if="item.tenant_id == app.logged_tenant_id" ng-click="rowform.$show();
-                                                    setTimings(key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a>
-                                                    <span ng-if="item.tenant_id != app.logged_tenant_id"> Booked </span>
-                                                    <br />
+                                            setTimings(key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a>
+                                        <span ng-if="item.tenant_id != app.logged_tenant_id"> Booked </span>
+                                        <br />
                                         <!--<span class="text-danger-dk">Waiting!</span>-->
                                     </div>
                                 </div>
@@ -204,7 +210,7 @@
                                     <i class="fa fa-print"></i>
                                 </button>
 
-                                <a ng-if="item.tenant_id ==app.logged_tenant_id" check-access-custom3 tooltip="Cancel Clinical Discharge" class="label bg-danger dk" ng-show="(item.status == 1 && item.row_sts == 'CD')"  ng-click="cancelAdmission(item.encounter_id, item.id, item.row_sts)" data-url='patient.cancelLastEncounter'>
+                                <a ng-if="item.tenant_id == app.logged_tenant_id" check-access-custom3 tooltip="Cancel Clinical Discharge" class="label bg-danger dk" ng-show="(item.status == 1 && item.row_sts == 'CD')"  ng-click="cancelAdmission(item.encounter_id, item.id, item.row_sts)" data-url='patient.cancelLastEncounter'>
                                     <i class="fa fa-remove"></i>
                                 </a>
                             </td>

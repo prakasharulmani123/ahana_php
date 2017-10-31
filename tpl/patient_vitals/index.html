@@ -5,27 +5,35 @@
 <div class="wrapper-md" ng-controller="VitalsController" ng-init="loadPatVitalsList()">
     <div class="panel panel-default">
         <div class="row wrapper">
-            <div class="col-sm-8 col-lg-9">
+            <div class="col-sm-6">
                 <button class="btn btn-info" ng-show="HaveActEnc" ng-click="$state.go('patient.vitalCreate', {id: $state.params.id})">
                     <i class="fa fa-plus"></i> Create Vital
                 </button>
             </div>
-            <div class="col-sm-4 col-lg-3">
-                <div class="row">
-                    <div class="col-sm-9 col-lg-9">
-                        <div class="input-group">
-                            <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatVitalsList(filterdate);"/>
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-sm-3 ">
-                        <button ng-click="filterdate = ''; loadPatVitalsList()" class="btn m-b-xs btn-dark">
-                            <i class="fa fa-times"></i>
-                        </button>
-                    </div>
-                </div>
+            <div class="col-sm-6 text-right">
+                    <select class="form-control search-dropdown" ng-model="day" ng-options="day.value as day.label for day in days">
+                        <option value="">DD</option>
+                    </select>
+                    <select class="form-control search-dropdown" ng-model="month" ng-options="month.value as month.label for month in months">
+                        <option value="">MM</option>
+                    </select>
+                    <select class="form-control search-dropdown" ng-model="year" ng-options="year.value as year.label for year in years">
+                        <option value="">YYYY</option>
+                    </select>
+                    <!--                        <div class="input-group">
+                                                <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatVitalsList(filterdate);"/>
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                                </span>
+                                            </div>-->
+
+                    <button class="btn m-b-xs btn-grey"  ng-disabled=" (day && month && year) ? false : true" ng-click="loadPatVitalsList(year + '-' + month + '-' + day)">
+                        &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
+                    </button>
+                    <button ng-click="day = '';month = '';year = '';loadPatVitalsList()" class="btn m-b-xs btn-dark">
+                        <i class="fa fa-times"></i>
+                    </button>
+
             </div>
         </div>
 
@@ -69,13 +77,13 @@
                         <td> {{vital.vital_time| moment:'DD/MM/YYYY'}} &nbsp;
                             <span class="label bg-light dk">{{vital.vital_time| moment:'hh:mm A'}}</span>
                         </td>
-                        <td> {{vital.temperature || '-'}} </td>
-                        <td> {{vital.blood_pressure_systolic || '-'}} / {{vital.blood_pressure_diastolic || '-'}}</td>
-                        <td> {{vital.pulse_rate || '-'}} </td>
-                        <td> {{vital.weight || '-'}} </td>
-                        <td> {{vital.height || '-'}} </td>
-                        <td> {{vital.sp02 || '-'}} </td>
-                        <td> {{vital.pain_score || '-'}} </td>
+                        <td> {{vital.temperature|| '-'}} </td>
+                        <td> {{vital.blood_pressure_systolic|| '-'}} / {{vital.blood_pressure_diastolic|| '-'}}</td>
+                        <td> {{vital.pulse_rate|| '-'}} </td>
+                        <td> {{vital.weight|| '-'}} </td>
+                        <td> {{vital.height|| '-'}} </td>
+                        <td> {{vital.sp02|| '-'}} </td>
+                        <td> {{vital.pain_score|| '-'}} </td>
                         <td>
                             <div ng-if="vital.tenant_id != null && vital.encounter_status">
                                 <a ng-show="vital.tenant_id == app.logged_tenant_id" class="label bg-info dk" title="Edit" check-access  ui-sref="patient.vitalUpdate({id: '{{$state.params.id}}', vital_id: '{{vital.vital_id}}'})">

@@ -160,6 +160,15 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         //Index Page
 
         $scope.loadSaleItemList = function (payment_type) {
+            $rootScope.commonService.GetDay(function (response) {
+                $scope.days = response;
+            });
+            $rootScope.commonService.GetMonth(function (response) {
+                $scope.months = response;
+            });
+            $rootScope.commonService.GetYear(function (response) {
+                $scope.years = response;
+            });
             $scope.payment_type = payment_type;
             $scope.maxSize = 5; // Limit number for pagination display number.  
             $scope.totalCount = 0; // Total number of items in all pages. initialize as a zero  
@@ -201,9 +210,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             if (typeof $scope.form_filter != 'undefined' && $scope.form_filter != '') {
                 pageURL += '&s=' + $scope.form_filter;
             }
-
-            if (typeof $scope.form_filter1 != 'undefined' && $scope.form_filter1 != '') {
-                pageURL += '&dt=' + moment($scope.form_filter1).format('YYYY-MM-DD');
+            if (typeof $scope.day != 'undefined' && $scope.day != '' && typeof $scope.month != 'undefined' && $scope.month != '' && typeof $scope.year != 'undefined' && $scope.year != '') {
+                pageURL += '&dt=' +$scope.year+'-'+$scope.month+'-'+$scope.day;
             }
             // Get data's from service
             //$http.get($rootScope.IRISOrgServiceUrl + '/pharmacysale/getsales?payment_type=' + payment_type + '&addtfields=sale_list')

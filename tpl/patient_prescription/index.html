@@ -904,7 +904,7 @@
                                             <div class="wrapper-md p-b">
                                                 <div class="panel panel-default">
                                                     <div class="row wrapper pb-sm">
-                                                        <div class="col-sm-9">
+                                                        <div class="col-sm-6">
                                                             <span ng-show="(previousPresSelected > 0 && represcribeSelected == 0)">
                                                                 <button ng-click="addToCurrentPrescription()" class="btn btn-sm btn-primary">
                                                                     <i class="fa fa-retweet"></i> Add to prescription
@@ -916,23 +916,29 @@
                                                                 </button>
                                                             </span>
                                                         </div>
-                                                        <div class="col-sm-3">
-                                                            <div class="row">   
-                                                                <div class="col-sm-9">
-                                                                    <div class="input-group">
-                                                                        <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, 'day')" ng-change="loadPrevPrescriptionsList(filterdate);"/>
-                                                                        <span class="input-group-btn">
-                                                                            <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-3">
-                                                                    <button ng-click="filterdate = '';
-                                                                        loadPrevPrescriptionsList()" class="btn m-b-xs  btn-dark">  
-                                                                        <i class="fa fa-times"></i> 
-                                                                    </button>
-                                                                </div> 
-                                                            </div>
+                                                        <div class="col-sm-6 text-right">
+                                                            <!--                                                            <div class="input-group">
+                                                                                                                            <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, 'day')" ng-change="loadPrevPrescriptionsList(filterdate);"/>
+                                                                                                                            <span class="input-group-btn">
+                                                                                                                                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                                                                                                            </span>
+                                                                                                                        </div>-->
+                                                            <select class="form-control search-dropdown" ng-model="day" ng-options="day.value as day.label for day in days">
+                                                                <option value="">DD</option>
+                                                            </select>
+                                                            <select class="form-control search-dropdown" ng-model="month" ng-options="month.value as month.label for month in months">
+                                                                <option value="">MM</option>
+                                                            </select>
+                                                            <select class="form-control search-dropdown" ng-model="year" ng-options="year.value as year.label for year in years">
+                                                                <option value="">YYYY</option>
+                                                            </select>
+                                                            <button class="btn m-b-xs btn-grey"  ng-disabled=" (day && month && year) ? false : true" ng-click="loadPrevPrescriptionsList(year + '-' + month + '-' + day)">
+                                                                &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
+                                                            </button>
+                                                            <button ng-click="filterdate = '';
+                                                                loadPrevPrescriptionsList()" class="btn m-b-xs  btn-dark">  
+                                                                <i class="fa fa-times"></i> 
+                                                            </button>
                                                         </div>    
                                                     </div>
                                                     <div ng-include="'tpl/patient_prescription/_previous_prescription.html'">
@@ -987,9 +993,9 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata   =   {};
+                                    <div class="row" ng-init="vitaldata       =       {};
                                         loadVitals();
-                                        vitaldata.formtype  =  'add'">
+                                        vitaldata.formtype    =    'add'">
                                         <div class="col-lg-12"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">

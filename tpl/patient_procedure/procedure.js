@@ -85,6 +85,15 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
 
         $scope.enabled_dates = [];
         $scope.loadProceduresList = function (date) {
+            $rootScope.commonService.GetDay(function (response) {
+                $scope.days = response;
+            });
+            $rootScope.commonService.GetMonth(function (response) {
+                $scope.months = response;
+            });
+            $rootScope.commonService.GetYear(function (response) {
+                $scope.years = response;
+            });
             $scope.loadbar('show');
             $scope.isLoading = true;
             // pagination set up

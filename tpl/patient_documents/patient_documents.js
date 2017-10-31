@@ -19,7 +19,15 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
         //Documents Index Page
         $scope.loadPatDocumentsList = function (date) {
-
+            $rootScope.commonService.GetDay(function (response) {
+                $scope.days = response;
+            });
+            $rootScope.commonService.GetMonth(function (response) {
+                $scope.months = response;
+            });
+            $rootScope.commonService.GetYear(function (response) {
+                $scope.years = response;
+            });
 //            Disable Back button
 //            $scope.$on('$locationChangeStart', function (event, next, current) {
 //                // Here you can take the control and call your own functions:

@@ -16,26 +16,31 @@
                 </div>
 
                 <div class="col-sm-3" ng-hide="isLoading">
-                    <div class="row"> 
-                        <div class="col-sm-9">  
-                            <div class="input-group">
-                                <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatientAllBilling('Current', filterdate);"/>
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                </span>
-                            </div>
-                        </div>
+                    <!--                            <div class="input-group">
+                                                    <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatientAllBilling('Current', filterdate);"/>
+                                                    <span class="input-group-btn">
+                                                        <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                                    </span>
+                                                </div>-->
+                    <select class="form-control search-dropdown" ng-model="day" ng-options="day.value as day.label for day in days">
+                        <option value="">DD</option>
+                    </select>
+                    <select class="form-control search-dropdown" ng-model="month" ng-options="month.value as month.label for month in months">
+                        <option value="">MM</option>
+                    </select>
+                    <select class="form-control search-dropdown" ng-model="year" ng-options="year.value as year.label for year in years">
+                        <option value="">YYYY</option>
+                    </select>
+                    <button class="btn m-b-xs btn-grey"  ng-disabled=" (day && month && year) ? false : true" ng-click="loadPatientAllBilling('Current', year + '-' + month + '-' + day)">
+                        &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
+                    </button>
 
-                        <div class="col-sm-3">   
-                            <button title="Clear" ng-click="filterdate = '';
-                                    loadPatientAllBilling('Current')" class="btn m-b-xs  btn-dark">  
-                                <i class="fa fa-times"></i> 
-                            </button>
-                        </div>
-                    </div>
+                    <button title="Clear" ng-click="day = ''; month = ''; year = '';loadPatientAllBilling('Current')" class="btn m-b-xs  btn-dark">  
+                        <i class="fa fa-times"></i> 
+                    </button>
                 </div>
             </div>
-            
+
             <div class="table-responsive in-patient-table">
                 <script type="text/ng-template" id="myModalContent.html">
                     <div ng-include="'tpl/inpatient.edit.html'"></div>
@@ -82,8 +87,8 @@
                                 <span ng-if="encounter.encounter_type == 'IP'" class="label bg-success">{{encounter.details}}</span>
                             </td>
                             <td> {{encounter.doctor}} </td>
-                            <td> {{(encounter.view_calculation.total_paid || 0) | number:2 }} </td>
-                            <td> {{(encounter.view_calculation.balance || 0) | number:2}} </td>
+                            <td> {{(encounter.view_calculation.total_paid|| 0) | number:2 }} </td>
+                            <td> {{(encounter.view_calculation.balance|| 0) | number:2}} </td>
                             <td>
                                 <button tooltip="View/Print Bill"  class="label bg-info dk" ng-if="encounter.encounter_type == 'IP'" ng-click="$state.go('patient.billing', {id: $state.params.id, enc_id: encounter.encounter_id})">
                                     <i class="fa fa-eye"></i>

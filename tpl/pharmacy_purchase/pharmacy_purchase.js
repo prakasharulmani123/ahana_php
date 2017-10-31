@@ -99,6 +99,15 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     });
         };
         $scope.loadPurchaseItemList = function (payment_type) {
+            $rootScope.commonService.GetDay(function (response) {
+                $scope.days = response;
+            });
+            $rootScope.commonService.GetMonth(function (response) {
+                $scope.months = response;
+            });
+            $rootScope.commonService.GetYear(function (response) {
+                $scope.years = response;
+            });
             $scope.errorData = $scope.msg.successMessage = '';
             $scope.purchase_payment_type_name = (payment_type == 'CA') ? 'Cash' : 'Credit';
             $scope.activeMenu = $scope.purchase_payment_type = payment_type;
@@ -115,8 +124,9 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 pageURL += '&s=' + $scope.form_filter;
             }
 
-            if (typeof $scope.form_filter1 != 'undefined' && $scope.form_filter1 != '') {
-                pageURL += '&dt=' + moment($scope.form_filter1).format('YYYY-MM-DD');
+            if (typeof $scope.day != 'undefined' && $scope.day != '' && typeof $scope.month != 'undefined' && $scope.month != '' && typeof $scope.year != 'undefined' && $scope.year != '') {
+                //pageURL += '&dt=' + moment($scope.form_filter1).format('YYYY-MM-DD');
+                pageURL += '&dt=' +$scope.year+'-'+$scope.month+'-'+$scope.day;
             }
             // Get data's from service
             $http.get(pageURL)

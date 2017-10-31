@@ -367,6 +367,15 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.globalData.frequency_3_1 = '';
             $scope.globalData.frequency_3_2 = '';
             $("#current_prescription").focus();
+            $rootScope.commonService.GetDay(function (response) {
+                $scope.days = response;
+            });
+            $rootScope.commonService.GetMonth(function (response) {
+                $scope.months = response;
+            });
+            $rootScope.commonService.GetYear(function (response) {
+                $scope.years = response;
+            });
         }
 
         var canceler;

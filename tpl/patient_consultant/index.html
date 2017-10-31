@@ -11,29 +11,34 @@
     </div>
     <div class="panel panel-default"> 
         <div class="row wrapper">
-            <div class="col-sm-9">
+            <div class="col-sm-6">
                 <button ng-show="enc.selected.status == '1'" ng-click="$state.go('patient.consultantCreate', {id: $state.params.id, enc_id: enc.selected.encounter_id})" class="btn btn-sm btn-info">
                     <i class="fa fa-plus"></i> &nbsp; Add consultant visit
                 </button>
             </div>
 
-            <div class="col-sm-3">
-                <div class="row">  
-                    <div class="col-sm-9">
-                        <div class="input-group">
-                            <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatConsultantsList(filterdate);"/>
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <button ng-click="filterdate = '';
-                                    loadPatConsultantsList()" class="btn m-b-xs  btn-dark">  
-                            <i class="fa fa-times"></i> 
-                        </button>
-                    </div>
-                </div>
+            <div class="col-sm-6 text-right">
+                <select class="form-control search-dropdown" ng-model="day" ng-options="day.value as day.label for day in days">
+                    <option value="">DD</option>
+                </select>
+                <select class="form-control search-dropdown" ng-model="month" ng-options="month.value as month.label for month in months">
+                    <option value="">MM</option>
+                </select>
+                <select class="form-control search-dropdown" ng-model="year" ng-options="year.value as year.label for year in years">
+                    <option value="">YYYY</option>
+                </select>
+                <button class="btn m-b-xs btn-grey"  ng-disabled=" (day && month && year) ? false : true" ng-click="loadPatConsultantsList(year + '-' + month + '-' + day)">
+                    &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
+                </button>
+                <!--                        <div class="input-group">
+                                            <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatConsultantsList(filterdate);"/>
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                            </span>
+                                        </div>-->
+                <button ng-click="day = ''; month = ''; year = '';loadPatConsultantsList()" class="btn m-b-xs  btn-dark">  
+                    <i class="fa fa-times"></i> 
+                </button>
             </div>
         </div>
 

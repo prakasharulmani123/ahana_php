@@ -124,13 +124,23 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
 
         $scope.enabled_dates = [];
         $scope.loadPatConsultantsList = function (date) {
+            
+            $rootScope.commonService.GetDay(function (response) {
+                $scope.days = response;
+            });
+            $rootScope.commonService.GetMonth(function (response) {
+                $scope.months = response;
+            });
+            $rootScope.commonService.GetYear(function (response) {
+                $scope.years = response;
+            });
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
 
-            if (typeof date == 'undefined') {
+            if ((typeof date == 'undefined')) {
                 url = $rootScope.IRISOrgServiceUrl + '/patientconsultant/getpatconsultantsbyencounter?patient_id=' + $state.params.id;
             } else {
                 date = moment(date).format('YYYY-MM-DD');

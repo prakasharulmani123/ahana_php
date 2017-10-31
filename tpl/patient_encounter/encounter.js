@@ -21,6 +21,15 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
         //Encounter Page
         $scope.enabled_dates = [];
         $scope.loadPatientEncounters = function (type, date) {
+            $rootScope.commonService.GetDay(function (response) {
+                $scope.days = response;
+            });
+            $rootScope.commonService.GetMonth(function (response) {
+                $scope.months = response;
+            });
+            $rootScope.commonService.GetYear(function (response) {
+                $scope.years = response;
+            });
             $scope.errorData = '';
             $scope.encounterView = type;
             $scope.isLoading = true;

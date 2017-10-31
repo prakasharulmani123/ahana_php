@@ -51,6 +51,15 @@ app.controller('NotesController', ['$rootScope', '$scope', '$timeout', '$http', 
 //        //Index Page
         $scope.enabled_dates = [];
         $scope.loadPatNotesList = function (date) {
+            $rootScope.commonService.GetDay(function (response) {
+                $scope.days = response;
+            });
+            $rootScope.commonService.GetMonth(function (response) {
+                $scope.months = response;
+            });
+            $rootScope.commonService.GetYear(function (response) {
+                $scope.years = response;
+            });
             $scope.isLoading = true;
             // pagination set up
             $scope.rowCollection = [];  // base collection

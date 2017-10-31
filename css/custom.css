@@ -818,6 +818,10 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 .network-mgs span {
 	font-weight:600;
 }
+.search-dropdown {
+    width: auto !important;
+    display: inline-block !important;
+}
  @media (min-width: 1280px) {
 .pre-freq-new1 input {
 	width: 27%;

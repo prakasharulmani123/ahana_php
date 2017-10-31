@@ -135,6 +135,15 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
         //All Billing Page
         $scope.enabled_dates = [];
         $scope.loadPatientAllBilling = function (type, date) {
+            $rootScope.commonService.GetDay(function (response) {
+                $scope.days = response;
+            });
+            $rootScope.commonService.GetMonth(function (response) {
+                $scope.months = response;
+            });
+            $rootScope.commonService.GetYear(function (response) {
+                $scope.years = response;
+            });
             $scope.errorData = '';
             $scope.isLoading = true;
             $scope.rowCollection = [];  // base collection

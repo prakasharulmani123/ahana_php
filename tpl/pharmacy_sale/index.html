@@ -33,14 +33,23 @@
                             &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
                         </button>
                         <input id="filter" type="text" placeholder="Search" class="form-control input-sm w-sm inline m-r" ng-model="form_filter"/>
-                        <input prevent-enter id="filter1" type="text" placeholder="Filter by date" class="form-control input-sm w-sm inline filter-date" ng-model="form_filter1" datepicker-popup="yyyy-MM-dd" is-open="opened1" datepicker-options="dateOptions" close-text="Close"/>
-                        <button type="button" class="btn btn-sm btn-default" ng-click="open($event, 'opened1')">
-                            <i class="glyphicon glyphicon-calendar"></i>
-                        </button>
+                        <!--                        <input prevent-enter id="filter1" type="text" placeholder="Filter by date" class="form-control input-sm w-sm inline filter-date" ng-model="form_filter1" datepicker-popup="yyyy-MM-dd" is-open="opened1" datepicker-options="dateOptions" close-text="Close"/>
+                                                <button type="button" class="btn btn-sm btn-default" ng-click="open($event, 'opened1')">
+                                                    <i class="glyphicon glyphicon-calendar"></i>
+                                                </button>-->
+                        <select class="form-control search-dropdown" ng-model="day" ng-options="day.value as day.label for day in days">
+                            <option value="">DD</option>
+                        </select>
+                        <select class="form-control search-dropdown" ng-model="month" ng-options="month.value as month.label for month in months">
+                            <option value="">MM</option>
+                        </select>
+                        <select class="form-control search-dropdown" ng-model="year" ng-options="year.value as year.label for year in years">
+                            <option value="">YYYY</option>
+                        </select>
                         <button class="btn btn-sm btn-grey" ng-click="loadSaleItemList(sale_payment_type)">
                             &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
                         </button>
-                        <button class="btn btn-sm btn-dark" title="clear filter" ng-click="form_filter = '';form_filter1 = '';loadSaleItemList(sale_payment_type)">
+                        <button class="btn btn-sm btn-dark" title="clear filter" ng-click="form_filter = '';day='';month='';year='';loadSaleItemList(sale_payment_type)">
                             <i class="fa fa-times"></i>
                         </button>
                     </div>
@@ -141,7 +150,7 @@
                             <button tooltip="Print Bill"  class="label bg-primary dk" ng-click="printSaleBill(saleitem.sale_id)">
                                 <i class="fa fa-print"></i>
                             </button>
-                             <!--check-access-custom / hide-->
+                            <!--check-access-custom / hide-->
                             <a data-button="pharmacy.delete_sale_bill" check-access-custom title="Delete Bill" ng-click="removeRow(saleitem.sale_id)" class="label bg-dark dk">
                                 <i class="fa fa-trash"></i>
                             </a>
