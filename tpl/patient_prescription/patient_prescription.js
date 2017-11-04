@@ -2985,6 +2985,30 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
 
         });
+
+        //Delete
+        $scope.deleteDocument = function (doc_id) {
+            URL = $rootScope.IRISOrgServiceUrl + "/patientdocuments/remove";
+            var conf = confirm('Are you sure to delete ?');
+            if (conf) {
+                $scope.loadbar('show');
+                $http({
+                    url: URL,
+                    method: "POST",
+                    data: {doc_id: doc_id}
+                }).then(
+                        function (response) {
+                            if (response.data.success === true) {
+                                $scope.successMessage = 'Document Deleted Successfully';
+                                $scope.loadmedicalcasehistory();
+                            } else {
+                                $scope.errorData = response.data.message;
+                            }
+                        }
+                )
+            }
+        };
+
         $scope.ckeditorupdate = function () {
             for (instance in CKEDITOR.instances)
                 CKEDITOR.instances[instance].updateElement();

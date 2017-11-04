@@ -935,7 +935,7 @@
                                                             <button class="btn m-b-xs btn-grey"  ng-disabled=" (day && month && year) ? false : true" ng-click="loadPrevPrescriptionsList(year + '-' + month + '-' + day)">
                                                                 &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
                                                             </button>
-                                                            <button ng-click="day = ''; month = ''; year = '';loadPrevPrescriptionsList()" class="btn m-b-xs  btn-dark">  
+                                                            <button ng-click="day = ''; month = ''; year = ''; loadPrevPrescriptionsList()" class="btn m-b-xs  btn-dark">  
                                                                 <i class="fa fa-times"></i> 
                                                             </button>
                                                         </div>    
@@ -974,27 +974,101 @@
                                 <div ng-show="tab == 2">
                                     <div class="casehistory-form">
                                         <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="panel-body">
-                                                    Coming Soon
-                                                </div>
-                                                <!--                                                <div class="panel-body" ng-init="initmedicalhistory();">
-                                                                                                    <div ng-bind-html="xml | xslt:xslt | sanitize"></div>
-                                                                                                </div>
-                                                                                                <footer class="panel-footer text-right bg-light lter">
-                                                                                                    <button class="btn m-b-xs  btn-success" ng-click="savemedicalForm()">Save</button>
-                                                                                                    &nbsp;
-                                                                                                    <button class="btn m-b-xs  btn-dark"> <i class="fa fa-times"></i> Cancel</button>
-                                                                                                </footer>-->
+                                            <div class="panel-body">
+                                                Coming Soon
                                             </div>
+                                            <!--                                            <div ng-if="medical_history == 'form'" class="col-sm-12">
+                                                                                            <div ng-include="'tpl/blocks/alert.html'">
+                                                                                                {% include 'tpl/blocks/alert.html' %}
+                                                                                            </div>
+                                                                                            <div class="panel-body">
+                                                                                                <div ng-bind-html="xml | xslt:xslt | sanitize"></div>
+                                                                                            </div>
+                                                                                            <footer class="panel-footer text-right bg-light lter">
+                                                                                                <button class="btn m-b-xs  btn-success" ng-click="savemedicalForm()">Save</button>
+                                                                                                &nbsp;
+                                                                                                <button class="btn m-b-xs  btn-dark" ng-click="clearmedicalForm()"> <i class="fa fa-times"></i> Cancel</button>
+                                                                                            </footer>
+                                                                                        </div>
+                                                                                        <div ng-if="medical_history == 'index'" class="col-sm-12">
+                                                                                            <div class="create-vitals-table" style="max-height:600px;overflow-y: auto" ng-init="loadmedicalcasehistory()">
+                                                                                                <div class="row wrapper">
+                                                                                                    <div class="col-sm-12">
+                                                                                                        <button class="btn btn-info text-right" ng-click="initmedicalhistory()" style="">
+                                                                                                            <i class="fa fa-plus"></i> Create Document
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <table class="table table-striped b-t b-light">
+                                                                                                    <thead>
+                                                                                                        <tr>
+                                                                                                            <th>
+                                                                                                                <button class="btn btn-sm btn-default hms-plus" type="button" ng-click="ctrl.expandAll(allExpanded = !allExpanded)">
+                                                                                                                    <i ng-if="!allExpanded" class="fa fa-plus text"></i>
+                                                                                                                    <i ng-if="allExpanded" class="fa fa-minus text"></i>
+                                                                                                                </button>
+                                                                                                            </th>
+                                                                                                            <th>Document Date</th>
+                                                                                                            <th>Document Type</th>
+                                                                                                            <th>Document Name</th>
+                                                                                                            <th>Created By</th>
+                                                                                                            <th>Actions</th>
+                                                                                                        </tr>
+                                                                                                    </thead>
+                                            
+                                                                                                    <tbody ng-show="isLoading">
+                                                                                                        <tr>
+                                                                                                            <td colspan="6" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                                                                                                        </tr>
+                                                                                                    </tbody>
+                                            
+                                                                                                    <tbody ng-hide="isLoading">
+                                                                                                        <tr ng-repeat-start="(key, value) in MCHCollection" ng-init="expanded = (key == 0) ? true : false;">
+                                                                                                            <td>
+                                                                                                                <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
+                                                                                                                    <i ng-if="!expanded" class="fa fa-plus text"></i>
+                                                                                                                    <i ng-if="expanded" class="fa fa-minus text"></i>
+                                                                                                                </button>
+                                                                                                            </td>
+                                                                                                            <td colspan="6">
+                                                                                                                <b> 
+                                                                                                                    <span class="badge bg-primary">Encounter: {{value.encounter_id}}</span>&nbsp; &nbsp; 
+                                                                                                                </b>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                        <tr ng-repeat-end ng-show="expanded" ng-repeat="(doc_key, doc) in value.all">
+                                                                                                            <td align="center" valign="middle"></td>
+                                                                                                            <td valign="middle"> {{doc.date_time| moment:'DD/MM/YYYY - hh:mm A'}} </td>
+                                                                                                            <td valign="middle"> 
+                                                                                                                <span ng-if="doc.doc_type == 'CH' && doc.status == '0'">
+                                                                                                                    <img ng-src="img/incomplete.gif" title="InComplete"  alt="InComplete" width="" height="" />
+                                                                                                                </span>
+                                                                                                                {{doc.doc_type_name}} 
+                                                                                                            </td>
+                                                                                                            <td valign="middle"> {{doc.doc_name}} </td>
+                                                                                                            <td valign="middle"> {{doc.created_by}} </td>
+                                                                                                            <td valign="middle">
+                                                                                                                <a class="label bg-dark" title="Edit" ng-click="Updatemedicaldocument(doc.doc_id)">
+                                                                                                                    <i class="fa fa-pencil"></i>
+                                                                                                                </a>
+                                                                                                                &nbsp;&nbsp;&nbsp;
+                                                                                                                <button type="button" title="Delete"  ng-click="deleteDocument(doc.doc_id, 'CH')" class="label bg-dark">
+                                                                                                                    <i class="fa fa-trash"></i>
+                                                                                                                </button>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                            </div>
+                                                                                        </div>-->
                                         </div>
                                     </div>
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata       =       {};
+                                    <div class="row" ng-init="vitaldata                           =                           {};
                                         loadVitals();
-                                        vitaldata.formtype    =    'add'">
+                                        vitaldata.formtype              =              'add'">
                                         <div class="col-lg-12"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
