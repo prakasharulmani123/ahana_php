@@ -37,7 +37,7 @@
                                         <div class="col-sm-8">
                                             <div ng-repeat="share_data in config_inpatient">
                                                 <label class="i-checks">
-                                                    <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="share_data.value" ng-change='updateVital(share_data.value, share_data.config_id)'/> 
+                                                    <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="share_data.value" ng-change='updateVital(share_data.value, share_data.config_id, share_data.key)'/> 
                                                     <i></i> 
                                                 </label> 
                                                 <label for='{{share_data.code}}'>{{share_data.code}}</label>
@@ -51,7 +51,7 @@
                                         <div class="col-sm-8">
                                             <div ng-repeat="share_data in config_outpatient">
                                                 <label class="i-checks">
-                                                    <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="share_data.value" ng-change='updateVital(share_data.value, share_data.config_id)'/> 
+                                                    <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="share_data.value" ng-change='updateVital(share_data.value, share_data.config_id, share_data.key)'/> 
                                                     <i></i> 
                                                 </label> 
                                                 <label for='{{share_data.code}}'>{{share_data.code}}</label>

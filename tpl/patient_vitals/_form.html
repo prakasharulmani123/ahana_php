@@ -72,7 +72,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">Weight </label>
                 <div class="col-sm-5">
-                    <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="data.weight" number-mask="" two-decimal-places>
+                    <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="data.weight" number-mask="" ng-blur="Calculatebmi()" two-decimal-places>
                 </div>
                 <div class="col-sm-4">
                     <div class="row"> Kg </div>
@@ -85,7 +85,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">Height </label>
                 <div class="col-sm-5">
-                    <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="data.height" number-mask="" two-decimal-places>
+                    <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="data.height" number-mask="" ng-blur="Calculatebmi()" two-decimal-places>
                 </div>
                 <div class="col-sm-4">
                     <div class="row"> Cm </div>
@@ -112,6 +112,19 @@
                 <label class="col-sm-3 control-label">Pain Score </label>
                 <div class="col-sm-5">
                     <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="data.pain_score" number-mask="" two-decimal-places>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">  </div>
+                </div>
+            </div>
+            <div class="line line-dashed b-b line-lg "></div>
+        </div>
+
+        <div ng-show="(vitalcong.BMI == 1)">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">BMI </label>
+                <div class="col-sm-5">
+                    <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="data.bmi" readonly number-mask="" two-decimal-places>
                 </div>
                 <div class="col-sm-4">
                     <div class="row">  </div>

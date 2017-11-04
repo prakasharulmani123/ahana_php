@@ -4,7 +4,7 @@ app.controller('VitalmanagementController', ['$rootScope', '$scope', '$timeout',
         editableThemes.bs3.buttonsClass = 'btn-sm';
         editableOptions.theme = 'bs3';
         $scope.current_type = '';
-        
+
         $scope.data = {};
 
         $scope.initSettings = function () {
@@ -27,7 +27,9 @@ app.controller('VitalmanagementController', ['$rootScope', '$scope', '$timeout',
                                 $scope.config_inpatient.push(conf);
                             }
                         });
-                        $scope.loadIpVitals('IP');
+                        if(!$scope.current_type) {
+                            $scope.loadIpVitals('IP');
+                        }
                         $scope.isLoading = false;
                     })
                     .error(function () {
@@ -41,23 +43,19 @@ app.controller('VitalmanagementController', ['$rootScope', '$scope', '$timeout',
             $scope.current_type = type;
         }
 
-        $scope.updateVital = function ($data, config_id) {
-            $scope.errorData = "";
-            $scope.msg.successMessage = "";
-
-            $scope.loadbar('show');
-            if (($data == 1) || ($data == 0)) {
-                $data = {value: $data}
-            }
-
+        $scope.updateVitalByKey = function (value,a, b) {
+            var vitalvalue = value;
+            var vitalkey = [];
+            vitalkey.push(a);
+            if (b)
+                vitalkey.push(b);
             $http({
-                method: 'PUT',
-                url: $rootScope.IRISOrgServiceUrl + '/appconfigurations/' + config_id,
-                data: $data,
+                method: 'post',
+                url: $rootScope.IRISOrgServiceUrl + '/appconfiguration/updatebykey',
+                data: {vitalkey:vitalkey,vitalvalue:vitalvalue},
             }).success(
                     function (response) {
-                        $scope.loadbar('hide');
-                        $scope.msg.successMessage = 'Updated successfully';
+                        $scope.initSettings();
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -67,6 +65,50 @@ app.controller('VitalmanagementController', ['$rootScope', '$scope', '$timeout',
                     $scope.errorData = data.message;
             });
         }
+
+        $scope.updateVital = function ($data, config_id, key) {
+            $scope.errorData = "";
+            $scope.msg.successMessage = "";
+
+            if (($data == 1) && (key == 'IP_V_BMI')) {
+                $scope.updateVitalByKey(1,'IP_V_H', 'IP_V_W');
+            }
+            if (($data == 1) && (key == 'OP_V_BMI')) {
+                $scope.updateVitalByKey(1,'OP_V_H', 'OP_V_W');
+            }
+            if (($data == 0) && ((key == 'IP_V_H') || (key == 'IP_V_W'))) {
+                $scope.updateVitalByKey(0,'IP_V_BMI');
+            }
+            if (($data == 0) && ((key == 'OP_V_H') || (key == 'OP_V_W'))) {
+                $scope.updateVitalByKey(0,'OP_V_BMI');
+            }
+
+            $scope.loadbar('show');
+            if (($data == 1) || ($data == 0)) {
+                $data = {value: $data}
+            }
+
+
+            $http({
+                method: 'PUT',
+                url: $rootScope.IRISOrgServiceUrl + '/appconfigurations/' + config_id,
+                data: $data,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.msg.successMessage = 'Updated successfully';
+                        $scope.initSettings();
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
+
     }]);
 // I provide a request-transformation method that is used to prepare the outgoing
 // request as a FORM post instead of a JSON packet.

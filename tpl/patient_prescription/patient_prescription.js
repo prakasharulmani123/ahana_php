@@ -3032,6 +3032,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             ];
         };
 
+        $scope.Calculatebmi = function () {
+            if ($scope.vitaldata.height && $scope.vitaldata.weight) {
+                $scope.vitaldata.bmi = (($scope.vitaldata.weight / $scope.vitaldata.height / $scope.vitaldata.height) * 10000).toFixed(2);
+            }
+        }
+
 //Not Used
 //        $scope.changeFreqMask = function (key, freq) {
 //            $('.freq_div_' + key).addClass('hide');

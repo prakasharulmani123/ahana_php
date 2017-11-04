@@ -253,4 +253,10 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                 );
             });
         };
+
+        $scope.Calculatebmi = function () {
+            if ($scope.data.height && $scope.data.weight) {
+                $scope.data.bmi = (($scope.data.weight / $scope.data.height / $scope.data.height) * 10000).toFixed(2);
+            }
+        }
     }]);

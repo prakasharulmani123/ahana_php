@@ -55,6 +55,7 @@
                         <th>Height</th>
                         <th>SP02</th>
                         <th>Pain Score</th>
+                        <th>BMI</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -84,6 +85,7 @@
                         <td> {{vital.height|| '-'}} </td>
                         <td> {{vital.sp02|| '-'}} </td>
                         <td> {{vital.pain_score|| '-'}} </td>
+                        <td> {{vital.bmi|| '-'}} </td>
                         <td>
                             <div ng-if="vital.tenant_id != null && vital.encounter_status">
                                 <a ng-show="vital.tenant_id == app.logged_tenant_id" class="label bg-info dk" title="Edit" check-access  ui-sref="patient.vitalUpdate({id: '{{$state.params.id}}', vital_id: '{{vital.vital_id}}'})">
