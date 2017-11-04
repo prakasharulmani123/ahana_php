@@ -245,6 +245,16 @@ class AppConfiguration extends RActiveRecord {
                 'value' => '1',
                 'notes' => 'Show notes tab',
             ],
+            'IP_V_BMI' => [
+                'code' => 'BMI',
+                'value' => '1',
+                'notes' => 'Show BMI field in vital form',
+            ],
+            'OP_V_BMI' => [
+                'code' => 'BMI',
+                'value' => '1',
+                'notes' => 'Show BMI field in vital form',
+            ]
         );
     }
 

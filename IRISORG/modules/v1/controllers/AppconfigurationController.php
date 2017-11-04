@@ -48,22 +48,34 @@ class AppconfigurationController extends ActiveController {
             'pagination' => false,
         ]);
     }
-    
+
     public function actionGetpresstatus() {
         $modelClass = $this->modelClass;
         $get = Yii::$app->getRequest()->get();
         return $modelClass::getConfigurationByKey($get['key']);
     }
-    
+
     public function actionGetpresstatusbycode() {
         $modelClass = $this->modelClass;
         $get = Yii::$app->getRequest()->get();
         return $modelClass::getConfigurationBycode($get['code']);
     }
-    
+
     public function actionGetpresstatusbygroup() {
         $modelClass = $this->modelClass;
         $get = Yii::$app->getRequest()->get();
         return $modelClass::getConfigurationBygroup($get['group']);
     }
+
+    public function actionUpdatebykey() {
+        $modelClass = $this->modelClass;
+        $post = Yii::$app->getRequest()->post();
+        $vitals = "'" . implode( "','", $post['vitalkey'] ) . "'";
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        $update_value = $post['vitalvalue'];
+
+        $modelClass::updateAll(['value' => "$update_value"], "`key` IN ($vitals) AND tenant_id=$tenant_id");
+        return ['success' => true];
+    }
+
 }

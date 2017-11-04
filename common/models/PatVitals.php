@@ -46,7 +46,7 @@ class PatVitals extends RActiveRecord {
         return [
 //            [['temperature'], 'required'],
                 [['tenant_id', 'encounter_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
-                [['vital_time', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['vital_time', 'created_at', 'modified_at', 'deleted_at','bmi'], 'safe'],
                 [['status'], 'string'],
             //[['temperature', 'blood_pressure_systolic', 'blood_pressure_diastolic', 'pulse_rate'], 'string', 'max' => 20],
             //[['weight', 'height', 'sp02'], 'string', 'max' => 10],
@@ -79,6 +79,7 @@ class PatVitals extends RActiveRecord {
             'height' => 'Height',
             'sp02' => 'Sp02',
             'pain_score' => 'Pain Score',
+            'bmi' => 'BMI',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -159,6 +160,7 @@ class PatVitals extends RActiveRecord {
                         'height' => 'height',
                         'sp02' => 'sp02',
                         'pain_score' => 'pain_score',
+                        'bmi' => 'bmi',
                         'status' => 'status',
                         'created_at' => 'created_at',
                     ];
