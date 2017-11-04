@@ -234,4 +234,18 @@ class PatientvitalsController extends ActiveController {
             'weight' => $weight, 'height' => $height, 'sp02' => $sp02, 'painScore' => $painScore];
     }
 
+    public function actionGetvitalsbyencounter() {
+        $get = Yii::$app->request->get();
+        if (!empty($get['encounter_id'])) {
+            $vitals = PatVitals::find()->tenant()->active()->andWhere(['encounter_id' => $get['encounter_id']])->orderBy(['created_at' => SORT_DESC])->one();
+            if (!empty($vitals)) {
+                return ['success' => true, 'vitals' => $vitals];
+            } else {
+                return ['success' => false];
+            }
+        } else {
+            return ['success' => false];
+        }
+    }
+
 }

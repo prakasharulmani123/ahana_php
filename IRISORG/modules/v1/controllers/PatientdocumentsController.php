@@ -78,7 +78,8 @@ class PatientdocumentsController extends ActiveController {
         if ($id) {
             $model = PatDocuments::find()->where(['doc_id' => $id])->one();
             $model->delete();
-            $activity = 'Case history Deleted Successfully (#' . $model->encounter_id . ' )';
+            $document = $model->docType->doc_type_name;
+            $activity = ''.$document.' Deleted Successfully (#' . $model->encounter_id . ' )';
             CoAuditLog::insertAuditLog(PatDocuments::tableName(), $id, $activity);
             return ['success' => true];
         }

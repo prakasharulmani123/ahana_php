@@ -129,6 +129,7 @@ class PatDocuments extends RActiveRecord {
         return [
                 [['patient_id', 'doc_type_id', 'encounter_id'], 'required'],
                 [['name', 'age', 'gender', 'address', 'education', 'martial_status', 'relationship'], 'required', 'on' => 'CH'],
+                [['name', 'age', 'gender', 'address', 'education', 'martial_status', 'relationship', 'information', 'information_adequacy'], 'required', 'on' => 'MCH'],
                 [['information', 'information_adequacy', 'total_duration', 'mode_of_onset', 'course_type', 'nature'], 'required', 'on' => 'CH'],
                 [['tenant_id', 'patient_id', 'doc_type_id', 'encounter_id', 'created_by', 'modified_by'], 'integer'],
                 [['document_xml', 'status', 'xml_path'], 'string'],
@@ -305,18 +306,18 @@ class PatDocuments extends RActiveRecord {
     }
 
     public function beforeSave($insert) {
-        $this->xml_path = $this->createXMLFile(Yii::$app->user->identity->logged_tenant_id, $this->patient->patient_global_int_code, $this->encounter_id, $this->document_xml, $this->xml_path);
+        $this->xml_path = $this->createXMLFile(Yii::$app->user->identity->logged_tenant_id, $this->patient->patient_global_int_code, $this->encounter_id, $this->document_xml, $this->xml_path, $this->docType->doc_type);
         return parent::beforeSave($insert);
     }
 
-    protected function createXMLFile($tenant_id, $patient_id, $encounter_id, $content, $file_name) {
+    protected function createXMLFile($tenant_id, $patient_id, $encounter_id, $content, $file_name, $file_type) {
         $fpath = "uploads/{$tenant_id}/{$patient_id}";
         \yii\helpers\FileHelper::createDirectory($fpath, 0777);
         if (!empty($file_name)) {
             $splitFile = explode('/', $file_name);
             $file_name = end($splitFile);
         } else {
-            $file_name = "CH_{$encounter_id}_" . time() . ".xml";
+            $file_name = "{$file_type}_{$encounter_id}_" . time() . ".xml";
         }
         $path = \yii::getAlias('@webroot') . '/' . $fpath . '/' . $file_name;
         $myfile = fopen($path, "w") or die("Unable to open file!");
@@ -327,12 +328,16 @@ class PatDocuments extends RActiveRecord {
     }
 
     public function afterSave($insert, $changedAttributes) {
+        $document = $this->docType->doc_type_name;
         if ($insert) {
-            $activity = 'Case history Added Successfully (#' . $this->encounter_id . ' )';
+            $activity = '' . $document . ' Added Successfully (#' . $this->encounter_id . ' )';
             CoAuditLog::insertAuditLog(PatDocuments::tableName(), $this->doc_id, $activity);
         } else {
             if (isset($this->audit_log) && ($this->audit_log)) {
-                $activity = 'Case history Updated Successfully (#' . $this->encounter_id . ' )';
+                $activity = '' . $document . ' Updated Successfully (#' . $this->encounter_id . ' )';
+                CoAuditLog::insertAuditLog(PatDocuments::tableName(), $this->doc_id, $activity);
+            } else if ($this->docType->doc_type_name == 'Medical Case History') {
+                $activity = '' . $document . ' Updated Successfully (#' . $this->encounter_id . ' )';
                 CoAuditLog::insertAuditLog(PatDocuments::tableName(), $this->doc_id, $activity);
             }
         }
