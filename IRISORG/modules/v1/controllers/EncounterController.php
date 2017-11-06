@@ -368,6 +368,11 @@ class EncounterController extends ActiveController {
                 $filterdate = date('m Y');
                 $filterQuery = "AND DATE_FORMAT(d.encounter_date,'%m %Y') = '$filterdate'";
                 $filterQuery1 = "AND DATE_FORMAT(b.encounter_date,'%m %Y') = '$filterdate'";
+            } else if(@$params['type'] == 'previous') {
+                $start_date = @$params['range_filter_start'];
+                $end_date = @$params['range_filter_end'];
+                $filterQuery = "AND DATE(d.encounter_date) BETWEEN '$start_date' and '$end_date'";
+                $filterQuery1 = "AND DATE(b.encounter_date) BETWEEN '$start_date' and '$end_date'";
             } else {
                 $filterQuery = "";
                 $filterQuery1 = "";
@@ -398,6 +403,7 @@ class EncounterController extends ActiveController {
                     AND d.status = '1'
                     AND c.appt_status = 'A'
                     AND d.encounter_type = :ptype
+                    $filterQuery
                     AND DATE(d.encounter_date) {$dtop} :enc_date
                     AND c.consultant_id = a.consultant_id
                 ) AS arrival,
@@ -474,8 +480,9 @@ class EncounterController extends ActiveController {
 
 //        Encounter Date Condition
         $encDtCond = ['=', 'DATE(encounter_date)', $params['date']];
-        if (strtolower(@$params['type']) == 'previous') {
-            $encDtCond = ['<', 'DATE(encounter_date)', $params['date']];
+        if ((strtolower(@$params['type']) == 'previous') && (isset($params['range_filter_start']) && @$params['range_filter_start'] != 'undefined') && (isset($params['range_filter_end']) && @$params['range_filter_end'] != 'undefined')) {
+            $encDtCond = ['between', 'DATE(encounter_date)', $params['range_filter_start'], $params['range_filter_end']];
+            //$encDtCond = ['<', 'DATE(encounter_date)', $params['date']];
         } else if (@$params['type'] == 'Future') {
             $encDtCond = ['>', 'DATE(encounter_date)', $params['date']];
         }
