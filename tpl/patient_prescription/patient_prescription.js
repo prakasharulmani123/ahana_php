@@ -2235,8 +2235,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.pulse_graph_tick = [];
                         var pul = vitals.pulse.length;
                         angular.forEach(vitals.pulse, function (row) {
-                            if (row.pulse) {
-                                $scope.pulse_graph_data.push([pul, row.pulse]);
+                            if (row.pulse_rate) {
+                                $scope.pulse_graph_data.push([pul, row.pulse_rate]);
                                 $scope.pulse_graph_tick.push([pul, moment(row.vital_time).format('DD-MM-YY')]);
                                 pul--;
                             }
