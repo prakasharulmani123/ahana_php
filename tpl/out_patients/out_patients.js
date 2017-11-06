@@ -4,37 +4,64 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
         $scope.app.settings.patientSideMenu = false;
         $scope.app.settings.patientContentClass = 'app-content app-content3';
         $scope.app.settings.patientFooterClass = 'app-footer app-footer3';
-
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
         //index.html - To Avoid the status column design broken, used the below controlsTpl
         editableThemes.bs3.controlsTpl = '<div class="editable-controls" ng-class="{\'has-error\': $error}"></div>';
         editableOptions.theme = 'bs3';
         var currentUser = $rootScope.authenticationService.getCurrentUser();
-
         $scope.ctrl = {};
         $scope.allExpanded = false;
+
 //        $scope.expanded = true;
         $scope.ctrl.expandAll = function (expanded) {
             $scope.expandAllRow(expanded);
         };
-
         //Checkbox initialize
         $scope.checkboxes = {'checked': false, items: []};
         $scope.currentAppointmentSelectedItems = [];
         $scope.currentAppointmentSelected = 0;
-
         //Index page height
         $scope.css = {'style': ''};
-
         function dateCheck(month, year)
         {
             $scope.isLoading = true;
             $scope.loadOutPatientsList('Future', '', month, year);
         }
-        
+
         $scope.resetDatepicker = function () {
             $("#appointment").datepicker().datepicker("setDate", new Date());
+        }
+
+        function cb(start, end) {
+            $scope.range_filter_start = start.format('YYYY-MM-DD');
+            $scope.range_filter_end = end.format('YYYY-MM-DD');
+            $scope.loadOutPatientsList('previous');
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+
+        $scope.startDaterangepicker = function () {
+            //$(function () {
+            $scope.range_filter_start = '';
+            $scope.range_filter_end = '';
+            
+            var start = moment().subtract(1, 'days');
+            var end = moment().subtract(1, 'days');
+
+            $('#reportrange').daterangepicker({
+                startDate: start,
+                endDate: end,
+                maxDate: moment().subtract(1, 'days'),
+                ranges: {
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(7, 'days'), moment().subtract(1, 'days')],
+                    'Last 30 Days': [moment().subtract(30, 'days'), moment().subtract(1, 'days')],
+                    'This Month': [moment().startOf('month'), moment().subtract(1, 'days')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, cb);
+            cb(start, end);
+            //});
         }
 
         //Index Page
@@ -52,9 +79,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     dateCheck(month, year);
                 },
             });
-
             $scope.op_type = type;
-
             $('.op-btn-group button, .op-btn-group a').removeClass('active');
             $('.op-btn-group button.' + type + '-op-patient').addClass('active');
             // pagination set up
@@ -71,14 +96,18 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             }
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + type + '&cid=' + cid + '&seen=false&month=' + month + '&year=' + year)
+            if ($scope.range_filter_start && $scope.range_filter_end && $scope.op_type == 'previous') {
+                var url = $rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + type + '&cid=' + cid + '&seen=false&month=' + month + '&year=' + year + '&range_filter_start=' + $scope.range_filter_start + '&range_filter_end=' + $scope.range_filter_end;
+            } else {
+                var url = $rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + type + '&cid=' + cid + '&seen=false&month=' + month + '&year=' + year;
+            }
+            $http.get(url)
                     .success(function (OutPatients) {
                         var prepared_result = $scope.prepareCollection(OutPatients);
                         $scope.rowCollection = prepared_result;
                         //                        $scope.rowCollection = OutPatients.result;
 
                         $scope.updateCollection();
-
                         //Checkbox initialize
                         $scope.checkboxes = {'checked': false, items: []};
                         $scope.currentAppointmentSelectedItems = [];
@@ -88,16 +117,19 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                         $scope.errorData = "An Error has occured while loading patients!";
                     });
         };
-
         $scope.expandSeen = function (cid, rowopen) {
             if (rowopen) {
                 var seenrowcoll = $filter('filter')($scope.rowCollection, {consultant_id: cid})[0];
                 seenrowcoll.rowSeenLoading = true;
-                $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + $scope.op_type + '&cid=' + cid + '&seen=true&only=results')
+                if ($scope.range_filter_start && $scope.range_filter_end && $scope.op_type == 'previous') {
+                    var url = $rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + $scope.op_type + '&cid=' + cid + '&seen=true&only=results&range_filter_start=' + $scope.range_filter_start + '&range_filter_end=' + $scope.range_filter_end;
+                } else {
+                    var url = $rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + $scope.op_type + '&cid=' + cid + '&seen=true&only=results';
+                }
+                $http.get(url)
                         .success(function (OutPatients) {
                             seenrowcoll.seen_records = OutPatients.result;
                             seenrowcoll.rowSeenLoading = false;
-
                             $timeout(function () {
                                 profilePhoto(".patientImage");
                             }, 1000);
@@ -106,8 +138,6 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                             $scope.errorData = "An Error has occured while loading seen data!";
                             seenrowcoll.rowSeenLoading = false;
                         });
-
-
             }
         }
 
@@ -150,23 +180,18 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             // Make sure that the interval is destroyed too
             $scope.stopAutoRefresh();
         });
-
         $scope.updateCheckbox = function (parent, parent_key) {
             angular.forEach($scope.displayedCollection, function (value, op_key) {
                 value.selected = '0';
-
                 if (parent_key == op_key)
                     value.selected = parent.selected;
-
                 angular.forEach(value.act_enc, function (row, key) {
                     row.selected = '0';
-
                     if (parent_key == op_key) {
                         row.selected = parent.selected;
                     }
                 });
             });
-
             $timeout(function () {
                 angular.forEach($scope.displayedCollection, function (value, op_key) {
                     angular.forEach(value.act_enc, function (row, key) {
@@ -180,11 +205,9 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             appt_exists = $filter('filter')($scope.checkboxes.items, {appt_id: appt_id});
             if ($('#oplist_' + op_key + '_' + key).is(':checked')) {
                 $('#oplist_' + op_key + '_' + key).closest('tr').addClass('selected_row');
-
                 $('.tr_oplistcheckbox').not('.tr_oplistcheckbox_' + op_key).each(function () {
                     $(this).removeClass('selected_row');
                 });
-
                 if (appt_exists.length == 0) {
                     consultant_exists = $filter('filter')($scope.checkboxes.items, {consultant_id: consultant_id});
                     rowData = row.apptBookingData;
@@ -234,7 +257,6 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 }
             });
             modalInstance.data = $scope.currentAppointmentSelectedItems;
-
             modalInstance.result.then(function (selectedItem) {
                 $scope.selected = selectedItem;
             }, function () {
@@ -242,7 +264,6 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 $log.info('Modal dismissed at: ' + new Date());
             });
         };
-
         $scope.cancelAppointments = function () {
             var modalOptions = {
                 closeButtonText: 'No',
@@ -250,7 +271,6 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 headerText: 'Cancel Appointments?',
                 bodyText: 'Are you sure to cancel these appointments ?'
             };
-
             modalService.showModal({}, modalOptions).then(function (result) {
                 $scope.loadbar('show');
                 post_url = $rootScope.IRISOrgServiceUrl + '/appointment/bulkcancel';
@@ -275,15 +295,12 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 });
             });
         };
-
         $scope.statuses = [
             {value: 'A', text: 'Arrived'},
         ];
-
         $scope.arr_statuses = [
             {value: 'S', text: 'Seen'},
         ];
-
         $scope.updatePatient = function (id, _data, val) {
             if (val == '') {
                 return 'Mobile can not be empty';
@@ -328,7 +345,6 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
         $scope.changeAppointmentStatus = function (_data, op_key, key) {
             $scope.errorData = "";
             $scope.msg.successMessage = "";
-
             $scope.loadbar('show');
             $http({
                 method: 'POST',
@@ -340,14 +356,12 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                         $scope.msg.successMessage = 'Status changed successfully';
                         $scope.rowCollection[op_key]['act_enc'][key].apptArrivalData = response;
                         $scope.displayedCollection[op_key]['act_enc'][key].apptArrivalData = response;
-
                         angular.forEach($scope.displayedCollection, function (value, parent_key) {
                             if (parent_key == op_key) {
                                 value.booking_count--;
                                 value.arrived_count++;
                             }
                         });
-
                         $scope.updateCollection();
                     }
             ).error(function (data, status) {
@@ -358,7 +372,6 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     $scope.errorData = data.message;
             });
         };
-
         $scope.prepareCollection = function (OutPatients) {
             var result = [];
             var key_index = 0;
@@ -394,13 +407,11 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             $scope.isLoading = true;
             rowCollection = $scope.rowCollection;
             displayedCollection = $scope.rowCollection;
-
             $scope.rowCollection = []; // base collection
             $scope.displayedCollection = [].concat($scope.rowCollection); // displayed collection
 
             $timeout(function () {
                 $scope.rowCollection = rowCollection;
-
                 angular.forEach($scope.rowCollection, function (row) {
                     angular.forEach(row.act_enc, function (appt) {
                         if (appt.apptArrivalData == '-' && appt.apptSeenData == '-') {
@@ -411,25 +422,22 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                         }
                         appt.selected = '0';
                     });
-
                     row.expanded = $scope.getRowExpand(row.consultant_id);
                     row.act_enc = $filter('orderBy')(row.act_enc, ['sts', 'apptArrivalData.status_datetime', 'apptBookingData.status_datetime', 'apptSeenData.status_datetime']);
                 });
                 $scope.displayedCollection = [].concat($scope.rowCollection);
                 $scope.isLoading = false;
-
                 $timeout(function () {
                     profilePhoto(".patientImage");
                 }, 1000);
-
             }, 200);
         }
 
         $.cookie.json = true;
         $scope.setRowExpanded = function (cid, rowopen) {
-            if($scope.op_type == 'Future')
+            if ($scope.op_type == 'Future')
             {
-                var month = parseInt($(".ui-datepicker-month").val())+1;
+                var month = parseInt($(".ui-datepicker-month").val()) + 1;
                 var year = $(".ui-datepicker-year").val();
             }
             var opRowExpand = [];
@@ -446,11 +454,15 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                 exists[0].rowopen = rowopen;
             }
             $.cookie('opRowExp', opRowExpand, {path: '/'});
-
             if (rowopen) {
                 var docRow = $filter('filter')($scope.rowCollection, {consultant_id: cid})[0];
                 docRow.rowLoading = true;
-                $http.get($rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + $scope.op_type + '&cid=' + cid + '&seen=false&only=results&month=' + month + '&year=' + year)
+                if ($scope.range_filter_start && $scope.range_filter_end && $scope.op_type == 'previous') {
+                    var url = $rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + $scope.op_type + '&cid=' + cid + '&seen=false&only=results&month=' + month + '&year=' + year + '&range_filter_start=' + $scope.range_filter_start + '&range_filter_end=' + $scope.range_filter_end;
+                } else {
+                    var url = $rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + $scope.op_type + '&cid=' + cid + '&seen=false&only=results&month=' + month + '&year=' + year;
+                }
+                $http.get(url)
                         .success(function (OutPatients) {
                             docRow.act_enc = OutPatients.result;
                             docRow.rowLoading = false;
@@ -459,7 +471,6 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                             $scope.errorData = "An Error has occured while loading seen data!";
                             docRow.rowLoading = false;
                         });
-
                 $timeout(function () {
                     profilePhoto(".patientImage");
                 }, 1000);
@@ -478,7 +489,6 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             }
             return true;
         };
-
         $scope.expandAllRow = function (expanded) {
             angular.forEach($scope.rowCollection, function (row) {
                 if (expanded && row.expanded)

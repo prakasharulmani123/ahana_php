@@ -1,7 +1,7 @@
 <div class="bg-light lter b-b wrapper-md">
     <h1 class="m-n h3">Out-Patient</h1>
 </div>
-<div ng-controller="OutPatientsController">
+<div ng-controller="OutPatientsController" ng-init="startDaterangepicker()">
     <div class="wrapper-md tab-btn">
         <div ng-include="'tpl/blocks/alert.html'">
             {% include 'tpl/blocks/alert.html' %}
@@ -15,7 +15,7 @@
                     <a class="btn btn-info" ui-sref="patient.futureAppointment">
                         <i class="fa fa-hospital-o"></i>&nbsp;&nbsp;Scheduled Appointments
                     </a>
-                    <button class="btn btn-info previous-op-patient" ng-click="loadOutPatientsList('previous')">
+                    <button class="btn btn-info previous-op-patient" ng-click="startDaterangepicker(); loadOutPatientsList('previous')">
                         <i class="fa fa-user-md"></i>&nbsp;&nbsp;Past Appointments
                     </button>
                 </div>
@@ -26,7 +26,7 @@
     <div class="wrapper-md" ng-init="loadOutPatientsList(op_type)">
         <div class="panel panel-default">
             <div class="row wrapper pb-0">
-                <div class="col-sm-5 m-b-xs">
+                <div class="col-sm-6 m-b-xs">
                     <button class="btn btn-sm btn-grey" ng-click="loadOutPatientsList(op_type)"> &nbsp; &nbsp; <i class="fa fa-refresh"></i>  &nbsp; &nbsp; </button>
                     <span ng-show="currentAppointmentSelected > 0">
                         <button ng-click="rescheduleAppointments()" class="btn btn-sm btn-primary">
@@ -37,7 +37,13 @@
                         </button>
                     </span>
                 </div>
-                <div class="col-sm-4"></div>
+                <div class="col-sm-6">
+                    <div id="reportrange" ng-show="op_type == 'previous'" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+                        <span></span> <b class="caret"></b>
+                    </div>
+                </div>
+                
                 <!-- hide by Nad -->
                 <!--            <div class="col-sm-3 pull-right text-right">
                                 <h4 class="badge bg-primary mt-10"> <b> Census: {{census}} </b></h4>
@@ -85,7 +91,7 @@
                                 <td colspan="9">
                                     <b>
                                         <button ng-click="value.expanded = !value.expanded;
-                                                setRowExpanded(value.consultant_id, value.expanded)" expand class="btn btn-sm btn-default hms-plus">
+                                                                        setRowExpanded(value.consultant_id, value.expanded)" expand class="btn btn-sm btn-default hms-plus">
                                             <i ng-if="!value.expanded" class="fa fa-plus text"></i>
                                             <i ng-if="value.expanded" class="fa fa-minus text"></i>
                                         </button>&nbsp; &nbsp;
@@ -174,14 +180,14 @@
                                                 <span class="glyphicon glyphicon-ok"></span>
                                             </button>
                                             <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel();
-                                                    setTimings(op_key, key, 'unset')" class="btn btn-default btn-sm">
+                                                                            setTimings(op_key, key, 'unset')" class="btn btn-default btn-sm">
                                                 <span class="glyphicon glyphicon-remove"></span>
                                             </button>
                                         </form>
                                         <div class="buttons" ng-show="!rowform.$visible">
                                             <a ng-click="rowform.$show();
-                                               row.sts_status = 'A';
-                                               setTimings(op_key, key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a><br />
+                                                                            row.sts_status = 'A';
+                                                                            setTimings(op_key, key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a><br />
                                         </div>
                                     </div>
 
@@ -217,7 +223,8 @@
                                 <td>&nbsp; </td>
                                 <td colspan="9">
                                     <b>
-                                        <button ng-click="value.seenExpanded = !value.seenExpanded; expandSeen(value.consultant_id, value.seenExpanded);" expand class="btn btn-sm btn-default hms-plus">
+                                        <button ng-click="value.seenExpanded = !value.seenExpanded;
+                                                                    expandSeen(value.consultant_id, value.seenExpanded);" expand class="btn btn-sm btn-default hms-plus">
                                             <i ng-if="!value.seenExpanded" class="fa fa-plus text"></i>
                                             <i ng-if="value.seenExpanded" class="fa fa-minus text"></i>
                                         </button>&nbsp; &nbsp;
@@ -302,13 +309,13 @@
 
 
 <script>
-    $(function () {
-        if ($.isFunction($.fn.photoZoom)) {
-            profilePhoto(".patientImage");
-        } else {
-            $.getScript("js/photoZoom.js", function (data, textStatus, jqxhr) {
-                profilePhoto(".patientImage");
-            });
-        }
-    });
+                    $(function () {
+                        if ($.isFunction($.fn.photoZoom)) {
+                            profilePhoto(".patientImage");
+                        } else {
+                            $.getScript("js/photoZoom.js", function (data, textStatus, jqxhr) {
+                                profilePhoto(".patientImage");
+                            });
+                        }
+                    });
 </script>

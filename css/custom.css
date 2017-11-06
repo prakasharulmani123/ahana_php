@@ -822,6 +822,9 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
     width: auto !important;
     display: inline-block !important;
 }
+.daterangepicker .input-mini {
+    padding-left: 25px !important;
+}
  @media (min-width: 1280px) {
 .pre-freq-new1 input {
 	width: 27%;
