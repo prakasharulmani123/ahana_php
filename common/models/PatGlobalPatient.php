@@ -175,6 +175,9 @@ class PatGlobalPatient extends RActiveRecord {
         $extend = [
             'fullname' => function ($model) {
                 return $model->fullname;
+            },
+            'fullname_globalcode' => function ($model) {
+                return $model->fullname.' ('.$model->patient_global_int_code.')';
             }];
 
         $fields = array_merge(parent::fields(), $extend);
@@ -182,7 +185,7 @@ class PatGlobalPatient extends RActiveRecord {
         if ($onlyField = Yii::$app->request->get('onlyfields')) {
             switch ($onlyField):
                 case 'pharmacylist':
-                    $only_keys = ['global_patient_id', 'fullname', 'patient_global_guid'];
+                    $only_keys = ['global_patient_id', 'fullname', 'patient_global_guid','fullname_globalcode'];
                     break;
             endswitch;
 
