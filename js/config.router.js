@@ -2404,7 +2404,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
 
             //PHARMACY PATIENT GROUP
             .state('configuration.patientgroupassign', {
-                url: '/patientgroup',
+                url: '/patientgroupassign',
                 templateUrl: 'tpl/patient_groups/pharmacy_patient_list.html',
                 resolve: {
                     deps: ['$ocLazyLoad',

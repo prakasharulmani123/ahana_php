@@ -83,7 +83,7 @@
                                                     e-typeahead-editable="false" 
                                                     e-typeahead="patient as patient.name_with_int_code for patient in getPatients($viewValue) | filter:{name_with_int_code:$viewValue} | limitTo: 10"
                                                     >
-                                                    {{patient.fullname || 'empty' }}
+                                                    {{patient.fullname_globalcode || 'empty' }}
                                                 </span>
                                             </li>
                                         </ul>
