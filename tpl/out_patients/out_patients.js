@@ -33,18 +33,23 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             $("#appointment").datepicker().datepicker("setDate", new Date());
         }
 
-        function cb(start, end) {
+        function cb(start, end, type) {
             $scope.range_filter_start = start.format('YYYY-MM-DD');
             $scope.range_filter_end = end.format('YYYY-MM-DD');
-            $scope.loadOutPatientsList('previous');
+            if (typeof type == 'undefined') {
+                var current_type = type;
+            } else {
+                var current_type = $scope.op_type;
+            }
+            $scope.loadOutPatientsList(current_type);
             $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         }
 
-        $scope.startDaterangepicker = function () {
+        $scope.startDaterangepicker = function (type) {
             //$(function () {
             $scope.range_filter_start = '';
             $scope.range_filter_end = '';
-            
+
             var start = moment().subtract(1, 'days');
             var end = moment().subtract(1, 'days');
 
@@ -60,7 +65,7 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
                 }
             }, cb);
-            cb(start, end);
+            cb(start, end, type);
             //});
         }
 
