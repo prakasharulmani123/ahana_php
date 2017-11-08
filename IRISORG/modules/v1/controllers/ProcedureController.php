@@ -96,7 +96,7 @@ class ProcedureController extends ActiveController {
             $procedure = PatProcedure::find()
                     ->active()
                     ->status()
-                    ->where("patient_id IN ($all_patient_id->allpatient)");
+                    ->andWhere("patient_id IN ($all_patient_id->allpatient)");
             if (isset($get['date'])) {
                 $procedure->andWhere(['DATE(proc_date)' => $get['date']]);
             }
@@ -108,7 +108,7 @@ class ProcedureController extends ActiveController {
                 $procedure_details = PatProcedure::find()
                         ->active()
                         ->status()
-                        ->where("patient_id IN ($all_patient_id->allpatient)");
+                        ->andWhere("patient_id IN ($all_patient_id->allpatient)");
                 if (isset($get['date'])) {
                     $procedure_details->andWhere(['DATE(proc_date)' => $get['date']]);
                 }
