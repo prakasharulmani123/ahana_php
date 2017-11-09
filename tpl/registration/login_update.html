@@ -16,12 +16,17 @@
                                 <div class="col-lg-6">
                                     <input type="text" placeholder="Username" class="form-control" ng-model="data.username">
                                 </div>
-                            </div>
-                            <div class="form-group">
+                                <a class="btn btn-primary" ng-show="data.form_type == 'update'" ng-click="data.change_password = true">Change Password</a>
+                            </div> 
+                            <div ng-show="((data.form_type == 'add') || ((data.form_type == 'update') && data.change_password))" class="form-group">
                                 <label class="col-lg-2 control-label" ng-show="data.form_type == 'add'">Password *</label>
                                 <label class="col-lg-2 control-label" ng-show="data.form_type == 'update'">Password </label>
                                 <div class="col-lg-6">
-                                    <input type="password" placeholder="Password" class="form-control" ng-model="data.password" value="">
+                                    <input type="{{ showPassword ? 'text' : 'password' }}" placeholder="Password" class="form-control" ng-model="data.password" value="">
+                                </div>
+                                <div class="col-lg-3">
+                                    <button class="btn btn-sm btn-icon btn-info" ng-show="!showPassword" ng-click="showPassword = true"><i class="fa fa-eye"></i></button>
+                                    <button class="btn btn-sm btn-icon btn-info" ng-show="showPassword" ng-click="showPassword = false"><i class="fa fa-eye-slash"></i></button>
                                 </div>
                             </div>
                             <div class="form-group">
