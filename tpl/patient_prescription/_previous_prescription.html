@@ -39,7 +39,7 @@
             <td>{{value.diag_name}}</td>
             <td>{{value.number_of_days}}</td>
             <td>
-                <button tooltip="Print Bill"  class="label bg-primary dk" ng-click="printPres(value.pres_id)">
+                <button tooltip="Print Prescription"  class="label bg-primary dk" ng-click="printPres(value.pres_id)">
                     <i class="fa fa-print"></i>
                 </button>
                 <a ng-if="value.tenant_id == app.logged_tenant_id" data-button="patient.prescriptionDelete" check-access-custom title="Delete Prescription" ng-click="removeRow(value.pres_id)" class="label bg-dark dk">
