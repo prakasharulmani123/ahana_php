@@ -1369,6 +1369,161 @@ angular.module('app')
                     }
                     return groups;
                 }
+                //Medical case history auto save
+                $scope.initMedicalSaveDocument = function (encounter_id, callback) {
+                    var _data = [];
+                    var url = $rootScope.IRISOrgServiceUrl + '/patientvitals/getvitalsbyencounter?addtfields=eprvitals&encounter_id=' + encounter_id;
+                    $http.get(url)
+                            .success(function (response) {
+                                if (response.success == true) {
+                                    _data.push({
+                                        name: 'temperature',
+                                        value: response.vitals.temperature,
+                                    }, {
+                                        name: 'bpsystolic',
+                                        value: response.vitals.blood_pressure_systolic,
+                                    }, {
+                                        name: 'bpdiastolic',
+                                        value: response.vitals.blood_pressure_diastolic,
+                                    }, {
+                                        name: 'pulse',
+                                        value: response.vitals.pulse_rate,
+                                    }, {
+                                        name: 'weight',
+                                        value: response.vitals.weight,
+                                    }, {
+                                        name: 'height',
+                                        value: response.vitals.height,
+                                    }, {
+                                        name: 'sp02',
+                                        value: response.vitals.sp02,
+                                    }, {
+                                        name: 'pain_score',
+                                        value: response.vitals.pain_score,
+                                    });
+                                }
+                            })
+                    _data.push({
+                        name: 'name',
+                        value: $scope.patientObj.fullname,
+                    }, {
+                        name: 'uhid',
+                        value: $scope.patientObj.patient_global_int_code,
+                    }, {
+                        name: 'age',
+                        value: $scope.patientObj.patient_age,
+                    }, {
+                        name: 'gender',
+                        value: $scope.app.patientDetail.patientSex,
+                    }, {
+                        name: 'martial_status',
+                        value: $scope.app.patientDetail.patientMaritalStatus,
+                    }, {
+                        name: 'encounter_id',
+                        value: encounter_id,
+                    }, {
+                        name: 'patient_id',
+                        value: $state.params.id,
+                    }, {
+                        name: 'novalidate',
+                        value: true,
+                    }, {
+                        name: 'status',
+                        value: '0',
+                    });
+                    $scope.loadbar('show');
+                    $timeout(function () {
+                        $http({
+                            url: $rootScope.IRISOrgServiceUrl + "/patientprescription/savemedicaldocument",
+                            method: "POST",
+                            data: _data,
+                        }).then(
+                                function (response) {
+                                    $scope.loadbar('hide');
+                                    if (response.data.success == true) {
+                                        callback(response);
+                                    }
+                                }
+                        );
+                    }, 100);
+
+                };
+                //Medical case history common service
+                $scope.medicalcasecommonservice = function () {
+                    $rootScope.commonService.GetDiagnosisList(function (response) {
+                        var availableTags = [];
+                        angular.forEach(response.diagnosisList, function (diagnosis) {
+                            availableTags.push(diagnosis.label);
+                        });
+                        $(".icd_code_autocomplete").autocomplete({
+                            source: availableTags,
+                        });
+                    });
+                }
+                //Check Medical case history empty rows
+                $scope.checkmedicalcaseemptyrow = function (a) {
+                    $('#'+a+' > tbody  > tr').each(function () {
+                        //$("td:empty").remove(); //Remove Empty table td
+                        $('td').each(function () {
+                            var cellText = $(this).text();
+                            if (cellText.trim() == "Hiding text") {
+                                $(this).remove();
+                            }
+                        });
+                        //$("tr:empty").remove(); //Remove Empty table tr
+
+                        //Removed personal history empty heading
+                        var personalText = $(this).find('tr.personal_history');
+                        if (personalText.text().trim().length === 0) {
+                            var personalTr = personalText.closest('tr').prev('tr');
+                            personalTr.remove();
+                        }
+                        //Removed Physical examination empty heading
+                        var physicalText = $(this).find('tr.physical_examination');
+                        if (physicalText.text().trim().length === 0) {
+                            var physicalTr = physicalText.closest('tr').prev('tr');
+                            physicalTr.remove();
+                        }
+                        //Removed Informant empty heading
+                        var informantText = $(this).find('tr.informant_body');
+                        if (informantText.text().trim().length === 0) {
+                            var informantTr = informantText.closest('tr').prev('tr');
+                            informantTr.remove();
+                        }
+                        
+                        var tr = $(this).find("tr");
+                        $.each(tr, function () {
+                            $this = $(this);
+                            if ($(this).find("td").length > 0) {
+                                if ($(this).find("td").text().trim().length === 0) {
+                                    $this.remove();
+                                }
+                            }
+                        });
+                        $("tr:empty").remove(); //Remove Empty table tr
+                        //Removed empty icd code row
+                        var icd_code = $('#TBicdcode tbody').children().length;
+                        if (icd_code == 0) {
+                            $('#TBicdcode').remove();
+                        }
+                        //Removed empty prescription row
+                        var prescription = $('#RGprevprescription tbody').children().length;
+                        if (prescription == 0) {
+                            $('#RGprevprescription').remove();
+                        }
+                        //Removed empty referral row
+                        var referral_code = $('#referral tbody').children().length;
+                        if (referral_code == 0) {
+                            $('#referral').remove();
+                        }
+                        //Removed empty past medical row
+                        var past_medical = $('#past_medical_history tbody').children().length;
+                        if (past_medical == 1) {
+                            $('#past_medical_history').remove();
+                        }
+                    });
+                }
+
                 //Excel Export
                 $scope.tablesToExcel = (function () {
                     var uri = 'data:application/vnd.ms-excel;base64,'

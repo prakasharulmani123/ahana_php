@@ -2800,7 +2800,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
             //Patient Document - Create
             .state('patient.addDocument', {
-                url: '/addDocument/{id}/{enc_id}',
+                url: '/addDocument/{id}/{enc_id}/{document}',
                 templateUrl: 'tpl/patient_documents/create.html',
                 resolve: {
                     deps: ['uiLoad',
@@ -2814,7 +2814,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
             //Patient Document - Update
             .state('patient.editDocument', {
-                url: '/editDocument/{id}/{doc_id}',
+                url: '/editDocument/{id}/{doc_id}/{document}',
                 templateUrl: 'tpl/patient_documents/update.html',
                 resolve: {
                     deps: ['uiLoad',
@@ -2828,7 +2828,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
             //Patient Document - View
             .state('patient.viewDocument', {
-                url: '/viewDocument/{id}/{doc_id}',
+                url: '/viewDocument/{id}/{doc_id}/{document}',
                 templateUrl: 'tpl/patient_documents/view.html',
                 resolve: {
                     deps: ['uiLoad',
