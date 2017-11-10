@@ -73,11 +73,20 @@ class PatientscanneddocumentsController extends ActiveController {
                     ->tenant()
                     ->status()
                     ->active()
-                    ->andWhere(['scanned_doc_id' => $get['id']])
-                    ->one();
+                    ->andWhere(['scanned_doc_name' => $get['doc_name'],
+                        'encounter_id' => $get['encounter_id'],
+                        'scanned_doc_creation_date' => $get['date_time']])
+                    //->groupBy('encounter_id','scanned_doc_name','patient_id')
+                    ->all();
             if (!empty($scanned_document)) {
-                $file = file_get_contents(\Yii::$app->basePath . '/web/uploads/' . $scanned_document->file_name);
-                return ['success' => true, 'result' => $scanned_document, 'file' => base64_encode($file)];
+                $all_file = [];
+                foreach ($scanned_document as $key => $value) {
+                    $file = file_get_contents(\Yii::$app->basePath . '/web/uploads/' . $value->file_name);
+                    $result[$key] = ['data' => $value, 'file' => base64_encode($file)];
+                }
+                //$file = file_get_contents(\Yii::$app->basePath . '/web/uploads/' . $scanned_document->file_name);
+                //return ['success' => true, 'result' => $scanned_document, 'file' => base64_encode($file)];
+                return ['success' => true, 'result' => $result];
             } else {
                 return ['success' => false, 'message' => "Result Not Found."];
             }
@@ -117,7 +126,8 @@ class PatientscanneddocumentsController extends ActiveController {
     //Save Create / Update
     public function actionSavedocument() {
         $post = Yii::$app->getRequest()->post();
-
+        $post['scanned_doc_creation_date'] = $post['year'].'-'.$post['month'].'-'.$post['day'];
+        
         $patient = PatPatient::getPatientByGuid($post['patient_id']);
         $patient_id = $patient->patient_id;
         $encounter_id = $post['encounter_id'];
@@ -133,7 +143,7 @@ class PatientscanneddocumentsController extends ActiveController {
                 'patient_id' => $patient->patient_id,
                 'encounter_id' => $post['encounter_id'],
                 'scanned_doc_name' => $post['scanned_doc_name'],
-                'scanned_doc_creation_date' => $post['scanned_doc_creation_date'],
+                'scanned_doc_creation_date' => date('Y-m-d H:i:s', strtotime($post['scanned_doc_creation_date'])),
                 'file_org_name' => $_FILES['file']['name'],
                 'file_name' => $filename,
                 'file_type' => $_FILES['file']['type'],
