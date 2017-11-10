@@ -1,4 +1,4 @@
-app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'transformRequestAsFormPost', '$anchorScroll', '$filter', '$interval', function ($rootScope, $scope, $timeout, $http, $state, transformRequestAsFormPost, $anchorScroll, $filter, $interval) {
+app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', '$log', 'transformRequestAsFormPost', '$anchorScroll', '$filter', '$interval', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log, transformRequestAsFormPost, $anchorScroll, $filter, $interval) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -1197,6 +1197,41 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             }
 
         });
+
+        $scope.openModel = function (size, ctrlr, tmpl, update_col, doc_id, doc_name, encounter_id, date_time) {
+            $http.get($rootScope.IRISOrgServiceUrl + "/patientscanneddocuments/getscanneddocument?id=" + doc_id + "&doc_name=" + doc_name + "&encounter_id=" + encounter_id + "&date_time=" + date_time)
+                    .success(function (response) {
+                        if (response.success === true) {
+                            $scope.scan_document = response.result;
+                        } else {
+                            $scope.errorData = response.message;
+                        }
+                    }).
+                    error(function (data, status) {
+                    });
+            $timeout(function () {
+                var modalInstance = $modal.open({
+                    templateUrl: tmpl,
+                    controller: ctrlr,
+                    size: size,
+                    resolve: {
+                        scope: function () {
+                            return $scope;
+                        },
+                        column: function () {
+                            return update_col;
+                        },
+                    }
+                });
+
+
+                modalInstance.result.then(function (selectedItem) {
+                    $scope.selected = selectedItem;
+                }, function () {
+                    $log.info('Modal dismissed at: ' + new Date());
+                });
+            }, 700);
+        };
     }]);
 // Filter HTML Code
 app.filter("sanitize", ['$sce', function ($sce) {

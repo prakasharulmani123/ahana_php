@@ -1,5 +1,4 @@
 'use strict';
-
 /**
  * Config for the router
  */
@@ -7,21 +6,17 @@
 angular.module('app')
         .run(run)
         .config(config);
-
-
 config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider', 'ivhTreeviewOptionsProvider', 'JQ_CONFIG', 'hotkeysProvider', '$compileProvider'];
 function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOptionsProvider, JQ_CONFIG, hotkeysProvider, $compileProvider) {
 
 //    hotkeysProvider.template = '<div class="my-own-cheatsheet">Hai</div>';
 
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
-
     ivhTreeviewOptionsProvider.set({
         twistieExpandedTpl: '<i class="fa fa-caret-right"></i>',
         twistieCollapsedTpl: '<i class="fa fa-caret-down"></i>',
         twistieLeafTpl: '',
     });
-
 //    var newBaseUrl = "";
 //
 //    if (window.location.hostname == "localhost") {
@@ -34,7 +29,6 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
 
     $urlRouterProvider
             .otherwise('/access/signin');
-
     $stateProvider
             .state('access', {
                 url: '/access',
@@ -2794,10 +2788,14 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['uiLoad',
                         function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_documents/patient_documents.js?v=' + APP_VERSION]);
+                            return uiLoad.load([
+                                'tpl/patient_documents/patient_documents.js?v=' + APP_VERSION,
+                                'tpl/modal_form/modal.scan_document.js?v=' + APP_VERSION,
+                            ]);
                         }]
                 }
             })
+
             //Patient Document - Create
             .state('patient.addDocument', {
                 url: '/addDocument/{id}/{enc_id}/{document}',
@@ -3084,17 +3082,14 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
 
     $httpProvider.interceptors.push('APIInterceptor');
-
 }
 run.$inject = ['$rootScope', '$state', '$stateParams', '$location', '$cookieStore', '$http', '$window', 'CommonService', 'AuthenticationService', '$timeout', '$templateCache'];
 function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $window, CommonService, AuthenticationService, $timeout) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
-
     var serviceUrl = '';
     var orgUrl = '';
     var clientURL = '';
-
     if ($location.host() == 'hms.ark') {
         serviceUrl = 'http://hms.ark/api/IRISORG/web/v1'
         orgUrl = 'http://hms.ark/client';
@@ -3118,11 +3113,9 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
     $rootScope.authenticationService = AuthenticationService;
     $rootScope.IRISOrgUrl = orgUrl;
     $rootScope.clientUrl = clientURL;
-
 //    var currentUser = AuthenticationService.getCurrentUser();
 
     $rootScope.globals = $cookieStore.get('globals') || {};
-
     $rootScope.$on('$locationChangeStart', function (event, next, current) {
         if ($location.path() == '/access/resetpwd') {
             var token = $location.search().token;
@@ -3138,7 +3131,6 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
             var loggedIn = Boolean(currentUser);
             var stay_date = AuthenticationService.getCurrent();
             var today_date = moment().format("YYYY-MM-DD");
-
             if (restrictedPage && !loggedIn) {
                 $location.path('/access/signin');
             } else if (!restrictedPage && loggedIn) {
@@ -3163,7 +3155,6 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
             }
         }
     });
-
     //Check Access
     $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
         $rootScope.currentPage = ' ';
@@ -3172,7 +3163,6 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
         var loggedIn = Boolean(currentUser);
         var page = toState.name.split('.');
         $rootScope.currentPage = page[0];
-
         if (toState.name == 'patient.inPatients') {
             $rootScope.currentPage = 'IP';
         } else if (toState.name == 'patient.outPatients') {

@@ -22,10 +22,10 @@
                     <select class="form-control search-dropdown" ng-model="year" ng-options="year.value as year.label for year in years">
                         <option value="">YYYY</option>
                     </select>
-                    <button class="btn m-b-xs btn-grey"  ng-disabled=" (day&&month&&year) ?  false : true" ng-click="loadPatDocumentsList(year+'-'+month+'-'+day)">
-                            &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
-                        </button>
-                    <button title="Clear" ng-click="day='';month='';year='';loadPatDocumentsList()" class="btn btn-dark">
+                    <button class="btn m-b-xs btn-grey"  ng-disabled=" (day && month && year) ? false : true" ng-click="loadPatDocumentsList(year + '-' + month + '-' + day)">
+                        &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
+                    </button>
+                    <button title="Clear" ng-click="day = '';month = '';year = '';loadPatDocumentsList()" class="btn btn-dark">
                         <i class="fa fa-times"></i>
                     </button>
 
@@ -105,7 +105,7 @@
                         <td valign="middle"> {{doc.doc_name}} </td>
                         <td valign="middle"> {{doc.created_by}} </td>
                         <td valign="middle">
-                            <span ng-if="((doc.doc_type == 'CH') || (doc.doc_type == 'MCH')) ">
+                            <span ng-if="((doc.doc_type == 'CH') || (doc.doc_type == 'MCH'))">
                                 <a class="label bg-dark" title="View" check-access  ui-sref="patient.viewDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}', document: '{{doc.doc_type}}'})">
                                     <i class="fa fa-eye"></i>
                                 </a>
@@ -118,7 +118,7 @@
                                     <i class="fa fa-trash"></i>
                                 </button>
                                 &nbsp;&nbsp;&nbsp;
-                                <button title="Print"  class="label bg-dark" ng-click="printCasedocument(doc.doc_id,doc.doc_type)">
+                                <button title="Print"  class="label bg-dark" ng-click="printCasedocument(doc.doc_id, doc.doc_type)">
                                     <i class="fa fa-print"></i>
                                 </button>
                             </span>
@@ -141,7 +141,14 @@
                             </span>
                             <span ng-if="doc.doc_type == 'SD'">
                                 <i class="fa fa-spin fa-repeat" ng-if="displayspin == doc.doc_id"></i>
-                                <button type="button" title="Download"  ng-click="downloadDocument(doc.doc_id,doc.doc_name,doc.encounter_id,doc.date_time)" class="label bg-dark">
+                                <script type="text/ng-template" id="ScanDocumentModalContent.html">
+                                    <div ng-include="'tpl/modal_form/modal.scan_document.html'"></div>
+                                </script>
+                                <button type="button" class="label bg-dark" ng-click="openModel('lg', 'ScandocumentModalInstanceCtrl', 'ScanDocumentModalContent.html', '', doc.doc_id, doc.doc_name, doc.encounter_id, doc.date_time)">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                                &nbsp;&nbsp;&nbsp; 
+                                <button type="button" title="Download"  ng-click="downloadDocument(doc.doc_id, doc.doc_name, doc.encounter_id, doc.date_time)" class="label bg-dark">
                                     <i class="fa fa-download"></i>
                                 </button>
                                 &nbsp;&nbsp;&nbsp;                        
