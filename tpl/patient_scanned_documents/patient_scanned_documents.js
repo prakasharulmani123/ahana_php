@@ -38,7 +38,9 @@ app.controller('ScannedDocumentsController', ['$rootScope', '$scope', '$timeout'
                 'encounter_id': $scope.encounter.encounter_id,
                 'patient_id': $state.params.id,
                 'scanned_doc_name': $scope.data.document_name,
-                'scanned_doc_creation_date': moment($scope.data.date_of_creation).format('YYYY-MM-DD HH:mm:ss'),
+                'day':$scope.day,
+                'month':$scope.month,
+                'year':$scope.year,
             });
         };
 //        uploader.onProgressItem = function (fileItem, progress) {
@@ -81,10 +83,23 @@ app.controller('ScannedDocumentsController', ['$rootScope', '$scope', '$timeout'
         $scope.initForm = function () {
             $scope.data = {};
             $scope.data.document_name = '';
-            $scope.data.date_of_creation = moment().format('YYYY-MM-DD HH:mm:ss');
+            $scope.day = '';
+            $scope.month = '';
+            $scope.year = '';
+            //$scope.data.date_of_creation = moment().format('YYYY-MM-DD HH:mm:ss');
             $scope.isLoading = true;
             $scope.encounter = {encounter_id: $state.params.enc_id};
             $scope.isLoading = false;
+            
+            $rootScope.commonService.GetDay(function (response) {
+                $scope.days = response;
+            });
+            $rootScope.commonService.GetMonth(function (response) {
+                $scope.months = response;
+            });
+            $rootScope.commonService.GetYear(function (response) {
+                $scope.years = response;
+            });
 //            $scope.isPatientHaveActiveEncounter(function (response) {
 //                if (response.success == false) {
 //                    $scope.isLoading = false;

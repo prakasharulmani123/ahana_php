@@ -39,8 +39,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             if (date)
                 filterDate = moment(date).format('YYYY-MM-DD');
             $scope.documents = [];
+            //$scope.documents.push({label: 'Case History', value: 'CH'}, {label: 'Scanned Documents', value: 'SD'}, {label: 'Other Documents', value: 'OD'}, {label: 'Medical Case History', value: 'MCH'});
             $scope.documents.push({label: 'Case History', value: 'CH'}, {label: 'Scanned Documents', value: 'SD'}, {label: 'Other Documents', value: 'OD'});
-
             $scope.isLoading = true;
             $scope.rowCollection = [];
             $scope.encounters_list = [];
@@ -49,7 +49,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 if (newValue != '') {
                     $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
                         angular.forEach(response, function (resp) {
-                            if(((resp.encounter_type=='IP') && (!resp.cancel_admission)) || ((resp.encounter_type=='OP') && (!resp.cancel_appoitment))) {
+                            if (((resp.encounter_type == 'IP') && (!resp.cancel_admission)) || ((resp.encounter_type == 'OP') && (!resp.cancel_appoitment))) {
                                 $scope.encounters_list.push(resp);
                             }
                             resp.encounter_id = resp.encounter_id.toString();
@@ -74,9 +74,9 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         //Create Document
         $scope.switchAddDocument = function () {
             if ($scope.add_document) {
-                if ($scope.add_document == 'CH') {
+                if (($scope.add_document == 'CH') || ($scope.add_document == 'MCH')) {
                     localStorage.setItem("add_case_document", "1");
-                    $state.go('patient.addDocument', {id: $state.params.id, enc_id: $scope.add_doc_encounter_id});
+                    $state.go('patient.addDocument', {id: $state.params.id, enc_id: $scope.add_doc_encounter_id, document: $scope.add_document});
                 } else if ($scope.add_document == 'SD') {
                     $state.go('patient.addScannedDocument', {id: $state.params.id, enc_id: $scope.add_doc_encounter_id});
                 } else if ($scope.add_document == 'OD') {
@@ -117,20 +117,30 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
         //Download
         $scope.displayspin = '';
-        $scope.downloadDocument = function (scanned_doc_id) {
+        $scope.downloadDocument = function (scanned_doc_id, doc_name, encounter_id, date_time) {
             $scope.displayspin = scanned_doc_id;
-            $http.get($rootScope.IRISOrgServiceUrl + "/patientscanneddocuments/getscanneddocument?id=" + scanned_doc_id)
+            $http.get($rootScope.IRISOrgServiceUrl + "/patientscanneddocuments/getscanneddocument?id=" + scanned_doc_id + "&doc_name=" + doc_name + "&encounter_id=" + encounter_id + "&date_time=" + date_time)
                     .success(function (response) {
                         $scope.displayspin = '';
                         if (response.success === true) {
-                            var link = document.createElement('a');
-                            link.href = 'data:' + response.result.file_type + ';base64,' + response.file;
-                            link.download = response.result.file_org_name;
-                            document.body.appendChild(link);
-                            link.click();
-                            $timeout(function () {
-                                document.body.removeChild(link);
-                            }, 1000);
+                            if (response.result.length == 1) {
+                                //Not check need to put 0 value in result;
+                                var link = document.createElement('a');
+                                link.href = 'data:' + response.result[0].data.file_type + ';base64,' + response.result[0].file;
+                                link.download = response.result[0].data.file_org_name;
+                                document.body.appendChild(link);
+                                link.click();
+                                $timeout(function () {
+                                    document.body.removeChild(link);
+                                }, 1000);
+                            } else {
+                                var zip = new JSZip();
+                                angular.forEach(response.result, function (resp) {
+                                    zip.add(resp.data.file_org_name, resp.file, {base64: true})
+                                });
+                                content = zip.generate();
+                                location.href = "data:application/zip;base64," + content;
+                            }
                         } else {
                             $scope.errorData = response.message;
                         }
@@ -153,7 +163,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
 // Get Case History Document Template - Create
         $scope.getDocumentType = function (callback) {
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getdocumenttype?doc_type=CH')
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getdocumenttype?doc_type=' + $scope.document_type)
                     .success(function (response) {
                         callback(response);
                     }, function (x) {
@@ -222,16 +232,10 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
 // Initialize Create Form
         $scope.initForm = function () {
+            $scope.document_type = $state.params.document;
             $scope.isLoading = true;
 
             var checking = localStorage.getItem("add_case_document");
-//            $scope.isPatientHaveActiveEncounter(function (response) {
-//                if (response.success == false) {
-//                    $scope.isLoading = false;
-//                    alert("Sorry, you can't create a document");
-//                    $state.go("patient.document", {id: $state.params.id});
-//                } else {
-//                    $scope.encounter = response.model;
             $scope.encounter = {encounter_id: $state.params.enc_id};
             if (checking == 1) {
                 $scope.getDocumentType(function (doc_type_response) {
@@ -242,20 +246,32 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.xslt = doc_type_response.result.document_xslt;
                         $scope.$watch('patientObj', function (newValue, oldValue) {
                             if (Object.keys(newValue).length > 0) {
-                                $scope.initSaveDocument(function (auto_save_document) {
-                                    $scope.xml = auto_save_document.data.xml;
-                                    $scope.isLoading = false;
-                                    $scope.doc_id = auto_save_document.data.doc_id; // Set Document id
+                                if ($scope.document_type == 'CH') {
+                                    $scope.initSaveDocument(function (auto_save_document) {
+                                        $scope.xml = auto_save_document.data.xml;
+                                        $scope.isLoading = false;
+                                        $scope.doc_id = auto_save_document.data.doc_id; // Set Document id
 
-                                    $timeout(function () {
-                                        $scope.diagnosisDsmiv();
-                                    }, 2000);
+                                        $timeout(function () {
+                                            $scope.diagnosisDsmiv();
+                                        }, 2000);
 
-                                    $timeout(function () {
-                                        $scope.ckeditorReplace();
-                                    }, 500);
-                                    $scope.startAutoSave(auto_save_document.data.doc_id);
-                                });
+                                        $timeout(function () {
+                                            $scope.ckeditorReplace();
+                                        }, 500);
+                                        $scope.startAutoSave(auto_save_document.data.doc_id);
+                                    });
+                                } else if ($scope.document_type == 'MCH') {
+                                    $scope.initMedicalSaveDocument($state.params.enc_id, function (auto_save_document) {
+                                        $scope.isLoading = false;
+                                        $scope.xml = auto_save_document.data.xml;
+                                        $scope.doc_id = auto_save_document.data.doc_id; // Set Document id
+                                        $timeout(function () {
+                                            $scope.medicalcasecommonservice();
+                                            $scope.ckeditorReplace();
+                                        }, 2000);
+                                    });
+                                }
                             }
                         }, true);
                     }
@@ -264,8 +280,40 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             } else {
                 $state.go("patient.document", {id: $state.params.id});
             }
-//                }
-//            });
+        }
+
+        $scope.savemedicalForm = function () {
+            $scope.ckeditorupdate();
+            _data = $('#xmlform').serializeArray();
+            _data.push({
+                name: 'encounter_id',
+                value: $scope.encounter.encounter_id,
+            }, {
+                name: 'patient_id',
+                value: $state.params.id,
+            }, {
+                name: 'doc_id',
+                value: $scope.doc_id,
+            }, {
+                name: 'novalidate',
+                value: false,
+            });
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/patientprescription/savemedicaldocument",
+                method: "POST",
+                data: _data,
+            }).then(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        if (response.data.success == true) {
+                            $scope.msg.successMessage = 'Document Saved Successfully';
+                            $state.go('patient.document', {id: $state.params.id});
+                        } else {
+                            $scope.errorData = response.data.message;
+                            $anchorScroll();
+                        }
+                    }
+            );
         }
 
         $scope.initSaveDocument = function (callback) {
@@ -363,6 +411,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         });
         // Initialize Update Form
         $scope.initFormUpdate = function () {
+            $scope.document_type = $state.params.document;
             $scope.isLoading = true;
             $scope.getDocumentType(function (doc_type_response) {
                 if (doc_type_response.success == false) {
@@ -379,18 +428,103 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.isLoading = false;
                         $timeout(function () {
                             $scope.diagnosisDsmiv();
+                            $scope.medicalcasecommonservice(); // This function used for medical case history
                         }, 2000);
 
                         $timeout(function () {
                             $scope.ckeditorReplace();
                         }, 500);
-                        $scope.startAutoSave(doc_id);
+                        if ($scope.document_type == 'CH') {
+                            $scope.startAutoSave(doc_id);
+                        }
                     });
                 }
             });
         }
 
+        $("body").on("click", ".MCHaddMore", function () {
+            if (!jQuery.isEmptyObject($scope.encounter)) {
+                $scope.spinnerbar('show');
+                var button_id = $(this).attr('id');
+                var table_id = $(this).data('table-id');
+                var rowCount = $('#' + table_id + ' tbody  tr').length;
+                //var firstMsg = $('#' + table_id).find("tr:last");
+                //var curOffset = firstMsg.offset().top - $(document).scrollTop();
+                $scope.ckeditorupdate();
+                _data = $('#xmlform').serializeArray();
+                _data.push({
+                    name: 'encounter_id',
+                    value: $scope.encounter.encounter_id,
+                }, {
+                    name: 'patient_id',
+                    value: $state.params.id,
+                }, {
+                    name: 'button_id',
+                    value: button_id,
+                }, {
+                    name: 'table_id',
+                    value: table_id,
+                }, {
+                    name: 'rowCount',
+                    value: rowCount,
+                }, {
+                    name: 'novalidate',
+                    value: true,
+                }, {
+                    name: 'doc_id',
+                    value: $scope.doc_id,
+                });
+
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + "/patientprescription/savemedicaldocument",
+                    method: "POST",
+                    data: _data,
+                }).then(
+                        function (response) {
+                            $scope.loadbar('hide');
+                            if (response.data.success == true) {
+                                $scope.xml = response.data.xml;
+                                $timeout(function () {
+                                    $scope.medicalcasecommonservice();
+                                }, 2000);
+                                $timeout(function () {
+                                    angular.forEach($scope.panel_bars, function (bar) {
+                                        if (bar.opened) {
+                                            $('#' + bar.div)
+                                                    .siblings('.panel-heading')
+                                                    .find('i')
+                                                    .removeClass("fa-angle-right")
+                                                    .addClass("fa-angle-down");
+                                            $('#' + bar.div)
+                                                    .toggleClass('collapse in')
+                                                    .attr('aria-expanded', true)
+                                                    .removeAttr("style");
+                                        } else {
+                                            $('#' + bar.div)
+                                                    .toggleClass('collapse')
+                                                    .attr('aria-expanded', false);
+                                        }
+                                    });
+                                    $scope.ckeditorReplace();
+                                    var firstMsg = $('#' + table_id).find("tr:last");
+                                    //$(document).scrollTop(firstMsg.offset().top - curOffset);
+                                    $scope.spinnerbar('hide');
+                                }, 500);
+                            } else {
+                                $scope.spinnerbar('hide');
+                                $scope.errorData = response.data.message;
+                                $anchorScroll();
+                            }
+                        }
+                );
+            }
+
+        });
+
         $scope.printDocument = function () {
+            if ($scope.document_type == 'MCH') {
+                $scope.checkmedicalcaseemptyrow('print_medical_case');
+            }
             $scope.printElement();
 
 //            $timeout(function () {
@@ -404,6 +538,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
         //View Document
         $scope.viewDocument = function () {
+            $scope.document_type = $state.params.document;
             $scope.isLoading = true;
             $scope.getDocumentType(function (doc_type_response) {
                 if (doc_type_response.success == false) {
@@ -424,14 +559,23 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             $scope.setRefferedBy();
                         }, 100);
                         $timeout(function () {
-                            $scope.checkTablerow();
+                            if ($scope.document_type == 'CH') {
+                                $scope.checkTablerow();
+                            } else {
+                                $(".classy-edit").each(function () {
+                                    $(this).removeClass("form-control");
+                                    $(this).html($(this).text());
+                                });
+                                $scope.checkmedicalcaseemptyrow('print_medical_case');
+                            }
                         }, 1000);
                     });
                 }
             });
         }
 
-        $scope.printCasedocument = function (list) {
+        $scope.printCasedocument = function (list, document_type) {
+            $scope.document_type = document_type;
             $scope.printxslt = '';
             $scope.getDocumentType(function (doc_type_response) {
                 if (doc_type_response.success == false) {
@@ -450,7 +594,15 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             $scope.setRefferedBy();
                         }, 100);
                         $timeout(function () {
-                            $scope.checkTablerow();
+                            if ($scope.document_type == 'CH') {
+                                $scope.checkTablerow();
+                            } else {
+                                $(".classy-edit").each(function () {
+                                    $(this).removeClass("form-control");
+                                    $(this).html($(this).text());
+                                });
+                                $scope.checkmedicalcaseemptyrow('print_medical_case');
+                            }
                             $scope.printElement();
                         }, 1000);
                     });
@@ -580,7 +732,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $this.parents("span").remove();
                         //$this.parents("div").remove();
                     }
-                    if ($this.text().trim()== '|') {
+                    if ($this.text().trim() == '|') {
                         $this.parents("span").remove();
                     }
                 });
