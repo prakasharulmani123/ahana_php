@@ -66,7 +66,9 @@ class RActiveRecord extends ActiveRecord {
     }
 
     public function beforeSave($insert) {
-        $this->setTenant();
+        if ($insert) {
+            $this->setTenant();
+        }
         return parent::beforeSave($insert);
     }
 
