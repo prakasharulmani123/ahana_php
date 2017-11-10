@@ -75,7 +75,8 @@ class PatientscanneddocumentsController extends ActiveController {
                     ->active()
                     ->andWhere(['scanned_doc_name' => $get['doc_name'],
                         'encounter_id' => $get['encounter_id'],
-                        'scanned_doc_creation_date' => $get['date_time']])
+                        'scanned_doc_creation_date' => $get['date_time']
+                            ])
                     //->groupBy('encounter_id','scanned_doc_name','patient_id')
                     ->all();
             if (!empty($scanned_document)) {
@@ -126,7 +127,7 @@ class PatientscanneddocumentsController extends ActiveController {
     //Save Create / Update
     public function actionSavedocument() {
         $post = Yii::$app->getRequest()->post();
-        $post['scanned_doc_creation_date'] = $post['year'].'-'.$post['month'].'-'.$post['day'];
+        $post['scanned_doc_creation_date'] = $post['year'].'-'.$post['month'].'-'.$post['day']. date('h:i:s');
         
         $patient = PatPatient::getPatientByGuid($post['patient_id']);
         $patient_id = $patient->patient_id;
