@@ -331,7 +331,8 @@
                             <td>{{row.sale_date | moment:'DD/MM/YYYY'}}</td>
                             <td>{{row.bill_payment}}</td>
                             <td>{{row.bill_amount}}</td>
-                            <td align="right" ng-init="pharmacy.total = pharmacy.total + parseFloat(row.billings_total_balance_amount);"> {{row.billings_total_balance_amount}} </td>
+                            <td align="right" ng-init="pharmacy.total = pharmacy.total + parseFloat(row.billings_total_balance_amount);
+                                recurr_billing.total.recurring_total = recurr_billing.total.recurring_total + parseFloat(row.billings_total_balance_amount);"> {{row.billings_total_balance_amount}} </td>
                         </tr>
                     </table>
                 </div>
