@@ -284,6 +284,10 @@ class PatEncounter extends RActiveRecord {
         return $this->hasOne(PatVitals::className(), ['encounter_id' => 'encounter_id', 'patient_id' => 'patient_id'])->orderBy(['created_at' => SORT_DESC]);
     }
 
+    public function getPhaSales() {
+        return $this->hasOne(PhaSale::className(), ['encounter_id' => 'encounter_id'])->orderBy(['created_at' => SORT_DESC]);
+    }
+
     /**
      *
      * @return type
@@ -535,8 +539,8 @@ class PatEncounter extends RActiveRecord {
                     $parent_fields = ['encounter_id' => 'encounter_id'];
                     break;
                 case 'sale_encounter_id':
-                    $addt_keys = ['cancel_appoitment','cancel_admission'];
-                    $parent_fields = ['encounter_id' => 'encounter_id','encounter_type'=>'encounter_type'];
+                    $addt_keys = ['cancel_appoitment', 'cancel_admission'];
+                    $parent_fields = ['encounter_id' => 'encounter_id', 'encounter_type' => 'encounter_type'];
                     break;
                 case 'encounter_details':
                     $addt_keys = false;
@@ -667,10 +671,21 @@ class PatEncounter extends RActiveRecord {
                     ])
                     ->sum('total_charge');
 
+            $sale_amount = PhaSale::find()
+                            ->where([
+                                'encounter_id' => $this->encounter_id,
+                                'tenant_id' => $this->tenant_id,
+                                'payment_type' => 'CR'
+                            ])
+                            ->andWhere(['!=', 'payment_status', 'C'])->all();
+            $total_amount = 0;
+            foreach ($sale_amount as $sale) {
+                $total_amount += $sale['bill_amount'] - $sale->phaSaleBillingsTotalPaidAmount;
+            }
 
             $row_total_charge = $recurring->total_charge + $procedure->total_charge + $professional->total_charge + $other_charge->total_charge;
             $extra_charge = $procedure->extra_amount + $professional->extra_amount + $other_charge->extra_amount;
-            $total_charge = $row_total_charge + $extra_charge;
+            $total_charge = $row_total_charge + $extra_charge + $total_amount;
             $total_concession = $this->concession_amount + $procedure->concession_amount + $professional->concession_amount + $other_charge->concession_amount;
 
             $balance = $total_charge - $total_concession - $total_paid;
