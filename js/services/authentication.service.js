@@ -74,6 +74,10 @@
             if (!currentUser) {
                 currentUser = $localStorage.user;
             }
+            //Thangaraj - switch branch for multiple tab open in broswer.
+            if (currentUser) {
+                currentUser = $localStorage.user;
+            }
             return currentUser;
         };
         

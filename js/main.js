@@ -829,6 +829,7 @@ angular.module('app')
                     }
                 }
 
+
                 $scope.switchBranch = function () {
                     $http({
                         method: 'POST',
@@ -838,6 +839,7 @@ angular.module('app')
                             function (response) {
                                 if (response.admin) {
                                     if (response.tenant) {
+                                        $localStorage.switch_tenant_id = response.tenant.tenant_id;
                                         $localStorage.user.credentials.logged_tenant_id = response.tenant.tenant_id;
                                         $localStorage.user.credentials.org = response.tenant.tenant_name;
                                         $localStorage.user.credentials.org_address = response.tenant.tenant_address;
@@ -851,6 +853,7 @@ angular.module('app')
                                 } else {
                                     if (response.success && !jQuery.isEmptyObject(response.resources)) {
                                         if (response.tenant) {
+                                            $localStorage.switch_tenant_id = response.tenant.tenant_id;
                                             $localStorage.user.credentials.logged_tenant_id = response.tenant.tenant_id;
                                             $localStorage.user.credentials.org = response.tenant.tenant_name;
                                             $localStorage.user.credentials.org_address = response.tenant.tenant_address;
@@ -888,6 +891,16 @@ angular.module('app')
                     );
                 }
 
+                $scope.$watch(function () {
+                    return $localStorage.switch_tenant_id;
+                }, function (newVal, oldVal) {
+                    if (oldVal !== newVal) {
+                        $timeout(function () {
+                            $scope.loadUserCredentials();
+                        }, 200);
+                        $state.go($state.current, {}, {reload: true});
+                    }
+                })
                 //Print OP Billing
                 $scope.printBillData = {};
                 $scope.printOPBill = function (item) {
@@ -1462,7 +1475,7 @@ angular.module('app')
                 }
                 //Check Medical case history empty rows
                 $scope.checkmedicalcaseemptyrow = function (a) {
-                    $('#'+a+' > tbody  > tr').each(function () {
+                    $('#' + a + ' > tbody  > tr').each(function () {
                         //$("td:empty").remove(); //Remove Empty table td
                         $('td').each(function () {
                             var cellText = $(this).text();
@@ -1490,7 +1503,7 @@ angular.module('app')
                             var informantTr = informantText.closest('tr').prev('tr');
                             informantTr.remove();
                         }
-                        
+
                         var tr = $(this).find("tr");
                         $.each(tr, function () {
                             $this = $(this);
