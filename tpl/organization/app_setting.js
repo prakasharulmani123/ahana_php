@@ -499,7 +499,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             $scope.loadbar('show');
             $scope.product_gst_import_process_text = 'Fetching the Excel Data. Please wait until the importing begins. This might take few mins';
             $scope.import_log = Date.parse(moment().format());
-//            $scope.import_log = '1501669314000';
+           //$scope.import_log = '1510558655000';
             var currentUser = AuthenticationService.getCurrentUser();
 
             fileUpload.uploadFileToUrl($scope.productGSTImport, $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/productgstupdate?tenant_id=' + currentUser.credentials.logged_tenant_id + '&import_log=' + $scope.import_log).success(function (response) {
