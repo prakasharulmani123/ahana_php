@@ -368,6 +368,7 @@ class PhaProduct extends RActiveRecord {
                         'hsn_id' => 'hsn_id',
                         'purchase_package_id' => 'purchase_package_id',
                         'sales_package_id' => 'sales_package_id',
+                        'product_price' => 'product_price',
                     ];
                     break;
                 case 'pharm_sale_alternateprod':
