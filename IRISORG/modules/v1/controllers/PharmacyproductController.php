@@ -1467,7 +1467,7 @@ class PharmacyproductController extends ActiveController {
     }
 
     public function actionProductgstupdate() {
-//        return ['success' => true, 'message' => ['total_rows' => '2996', 'id' => '47', 'max_id' => '2996']];
+        //return ['success' => true, 'message' => ['total_rows' => '1990', 'id' => '817', 'max_id' => '1990']];
         $get = Yii::$app->getRequest()->get();
         $allowed = array('csv');
         $filename = $_FILES['file']['name'];
@@ -1520,7 +1520,9 @@ class PharmacyproductController extends ActiveController {
             return $result[0];
         }
     }
-
+    // * Note 
+    //PhaProduct - After save Not working. 
+    //When import, Just hide the After save in PhaProduct and then use this function.
     public function actionProductgstupdatestart() {
         $post = Yii::$app->getRequest()->post();
         $id = $post['id'];
@@ -1542,12 +1544,14 @@ class PharmacyproductController extends ActiveController {
                         ])
                         ->one();
                 if (!empty($product_exists)) {
-                    if ($result->gst) {
+                    if ($result->gst && $result->gst != 0.00) {
                         //Check gst value exists.
-                        $gst = \common\models\PhaGst::find()->where([
-                            'tenant_id' => $result->tenant_id,
-                            'gst' => $result->gst
-                        ]);
+                        $gst = \common\models\PhaGst::find()
+                                ->where([
+                                    'tenant_id' => $result->tenant_id,
+                                    'gst' => $result->gst
+                                ])
+                                ->one();
                         if (!empty($gst)) {
                             $sales_gst_id = $gst->gst_id;
                         } else {
