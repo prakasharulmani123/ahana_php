@@ -2711,13 +2711,16 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     $scope.xslt = doc_type_response.result.document_xslt;
                     $scope.$watch('patientObj', function (newValue, oldValue) {
                         if (Object.keys(newValue).length > 0) {
-                            $scope.initSaveDocument(function (auto_save_document) {
+                            $scope.initMedicalSaveDocument($scope.enc.selected.encounter_id, function (auto_save_document) {
                                 $scope.xml = auto_save_document.data.xml;
                                 $scope.doc_id = auto_save_document.data.doc_id; // Set Document id
                                 $timeout(function () {
                                     $scope.medicalcasecommonservice();
                                     $scope.ckeditorReplace();
                                 }, 2000);
+                                $timeout(function () {
+                                    $("#patient-details").parent().hide();
+                                }, 1500);
                             });
                         }
                     }, true);
@@ -2773,84 +2776,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             );
         }
 
-        $scope.initSaveDocument = function (callback) {
-            var _data = [];
-            url = $rootScope.IRISOrgServiceUrl + '/patientvitals/getvitalsbyencounter?addtfields=eprvitals&encounter_id=' + $scope.enc.selected.encounter_id;
-            $http.get(url)
-                    .success(function (response) {
-                        if (response.success == true) {
-                            _data.push({
-                                name: 'temperature',
-                                value: response.vitals.temperature,
-                            }, {
-                                name: 'bpsystolic',
-                                value: response.vitals.blood_pressure_systolic,
-                            }, {
-                                name: 'bpdiastolic',
-                                value: response.vitals.blood_pressure_diastolic,
-                            }, {
-                                name: 'pulse',
-                                value: response.vitals.pulse_rate,
-                            }, {
-                                name: 'weight',
-                                value: response.vitals.weight,
-                            }, {
-                                name: 'height',
-                                value: response.vitals.height,
-                            }, {
-                                name: 'sp02',
-                                value: response.vitals.sp02,
-                            }, {
-                                name: 'pain_score',
-                                value: response.vitals.pain_score,
-                            });
-                        }
-                    })
-            _data.push({
-                name: 'name',
-                value: $scope.patientObj.fullname,
-            }, {
-                name: 'uhid',
-                value: $scope.patientObj.patient_global_int_code,
-            }, {
-                name: 'age',
-                value: $scope.patientObj.patient_age,
-            }, {
-                name: 'gender',
-                value: $scope.app.patientDetail.patientSex,
-            }, {
-                name: 'martial_status',
-                value: $scope.app.patientDetail.patientMaritalStatus,
-            }, {
-                name: 'encounter_id',
-                value: $scope.enc.selected.encounter_id,
-            }, {
-                name: 'patient_id',
-                value: $state.params.id,
-            }, {
-                name: 'novalidate',
-                value: true,
-            }, {
-                name: 'status',
-                value: '0',
-            });
-            $scope.loadbar('show');
-            $timeout(function () {
-                $http({
-                    url: $rootScope.IRISOrgServiceUrl + "/patientprescription/savemedicaldocument",
-                    method: "POST",
-                    data: _data,
-                }).then(
-                        function (response) {
-                            $scope.loadbar('hide');
-                            if (response.data.success == true) {
-                                callback(response);
-                            }
-                        }
-                );
-            }, 100);
 
-        };
 
         $scope.clearmedicalForm = function () {
             $scope.medical_history = 'index';
@@ -2860,6 +2786,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.loadmedicalcasehistory = function () {
             $scope.MCHCollection = [];
+            $scope.medical_history = 'index';
             $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getpatientdocuments?patient_id=' + $state.params.id)
                     .success(function (documents) {
                         $scope.isLoading = false;
@@ -2886,6 +2813,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             $scope.medicalcasecommonservice();
                             $scope.ckeditorReplace();
                         }, 2000);
+                        $timeout(function () {
+                            $("#patient-details").parent().hide();
+                        }, 200);
                     });
                 }
             });
@@ -2908,13 +2838,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.msg.errorMessage = '';
         }
 
-        $("body").on("click", ".addMore", function () {
-            if (!jQuery.isEmptyObject($scope.enc.selected.encounter_id)) {
+        $("body").on("click", ".MCHaddMore", function () {
+            if (!jQuery.isEmptyObject($scope.encounter_id)) {
                 $scope.spinnerbar('show');
                 var button_id = $(this).attr('id');
                 var table_id = $(this).data('table-id');
                 var rowCount = $('#' + table_id + ' tbody  tr').length;
-                var firstMsg = $('#' + table_id).find("tr:last");
+                //var firstMsg = $('#' + table_id).find("tr:last");
                 //var curOffset = firstMsg.offset().top - $(document).scrollTop();
                 $scope.ckeditorupdate();
                 _data = $('#xmlform').serializeArray();
@@ -2971,6 +2901,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                     .attr('aria-expanded', false);
                                         }
                                     });
+                                    $scope.ckeditorReplace();
                                     var firstMsg = $('#' + table_id).find("tr:last");
                                     //$(document).scrollTop(firstMsg.offset().top - curOffset);
                                     $scope.spinnerbar('hide');
@@ -3014,6 +2945,41 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 CKEDITOR.instances[instance].updateElement();
         };
 
+        $scope.printMedicaldocument = function (doc_id) {
+            $scope.printxslt = '';
+            $scope.getDocumentType(function (doc_type_response) {
+                if (doc_type_response.success == false) {
+                    $scope.isLoading = false;
+                    alert("Sorry, you can't view a document");
+                } else {
+                    $scope.printxslt = doc_type_response.result.document_out_print_xslt;
+                    $scope.getDocument(doc_id, function (pat_doc_response) {
+                        $scope.created_by = pat_doc_response.result.created_user;
+                        $scope.created_at = pat_doc_response.result.created_at;
+                        $scope.modified_at = pat_doc_response.result.modified_at;
+                        $scope.xml = pat_doc_response.result.document_xml;
+                        $timeout(function () {
+                            $scope.setRefferedBy();
+                        }, 100);
+                        $timeout(function () {
+                            $scope.checkmedicalcaseemptyrow('medical_case_history');
+                            $scope.printElement();
+                        }, 1000);
+                    });
+                }
+            });
+        }
+
+        $scope.printElement = function () {
+            $('#printMedicaldocument').printThis({
+                pageTitle: "",
+                debug: false,
+                importCSS: false,
+                importStyle: false,
+                loadCSS: [$rootScope.IRISOrgUrl + "/css/print.css"],
+            });
+        }
+
         $scope.ckeditorReplace = function () {
             CKEDITOR.replaceAll('classy-edit');
             CKEDITOR.config.disableNativeSpellChecker = true,
@@ -3036,6 +3002,75 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             if ($scope.vitaldata.height && $scope.vitaldata.weight) {
                 $scope.vitaldata.bmi = (($scope.vitaldata.weight / $scope.vitaldata.height / $scope.vitaldata.height) * 10000).toFixed(2);
             }
+        }
+
+        $scope.viewMedicaldocument = function (doc_id) {
+            $scope.getDocumentType(function (doc_type_response) {
+                if (doc_type_response.success == false) {
+                    $scope.isLoading = false;
+                    alert("Sorry, you can't view a document");
+                    $state.go("patient.document", {id: $state.params.id});
+                } else {
+                    $scope.viewxslt = doc_type_response.result.document_out_xslt;
+                    $scope.printxslt = doc_type_response.result.document_out_print_xslt;
+                    $scope.getDocument(doc_id, function (pat_doc_response) {
+                        $scope.medical_history = 'view';
+                        $scope.created_by = pat_doc_response.result.created_user;
+                        $scope.created_at = pat_doc_response.result.created_at;
+                        $scope.modified_at = pat_doc_response.result.modified_at;
+                        $scope.view_xml = pat_doc_response.result.document_xml;
+                        $timeout(function () {
+                            $scope.setRefferedBy();
+                        }, 100);
+                    });
+                }
+            });
+        }
+
+        $scope.printMedicalcasedocument = function () {
+            $scope.checkmedicalcaseemptyrow('medical_case_history');
+            $('#printCasedocument').printThis({
+                pageTitle: "",
+                debug: false,
+                importCSS: false,
+                importStyle: false,
+                loadCSS: [$rootScope.IRISOrgUrl + "/css/print.css"],
+            });
+        }
+
+        $scope.setRefferedBy = function () {
+            $(".classy-edit").each(function () {
+                $(this).removeClass("form-control");
+                $(this).html($(this).text());
+            });
+            var created_by = $scope.created_by;
+            var date = new Date($scope.modified_at);
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var output = (('' + day).length < 2 ? '0' : '') + day + '/' +
+                    (('' + month).length < 2 ? '0' : '') + month + '/' +
+                    date.getFullYear();
+
+            var create_date = new Date($scope.created_at);
+            var create_month = create_date.getMonth() + 1;
+            var create_day = create_date.getDate();
+            var create_output = (('' + create_day).length < 2 ? '0' : '') + create_day + '/' +
+                    (('' + create_month).length < 2 ? '0' : '') + create_month + '/' +
+                    create_date.getFullYear();
+
+            var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+            var am_pm = date.getHours() >= 12 ? "PM" : "AM";
+            hours = hours < 10 ? "0" + hours : hours;
+            var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+            //var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+            time = hours + ":" + minutes + am_pm;
+
+            $timeout(function () {
+                $('#created_name').html(created_by);
+                $('#created_date').html(create_output);
+                $('#date_name').html(output);
+                $('#time').html(time);
+            }, 100);
         }
 
 //Not Used
