@@ -37,10 +37,21 @@ class XmlController extends Controller {
     private function getAllFiles($foler_name = 'uploads') {
         $webroot = Yii::getAlias('@webroot');
         $files = FileHelper::findFiles($webroot . '/' . $foler_name, [
-                    'only' => ['*.xml'],
+                    'only' => ['CH_*.xml'],
                     'recursive' => true,
         ]);
         $base_xml = [realpath(dirname(__FILE__) . '/../../../../IRISADMIN/web/case_history.xml')];
+        $all_files = \yii\helpers\ArrayHelper::merge($base_xml, $files);
+        return $all_files;
+    }
+    
+    private function getAllMCHFiles($foler_name = 'uploads') {
+        $webroot = Yii::getAlias('@webroot');
+        $files = FileHelper::findFiles($webroot . '/' . $foler_name, [
+                    'only' => ['MCH_*.xml'],
+                    'recursive' => true,
+        ]);
+        $base_xml = [realpath(dirname(__FILE__) . '/../../../../IRISADMIN/web/medical_case_history.xml')];
         $all_files = \yii\helpers\ArrayHelper::merge($base_xml, $files);
         return $all_files;
     }
@@ -88,6 +99,11 @@ class XmlController extends Controller {
         $target_dom = dom_import_simplexml($target);
         $insert_dom = $target_dom->ownerDocument->importNode(dom_import_simplexml($insert), true);
         return $target_dom->parentNode->appendChild($insert_dom);
+    }
+    
+    public function actionCheckfile() {
+        $all_files = $this->getAllFiles();
+        print_r($all_files); die;
     }
 
     public function actionInsertnewfield() {
@@ -166,7 +182,6 @@ class XmlController extends Controller {
                             $target->addAttribute('Backdivid', 'subtextboxDiv');
                             $property22 = $target->PROPERTIES->addChild('PROPERTY', "OThersDDtextvisible(this.id,this.value,'subtextboxDiv','block')");
                             $property22->addAttribute('name', 'onchange');
-                            
                         }
                     }
                     $xml->asXML($files);
@@ -324,7 +339,7 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            $target->PROPERTIES->PROPERTY[3]= 'return isNumericDotKeyStroke(event)';
+                            $target->PROPERTIES->PROPERTY[3] = 'return isNumericDotKeyStroke(event)';
                         }
                     }
                     $xml->asXML($files);
@@ -613,7 +628,7 @@ class XmlController extends Controller {
 
                     $fileContent = file_get_contents($files);
                     //PatDocumentTypes::updateAllCounters(["document_xml" => $fileContent]);
-                    $docModel = PatDocumentTypes::find()->andWhere(['doc_type'=>'CH'])->all();
+                    $docModel = PatDocumentTypes::find()->andWhere(['doc_type' => 'CH'])->all();
                     foreach ($docModel as $doc) {
                         if (basename($files) == 'case_history.xml') {
                             $doc->document_xml = $fileContent;
@@ -628,6 +643,39 @@ class XmlController extends Controller {
                             $doc->save(false);
                         }
                         if (basename($files) == 'case_history_out_print.xslt') {
+                            $doc->document_out_print_xslt = $fileContent;
+                            $doc->save(false);
+                        }
+                    }
+                }
+            }
+        }
+        exit;
+    }
+
+    public function actionMchupdatedb() {
+        $all_files = $this->getAllXmlXsltFiles();
+        if (!empty($all_files)) {
+            foreach ($all_files as $key => $files) {
+                if (filesize($files) > 0) {
+
+                    $fileContent = file_get_contents($files);
+                    //PatDocumentTypes::updateAllCounters(["document_xml" => $fileContent]);
+                    $docModel = PatDocumentTypes::find()->andWhere(['doc_type' => 'MCH'])->all();
+                    foreach ($docModel as $doc) {
+                        if (basename($files) == 'medical_case_history.xml') {
+                            $doc->document_xml = $fileContent;
+                            $doc->save(false);
+                        }
+                        if (basename($files) == 'medical_case_history.xslt') {
+                            $doc->document_xslt = $fileContent;
+                            $doc->save(false);
+                        }
+                        if (basename($files) == 'medical_case_history_out.xslt') {
+                            $doc->document_out_xslt = $fileContent;
+                            $doc->save(false);
+                        }
+                        if (basename($files) == 'medical_casehistory_out_print.xslt') {
                             $doc->document_out_print_xslt = $fileContent;
                             $doc->save(false);
                         }

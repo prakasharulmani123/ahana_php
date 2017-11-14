@@ -392,153 +392,155 @@ class PatientprescriptionController extends ActiveController {
                                 ->andWhere(['encounter_id' => $encounterid])
                                 ->orderBy(['created_at' => SORT_DESC])
                                 ->one();
-                        foreach ($prescriptions->patPrescriptionItems as $key => $value) {
+                        if (!empty($prescriptions)) {
+                            foreach ($prescriptions->patPrescriptionItems as $key => $value) {
 
-                            $product_box = 'txtproductname' . $key;
-                            $generic_box = 'txtgenericname' . $key;
-                            $drug_box = 'txtdrugname' . $key;
-                            $route_box = 'txtroute' . $key;
-                            $frequency_box = 'txtfrequency' . $key;
-                            $noofdays_box = 'txtnoofdays' . $key;
-                            $txtaf_bf_box = 'txtaf/bf' . $key;
+                                $product_box = 'txtproductname' . $key;
+                                $generic_box = 'txtgenericname' . $key;
+                                $drug_box = 'txtdrugname' . $key;
+                                $route_box = 'txtroute' . $key;
+                                $frequency_box = 'txtfrequency' . $key;
+                                $noofdays_box = 'txtnoofdays' . $key;
+                                $txtaf_bf_box = 'txtaf/bf' . $key;
 
-                            $value['product_name'] = str_replace(["&nbsp;", "&"], ["&#160;", "&amp;"], $value['product_name']);
-                            $value['generic_name'] = str_replace(["&nbsp;", "&"], ["&#160;", "&amp;"], $value['generic_name']);
-                            $value['drug_name'] = str_replace(["&nbsp;", "&"], ["&#160;", "&amp;"], $value['drug_name']);
+                                $value['product_name'] = str_replace(["&nbsp;", "&"], ["&#160;", "&amp;"], $value['product_name']);
+                                $value['generic_name'] = str_replace(["&nbsp;", "&"], ["&#160;", "&amp;"], $value['generic_name']);
+                                $value['drug_name'] = str_replace(["&nbsp;", "&"], ["&#160;", "&amp;"], $value['drug_name']);
 
-                            $columns = $x->addChild('COLUMNS');
+                                $columns = $x->addChild('COLUMNS');
 
-                            $field1 = $columns->addChild('FIELD');
-                            $field1->addAttribute('id', $product_box);
-                            $field1->addAttribute('type', 'TextBox');
+                                $field1 = $columns->addChild('FIELD');
+                                $field1->addAttribute('id', $product_box);
+                                $field1->addAttribute('type', 'TextBox');
 
-                            $properties1 = $field1->addChild('PROPERTIES');
+                                $properties1 = $field1->addChild('PROPERTIES');
 
-                            $property1 = $properties1->addChild('PROPERTY', $product_box);
-                            $property1->addAttribute('name', 'id');
+                                $property1 = $properties1->addChild('PROPERTY', $product_box);
+                                $property1->addAttribute('name', 'id');
 
-                            $property2 = $properties1->addChild('PROPERTY', $product_box);
-                            $property2->addAttribute('name', 'name');
+                                $property2 = $properties1->addChild('PROPERTY', $product_box);
+                                $property2->addAttribute('name', 'name');
 
-                            $property3 = $properties1->addChild('PROPERTY', 'form-control');
-                            $property3->addAttribute('name', 'class');
+                                $property3 = $properties1->addChild('PROPERTY', 'form-control');
+                                $property3->addAttribute('name', 'class');
 
-                            $property4 = $properties1->addChild('PROPERTY', $value['product_name']);
-                            $property4->addAttribute('name', 'value');
+                                $property4 = $properties1->addChild('PROPERTY', $value['product_name']);
+                                $property4->addAttribute('name', 'value');
 
-                            //Generic Text Box
-                            $field12 = $columns->addChild('FIELD');
-                            $field12->addAttribute('id', $generic_box);
-                            $field12->addAttribute('type', 'TextBox');
+                                //Generic Text Box
+                                $field12 = $columns->addChild('FIELD');
+                                $field12->addAttribute('id', $generic_box);
+                                $field12->addAttribute('type', 'TextBox');
 
-                            $properties12 = $field12->addChild('PROPERTIES');
+                                $properties12 = $field12->addChild('PROPERTIES');
 
-                            $property12 = $properties12->addChild('PROPERTY', $generic_box);
-                            $property12->addAttribute('name', 'id');
+                                $property12 = $properties12->addChild('PROPERTY', $generic_box);
+                                $property12->addAttribute('name', 'id');
 
-                            $property22 = $properties12->addChild('PROPERTY', $generic_box);
-                            $property22->addAttribute('name', 'name');
+                                $property22 = $properties12->addChild('PROPERTY', $generic_box);
+                                $property22->addAttribute('name', 'name');
 
-                            $property32 = $properties12->addChild('PROPERTY', 'form-control');
-                            $property32->addAttribute('name', 'class');
+                                $property32 = $properties12->addChild('PROPERTY', 'form-control');
+                                $property32->addAttribute('name', 'class');
 
-                            $property42 = $properties12->addChild('PROPERTY', $value['generic_name']);
-                            $property42->addAttribute('name', 'value');
+                                $property42 = $properties12->addChild('PROPERTY', $value['generic_name']);
+                                $property42->addAttribute('name', 'value');
 
-                            //Drug Text Box
-                            $field13 = $columns->addChild('FIELD');
-                            $field13->addAttribute('id', $drug_box);
-                            $field13->addAttribute('type', 'TextBox');
+                                //Drug Text Box
+                                $field13 = $columns->addChild('FIELD');
+                                $field13->addAttribute('id', $drug_box);
+                                $field13->addAttribute('type', 'TextBox');
 
-                            $properties13 = $field13->addChild('PROPERTIES');
+                                $properties13 = $field13->addChild('PROPERTIES');
 
-                            $property13 = $properties13->addChild('PROPERTY', $drug_box);
-                            $property13->addAttribute('name', 'id');
+                                $property13 = $properties13->addChild('PROPERTY', $drug_box);
+                                $property13->addAttribute('name', 'id');
 
-                            $property23 = $properties13->addChild('PROPERTY', $drug_box);
-                            $property23->addAttribute('name', 'name');
+                                $property23 = $properties13->addChild('PROPERTY', $drug_box);
+                                $property23->addAttribute('name', 'name');
 
-                            $property33 = $properties13->addChild('PROPERTY', 'form-control');
-                            $property33->addAttribute('name', 'class');
+                                $property33 = $properties13->addChild('PROPERTY', 'form-control');
+                                $property33->addAttribute('name', 'class');
 
-                            $property43 = $properties13->addChild('PROPERTY', $value['drug_name']);
-                            $property43->addAttribute('name', 'value');
+                                $property43 = $properties13->addChild('PROPERTY', $value['drug_name']);
+                                $property43->addAttribute('name', 'value');
 
-                            //Route Text Box
-                            $field14 = $columns->addChild('FIELD');
-                            $field14->addAttribute('id', $route_box);
-                            $field14->addAttribute('type', 'TextBox');
+                                //Route Text Box
+                                $field14 = $columns->addChild('FIELD');
+                                $field14->addAttribute('id', $route_box);
+                                $field14->addAttribute('type', 'TextBox');
 
-                            $properties14 = $field14->addChild('PROPERTIES');
+                                $properties14 = $field14->addChild('PROPERTIES');
 
-                            $property14 = $properties14->addChild('PROPERTY', $route_box);
-                            $property14->addAttribute('name', 'id');
+                                $property14 = $properties14->addChild('PROPERTY', $route_box);
+                                $property14->addAttribute('name', 'id');
 
-                            $property24 = $properties14->addChild('PROPERTY', $route_box);
-                            $property24->addAttribute('name', 'name');
+                                $property24 = $properties14->addChild('PROPERTY', $route_box);
+                                $property24->addAttribute('name', 'name');
 
-                            $property34 = $properties14->addChild('PROPERTY', 'form-control');
-                            $property34->addAttribute('name', 'class');
+                                $property34 = $properties14->addChild('PROPERTY', 'form-control');
+                                $property34->addAttribute('name', 'class');
 
-                            $property44 = $properties14->addChild('PROPERTY', $value->presRoute->route_name);
-                            $property44->addAttribute('name', 'value');
+                                $property44 = $properties14->addChild('PROPERTY', $value->presRoute->route_name);
+                                $property44->addAttribute('name', 'value');
 
-                            //Frequency Text Box
-                            $field15 = $columns->addChild('FIELD');
-                            $field15->addAttribute('id', $frequency_box);
-                            $field15->addAttribute('type', 'TextBox');
+                                //Frequency Text Box
+                                $field15 = $columns->addChild('FIELD');
+                                $field15->addAttribute('id', $frequency_box);
+                                $field15->addAttribute('type', 'TextBox');
 
-                            $properties15 = $field15->addChild('PROPERTIES');
+                                $properties15 = $field15->addChild('PROPERTIES');
 
-                            $property15 = $properties15->addChild('PROPERTY', $frequency_box);
-                            $property15->addAttribute('name', 'id');
+                                $property15 = $properties15->addChild('PROPERTY', $frequency_box);
+                                $property15->addAttribute('name', 'id');
 
-                            $property25 = $properties15->addChild('PROPERTY', $frequency_box);
-                            $property25->addAttribute('name', 'name');
+                                $property25 = $properties15->addChild('PROPERTY', $frequency_box);
+                                $property25->addAttribute('name', 'name');
 
-                            $property35 = $properties15->addChild('PROPERTY', 'form-control');
-                            $property35->addAttribute('name', 'class');
+                                $property35 = $properties15->addChild('PROPERTY', 'form-control');
+                                $property35->addAttribute('name', 'class');
 
-                            $property45 = $properties15->addChild('PROPERTY', $value->freq->freq_name);
-                            $property45->addAttribute('name', 'value');
+                                $property45 = $properties15->addChild('PROPERTY', $value->freq->freq_name);
+                                $property45->addAttribute('name', 'value');
 
-                            //Drug Text Box
-                            $field16 = $columns->addChild('FIELD');
-                            $field16->addAttribute('id', $noofdays_box);
-                            $field16->addAttribute('type', 'TextBox');
+                                //Drug Text Box
+                                $field16 = $columns->addChild('FIELD');
+                                $field16->addAttribute('id', $noofdays_box);
+                                $field16->addAttribute('type', 'TextBox');
 
-                            $properties16 = $field16->addChild('PROPERTIES');
+                                $properties16 = $field16->addChild('PROPERTIES');
 
-                            $property16 = $properties16->addChild('PROPERTY', $noofdays_box);
-                            $property16->addAttribute('name', 'id');
+                                $property16 = $properties16->addChild('PROPERTY', $noofdays_box);
+                                $property16->addAttribute('name', 'id');
 
-                            $property26 = $properties16->addChild('PROPERTY', $noofdays_box);
-                            $property26->addAttribute('name', 'name');
+                                $property26 = $properties16->addChild('PROPERTY', $noofdays_box);
+                                $property26->addAttribute('name', 'name');
 
-                            $property36 = $properties16->addChild('PROPERTY', 'form-control');
-                            $property36->addAttribute('name', 'class');
+                                $property36 = $properties16->addChild('PROPERTY', 'form-control');
+                                $property36->addAttribute('name', 'class');
 
-                            $property46 = $properties16->addChild('PROPERTY', $value['number_of_days']);
-                            $property46->addAttribute('name', 'value');
+                                $property46 = $properties16->addChild('PROPERTY', $value['number_of_days']);
+                                $property46->addAttribute('name', 'value');
 
-                            //Drug Text Box
-                            $field17 = $columns->addChild('FIELD');
-                            $field17->addAttribute('id', $txtaf_bf_box);
-                            $field17->addAttribute('type', 'TextBox');
+                                //Drug Text Box
+                                $field17 = $columns->addChild('FIELD');
+                                $field17->addAttribute('id', $txtaf_bf_box);
+                                $field17->addAttribute('type', 'TextBox');
 
-                            $properties17 = $field17->addChild('PROPERTIES');
+                                $properties17 = $field17->addChild('PROPERTIES');
 
-                            $property17 = $properties17->addChild('PROPERTY', $txtaf_bf_box);
-                            $property17->addAttribute('name', 'id');
+                                $property17 = $properties17->addChild('PROPERTY', $txtaf_bf_box);
+                                $property17->addAttribute('name', 'id');
 
-                            $property27 = $properties17->addChild('PROPERTY', $txtaf_bf_box);
-                            $property27->addAttribute('name', 'name');
+                                $property27 = $properties17->addChild('PROPERTY', $txtaf_bf_box);
+                                $property27->addAttribute('name', 'name');
 
-                            $property37 = $properties17->addChild('PROPERTY', 'form-control');
-                            $property37->addAttribute('name', 'class');
+                                $property37 = $properties17->addChild('PROPERTY', 'form-control');
+                                $property37->addAttribute('name', 'class');
 
-                            $property47 = $properties17->addChild('PROPERTY', $value['food_type']);
-                            $property47->addAttribute('name', 'value');
+                                $property47 = $properties17->addChild('PROPERTY', $value['food_type']);
+                                $property47->addAttribute('name', 'value');
+                            }
                         }
                     }
                 }
@@ -826,14 +828,19 @@ class PatientprescriptionController extends ActiveController {
         //print_r($get); die;
         if (isset($get['patient_id'])) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
+            $all_patient_id = PatPatient::find()
+                    ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                    ->where(['patient_global_guid' => $patient->patient_global_guid])
+                    ->one();
+
             $condition = [
-                'patient_id' => $patient->patient_id,
                 'deleted_at' => '0000-00-00 00:00:00',
                 'doc_type' => 'MCH'
             ];
 
             $data = VDocuments::find()
                     ->where($condition)
+                    ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                     ->groupBy('encounter_id')
                     ->orderBy(['encounter_id' => SORT_DESC])
                     ->asArray()
@@ -841,7 +848,8 @@ class PatientprescriptionController extends ActiveController {
 
             foreach ($data as $key => $value) {
                 $details = VDocuments::find()
-                        ->where(['encounter_id' => $value['encounter_id']])
+                        ->where(['encounter_id' => $value['encounter_id'],
+                            'tenant_id' => $value['tenant_id']])
                         ->andWhere($condition)
                         ->orderBy(['date_time' => SORT_DESC])
                         ->asArray()

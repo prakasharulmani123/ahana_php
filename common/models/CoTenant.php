@@ -199,8 +199,21 @@ class CoTenant extends GActiveRecord {
                 $configuration->save(false);
             }
 
-            //Tenant Documents
+            //Tenant Case history Documents
             $tenant_doc_types = PatDocumentTypes::getTenantDocumentTypes();
+            foreach ($tenant_doc_types as $key => $tenant_doc_type) {
+                $tenant_doc_types = new PatDocumentTypes;
+                $tenant_doc_types->tenant_id = $this->tenant_id;
+                $tenant_doc_types->doc_type = $key;
+                $tenant_doc_types->doc_type_name = $tenant_doc_type['doc_type_name'];
+                $tenant_doc_types->document_xml = $tenant_doc_type['document_xml'];
+                $tenant_doc_types->document_xslt = $tenant_doc_type['document_xslt'];
+                $tenant_doc_types->document_out_xslt = $tenant_doc_type['document_out_xslt'];
+                $tenant_doc_types->save(false);
+            }
+            
+            //Tenant medical Case history Documents
+            $tenant_doc_types = PatDocumentTypes::getTenantmedicalDocumentTypes();
             foreach ($tenant_doc_types as $key => $tenant_doc_type) {
                 $tenant_doc_types = new PatDocumentTypes;
                 $tenant_doc_types->tenant_id = $this->tenant_id;

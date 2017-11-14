@@ -89,6 +89,19 @@ class PatDocumentTypes extends RActiveRecord {
                 'document_xml' => file_get_contents(Url::base(true) . '/case_history.xml'),
                 'document_xslt' => file_get_contents(Url::base(true) . '/case_history.xslt'),
                 'document_out_xslt' => file_get_contents(Url::base(true) . '/case_history_out.xslt'),
+                'document_out_print_xslt' => file_get_contents(Url::base(true) . '/case_history_out_print_div.xslt'),
+            ]
+        );
+    }
+    
+    public static function getTenantmedicalDocumentTypes() {
+        return array(
+            'MCH' => [
+                'doc_type_name' => 'Medical Case History',
+                'document_xml' => file_get_contents(Url::base(true) . '/medical_case_history.xml'),
+                'document_xslt' => file_get_contents(Url::base(true) . '/medical_case_history.xslt'),
+                'document_out_xslt' => file_get_contents(Url::base(true) . '/medical_case_history_out.xslt'),
+                'document_out_print_xslt' => file_get_contents(Url::base(true) . '/medical_casehistory_out_print.xslt'),
             ]
         );
     }
