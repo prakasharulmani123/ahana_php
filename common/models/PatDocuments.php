@@ -129,8 +129,8 @@ class PatDocuments extends RActiveRecord {
         return [
                 [['patient_id', 'doc_type_id', 'encounter_id'], 'required'],
                 [['name', 'age', 'gender', 'address', 'education', 'martial_status', 'relationship'], 'required', 'on' => 'CH'],
-                //[['name', 'age', 'gender', 'address', 'education', 'martial_status', 'relationship', 'information', 'information_adequacy'], 'required', 'on' => 'MCH'],
-                [['name'], 'required', 'on' => 'MCH'],
+                [['name', 'age', 'gender', 'address', 'education', 'martial_status', 'relationship', 'information', 'information_adequacy'], 'required', 'on' => 'MCH'],
+                //[['name'], 'required', 'on' => 'MCH'],
                 [['information', 'information_adequacy', 'total_duration', 'mode_of_onset', 'course_type', 'nature'], 'required', 'on' => 'CH'],
                 [['tenant_id', 'patient_id', 'doc_type_id', 'encounter_id', 'created_by', 'modified_by'], 'integer'],
                 [['document_xml', 'status', 'xml_path'], 'string'],

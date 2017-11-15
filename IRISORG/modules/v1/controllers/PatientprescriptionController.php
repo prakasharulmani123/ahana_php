@@ -349,8 +349,10 @@ class PatientprescriptionController extends ActiveController {
             $patient_document = new PatDocuments;
             $xml = $case_history_xml->document_xml;
         }
-        $patient_document->scenario = $type;
-
+        if(isset($post['scenario']) && $post['scenario']) {
+            $patient_document->scenario = $type;
+        }
+ 
         $attr = [
             'patient_id' => $patient->patient_id,
             'encounter_id' => $post['encounter_id'],

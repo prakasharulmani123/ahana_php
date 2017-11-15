@@ -17,7 +17,7 @@
                     <PROPERTY name="placeholder">Therapist Name</PROPERTY>
                 </PROPERTIES>
             </FIELD>
-            <FIELD id="name" type="TextBox" label="Name" required="false">
+            <FIELD id="name" type="TextBox" label="Name" required="true">
                 <PROPERTIES>
                     <PROPERTY name="id">txtName</PROPERTY>
                     <PROPERTY name="name">name</PROPERTY>
@@ -25,7 +25,7 @@
                     <PROPERTY name="placeholder">Patient Name</PROPERTY>
                 </PROPERTIES>
             </FIELD>
-            <FIELD id="uhid" type="TextBox" label="UHID" required="false">
+            <FIELD id="uhid" type="TextBox" label="UHID" required="true">
                 <PROPERTIES>
                     <PROPERTY name="id">uhid</PROPERTY>
                     <PROPERTY name="name">uhid</PROPERTY>
@@ -34,7 +34,7 @@
                 </PROPERTIES>
             </FIELD>
 
-            <FIELD id="age" type="TextBox" label="Age" required="false" Backtext=" Years">
+            <FIELD id="age" type="TextBox" label="Age" required="true" Backtext=" Years">
                 <PROPERTIES>
                     <PROPERTY name="id">txtage</PROPERTY>
                     <PROPERTY name="name">age</PROPERTY>
@@ -46,7 +46,7 @@
                 </PROPERTIES>
             </FIELD>
             
-            <FIELD id="gender" type="RadioButtonList" label="Gender" required="false">
+            <FIELD id="gender" type="RadioButtonList" label="Gender" required="true">
                 <PROPERTIES>
                     <PROPERTY name="name">gender</PROPERTY>
                 </PROPERTIES>
@@ -56,7 +56,7 @@
                 </LISTITEMS>
             </FIELD>
             
-            <FIELD id="address" type="TextArea" label="Address" required="false">
+            <FIELD id="address" type="TextArea" label="Address" required="true">
                 <PROPERTIES>
                     <PROPERTY name="id">txtAddress</PROPERTY>
                     <PROPERTY name="name">address</PROPERTY>
@@ -89,7 +89,7 @@
                 </FIELD>
             </FIELD>
                       
-            <FIELD id="education" type="RadioButtonList" required="false" label="Education" Backcontrols="hide" Backdivid="education_note_div">
+            <FIELD id="education" type="RadioButtonList" required="true" label="Education" Backcontrols="hide" Backdivid="education_note_div">
                 <PROPERTIES>
                     <PROPERTY name="name">education</PROPERTY>
                 </PROPERTIES>
@@ -131,7 +131,7 @@
                 </FIELD>
             </FIELD>
             
-            <FIELD id="martial_status" type="RadioButtonList" label="Marital Status" required="false" Backcontrols="hide" Backdivid="maritalnote_div">
+            <FIELD id="martial_status" type="RadioButtonList" label="Marital Status" required="true" Backcontrols="hide" Backdivid="maritalnote_div">
                 <FIELD id="maritalnote" type="TextBox" label="Marital Notes: ">
                     <PROPERTIES>
                         <PROPERTY name="id">maritalnote</PROPERTY>
@@ -196,7 +196,7 @@
             
             <FIELD type="Header2" label="Informant" class="Informant"/>
             
-            <FIELD id="relationship" header2Class="Informant" type="CheckBoxList" label="Relationship" required="false" Backcontrols="hide" Backdivid="relationshipother_div">
+            <FIELD id="relationship" header2Class="Informant" type="CheckBoxList" label="Relationship" required="true" Backcontrols="hide" Backdivid="relationshipother_div">
                 <PROPERTIES>
                     <PROPERTY name="name">relationship[]</PROPERTY>
                 </PROPERTIES>
@@ -260,7 +260,7 @@
                 </FIELD>
             </FIELD>
             
-            <FIELD id="information" header2Class="Informant" type="RadioButtonList" label="Information (Reliability)" required="false">
+            <FIELD id="information" header2Class="Informant" type="RadioButtonList" label="Information (Reliability)" required="true">
                 <PROPERTIES>
                     <PROPERTY name="name">information</PROPERTY>
                 </PROPERTIES>
@@ -270,7 +270,7 @@
                 </LISTITEMS>
             </FIELD>
             
-            <FIELD id="information_adequacy" header2Class="Informant" type="RadioButtonList" label="Information (Adequacy)" required="false">
+            <FIELD id="information_adequacy" header2Class="Informant" type="RadioButtonList" label="Information (Adequacy)" required="true">
                 <PROPERTIES>
                     <PROPERTY name="name">information_adequacy</PROPERTY>
                 </PROPERTIES>
