@@ -39,8 +39,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             if (date)
                 filterDate = moment(date).format('YYYY-MM-DD');
             $scope.documents = [];
-            //$scope.documents.push({label: 'Case History', value: 'CH'}, {label: 'Scanned Documents', value: 'SD'}, {label: 'Other Documents', value: 'OD'}, {label: 'Medical Case History', value: 'MCH'});
-            $scope.documents.push({label: 'Case History', value: 'CH'}, {label: 'Scanned Documents', value: 'SD'}, {label: 'Other Documents', value: 'OD'});
+            $scope.documents.push({label: 'Case History', value: 'CH'}, {label: 'Scanned Documents', value: 'SD'}, {label: 'Other Documents', value: 'OD'}, {label: 'Medical Case History', value: 'MCH'});
+            //$scope.documents.push({label: 'Case History', value: 'CH'}, {label: 'Scanned Documents', value: 'SD'}, {label: 'Other Documents', value: 'OD'});
             $scope.isLoading = true;
             $scope.rowCollection = [];
             $scope.encounters_list = [];
@@ -297,6 +297,9 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             }, {
                 name: 'novalidate',
                 value: false,
+            }, {
+                name: 'scenario',
+                value: true,
             });
             $http({
                 url: $rootScope.IRISOrgServiceUrl + "/patientprescription/savemedicaldocument",

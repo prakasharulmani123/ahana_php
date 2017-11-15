@@ -988,12 +988,12 @@
                                 <div ng-show="tab == 2">
                                     <div class="casehistory-form">
                                         <div class="row">
-                                            <div class="panel-body">
-                                                Coming Soon
-                                            </div>
+                                            <!--                                            <div class="panel-body">
+                                                                                            Coming Soon
+                                                                                        </div>-->
 
                                             <!-- Medical Case history Starting-->
-<!--                                            <div ng-if="medical_history == 'form'" class="col-sm-12">
+                                            <div ng-if="medical_history == 'form'" class="col-sm-12">
                                                 <div ng-include="'tpl/blocks/alert.html'">
                                                     {% include 'tpl/blocks/alert.html' %}
                                                 </div>
@@ -1005,9 +1005,9 @@
                                                     &nbsp;
                                                     <button class="btn m-b-xs  btn-dark" ng-click="clearmedicalForm()"> <i class="fa fa-times"></i> Cancel</button>
                                                 </footer>
-                                            </div>-->
+                                            </div>
 
-<!--                                            <div ng-if="medical_history == 'view'" class="col-sm-12">
+                                            <div ng-if="medical_history == 'view'" class="col-sm-12">
                                                 <div ng-bind-html="view_xml | xslt:viewxslt | sanitize"></div>
                                                 <footer class="panel-footer text-right bg-light lter">
                                                     <button class="btn m-b-xs  btn-success" ng-click="printMedicalcasedocument()">Print</button>
@@ -1024,9 +1024,12 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                            </div>-->
+                                            </div>
 
-<!--                                            <div ng-if="medical_history == 'index'" class="col-sm-12">
+                                            <div ng-if="medical_history == 'index'" class="col-sm-12">
+                                                <div ng-include="'tpl/blocks/alert.html'">
+                                                    {% include 'tpl/blocks/alert.html' %}
+                                                </div>
                                                 <div class="create-vitals-table" ng-init="loadmedicalcasehistory()">
                                                     <div class="row wrapper">
                                                         <div class="col-sm-12">
@@ -1102,16 +1105,16 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                            </div>-->
+                                            </div>
                                             <!-- Medical Case history Ending-->
                                         </div>
                                     </div>
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata                 =                 {};
+                                    <div class="row" ng-init="vitaldata                   =                   {};
                                         loadVitals();
-                                        vitaldata.formtype         =         'add'">
+                                        vitaldata.formtype          =          'add'">
                                         <div class="col-lg-12"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
