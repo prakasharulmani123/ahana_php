@@ -94,9 +94,9 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                 $scope.class2 = 'col-sm-6 text-center';
                                 $scope.class3 = 'col-sm-3';
                             } else if (Object.keys($scope.activeIPEncounter).length > 0) {
-                                $scope.class1 = 'col-sm-9';
+                                $scope.class1 = 'col-sm-8';
                                 $scope.class2 = '';
-                                $scope.class3 = 'col-sm-3';
+                                $scope.class3 = 'col-sm-4';
                             } else if (Object.keys($scope.activeOPEncounter).length > 0) {
                                 $scope.class1 = 'col-sm-5';
                                 $scope.class2 = 'col-sm-4 text-center';
