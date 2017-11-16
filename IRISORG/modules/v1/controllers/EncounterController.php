@@ -260,7 +260,7 @@ class EncounterController extends ActiveController {
 
             $data = [];
             foreach ($encounters as $k => $e) {
-                if ($e->encounter_type == 'IP' || ($e->encounter_type == 'OP' && $e->encounter->patAppointmentSeen)) {
+                if (($e->encounter_type == 'IP' && !$e->encounter->patAdmissionCancel) || ($e->encounter_type == 'OP' && $e->encounter->patAppointmentSeen)) {
                     $data[$k] = $e->toArray();
                     $data[$k]['view_calculation'] = $e->encounter->viewChargeCalculation;
 
