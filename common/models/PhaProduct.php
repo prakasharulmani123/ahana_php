@@ -492,29 +492,29 @@ class PhaProduct extends RActiveRecord {
         return $final_rand;
     }
 
-    public function afterSave($insert, $changedAttributes) {
-        if ($insert)
-            $activity = 'Product Added Successfully (#' . $this->product_name . ' )';
-        else
-            $activity = 'Product Updated Successfully (#' . $this->product_name . ' )';
-        CoAuditLog::insertAuditLog(PhaProduct::tableName(), $this->product_id, $activity);
-        
-        //Check Generic already assigned
-        $assigned = PhaDrugGeneric::find()
-                ->tenant()
-                ->active()
-                ->andWhere([
-                    'generic_id' => $this->generic_id,
-                ])
-                ->one(); 
-        //If not assigned then link in pivot table 
-        if(empty($assigned)) {
-            $drugGeneric = new PhaDrugGeneric();
-            $drugGeneric->drug_class_id = $this->drug_class_id;
-            $drugGeneric->generic_id = $this->generic_id;
-            $drugGeneric->save(false);
-        }
-        return parent::afterSave($insert, $changedAttributes);
-    }
+//    public function afterSave($insert, $changedAttributes) {
+//        if ($insert)
+//            $activity = 'Product Added Successfully (#' . $this->product_name . ' )';
+//        else
+//            $activity = 'Product Updated Successfully (#' . $this->product_name . ' )';
+//        CoAuditLog::insertAuditLog(PhaProduct::tableName(), $this->product_id, $activity);
+//        
+//        //Check Generic already assigned
+//        $assigned = PhaDrugGeneric::find()
+//                ->tenant()
+//                ->active()
+//                ->andWhere([
+//                    'generic_id' => $this->generic_id,
+//                ])
+//                ->one(); 
+//        //If not assigned then link in pivot table 
+//        if(empty($assigned)) {
+//            $drugGeneric = new PhaDrugGeneric();
+//            $drugGeneric->drug_class_id = $this->drug_class_id;
+//            $drugGeneric->generic_id = $this->generic_id;
+//            $drugGeneric->save(false);
+//        }
+//        return parent::afterSave($insert, $changedAttributes);
+//    }
 
 }
