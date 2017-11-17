@@ -41,7 +41,7 @@ class PatDocumentTypes extends RActiveRecord {
         return [
             [['doc_type_name', 'document_xml', 'document_xslt', 'document_out_xslt'], 'required'],
             [['tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['document_xml', 'document_xslt', 'document_out_xslt', 'status'], 'string'],
+            [['document_xml', 'document_xslt', 'document_out_xslt', 'document_out_print_xslt', 'status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at', 'doc_type', 'doc_type_name'], 'safe'],
             [['doc_type'], 'string', 'max' => 50]
         ];
@@ -58,6 +58,7 @@ class PatDocumentTypes extends RActiveRecord {
             'document_xml' => 'Document Xml',
             'document_xslt' => 'Document Xslt',
             'document_out_xslt' => 'Document Output Xslt',
+            'document_out_print_xslt' => 'Document Out Print Xslt',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -89,7 +90,7 @@ class PatDocumentTypes extends RActiveRecord {
                 'document_xml' => file_get_contents(Url::base(true) . '/case_history.xml'),
                 'document_xslt' => file_get_contents(Url::base(true) . '/case_history.xslt'),
                 'document_out_xslt' => file_get_contents(Url::base(true) . '/case_history_out.xslt'),
-                'document_out_print_xslt' => file_get_contents(Url::base(true) . '/case_history_out_print_div.xslt'),
+                'document_out_print_xslt' => file_get_contents(Url::base(true) . '/case_history_out_print.xslt'),
             ]
         );
     }

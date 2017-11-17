@@ -117,13 +117,13 @@ class AppConfiguration extends RActiveRecord {
             ],
             'ALLERGIES' => [
                 'code' => 'SA',
-                'group' => 'prescription_footer',
+                'group' => 'prescription_print',
                 'value' => '1',
                 'notes' => 'Show Allergies',
             ],
             'DIAGNOSIS' => [
                 'code' => 'SD',
-                'group' => 'prescription_footer',
+                'group' => 'prescription_print',
                 'value' => '1',
                 'notes' => 'Show Diagnosis',
             ],

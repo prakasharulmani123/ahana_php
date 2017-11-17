@@ -31,6 +31,7 @@ use yii\db\Connection;
 class CoOrganization extends GActiveRecord {
 
     public $is_decoded = false;
+    public $patient_UHID_prefix;
 
     /**
      * @inheritdoc
@@ -44,7 +45,7 @@ class CoOrganization extends GActiveRecord {
      */
     public function rules() {
         return [
-            [['org_name', 'org_description', 'org_db_host', 'org_db_username', 'org_database', 'org_domain'], 'required'],
+            [['org_name', 'org_description', 'org_db_host', 'org_db_username', 'org_database', 'org_domain','patient_UHID_prefix'], 'required'],
             [['org_domain'], 'url'],
             [['org_description', 'status'], 'string'],
             [['created_by', 'modified_by'], 'integer'],
@@ -54,6 +55,7 @@ class CoOrganization extends GActiveRecord {
             [['org_name', 'org_database'], 'unique'],
             [['org_domain'], 'unique'],
             ['org_database', 'checkDB'],
+            ['patient_UHID_prefix', 'validateCodeprefix'],
         ];
     }
 
@@ -70,6 +72,7 @@ class CoOrganization extends GActiveRecord {
             'org_db_password' => 'Database Password',
             'org_database' => 'Database Name',
             'org_domain' => 'Domain Name',
+            'patient_UHID_prefix' => 'Patient UHID Prefix',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -120,6 +123,15 @@ class CoOrganization extends GActiveRecord {
             $this->addError($attribute, $ex->getMessage());
         }
     }
+    
+    public function validateCodeprefix($attribute, $params) {
+        if($this->patient_UHID_prefix) {
+            $InternalCode = GlInternalCode::find()->where(['code_prefix' => $this->patient_UHID_prefix])->one();
+            if(!empty($InternalCode)) {
+                $this->addError($attribute, "Patient UHID Prefix already taken. Kindly choose another Prefix");
+            }
+        }
+    }
 
     public function beforeValidate() {
         $this->org_domain = rtrim($this->org_domain, "/");
@@ -163,7 +175,7 @@ class CoOrganization extends GActiveRecord {
             $internal_code->code_type = 'PG';
             $string = str_replace(' ', '-', $this->org_name);
             $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string);
-            $internal_code->code_prefix = strtoupper(substr($string, 0, 2));
+            $internal_code->code_prefix = $this->patient_UHID_prefix;
             $internal_code->code = '1';
             $internal_code->save(false);
             

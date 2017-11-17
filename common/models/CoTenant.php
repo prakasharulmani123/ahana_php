@@ -49,16 +49,16 @@ class CoTenant extends GActiveRecord {
      */
     public function rules() {
         return [
-            [['tenant_name', 'tenant_address', 'tenant_country_id', 'tenant_state_id', 'tenant_city_id', 'tenant_contact1', 'tenant_email'], 'required'],
-            [['tenant_city_id', 'tenant_state_id', 'tenant_country_id', 'created_by', 'modified_by', 'org_id'], 'integer'],
-            [['status'], 'string'],
-            [['tenant_email'], 'email', 'message' => 'Invalid Email Format'],
-            [['tenant_url'], 'url', 'message' => 'Invalid Website Format'],
-            [['created_at', 'modified_at', 'org_id'], 'safe'],
-            [['tenant_guid', 'tenant_name', 'tenant_fax', 'tenant_email', 'tenant_url', 'slug'], 'string', 'max' => 50],
-            [['tenant_address'], 'string', 'max' => 100],
-            [['tenant_contact1', 'tenant_contact2', 'tenant_mobile'], 'string', 'max' => 20],
-            [['tenant_name'], 'unique', 'targetAttribute' => ['org_id', 'tenant_name'], 'message' => 'The combination of Branch Name has already been taken.']
+                [['tenant_name', 'tenant_address', 'tenant_country_id', 'tenant_state_id', 'tenant_city_id', 'tenant_contact1', 'tenant_email'], 'required'],
+                [['tenant_city_id', 'tenant_state_id', 'tenant_country_id', 'created_by', 'modified_by', 'org_id'], 'integer'],
+                [['status'], 'string'],
+                [['tenant_email'], 'email', 'message' => 'Invalid Email Format'],
+                [['tenant_url'], 'url', 'message' => 'Invalid Website Format'],
+                [['created_at', 'modified_at', 'org_id'], 'safe'],
+                [['tenant_guid', 'tenant_name', 'tenant_fax', 'tenant_email', 'tenant_url', 'slug'], 'string', 'max' => 50],
+                [['tenant_address'], 'string', 'max' => 100],
+                [['tenant_contact1', 'tenant_contact2', 'tenant_mobile'], 'string', 'max' => 20],
+                [['tenant_name'], 'unique', 'targetAttribute' => ['org_id', 'tenant_name'], 'message' => 'The combination of Branch Name has already been taken.']
         ];
     }
 
@@ -196,6 +196,9 @@ class CoTenant extends GActiveRecord {
                 $configuration->code = $app_configuration['code'];
                 $configuration->value = $app_configuration['value'];
                 $configuration->notes = $app_configuration['notes'];
+                if (isset($app_configuration['group'])) {
+                    $configuration->group = $app_configuration['group'];
+                }
                 $configuration->save(false);
             }
 
@@ -209,9 +212,10 @@ class CoTenant extends GActiveRecord {
                 $tenant_doc_types->document_xml = $tenant_doc_type['document_xml'];
                 $tenant_doc_types->document_xslt = $tenant_doc_type['document_xslt'];
                 $tenant_doc_types->document_out_xslt = $tenant_doc_type['document_out_xslt'];
+                $tenant_doc_types->document_out_print_xslt = $tenant_doc_type['document_out_print_xslt'];
                 $tenant_doc_types->save(false);
             }
-            
+
             //Tenant medical Case history Documents
             $tenant_doc_types = PatDocumentTypes::getTenantmedicalDocumentTypes();
             foreach ($tenant_doc_types as $key => $tenant_doc_type) {
@@ -222,6 +226,7 @@ class CoTenant extends GActiveRecord {
                 $tenant_doc_types->document_xml = $tenant_doc_type['document_xml'];
                 $tenant_doc_types->document_xslt = $tenant_doc_type['document_xslt'];
                 $tenant_doc_types->document_out_xslt = $tenant_doc_type['document_out_xslt'];
+                $tenant_doc_types->document_out_print_xslt = $tenant_doc_type['document_out_print_xslt'];
                 $tenant_doc_types->save(false);
             }
         }

@@ -11,7 +11,7 @@ use common\models\CoRolesResources;
 use common\models\CoTenant;
 use common\models\CoUser;
 use common\models\CoUserForm;
-use common\models\CoUsersRoles;
+use common\models\GlInternalCode;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -113,39 +113,40 @@ class OrganizationController extends ActiveController {
             ]);
             $connection->open();
             
+            //$structure = str_replace("AUTO_INCREMENT=/[0-9]/", "AUTO_INCREMENT=1", $structure);
             $command = $connection->createCommand($structure);
             $command->execute();
-            
+
             $command = $connection->createCommand($data);
             $command->execute();
-            
+
             $command = $connection->createCommand($functions);
             $command->execute();
-            
+
             $command = $connection->createCommand($sp);
             $command->execute();
-            
+
             $command = $connection->createCommand($v_billing_advance_charges);
             $command->execute();
-            
+
             $command = $connection->createCommand($v_billing_other_charges);
             $command->execute();
-            
+
             $command = $connection->createCommand($v_billing_procedures);
             $command->execute();
-            
+
             $command = $connection->createCommand($v_billing_professionals);
             $command->execute();
-            
+
             $command = $connection->createCommand($v_billing_recurring);
             $command->execute();
-            
+
             $command = $connection->createCommand($v_documents);
             $command->execute();
-            
+
             $command = $connection->createCommand($v_encounter);
             $command->execute();
-            
+
             $connection->close();
             //End
         }
@@ -230,60 +231,74 @@ class OrganizationController extends ActiveController {
 
             $valid = false;
 
-            if (isset($post['Tenant']) && !empty($post['Tenant'])) {
-                $model = CoTenant::findOne(['tenant_id' => $post['Tenant']['tenant_id']]);
-                $model->attributes = $post['Tenant'];
-                $valid = $model->validate();
-            }
+            $user_form_model = new CoUserForm();
+            $user_form_model->scenario = 'saveorg';
+            $user_form_model->attributes = Yii::$app->request->post('User');
+            $valid = $user_form_model->validate();
 
-            if (isset($post['Role']) && !empty($post['Role'])) {
-                $model = CoRole::findOne(['role_id' => $post['Role']['role_id']]);
-                $model->attributes = $post['Role'];
-                $valid = $model->validate();
-            }
-
-            if (isset($post['Login']) && !empty($post['Login'])) {
-                $model = CoLogin::findOne(['login_id' => $post['Login']['login_id']]);
-                $model->attributes = $post['Login'];
-                if (!empty($model->password))
-                    $model->setPassword($model->password);
-
-                $valid = $model->validate();
-            }
-
-            if (isset($post['User']) && !empty($post['User'])) {
-                $model = CoUser::findOne(['user_id' => $post['User']['user_id']]);
-                $model->scenario = 'saveorg';
-                $model->attributes = $post['User'];
-                $valid = $model->validate();
-            }
-
-            if (isset($post['Module']) && !empty($post['Module'])) {
-                $resource_id = $post['Module']['resource_ids'];
-                $model = CoRole::findOne(['role_id' => $post['Module']['role_id']]);
-
-                $resources = CoResources::find()->where(['in', 'resource_id', $resource_id])->all();
-                $extraColumns = ['tenant_id' => $post['Module']['tenant_id'], 'created_by' => Yii::$app->user->identity->user_id, 'status' => '1']; // extra columns to be saved to the many to many table
-                $unlink = true; // unlink tags not in the list
-                $delete = true; // delete unlinked tags
-                $model->linkAll('resources', $resources, $extraColumns, $unlink, $delete);
-
-                //For Update Status
-                $role_resources = CoRolesResources::find()->tenant($post['Module']['tenant_id'])->where(['role_id' => $post['Module']['role_id']])->all();
-                foreach ($role_resources as $role_resource) {
-                    if ($role_resource->status != '1') {
-                        $role_resource->updateAttributes(['status' => '1']);
-                    }
-                }
-
-                return ['success' => true];
-            }
+//            if (isset($post['Tenant']) && !empty($post['Tenant'])) {
+//                $model = CoTenant::findOne(['tenant_id' => $post['Tenant']['tenant_id']]);
+//                $model->attributes = $post['Tenant'];
+//                $valid = $model->validate();
+//            }
+//
+//            if (isset($post['Role']) && !empty($post['Role'])) {
+//                $model = CoRole::findOne(['role_id' => $post['Role']['role_id']]);
+//                $model->attributes = $post['Role'];
+//                $valid = $model->validate();
+//            }
+//
+//            if (isset($post['Login']) && !empty($post['Login'])) {
+//                $model = CoLogin::findOne(['login_id' => $post['Login']['login_id']]);
+//                $model->attributes = $post['Login'];
+//                if (!empty($model->password))
+//                    $model->setPassword($model->password);
+//
+//                $valid = $model->validate();
+//            }
+//            if (isset($post['User']) && !empty($post['User'])) {
+//                $model = CoUser::findOne(['user_id' => $post['User']['user_id']]);
+//                $model->scenario = 'saveorg';
+//                $model->attributes = $post['User'];
+//                $valid = $model->validate();
+//            }
+//            if (isset($post['Module']) && !empty($post['Module'])) {
+//                $resource_id = $post['Module']['resource_ids'];
+//                $model = CoRole::findOne(['role_id' => $post['Module']['role_id']]);
+//
+//                $resources = CoResources::find()->where(['in', 'resource_id', $resource_id])->all();
+//                $extraColumns = ['tenant_id' => $post['Module']['tenant_id'], 'created_by' => Yii::$app->user->identity->user_id, 'status' => '1']; // extra columns to be saved to the many to many table
+//                $unlink = true; // unlink tags not in the list
+//                $delete = true; // delete unlinked tags
+//                $model->linkAll('resources', $resources, $extraColumns, $unlink, $delete);
+//
+//                //For Update Status
+//                $role_resources = CoRolesResources::find()->tenant($post['Module']['tenant_id'])->where(['role_id' => $post['Module']['role_id']])->all();
+//                foreach ($role_resources as $role_resource) {
+//                    if ($role_resource->status != '1') {
+//                        $role_resource->updateAttributes(['status' => '1']);
+//                    }
+//                }
+//
+//                return ['success' => true];
+//            }
 
             if ($valid) {
-                $model->save(false);
+                $organization = CoOrganization::find()->where(['org_id' => $post['User']['org_id']])->one();
+
+                $connection = new Connection([
+                    'dsn' => "mysql:host={$organization->org_db_host};dbname={$organization->org_database}",
+                    'username' => $organization->org_db_username,
+                    'password' => $organization->org_db_password,
+                ]);
+                $connection->open();
+
+                $sql = "UPDATE co_user SET title_code = '" . $post['User']['title_code'] . "', name = '" . $post['User']['name'] . "', designation = '" . $post['User']['designation'] . "', address = '" . $post['User']['address'] . "', city_id = '" . $post['User']['city_id'] . "', state_id = '" . $post['User']['state_id'] . "', country_id = '" . $post['User']['country_id'] . "', contact1 = '" . $post['User']['contact1'] . "', contact2 = '" . $post['User']['contact2'] . "', mobile = '" . $post['User']['mobile'] . "', email = '" . $post['User']['email'] . "', zip = '" . $post['User']['zip'] . "' WHERE user_id='" . $post['User']['user_id'] . "'";
+                $command = $connection->createCommand($sql);
+                $command->execute();
                 return ['success' => true];
             } else {
-                return ['success' => false, 'message' => Html::errorSummary([$model])];
+                return ['success' => false, 'message' => Html::errorSummary([$user_form_model])];
             }
         } else {
             return ['success' => false, 'message' => 'Please Fill the Form'];
@@ -291,23 +306,33 @@ class OrganizationController extends ActiveController {
     }
 
     public function actionGetorg() {
-        $tenant_id = Yii::$app->request->get('id');
+        $org_id = Yii::$app->request->get('id');
 
-        if (!empty($tenant_id)) {
+        if (!empty($org_id)) {
             $return = array();
+            $organization = CoOrganization::find()->where(['org_id' => $org_id])->one();
 
-            $organization = CoTenant::find()->tenant($tenant_id)->one();
-            $userProf = CoUser::find()->where(['tenant_id' => $tenant_id, 'created_by' => Yii::$app->user->identity->user_id])->one();
-            $user_role = CoUsersRoles::find()->where(['tenant_id' => $tenant_id, 'user_id' => $userProf->user_id])->one();
-            $login = CoLogin::find()->where(['user_id' => $userProf->user_id])->one();
-            $login->password = '';
+            $connection = new Connection([
+                'dsn' => "mysql:host={$organization->org_db_host};dbname={$organization->org_database}",
+                'username' => $organization->org_db_username,
+                'password' => $organization->org_db_password,
+            ]);
+            $connection->open();
 
-            $return['Tenant'] = $this->excludeColumns($organization->attributes);
-            $return['User'] = $this->excludeColumns($userProf->attributes);
-            $return['Role'] = $this->excludeColumns($user_role->role->attributes);
-            $return['Login'] = $this->excludeColumns($login->attributes);
+            $sql = "select * from co_user where created_by=" . Yii::$app->user->identity->user_id . " and org_id=" . $org_id . " order by user_id asc limit 1";
+            $command = $connection->createCommand($sql);
+            $query_php = $command->queryAll();
+            $return['User'] = $query_php[0];
 
-            return ['success' => true, 'return' => $return, 'modules' => CoRolesResources::getModuletreeByRole($tenant_id, $user_role->role_id)];
+            //$user_role = CoUsersRoles::find()->where(['tenant_id' => $tenant_id, 'user_id' => $userProf->user_id])->one();
+            //$login = CoLogin::find()->where(['user_id' => $userProf->user_id])->one();
+            //$login->password = '';
+            //$return['Tenant'] = $this->excludeColumns($organization->attributes);
+            //$return['User'] = $this->excludeColumns($userProf->attributes);
+            //$return['Role'] = $this->excludeColumns($user_role->role->attributes);
+            //$return['Login'] = $this->excludeColumns($login->attributes);
+            //return ['success' => true, 'return' => $return, 'modules' => CoRolesResources::getModuletreeByRole($tenant_id, $user_role->role_id)];
+            return ['success' => true, 'return' => $return];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
@@ -369,7 +394,7 @@ class OrganizationController extends ActiveController {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
     }
-
+    
     public function actionGetorglist() {
         return CoOrganization::find()->all();
     }
