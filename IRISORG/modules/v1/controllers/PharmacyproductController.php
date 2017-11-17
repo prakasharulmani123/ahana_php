@@ -341,18 +341,18 @@ class PharmacyproductController extends ActiveController {
             $products = $this->_getProducts($text_search, $tenant_id, $limit);
 
             //Get Routes
-            $routes = $this->_getRoutes($products, $text_search, $tenant_id, $limit);
+            //$routes = $this->_getRoutes($products, $text_search, $tenant_id, $limit);
 
-            if (!empty($routes)) {
-                $products = $this->_mergeArrayWithProducts($products, $routes, 'route');
-            }
+//            if (!empty($routes)) {
+//                $products = $this->_mergeArrayWithProducts($products, $routes, 'route');
+//            }
 
             //Get Frequencies
-            $frequencies = $this->_getFrequencies($text, $tenant_id, $limit);
+            //$frequencies = $this->_getFrequencies($text, $tenant_id, $limit);
 
-            if (!empty($frequencies)) {
-                $products = $this->_mergeArrayWithProducts($products, $frequencies, 'frequency');
-            }
+//            if (!empty($frequencies)) {
+//                $products = $this->_mergeArrayWithProducts($products, $frequencies, 'frequency');
+//            }
         }
 
         return ['prescription' => $products];
