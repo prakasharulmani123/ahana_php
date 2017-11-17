@@ -825,6 +825,28 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 .daterangepicker .input-mini {
     padding-left: 25px !important;
 }
+.patient-dropdown {
+    width: 250px;
+    max-height: 350px;
+    overflow-y: auto;
+}
+.patient-dropdown a {
+    color: #0672ce;
+    text-transform: uppercase;
+}
+.patient-dropdown span {
+    color: #918e8e;
+    font-size: 14px;
+}   
+.patient-dropdown li {
+    width: 100%;
+    float: left;
+    padding: 5px 5px 5px 5px;
+} 
+
+.patient-dropdown li:hover{
+    background: #eeeeee;
+}
  @media (min-width: 1280px) {
 .pre-freq-new1 input {
 	width: 27%;
