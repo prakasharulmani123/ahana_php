@@ -51,12 +51,12 @@ class PatVitals extends RActiveRecord {
             //[['temperature', 'blood_pressure_systolic', 'blood_pressure_diastolic', 'pulse_rate'], 'string', 'max' => 20],
             //[['weight', 'height', 'sp02'], 'string', 'max' => 10],
             //[['pain_score'], 'number', 'min' => 0, 'max' => 10,'numberPattern' => '/(^\d+\.\d+$)|(^\d+$)/', 'message' => 'Invalid Pain Score'],
-            [['pain_score'], 'number', 'min' => 0, 'max' => 10],
+                [['pain_score'], 'number', 'min' => 0, 'max' => 10],
                 [['sp02'], 'number', 'min' => 0, 'max' => 100],
-                [['height'], 'number', 'min' => 30, 'max' => 245],
-                [['weight'], 'number', 'min' => 0, 'max' => 250],
-                [['pulse_rate'], 'number', 'min' => 15, 'max' => 250],
-                [['blood_pressure_systolic', 'blood_pressure_diastolic'], 'number', 'min' => 0, 'max' => 300],
+                [['height'], 'number', 'min' => 30, 'max' => 200],
+                [['weight'], 'number', 'min' => 0, 'max' => 150],
+                [['pulse_rate'], 'number', 'min' => 15, 'max' => 150],
+                [['blood_pressure_systolic', 'blood_pressure_diastolic'], 'number', 'min' => 0, 'max' => 200],
                 [['temperature'], 'number', 'min' => 80, 'max' => 120]
         ];
     }
