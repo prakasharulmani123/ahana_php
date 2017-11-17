@@ -31,15 +31,15 @@
                     <th style="width: 20%;">Status</th>
                     <th style="width: 10%;">Action</th>
                 </tr>
-                <tr>
+<!--                <tr>
                     <th>&nbsp;</th>
                     <th>
                         <input st-search="'org_name'" placeholder="search for organizationname" class="input-sm form-control" type="search"/>
                     </th>
                     <th colspan="3">
-                        <!--                        <input st-search placeholder="global search" class="input-sm form-control" type="search"/>-->
+                                                <input st-search placeholder="global search" class="input-sm form-control" type="search"/>
                     </th>
-                </tr>
+                </tr>-->
             </thead>
             <tbody ng-hide="isLoading">
                 <tr ng-repeat-start="row in displayedCollection| orderBy: org_name">
@@ -58,7 +58,7 @@
                     </td>
                     <td>
                         <a title="Add Brach" ui-sref="app.branch_add({org_id: '{{row.org_id}}'})"><i class="fa fa-plus-circle"></i></a>&nbsp;&nbsp;
-                        <!--<a title="Edit" ui-sref="app.org_edit({id: '{{row.tenant_id}}'})"><i class="fa fa-pencil"></i></a>-->
+                        <a title="Edit" ui-sref="app.org_edit({id: '{{row.org_id}}'})"><i class="fa fa-pencil"></i></a>
                     </td>
                 </tr>
                 <tr ng-repeat-end ng-show="expanded">

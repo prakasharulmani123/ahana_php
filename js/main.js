@@ -37,6 +37,7 @@ angular.module('app')
                         container: false
                     }
                 }
+                $scope.copyRightdate = new Date();
 
                 // save settings to local storage
                 if (angular.isDefined($localStorage.settings)) {

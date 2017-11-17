@@ -63,6 +63,12 @@
                                     <span class="help-block">(Ex: http://hms.com)</span>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-lg-4 control-label">Patient UHID Prefix *</label>
+                                <div class="col-lg-8">
+                                    <input type="text" placeholder="Patient UHID Prefix" class="form-control" ng-model="data.Organization.patient_UHID_prefix" required>
+                                </div>
+                            </div>
                             <div class="pull-right m-t m-b">
                                 <button type="submit" class="btn btn-default btn-rounded" ng-click="validateForm('Organization', 2);">Next</button>
                                 <!--<button type="submit" class="btn btn-default btn-rounded" ng-disabled="step1.$invalid" ng-click="steps.step2 = true">Next</button>-->

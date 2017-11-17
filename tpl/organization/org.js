@@ -223,8 +223,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                                 $timeout(function () {
                                     $state.go('app.org_list');
                                 }, 1000)
-                            }
-                            else {
+                            } else {
                                 $scope.steps.percent = 100;
                                 $scope.successMessage = "Organization saved successfully";
                                 $scope.data = {};
@@ -232,8 +231,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                                     $state.go('app.org_list');
                                 }, 1000)
                             }
-                        }
-                        else {
+                        } else {
                             $scope.errorData = response.data.message;
                         }
                     }
@@ -314,14 +312,15 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     function (response) {
                         if (response.data.success === true) {
                             _that.data = response.data.return;
-                            $scope.updateState();
-                            $scope.updateCity();
                             $scope.updateState2();
                             $scope.updateCity2();
+                            $scope.data.User.country_id = parseInt(_that.data.User.country_id);
+                            $scope.data.User.state_id = parseInt(_that.data.User.state_id);
+                            $scope.data.User.city_id = parseInt(_that.data.User.city_id);
+                            $scope.data.User.user_id = parseInt(_that.data.User.user_id);
                             $scope.modules = response.data.modules;
                             $scope.loadbar('hide');
-                        }
-                        else {
+                        } else {
                             $scope.errorData = response.data;
                         }
                     }
