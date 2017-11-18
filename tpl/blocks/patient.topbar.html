@@ -122,8 +122,8 @@
 
                     <!-- topbar next and previous options start-->
                     <div style="float:right;" class="patient-details-part b-n" ng-show="patientObj.have_encounter == true">
-                        <a ng-disabled="patientObj.prevPatient == ''" ui-sref="patient.view({id: patientObj.prevPatient})" class="btn btn-default"> <span class="fa fa-chevron-left"></span> </a>
-                        <a ng-disabled="patientObj.nextPatient == ''" ui-sref="patient.view({id: patientObj.nextPatient})" class="btn btn-default"> <span class="fa fa-chevron-right"></span> </a>
+                        <a ng-disabled="patientObj.prevPatient == ''" ng-click="checkPatientPage(patientObj.prevPatient)" class="btn btn-default"> <span class="fa fa-chevron-left"></span> </a>
+                        <a ng-disabled="patientObj.nextPatient == ''" ng-click="checkPatientPage(patientObj.nextPatient)" class="btn btn-default"> <span class="fa fa-chevron-right"></span> </a>
                         <div class="btn-group dropdown" dropdown="">
                             <button ng-disabled="patientObj.allEncounter == ''" class="btn btn-default" dropdown-toggle="" aria-haspopup="true" aria-expanded="false"><span class="fa fa-chevron-down"></span></button>
                             <ul class="dropdown-menu dropdown-menu-right patient-dropdown">
@@ -134,7 +134,7 @@
                                         </div>
                                         <div class="col-xs-12 col-sm-5 col-md-9">
                                             <div class="row ng-binding">
-                                                <a ng-bind-html="patient.apptPatientData.fullname" ui-sref="patient.view({id: patient.apptPatientData.patient_guid})" class="ng-binding">
+                                                <a ng-bind-html="patient.apptPatientData.fullname" ng-click="checkPatientPage(patient.apptPatientData.patient_guid)" class="ng-binding">
                                                 </a>
                                                 <b ng-if="patient.apptPatientData.patient_age_ym">({{patient.apptPatientData.patient_age_ym}}) </b>
                                                 <br>

@@ -229,6 +229,31 @@ angular.module('app')
                     }
                 };
 
+                $scope.checkPatientPage = function (patient_id) {
+                    var vitals_arr = ["patient.vitals", "patient.vitalCreate", "patient.vitalUpdate"];
+                    var documents_arr = ["patient.document", "patient.addDocument", "patient.editDocument", "patient.addScannedDocument", "patient.addOtherDocument", "patient.editOtherDocument", "patient.viewDocument", "patient.viewOtherDocument"];
+                    var consultation_arr = ['patient.consultant', 'patient.consultantUpdate', 'patient.consultantCreate'];
+                    var procedure_arr = ['patient.procedure', 'patient.add_procedure', 'patient.edit_procedure'];
+                    var note_arr = ['patient.notes', 'patient.noteCreate', 'patient.noteUpdate', 'patient.noteView'];
+                    var billing_arr = ['patient.allbilling', 'patient.billing', 'patient.viewBillingHistory'];
+
+                    if (jQuery.inArray($state.current.name, vitals_arr) != -1) {
+                        $state.go('patient.vitals', {id: patient_id});
+                    } else if (jQuery.inArray($state.current.name, documents_arr) != -1) {
+                        $state.go('patient.document', {id: patient_id});
+                    } else if (jQuery.inArray($state.current.name, consultation_arr) != -1) {
+                        $state.go('patient.consultant', {id: patient_id});
+                    } else if (jQuery.inArray($state.current.name, procedure_arr) != -1) {
+                        $state.go('patient.procedure', {id: patient_id});
+                    } else if (jQuery.inArray($state.current.name, note_arr) != -1) {
+                        $state.go('patient.notes', {id: patient_id});
+                    } else if (jQuery.inArray($state.current.name, billing_arr) != -1) {
+                        $state.go('patient.allbilling', {id: patient_id});
+                    } else {
+                        $state.go($state.current.name, {id: patient_id});
+                    }
+                }
+
                 $scope.setPatientAleratHtml = function (patient) {
                     if (patient.alert) {
                         var alert_link = '#/patient/alert/' + patient.patient_guid + '/alert';
