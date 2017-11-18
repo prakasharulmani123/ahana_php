@@ -169,21 +169,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 post_data = _that.data;
             } else {
                 post_url = $rootScope.IRISAdminServiceUrl + '/organization/updateorg';
-                if (mode == 'Organization') {
-                    post_data = {Tenant: sanitizeVariable(this.data.Tenant)};
-                } else if (mode == 'Role') {
-                    post_data = {Role: sanitizeVariable(this.data.Role)};
-                } else if (mode == 'Login') {
-                    post_data = {Login: sanitizeVariable(this.data.Login)};
-                } else if (mode == 'User') {
-                    post_data = {User: sanitizeVariable(this.data.User)};
-                } else if (mode == 'Module') {
-                    this.data.Module['role_id'] = this.data.Role.role_id;
-                    this.data.Module['tenant_id'] = this.data.Tenant.tenant_id;
-                    post_data = {Module: sanitizeVariable(this.data.Module)};
-                } else if (mode == 'RoleLogin') {
-                    post_data = {Role: sanitizeVariable(this.data.Role), Login: sanitizeVariable(this.data.Login), RoleLogin: true};
-                }
+                post_data = this.data;
             }
 
             if (mode == 'add') {
@@ -233,6 +219,59 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                             }
                         } else {
                             $scope.errorData = response.data.message;
+                        }
+                    }
+            )
+        }
+
+        $scope.updateValidateForm = function (mode, next_step) {
+            _that = this;
+            post_data = [];
+
+            $scope.errorData = "";
+            $scope.successMessage = "";
+
+            if (typeof this.data != "undefined") {
+                if (mode == 'Organization') {
+                    post_data = {Organization: sanitizeVariable(this.data.Organization)};
+                } else if (mode == 'Role') {
+                    post_data = {Role: sanitizeVariable(this.data.Role)};
+                } else if (mode == 'Login') {
+                    post_data = {Login: sanitizeVariable(this.data.Login)};
+                } else if (mode == 'User') {
+                    post_data = {User: sanitizeVariable(this.data.User)};
+                } else if (mode == 'RoleLogin') {
+                    post_data = {Role: sanitizeVariable(this.data.Role), Login: sanitizeVariable(this.data.Login), RoleLogin: true};
+                }
+            }
+            $http({
+                method: "POST",
+                url: $rootScope.IRISAdminServiceUrl + '/organization/updatevalidate',
+                data: post_data,
+            }).then(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        if (response.data.success === false) {
+                            $scope.errorData = response.data.message;
+                        } else {
+                            switch (next_step) {
+                                case 2:
+                                    $scope.steps.step2 = true;
+                                    element = $('#role_desc');
+                                    break;
+                                case 3:
+                                    $scope.steps.step3 = true;
+                                    break;
+                                case 4:
+                                    $scope.steps.step4 = true;
+                                    break;
+                            }
+                            $timeout(function () {
+                                if (typeof element != 'undefined') {
+                                    element.focus();
+                                    element.select();
+                                }
+                            }, 1000);
                         }
                     }
             )
@@ -318,7 +357,11 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                             $scope.data.User.state_id = parseInt(_that.data.User.state_id);
                             $scope.data.User.city_id = parseInt(_that.data.User.city_id);
                             $scope.data.User.user_id = parseInt(_that.data.User.user_id);
-                            $scope.modules = response.data.modules;
+//                            $http.get($rootScope.IRISAdminServiceUrl + "/default/get-module-tree").then(
+//                                    function (response) {
+//                                        $scope.modules = response.data.moduleList;
+//                                    }
+//                            );
                             $scope.loadbar('hide');
                         } else {
                             $scope.errorData = response.data;
