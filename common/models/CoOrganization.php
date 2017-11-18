@@ -45,17 +45,18 @@ class CoOrganization extends GActiveRecord {
      */
     public function rules() {
         return [
-            [['org_name', 'org_description', 'org_db_host', 'org_db_username', 'org_database', 'org_domain','patient_UHID_prefix'], 'required'],
+            [['org_name', 'org_description', 'org_db_host', 'org_db_username', 'org_database', 'org_domain'], 'required'],
             [['org_domain'], 'url'],
             [['org_description', 'status'], 'string'],
             [['created_by', 'modified_by'], 'integer'],
             [['created_at', 'modified_at', 'deleted_at', 'status'], 'safe'],
             [['org_name'], 'string', 'max' => 100],
             [['org_db_host', 'org_db_username', 'org_db_password', 'org_database', 'org_domain'], 'string', 'max' => 255],
-            [['org_name', 'org_database'], 'unique'],
-            [['org_domain'], 'unique'],
-            ['org_database', 'checkDB'],
-            ['patient_UHID_prefix', 'validateCodeprefix'],
+            [['org_name', 'org_database'], 'unique', 'on' => 'Create'],
+            [['patient_UHID_prefix'],'required', 'on' => 'Create'],
+            [['org_domain'], 'unique', 'on' => 'Create'],
+            ['org_database', 'checkDB', 'on' => 'Create'],
+            ['patient_UHID_prefix', 'validateCodeprefix', 'on' => 'Create'],
         ];
     }
 
@@ -99,12 +100,19 @@ class CoOrganization extends GActiveRecord {
     public function getCoActiveTenants() {
         return $this->hasMany(CoTenant::className(), ['org_id' => 'org_id'])->andWhere(['status' => '1'])->orderBy(['created_at' => SORT_ASC]);
     }
+    
+    public function getGlInternalCodes() {
+        return $this->hasOne(GlInternalCode::className(), ['org_id' => 'org_id']);
+    }
 
     public function fields() {
         $extend = [
             'tenants' => function ($model) {
                 return $model->coTenants;
             },
+            'prefix_code' => function ($model) {
+                return (isset($model->glInternalCodes->code_prefix) ? $model->glInternalCodes->code_prefix : '-');
+            }
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
@@ -189,5 +197,6 @@ class CoOrganization extends GActiveRecord {
         
         return parent::afterSave($insert, $changedAttributes);
     }
+
 
 }

@@ -12,6 +12,7 @@ use common\models\CoTenant;
 use common\models\CoUser;
 use common\models\CoUserForm;
 use common\models\GlInternalCode;
+use common\models\CoUsersRoles;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -112,7 +113,7 @@ class OrganizationController extends ActiveController {
                 'password' => isset($post['org_db_password']) ? $post['org_db_password'] : '',
             ]);
             $connection->open();
-            
+
             //$structure = str_replace("AUTO_INCREMENT=/[0-9]/", "AUTO_INCREMENT=1", $structure);
             $command = $connection->createCommand($structure);
             $command->execute();
@@ -157,6 +158,8 @@ class OrganizationController extends ActiveController {
         if (!empty($post)) {
             $model = new CoOrganization();
             $model->attributes = Yii::$app->request->post('Organization');
+            $model->patient_UHID_prefix = Yii::$app->request->post('Organization')['patient_UHID_prefix'];
+            
             $model->is_decoded = true;
 
             $login_form_model = new CoLoginForm();
@@ -228,60 +231,12 @@ class OrganizationController extends ActiveController {
     public function actionUpdateorg() {
         $post = Yii::$app->request->post();
         if (!empty($post)) {
-
             $valid = false;
 
             $user_form_model = new CoUserForm();
             $user_form_model->scenario = 'saveorg';
             $user_form_model->attributes = Yii::$app->request->post('User');
             $valid = $user_form_model->validate();
-
-//            if (isset($post['Tenant']) && !empty($post['Tenant'])) {
-//                $model = CoTenant::findOne(['tenant_id' => $post['Tenant']['tenant_id']]);
-//                $model->attributes = $post['Tenant'];
-//                $valid = $model->validate();
-//            }
-//
-//            if (isset($post['Role']) && !empty($post['Role'])) {
-//                $model = CoRole::findOne(['role_id' => $post['Role']['role_id']]);
-//                $model->attributes = $post['Role'];
-//                $valid = $model->validate();
-//            }
-//
-//            if (isset($post['Login']) && !empty($post['Login'])) {
-//                $model = CoLogin::findOne(['login_id' => $post['Login']['login_id']]);
-//                $model->attributes = $post['Login'];
-//                if (!empty($model->password))
-//                    $model->setPassword($model->password);
-//
-//                $valid = $model->validate();
-//            }
-//            if (isset($post['User']) && !empty($post['User'])) {
-//                $model = CoUser::findOne(['user_id' => $post['User']['user_id']]);
-//                $model->scenario = 'saveorg';
-//                $model->attributes = $post['User'];
-//                $valid = $model->validate();
-//            }
-//            if (isset($post['Module']) && !empty($post['Module'])) {
-//                $resource_id = $post['Module']['resource_ids'];
-//                $model = CoRole::findOne(['role_id' => $post['Module']['role_id']]);
-//
-//                $resources = CoResources::find()->where(['in', 'resource_id', $resource_id])->all();
-//                $extraColumns = ['tenant_id' => $post['Module']['tenant_id'], 'created_by' => Yii::$app->user->identity->user_id, 'status' => '1']; // extra columns to be saved to the many to many table
-//                $unlink = true; // unlink tags not in the list
-//                $delete = true; // delete unlinked tags
-//                $model->linkAll('resources', $resources, $extraColumns, $unlink, $delete);
-//
-//                //For Update Status
-//                $role_resources = CoRolesResources::find()->tenant($post['Module']['tenant_id'])->where(['role_id' => $post['Module']['role_id']])->all();
-//                foreach ($role_resources as $role_resource) {
-//                    if ($role_resource->status != '1') {
-//                        $role_resource->updateAttributes(['status' => '1']);
-//                    }
-//                }
-//
-//                return ['success' => true];
-//            }
 
             if ($valid) {
                 $organization = CoOrganization::find()->where(['org_id' => $post['User']['org_id']])->one();
@@ -292,6 +247,9 @@ class OrganizationController extends ActiveController {
                     'password' => $organization->org_db_password,
                 ]);
                 $connection->open();
+
+                $organization->attributes = Yii::$app->request->post('Organization');
+                $organization->save(false);
 
                 $sql = "UPDATE co_user SET title_code = '" . $post['User']['title_code'] . "', name = '" . $post['User']['name'] . "', designation = '" . $post['User']['designation'] . "', address = '" . $post['User']['address'] . "', city_id = '" . $post['User']['city_id'] . "', state_id = '" . $post['User']['state_id'] . "', country_id = '" . $post['User']['country_id'] . "', contact1 = '" . $post['User']['contact1'] . "', contact2 = '" . $post['User']['contact2'] . "', mobile = '" . $post['User']['mobile'] . "', email = '" . $post['User']['email'] . "', zip = '" . $post['User']['zip'] . "' WHERE user_id='" . $post['User']['user_id'] . "'";
                 $command = $connection->createCommand($sql);
@@ -311,6 +269,8 @@ class OrganizationController extends ActiveController {
         if (!empty($org_id)) {
             $return = array();
             $organization = CoOrganization::find()->where(['org_id' => $org_id])->one();
+            //$return['Organization'] = $this->excludeColumns($organization->attributes); //Only displayed inner table fields
+            $return['Organization'] = $this->excludeColumns($organization);
 
             $connection = new Connection([
                 'dsn' => "mysql:host={$organization->org_db_host};dbname={$organization->org_database}",
@@ -324,7 +284,16 @@ class OrganizationController extends ActiveController {
             $query_php = $command->queryAll();
             $return['User'] = $query_php[0];
 
-            //$user_role = CoUsersRoles::find()->where(['tenant_id' => $tenant_id, 'user_id' => $userProf->user_id])->one();
+//            $sql_roles = "select * from co_users_roles where user_id=" . $query_php[0]['user_id'] . "";
+//            $command_role = $connection->createCommand($sql_roles);
+//            $role_php = $command_role->queryAll();
+//            
+//            CoOrganization::getAnotherDb();
+//
+//            $user_role = CoUsersRoles::find()->where(['user_id' => $query_php[0]['user_id']])->one();
+//            print_r($user_role);
+//            die;
+
             //$login = CoLogin::find()->where(['user_id' => $userProf->user_id])->one();
             //$login->password = '';
             //$return['Tenant'] = $this->excludeColumns($organization->attributes);
@@ -347,6 +316,25 @@ class OrganizationController extends ActiveController {
         return $attrs;
     }
 
+    public function actionUpdatevalidate() {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
+            $valid = true;
+            if (isset($post['Organization'])) {
+                $model = new CoOrganization();
+                $model->attributes = Yii::$app->request->post('Organization');
+            }
+            $valid = $model->validate();
+            if ($valid) {
+                return ['success' => true];
+            } else {
+                return ['success' => false, 'message' => Html::errorSummary([$model])];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Please Fill the Form'];
+        }
+    }
+
     public function actionValidateorg() {
         $post = Yii::$app->request->post();
 
@@ -355,6 +343,10 @@ class OrganizationController extends ActiveController {
             if (isset($post['Organization'])) {
                 $model = new CoOrganization();
                 $model->attributes = Yii::$app->request->post('Organization');
+                if(isset(Yii::$app->request->post('Organization')['patient_UHID_prefix']) && Yii::$app->request->post('Organization')['patient_UHID_prefix']) {
+                    $model->patient_UHID_prefix = Yii::$app->request->post('Organization')['patient_UHID_prefix'];
+                }
+                $model->scenario = 'Create';
             }
 
 //            if (isset($post['Role'])) {
@@ -394,7 +386,7 @@ class OrganizationController extends ActiveController {
             return ['success' => false, 'message' => 'Please Fill the Form'];
         }
     }
-    
+
     public function actionGetorglist() {
         return CoOrganization::find()->all();
     }
