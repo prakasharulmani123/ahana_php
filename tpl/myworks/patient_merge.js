@@ -88,7 +88,7 @@ app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$
             var exists = $filter('filter')($scope.selected_patients, {Patient: {patient_global_guid: id}});
 
             if (filteredResult.length > 0) {
-                if (filteredResult[0].Patient.have_encounter) {
+                if (filteredResult[0].PatientActiveEncounter) {
                     alert('This patient have an active encounter, so you can not merge now');
                 } else if (exists.length > 0) {
                     alert('Patient already selected, Choose different patient');
@@ -120,39 +120,58 @@ app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$
         }
 
         $scope.saveForm = function () {
+            $scope.allow_merge = true;
             var conf = confirm('Are you sure to Merge these patients ?');
             if (conf) {
-                var primaryExists = $filter('filter')($scope.selected_patients, {is_primary: true});
-                if (primaryExists.length == 1) {
-                    $scope.loadbar('show');
-                    post_url = $rootScope.IRISOrgServiceUrl + '/patient/mergepatients';
-                    method = 'POST';
-                    $http({
-                        method: method,
-                        url: post_url,
-                        data: $scope.selected_patients,
-                    }).success(
-                            function (response) {
-                                if (response.success) {
-                                    $scope.msg.successMessage = response.message;
-                                } else {
-                                    $scope.msg.errorMessage = response.message;
-                                }
+                var primaryExists = $filter('filter')($scope.selected_patients, {is_primary: true}); // Filter for primary patient
+                var parentPatient = $filter('filter')($scope.selected_patients, function (value) { //Filter for multiple parent patient
+                    return value.Patient.childrens_count != '0'
+                });
+
+                if (parentPatient.length < 2) { //Check parent patient length is 0 and 1
+                    if (primaryExists.length == 1) { //Check enable for any primary merge parent patient
+                        if (parentPatient.length == 1) { //Check equal for parent patient id and primary patient id
+                            if (primaryExists[0].Patient.patient_id != parentPatient[0].Patient.patient_id)
+                                $scope.allow_merge = false;
+                        }
+
+                        if ($scope.allow_merge) { 
+                            $scope.loadbar('show');
+                            post_url = $rootScope.IRISOrgServiceUrl + '/patient/mergepatients';
+                            method = 'POST';
+                            $http({
+                                method: method,
+                                url: post_url,
+                                data: $scope.selected_patients,
+                            }).success(
+                                    function (response) {
+                                        if (response.success) {
+                                            $scope.msg.successMessage = response.message;
+                                        } else {
+                                            $scope.msg.errorMessage = response.message;
+                                        }
+                                        $scope.loadbar('hide');
+                                        $scope.patient_search_result = [];
+                                        $scope.selected_patients = [];
+                                        $scope.patient = '';
+                                    }
+                            ).error(function (data, status) {
                                 $scope.loadbar('hide');
-                                $scope.patient_search_result = [];
-                                $scope.selected_patients = [];
-                                $scope.patient = '';
-                            }
-                    ).error(function (data, status) {
-                        $scope.loadbar('hide');
-                        if (status == 422)
-                            $scope.errorData = $scope.errorSummary(data);
-                        else
-                            $scope.errorData = data.message;
-                    });
+                                if (status == 422)
+                                    $scope.errorData = $scope.errorSummary(data);
+                                else
+                                    $scope.errorData = data.message;
+                            });
+                        } else {
+                            alert('Kindly choose the Primary patient '+parentPatient[0].Patient.fullname);
+                        }
+                    } else {
+                        alert('Choose any one Primary patient');
+                    }
                 } else {
-                    alert('Choose any one Primary patient');
+                    alert('One or More parent patients. Kindly remove one parent patient '+parentPatient[0].Patient.fullname+' or '+parentPatient[1].Patient.fullname);
                 }
+
             }
         }
 
