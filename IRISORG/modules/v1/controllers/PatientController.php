@@ -148,10 +148,10 @@ class PatientController extends ActiveController {
             $lists = PatPatient::find()
                     ->andWhere([
                         'pat_patient.tenant_id' => $tenant_id,
-                        'pat_patient.deleted_at' => '0000-00-00 00:00:00',
+//                        'pat_patient.deleted_at' => '0000-00-00 00:00:00',
                         'pat_global_patient.parent_id' => NULL
                     ])
-                    ->joinWith('patGlobalPatient')
+                    ->joinWith(['patGlobalPatient', 'patMergedGlobalPatient bb'])
                     ->andFilterWhere([
                         'or',
                             ['like', 'pat_global_patient.patient_firstname', $text],
@@ -159,6 +159,11 @@ class PatientController extends ActiveController {
                             ['like', 'pat_global_patient.patient_mobile', $text],
                             ['like', 'pat_global_patient.patient_global_int_code', $text],
                             ['like', 'pat_global_patient.casesheetno', $text],
+                            ['like', 'bb.patient_firstname', $text],
+                            ['like', 'bb.patient_lastname', $text],
+                            ['like', 'bb.patient_mobile', $text],
+                            ['like', 'bb.patient_global_int_code', $text],
+                            ['like', 'bb.casesheetno', $text],
                     ])
                     ->orWhere("pat_global_patient.parent_id = ''")
                     ->limit($limit)
@@ -175,7 +180,7 @@ class PatientController extends ActiveController {
             //Search from same ORG but different branch
             if (empty($patients)) {
                 $lists = PatPatient::find()
-                        ->joinWith('patGlobalPatient')
+                        ->joinWith(['patGlobalPatient', 'patMergedGlobalPatient bb'])
                         ->andWhere("pat_patient.status = '1' AND pat_patient.tenant_id != {$tenant_id} AND pat_global_patient.parent_id IS NULL")
                         ->andFilterWhere([
                             'or',
@@ -184,6 +189,11 @@ class PatientController extends ActiveController {
                                 ['like', 'pat_global_patient.patient_mobile', $text],
                                 ['like', 'pat_global_patient.patient_global_int_code', $text],
                                 ['like', 'pat_global_patient.casesheetno', $text],
+                                 ['like', 'bb.patient_firstname', $text],
+                            ['like', 'bb.patient_lastname', $text],
+                            ['like', 'bb.patient_mobile', $text],
+                            ['like', 'bb.patient_global_int_code', $text],
+                            ['like', 'bb.casesheetno', $text],
                         ])
                         ->orWhere("pat_global_patient.parent_id = ''")
                         ->limit($limit)

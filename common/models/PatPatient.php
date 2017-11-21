@@ -259,6 +259,10 @@ class PatPatient extends RActiveRecord {
     public function getPatGlobalPatient() {
         return $this->hasOne(PatGlobalPatient::className(), ['patient_global_guid' => 'patient_global_guid']);
     }
+    
+    public function getPatMergedGlobalPatient() {
+        return $this->hasOne(PatGlobalPatient::className(), ['patient_global_guid' => 'migration_id']);
+    }
 
     public function getPatatleastoneencounter() {
         $all_patient_id = PatPatient::find()
