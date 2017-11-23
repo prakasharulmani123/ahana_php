@@ -92,8 +92,12 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <div class="col-sm-5">  <b>Total Amount : </b>   </div>
-                                <div class="col-sm-7"> 	<span class="label bg-dark"> {{billing.total_price = (billing.total.price + recurr_billing.total.recurring_total) - enc.selected.concession_amount | number:2}} </span> </div>
+                                <div class="col-sm-7"> 	<span class="label bg-dark"> {{billing.total_price = (billing.total.price + recurr_billing.total.recurring_total + recurr_billing.total_pharmacy.recurring_total) | number:2}} </span> </div>
                             </div>
+                            <div class="form-group">
+                                    <div class="col-sm-5">  <b>Total Discount :</b>   </div>
+                                    <div class="col-sm-7"> <span class="label bg-light dk"> {{billing.discount = billing.total.concession + parseFloat(enc.selected.concession_amount) | number:2}} </span> </div>
+                                </div>
                             <div class="form-group">
                                 <div class="col-sm-5">  <b>Amount Paid : </b>   </div>
                                 <div class="col-sm-7"> 
@@ -103,8 +107,9 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-5">  <b>Amount Payable : </b>   </div>
-                                <div class="col-sm-7"> <span class="label bg-danger">{{(billing.total_price) - billing.total.advance_charge| number:2}}</span>  </span>	</div>
+                                <div class="col-sm-7"> <span class="label bg-danger">{{(billing.total_price) - (billing.total.advance_charge+billing.discount)| number:2}}</span> </div>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -316,7 +321,7 @@
                     </div>
                     <div class="m-b-sm">
                     </div>
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table" >
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table" ng-init="recurr_billing.total_pharmacy = {}">
                         <tr>
                             <th>S.No</th>
                             <th>Bill No</th>
@@ -332,7 +337,7 @@
                             <td>{{row.bill_payment}}</td>
                             <td>{{row.bill_amount}}</td>
                             <td align="right" ng-init="pharmacy.total = pharmacy.total + parseFloat(row.billings_total_balance_amount);
-                                recurr_billing.total.recurring_total = recurr_billing.total.recurring_total + parseFloat(row.billings_total_balance_amount);"> {{row.billings_total_balance_amount}} </td>
+                                recurr_billing.total_pharmacy.recurring_total = recurr_billing.total_pharmacy.recurring_total + parseFloat(row.billings_total_balance_amount);"> {{row.billings_total_balance_amount}} </td>
                         </tr>
                     </table>
                 </div>

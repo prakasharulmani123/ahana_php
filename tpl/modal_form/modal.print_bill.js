@@ -12,6 +12,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
         $scope.recurr_billing = scope.recurr_billing;
         $scope.recurring_charges = scope.recurring_charges;
         $scope.procedures = scope.procedures;
+        $scope.pharmacy_charge = scope.pharmacy_charge;
         $scope.consultants = scope.consultants;
         $scope.other_charges = scope.other_charges;
         $scope.advances = scope.advances;
@@ -254,21 +255,37 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     {text: other_charge.toFixed(2).toString(), alignment: 'right'}
                 ]);
             }
+            if ($scope.pharmacy_charge.length > 0) {
+                var pharmacy_charge = 0;
+                angular.forEach($scope.pharmacy_charge, function (row, key) {
+                    pharmacy_charge += parseFloat(row.billings_total_balance_amount);
+                });
+                bill.push([
+                    {text: 'Pharmacy charges', style: 'rows', colSpan: 5},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {text: pharmacy_charge.toFixed(2).toString(), alignment: 'right'}
+                ]);
+            }
             if(typeof $scope.billing.total == 'undefined'){
                 charge = 0.00;
                 extra = 0.00;
                 advance_charge = 0.00;
                 price = 0.00;
             } else {
-                charge = $scope.billing.total.charge;
-                extra = $scope.billing.total.extra;
+                charge = (typeof $scope.billing.total.charge == 'undefined') ? '0.00' : $scope.billing.total.charge.toFixed(2);
+                extra = (typeof $scope.billing.total.extra == 'undefined') ? '0.00' : $scope.billing.total.extra.toFixed(2);
                 advance_charge = (typeof $scope.billing.total.advance_charge == 'undefined') ? '0.00' : $scope.billing.total.advance_charge.toFixed(2);
-                price = $scope.billing.total.price;
+                price = (typeof $scope.billing.total.price == 'undefined') ? '0.00' : $scope.billing.total.price.toFixed(2);
             }
+            pharmacy = (typeof pharmacy_charge == 'undefined') ? '0.00' : pharmacy_charge.toFixed(2);
+            
             
             bill.push([
                 {
-                    text: 'Grand Total : ' + (parseFloat(charge) + parseFloat(extra) + parseFloat($scope.recurr_billing.total.recurring_total)).toFixed(2).toString(),
+                    text: 'Grand Total : ' + (parseFloat(charge) + parseFloat(extra) + parseFloat($scope.recurr_billing.total.recurring_total) + parseFloat(pharmacy)).toFixed(2).toString(),
                     fillColor: '#eeeeee',
                     bold: true,
                     margin: [0, 10, 2, 0],
@@ -317,7 +334,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
             }
             bill.push([
                 {
-                    text: 'Net Total : ' + ((parseFloat(price) + parseFloat($scope.recurr_billing.total.recurring_total)) - parseFloat(advance_charge) - parseFloat($scope.enc.selected.concession_amount)).toFixed(2).toString(),
+                    text: 'Net Total : ' + ((parseFloat(price) + parseFloat($scope.recurr_billing.total.recurring_total) + parseFloat(pharmacy)) - parseFloat(advance_charge) - parseFloat($scope.enc.selected.concession_amount)).toFixed(2).toString(),
                     fillColor: '#eeeeee',
                     bold: true,
                     margin: [0, 10, 2, 0],
@@ -344,6 +361,9 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     consultant_net_total: '0',
                     consultant_total: '0',
                     net_step_3_total: '0',
+                    pharmacy_net_total: '0',
+                    pharmacy_total: '0',
+                    net_step_41_total: '0',
                     other_net_total: '0',
                     other_total: '0',
                     net_step_4_total: '0',
@@ -537,6 +557,48 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 detailed_billing.total.other_net_total = detailed_billing.total.consultant_net_total;
             }
             //Other charges END
+            
+            //Pharmacy charges START
+            if ($scope.pharmacy_charge.length > 0) {
+                bill.push([
+                    {text: 'Pharmacy Charges', bold: true, colSpan: 6, margin: [2, 10, 0, 10]},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {}
+                ]);
+                angular.forEach($scope.pharmacy_charge, function (row, key) {
+                    var profe_date = moment(row.sale_date).format('DD/MM/YYYY');
+                    detailed_billing.total.net_step_41_total = detailed_billing.total.other_net_total;
+                    var row_total =parseFloat(row.billings_total_balance_amount);
+                    var net_total = parseFloat(detailed_billing.total.net_step_41_total) + parseFloat(row.net_amount)
+                    bill.push([
+                        {text: profe_date, style: 'rows'},
+                        {text: row.bill_no, style: 'rows', colSpan: 2},
+                        '',
+                        {text: row_total.toString(), style: 'rows', alignment: 'right'},
+                        '',
+                        {text: net_total.toString(), style: 'rows', alignment: 'right'}
+                    ]);
+
+                    detailed_non_billing.total.charge = parseFloat(detailed_non_billing.total.charge) + row_total;
+                    detailed_billing.total.pharmacy_total = parseFloat(detailed_billing.total.pharmacy_total) + row_total;
+                    detailed_billing.total.pharmacy_net_total = parseFloat(detailed_billing.total.other_net_total) + parseFloat(row.net_amount);
+                });
+                bill.push([
+                    '',
+                    '',
+                    '',
+                    {text: detailed_billing.total.pharmacy_total.toString(), alignment: 'right', bold: true, margin: [0, 10, 0, 0]},
+                    '',
+                    '',
+                ]);
+            }
+            if (detailed_billing.total.pharmacy_net_total == '0') {
+                detailed_billing.total.pharmacy_net_total = detailed_billing.total.other_net_total;
+            }
+            //Pharmacy charges END
 
             //Advance START
             if ($scope.advances) {
@@ -549,7 +611,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     {}
                 ]);
                 angular.forEach($scope.advances, function (row, key) {
-                    detailed_billing.total.net_step_4_total = detailed_billing.total.other_net_total;
+                    detailed_billing.total.net_step_4_total = detailed_billing.total.pharmacy_net_total;
                     var row_total = parseFloat(row.total_charge);
                     var net_total = parseFloat(detailed_billing.total.net_step_4_total) - parseFloat(row.net_amount);
                     var payment_date = moment(row.payment_date).format('DD/MM/YYYY');
@@ -564,7 +626,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
 
                     detailed_non_billing.total.adv_charge = parseFloat(detailed_non_billing.total.adv_charge) + row_total;
                     detailed_billing.total.advance_total = parseFloat(detailed_billing.total.advance_total) + row_total;
-                    detailed_billing.total.advance_net_total = parseFloat(detailed_billing.total.other_net_total) - parseFloat(row.net_amount);
+                    detailed_billing.total.advance_net_total = parseFloat(detailed_billing.total.pharmacy_net_total) - parseFloat(row.net_amount);
                 });
                 bill.push([
                     '',
@@ -576,7 +638,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 ]);
             }
             if (detailed_billing.total.advance_net_total == '0') {
-                detailed_billing.total.advance_net_total = detailed_billing.total.other_net_total;
+                detailed_billing.total.advance_net_total = detailed_billing.total.pharmacy_net_total;
             }
             //Advance END
 
@@ -632,7 +694,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 }
 
                 if ($scope.enc.selected.concession_amount != '0.00') {
-                    var room_dis = (detailed_billing.total.cons_concession_net_total - $scope.enc.selected.concession_amount)
+                    var room_dis = (detailed_billing.total.cons_concession_net_total - parseInt($scope.enc.selected.concession_amount))
                     bill.push([
                         '',
                         {text: 'Room Discount', colSpan: 2, style: 'rows'},
@@ -648,15 +710,19 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 extra = 0.00;
                 advance_charge = 0.00;
                 price = 0.00;
+                disconcession = 0.00;
             } else {
-                charge = $scope.billing.total.charge;
-                extra = $scope.billing.total.extra;
+                charge = (typeof $scope.billing.total.charge == 'undefined') ? '0.00' : $scope.billing.total.charge;
+                extra = (typeof $scope.billing.total.extra == 'undefined') ? '0.00' : $scope.billing.total.extra;
                 advance_charge = (typeof $scope.billing.total.advance_charge == 'undefined') ? '0.00' : $scope.billing.total.advance_charge.toFixed(2);
-                price = $scope.billing.total.price;
+                price = (typeof $scope.billing.total.price == 'undefined') ? '0.00' : $scope.billing.total.price;
+                disconcession = (typeof $scope.billing.total.concession == 'undefined') ? '0.00' : $scope.billing.total.concession;
             }
+            
+            pharmacy = (typeof detailed_billing.total.pharmacy_total == 'undefined') ? '0.00' : detailed_billing.total.pharmacy_total;
             bill.push([
                 {
-                    text: 'Grand Total : ' + (parseFloat(charge) + parseFloat(extra) + parseFloat($scope.recurr_billing.total.recurring_total)).toString(),
+                    text: 'Grand Total : ' + (parseFloat(charge) + parseFloat(extra) + parseFloat($scope.recurr_billing.total.recurring_total) + parseFloat(pharmacy)).toString(),
                     fillColor: '#eeeeee',
                     bold: true,
                     margin: [0, 10, 2, 0],
@@ -669,21 +735,36 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 '',
                 '',
             ]);
-//            bill.push([
-//                {
-//                    text: 'Advance : ' + $scope.billing.total.advance_charge.toString(),
-//                    fillColor: '#eeeeee',
-//                    bold: true,
-//                    margin: [0, 10, 2, 0],
-//                    alignment: 'right',
-//                    colSpan: 6,
-//                },
-//                '',
-//                '',
-//                '',
-//                '',
-//                '',
-//            ]);
+            bill.push([
+                {
+                    text: 'Advance : ' + advance_charge.toString(),
+                    fillColor: '#eeeeee',
+                    bold: true,
+                    margin: [0, 10, 2, 0],
+                    alignment: 'right',
+                    colSpan: 6,
+                },
+                '',
+                '',
+                '',
+                '',
+                '',
+            ]);
+                        bill.push([
+                {
+                    text: 'Discount : ' + (parseFloat((typeof $scope.enc.selected.concession_amount == 'undefined') ? '0.00' : $scope.enc.selected.concession_amount) + parseFloat(disconcession)).toString(),
+                    fillColor: '#eeeeee',
+                    bold: true,
+                    margin: [0, 10, 2, 0],
+                    alignment: 'right',
+                    colSpan: 6,
+                },
+                '',
+                '',
+                '',
+                '',
+                '',
+            ]);
 //            bill.push([
 //                {
 //                    text: 'Room Discount : ' + $scope.enc.selected.concession_amount.toString(),
@@ -716,7 +797,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
 //            ]);
             bill.push([
                 {
-                    text: 'Net Total : ' + ((parseFloat(price) + parseFloat($scope.recurr_billing.total.recurring_total)) - parseFloat(advance_charge) - parseFloat($scope.enc.selected.concession_amount)).toString(),
+                    text: 'Net Total : ' + ((parseFloat(price) + parseFloat($scope.recurr_billing.total.recurring_total) + parseFloat(pharmacy)) - parseFloat(advance_charge) - parseFloat($scope.enc.selected.concession_amount)).toString(),
                     fillColor: '#eeeeee',
                     bold: true,
                     margin: [0, 10, 2, 0],

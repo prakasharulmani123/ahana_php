@@ -394,6 +394,11 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             }).success(
                     function (response) {
                         $scope.pharmacy_charge = response.sale;
+                        var grandTotal = 0;
+                        angular.forEach($scope.pharmacy_charge, function(obj){
+                            grandTotal += parseFloat(obj.billings_total_balance_amount);
+                            obj.net_amount = grandTotal;
+                        });
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
