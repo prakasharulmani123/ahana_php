@@ -714,7 +714,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
             } else {
                 charge = (typeof $scope.billing.total.charge == 'undefined') ? '0.00' : $scope.billing.total.charge;
                 extra = (typeof $scope.billing.total.extra == 'undefined') ? '0.00' : $scope.billing.total.extra;
-                advance_charge = (typeof $scope.billing.total.advance_charge == 'undefined') ? '0.00' : $scope.billing.total.advance_charge.toFixed(2);
+                advance_charge = (typeof $scope.billing.total.advance_charge == 'undefined') ? '0.00' : $scope.billing.total.advance_charge;
                 price = (typeof $scope.billing.total.price == 'undefined') ? '0.00' : $scope.billing.total.price;
                 disconcession = (typeof $scope.billing.total.concession == 'undefined') ? '0.00' : $scope.billing.total.concession;
             }
