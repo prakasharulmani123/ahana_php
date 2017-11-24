@@ -127,7 +127,7 @@ class PatientscanneddocumentsController extends ActiveController {
     //Save Create / Update
     public function actionSavedocument() {
         $post = Yii::$app->getRequest()->post();
-        $post['scanned_doc_creation_date'] = $post['year'].'-'.$post['month'].'-'.$post['day']. date('h:i:s');
+        $post['scanned_doc_creation_date'] = $post['year'].'-'.$post['month'].'-'.$post['day']. date('H:i:s');
         
         $patient = PatPatient::getPatientByGuid($post['patient_id']);
         $patient_id = $patient->patient_id;
