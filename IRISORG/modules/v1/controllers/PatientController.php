@@ -149,9 +149,9 @@ class PatientController extends ActiveController {
                     ->andWhere([
                         'pat_patient.tenant_id' => $tenant_id,
 //                        'pat_patient.deleted_at' => '0000-00-00 00:00:00',
-                        'pat_global_patient.parent_id' => NULL
+//                        'pat_global_patient.parent_id' => NULL
                     ])
-                    ->joinWith(['patGlobalPatient', 'patMergedGlobalPatient bb'])
+                    ->joinWith(['patGlobalPatient', 'patMergedGlobalPatient a'])
                     ->andFilterWhere([
                         'or',
                             ['like', 'pat_global_patient.patient_firstname', $text],
@@ -159,11 +159,105 @@ class PatientController extends ActiveController {
                             ['like', 'pat_global_patient.patient_mobile', $text],
                             ['like', 'pat_global_patient.patient_global_int_code', $text],
                             ['like', 'pat_global_patient.casesheetno', $text],
-                            ['like', 'bb.patient_firstname', $text],
-                            ['like', 'bb.patient_lastname', $text],
-                            ['like', 'bb.patient_mobile', $text],
-                            ['like', 'bb.patient_global_int_code', $text],
-                            ['like', 'bb.casesheetno', $text],
+                            ['like', 'a.patient_firstname', $text],
+                            ['like', 'a.patient_lastname', $text],
+                            ['like', 'a.patient_mobile', $text],
+                            ['like', 'a.patient_global_int_code', $text],
+                            ['like', 'a.casesheetno', $text],
+                    ])
+                    ->orWhere("pat_global_patient.parent_id = ''")
+                    ->limit($limit)
+                    ->all();
+
+            foreach ($lists as $key => $patient) {
+                $patients[$key]['Patient'] = $patient;
+//                $patients[$key]['PatientAddress'] = $patient->patPatientAddress; // :NOUSE
+                $patients[$key]['PatientActiveEncounter'] = $patient->patActiveEncounter;
+                $patients[$key]['PatientMerged'] = $patient->patMergedGlobalPatient;
+                $patients[$key]['same_branch'] = true;
+                $patients[$key]['same_org'] = true;
+            }
+
+            //Search from same ORG but different branch
+            if (empty($patients)) {
+                $lists = PatPatient::find()
+                        ->andWhere("pat_patient.status = '1' AND pat_patient.tenant_id != {$tenant_id}")
+                        ->joinWith(['patGlobalPatient', 'patMergedGlobalPatient a'])
+                        ->andFilterWhere([
+                            'or',
+                                ['like', 'pat_global_patient.patient_firstname', $text],
+                                ['like', 'pat_global_patient.patient_lastname', $text],
+                                ['like', 'pat_global_patient.patient_mobile', $text],
+                                ['like', 'pat_global_patient.patient_global_int_code', $text],
+                                ['like', 'pat_global_patient.casesheetno', $text],
+                                ['like', 'a.patient_firstname', $text],
+                                ['like', 'a.patient_lastname', $text],
+                                ['like', 'a.patient_mobile', $text],
+                                ['like', 'a.patient_global_int_code', $text],
+                                ['like', 'a.casesheetno', $text],
+                        ])
+                        ->orWhere("pat_global_patient.parent_id = ''")
+                        ->limit($limit)
+                        ->groupBy('a.patient_global_guid')
+                        ->all();
+
+                foreach ($lists as $key => $patient) {
+                    $patients[$key]['Patient'] = $patient;
+                    $patients[$key]['PatientMerged'] = $patient->patMergedGlobalPatient;
+                    $patients[$key]['same_branch'] = false;
+                    $patients[$key]['same_org'] = true;
+                }
+
+                //Search from HMS Database
+//                if (empty($patients)) {
+//
+//                    $lists = GlPatient::find()
+//                            ->andWhere("status = '1' AND tenant_id != {$tenant_id} AND (parent_id IS NULL OR parent_id = '')")
+//                            ->andFilterWhere([
+//                                'or',
+//                                    ['like', 'patient_firstname', $text],
+//                                    ['like', 'patient_lastname', $text],
+//                                    ['like', 'patient_mobile', $text],
+////                                ['like', 'patient_global_int_code', $text],
+//                                ['like', 'casesheetno', $text],
+//                            ])
+//                            ->limit($limit)
+//                            ->all();
+//
+//                    foreach ($lists as $key => $patient) {
+//                        $patients[$key]['Patient'] = $patient;
+//                        $patients[$key]['same_branch'] = false;
+//                        $patients[$key]['same_org'] = false;
+//                    }
+//                }
+            }
+        }
+        return ['patients' => $patients];
+    }
+
+    public function actionMergesearch() {
+        $post = Yii::$app->getRequest()->post();
+        $patients = [];
+        $limit = 20;
+
+        if (isset($post['search']) && !empty($post['search']) && strlen($post['search']) >= 2) {
+            $text = $post['search'];
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+
+            $lists = PatPatient::find()
+                    ->andWhere([
+                        'pat_patient.tenant_id' => $tenant_id,
+                        'pat_patient.deleted_at' => '0000-00-00 00:00:00',
+                        'pat_global_patient.parent_id' => NULL
+                    ])
+                    ->joinWith('patGlobalPatient')
+                    ->andFilterWhere([
+                        'or',
+                            ['like', 'pat_global_patient.patient_firstname', $text],
+                            ['like', 'pat_global_patient.patient_lastname', $text],
+                            ['like', 'pat_global_patient.patient_mobile', $text],
+                            ['like', 'pat_global_patient.patient_global_int_code', $text],
+                            ['like', 'pat_global_patient.casesheetno', $text],
                     ])
                     ->orWhere("pat_global_patient.parent_id = ''")
                     ->limit($limit)
@@ -180,7 +274,7 @@ class PatientController extends ActiveController {
             //Search from same ORG but different branch
             if (empty($patients)) {
                 $lists = PatPatient::find()
-                        ->joinWith(['patGlobalPatient', 'patMergedGlobalPatient bb'])
+                        ->joinWith('patGlobalPatient')
                         ->andWhere("pat_patient.status = '1' AND pat_patient.tenant_id != {$tenant_id} AND pat_global_patient.parent_id IS NULL")
                         ->andFilterWhere([
                             'or',
@@ -189,11 +283,6 @@ class PatientController extends ActiveController {
                                 ['like', 'pat_global_patient.patient_mobile', $text],
                                 ['like', 'pat_global_patient.patient_global_int_code', $text],
                                 ['like', 'pat_global_patient.casesheetno', $text],
-                                 ['like', 'bb.patient_firstname', $text],
-                            ['like', 'bb.patient_lastname', $text],
-                            ['like', 'bb.patient_mobile', $text],
-                            ['like', 'bb.patient_global_int_code', $text],
-                            ['like', 'bb.casesheetno', $text],
                         ])
                         ->orWhere("pat_global_patient.parent_id = ''")
                         ->limit($limit)
@@ -513,39 +602,49 @@ class PatientController extends ActiveController {
 
     public function actionImportpatient() {
         $cond = Yii::$app->getRequest()->post();
-        $Patient = PatPatient::find()->where([
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+
+        $Parent_patient = PatPatient::find()->where([
                     'patient_global_guid' => $cond['patient_global_guid'],
-                ])
-                ->one();
+                    'tenant_id' => $tenant_id,
+                ])->one();
+        if (empty($Parent_patient)) {
+            $Patient = PatPatient::find()->where([
+                        'patient_global_guid' => $cond['patient_global_guid'],
+                    ])
+                    ->one();
 
-        if (!empty($Patient)) {
-            $PatientData = ArrayHelper::toArray($Patient);
-            $model = new PatPatient;
+            if (!empty($Patient)) {
+                $PatientData = ArrayHelper::toArray($Patient);
+                $model = new PatPatient;
 
-            $unset_attr = [
-                'patient_id',
-                'patient_guid',
-                'patient_int_code',
-                'tenant_id',
-                'status',
-                'created_by',
-                'created_at',
-                'modified_by',
-                'modified_at',
-                'fullname',
-                'patient_age',
-                'tenant_name',
-                'org_name',
-            ];
-            $unset_attr = array_combine($unset_attr, $unset_attr);
+                $unset_attr = [
+                    'patient_id',
+                    'patient_guid',
+                    'patient_int_code',
+                    'tenant_id',
+                    'status',
+                    'created_by',
+                    'created_at',
+                    'modified_by',
+                    'modified_at',
+                    'fullname',
+                    'patient_age',
+                    'tenant_name',
+                    'org_name',
+                ];
+                $unset_attr = array_combine($unset_attr, $unset_attr);
 
-            $model->attributes = array_diff_key($PatientData, $unset_attr);
+                $model->attributes = array_diff_key($PatientData, $unset_attr);
 
-            if ($model->save(false)) {
-                return ['success' => true, 'patient' => $model];
-            } else {
-                return ['success' => false, 'message' => 'Failed to import'];
+                if ($model->save(false)) {
+                    return ['success' => true, 'patient' => $model];
+                } else {
+                    return ['success' => false, 'message' => 'Failed to import'];
+                }
             }
+        } else {
+            return ['success' => true, 'patient' => $Parent_patient];
         }
     }
 
