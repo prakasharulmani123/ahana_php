@@ -20,7 +20,7 @@ app.controller('PatientMergeController', ['$rootScope', '$scope', '$timeout', '$
                 changeTimer = setTimeout(function () {
                     $http({
                         method: 'POST',
-                        url: $rootScope.IRISOrgServiceUrl + '/patient/search?addtfields=merge_search',
+                        url: $rootScope.IRISOrgServiceUrl + '/patient/mergesearch?addtfields=merge_search',
                         timeout: canceler.promise,
                         data: {'search': newValue},
                     }).success(
