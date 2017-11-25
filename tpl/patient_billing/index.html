@@ -92,7 +92,7 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <div class="col-sm-5">  <b>Total Amount : </b>   </div>
-                                <div class="col-sm-7"> 	<span class="label bg-dark"> {{billing.total_price = (billing.total.price + recurr_billing.total.recurring_total + recurr_billing.total_pharmacy.recurring_total) | number:2}} </span> </div>
+                                <div class="col-sm-7"> 	<span class="label bg-dark"> {{billing.total_price = (billing.total.price + recurr_billing.total.recurring_total + billing.total.concession + recurr_billing.total_pharmacy.recurring_total) | number:2}} </span> </div>
                             </div>
                             <div class="form-group">
                                     <div class="col-sm-5">  <b>Total Discount :</b>   </div>

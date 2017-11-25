@@ -609,7 +609,7 @@
                             </tr>
                             <tr>
                                 <td colspan="4">Discount :</td>
-                                <td align="center">{{(enc.selected.concession_amount + billing.total.concession)| number:2}}</td>
+                                <td align="center">{{billing.total.concession + parseFloat(enc.selected.concession_amount) | number:2}}</td>
                             </tr>
                             <tr>
                                 <td colspan="4">NET TOTAL :</td>
