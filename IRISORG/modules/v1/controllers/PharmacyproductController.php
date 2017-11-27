@@ -1587,6 +1587,111 @@ class PharmacyproductController extends ActiveController {
         }
         return $return;
     }
+    
+    //Gst Product is starting
+    public function actionProductpriceupdate() {
+        //return ['success' => true, 'message' => ['total_rows' => '1990', 'id' => '817', 'max_id' => '1990']];
+        $get = Yii::$app->getRequest()->get();
+        $allowed = array('csv');
+        $filename = $_FILES['file']['name'];
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        if (!in_array($ext, $allowed)) {
+            return ['success' => false, 'message' => 'Unsupported File Format. CSV Files only accepted'];
+        }
+        $uploadPath = 'uploads/';
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+        $uploadFile = $uploadPath . $filename;
+        if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
+            $file = Url::to($uploadFile);
+            $result = $this->productpriceupdateimport($file, $get['tenant_id'], $get['import_log']);
+            if (!empty($result)) {
+                return ['success' => true, 'message' => $result];
+            } else {
+                return ['success' => false, 'message' => 'Failed to import. Try again later'];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Failed to import. Try again later'];
+        }
+    }
+
+    public function productpriceupdateimport($filename, $tenant_id, $log) {
+        $connection = Yii::$app->client;
+        $connection->open();
+
+        $row = 1;
+        if (($handle = fopen($filename, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle)) !== FALSE) {
+                //skip header row 
+                if ($row++ == 1) {
+                    continue;
+                }
+                $sql = "INSERT INTO test_product_price_import(product_id, tenant_id, product_name, product_price, import_log) VALUES('{$data[0]}', '{$tenant_id}','{$data[1]}', '{$data[2]}', '{$log}')";
+
+                $command = $connection->createCommand($sql);
+                $command->execute();
+            }
+            // close the file
+            fclose($handle);
+            // return the messages
+            @unlink($filename);
+            $command = $connection->createCommand("SELECT COUNT(*) AS 'total_rows', (SELECT MIN(id) FROM test_product_price_import WHERE import_log = $log) AS id, (SELECT MAX(id) FROM test_product_price_import WHERE import_log = $log) AS max_id FROM test_product_price_import WHERE import_log = $log");
+            $result = $command->queryAll(PDO::FETCH_OBJ);
+            $connection->close();
+            return $result[0];
+        }
+    }
+    
+    public function actionProductpriceupdatestart() {
+        $post = Yii::$app->getRequest()->post();
+        $id = $post['id'];
+        $import_log = $post['import_log'];
+        $max_id = $post['max_id'];
+
+        if ($id <= $max_id) {
+            $next_id = $id + 1;
+            $connection = Yii::$app->client;
+            $connection->open();
+            $command = $connection->createCommand("SELECT * FROM test_product_price_import WHERE id = {$id} AND import_log = $import_log");
+            $result = $command->queryAll(PDO::FETCH_OBJ);
+            if ($result) {
+                $result = $result[0];
+                //Product Update
+                $product_exists = \common\models\PhaProduct::find()->where([
+                            'tenant_id' => $result->tenant_id,
+                            'product_id' => $result->product_id
+                        ])
+                        ->one();
+                if (!empty($product_exists)) {
+                    if ($result->product_price && $result->product_price != 0.00) {
+                        $product_exists->product_price = $result->product_price;
+                        $product_exists->save(false);
+                        $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
+                    } else {
+                        $return = ['success' => false, 'continue' => $next_id, 'message' => 'Product Price is empty'];
+                    }
+                } else {
+                    $return = ['success' => false, 'continue' => $next_id, 'message' => 'Product Not exists'];
+                }
+            } else {
+                $return = ['success' => false, 'continue' => $next_id, 'message' => 'Import data not found'];
+            }
+        } else {
+            $return = ['success' => false, 'continue' => 0];
+        }
+
+        if ($return['continue']) {
+            $status = $return['success'] ? 1 : 0;
+            $message = $return['message'];
+//            $message = str_replace('<p>Please fix the following errors:</p>', '', $return['message']);
+            $sql = "UPDATE test_product_price_import SET `status` = '{$status}', response = '{$message}' WHERE id={$id}";
+            $command = $connection->createCommand($sql);
+            $command->execute();
+            $connection->close();
+        }
+        return $return;
+    }
 
     //Not used for data table model
 //public function actionGetbatchdetails() {
