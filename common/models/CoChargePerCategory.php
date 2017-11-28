@@ -168,7 +168,8 @@ class CoChargePerCategory extends RActiveRecord {
     private static function _get_amount($categories, $charge_link_id) {
         $amount = 0;
         foreach ($categories as $key => $category) {
-            if ($category->charge_link_id == $charge_link_id) {
+            //Record inserted two time, to avoid 0.00 "&&" condition used in IF statement.
+            if ($category->charge_link_id == $charge_link_id && $category->charge_amount != '0.00') {
                 $amount = $category->charge_amount;
                 break;
             }
