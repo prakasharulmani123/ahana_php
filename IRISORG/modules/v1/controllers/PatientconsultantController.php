@@ -93,8 +93,6 @@ class PatientconsultantController extends ActiveController {
 
             $result = [];
             $consultant = PatConsultant::find()
-                    ->active()
-                    ->status()
                     ->where("patient_id IN ($all_patient_id->allpatient)");
             if (isset($get['date'])) {
                 $consultant->andWhere(['DATE(consult_date)' => $get['date']]);
@@ -104,14 +102,14 @@ class PatientconsultantController extends ActiveController {
                             ['=', 'created_by', Yii::$app->user->identity->user_id],
                             ['privacy' => '0'],
                     ])
+                    ->active()
+                    ->status()
                     ->groupBy('encounter_id')
                     ->orderBy(['encounter_id' => SORT_DESC])
                     ->all();
 
             foreach ($data as $key => $value) {
                 $consultant_details = PatConsultant::find()
-                        ->active()
-                        ->status()
                         ->where("patient_id IN ($all_patient_id->allpatient)")
                         ->andWhere(['encounter_id' => $value->encounter_id]);
                 if (isset($get['date'])) {
@@ -122,6 +120,8 @@ class PatientconsultantController extends ActiveController {
                                 ['=', 'created_by', Yii::$app->user->identity->user_id],
                                 ['privacy' => '0'],
                         ])
+                        ->active()
+                        ->status()
                         ->orderBy(['consult_date' => SORT_DESC])
                         ->all();
 
