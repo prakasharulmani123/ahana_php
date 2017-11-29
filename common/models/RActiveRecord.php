@@ -21,7 +21,7 @@ class RActiveRecord extends ActiveRecord {
 
     public function behaviors() {
         return [
-            [
+                [
                 'class' => TimestampBehavior::className(),
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'modified_at'],
@@ -29,13 +29,13 @@ class RActiveRecord extends ActiveRecord {
                 ],
                 'value' => new Expression('NOW()')
             ],
-            [
+                [
                 'class' => BlameableBehavior::className(),
                 'updatedByAttribute' => 'modified_by',
                 'value' => function ($event) {
                     if (isset(Yii::$app->user->identity->user_id))
                         return Yii::$app->user->identity->user_id;
-                    else if(isset($this->created_by))
+                    else if (isset($this->created_by))
                         return $this->created_by;
                 }
             ],
@@ -61,7 +61,16 @@ class RActiveRecord extends ActiveRecord {
     }
 
     public function beforeValidate() {
-        $this->setTenant();
+        if ($this->isNewRecord) {
+            $this->setTenant();
+        } else {
+            if ($this->hasAttribute('tenant_id')) {
+                if ($this->tenant_id != Yii::$app->user->identity->logged_tenant_id) {
+                    $this->addError('tenant_id', 'Branch Mismatch');
+                    return FALSE;
+                }
+            }
+        }
         return parent::beforeValidate();
     }
 
