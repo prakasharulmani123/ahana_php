@@ -195,7 +195,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.data.prescriptionItems[key].number_of_days = days;
                 $scope.data.prescriptionItems[key].qty = $scope.calculate_qty($scope.data.prescriptionItems[key].frequency, days, item.product_description_id, item.description_name);
                 $scope.data.prescriptionItems[key].total = $scope.calculate_price($scope.data.prescriptionItems[key].qty, item.price);
-                $scope.data.prescriptionItems[key].in_stock = (parseInt(item.available_quantity) > parseInt($scope.data.prescriptionItems[key].qty));
+                $scope.data.prescriptionItems[key].in_stock = (parseInt(item.available_quantity) >= parseInt($scope.data.prescriptionItems[key].qty));
             } else {
                 $scope.data.prescriptionItems[key].number_of_days = '';
             }
@@ -220,7 +220,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.qtyChange = function (qty, item, key, tableform) {
             if (typeof qty != 'undefined') {
                 $scope.data.prescriptionItems[key].total = $scope.calculate_price(qty, item.price);
-                $scope.data.prescriptionItems[key].in_stock = (parseInt(item.available_quantity) > parseInt(qty));
+                $scope.data.prescriptionItems[key].in_stock = (parseInt(item.available_quantity) >= parseInt(qty));
             }
         };
         $scope.loadSideMenu = function () {
@@ -521,7 +521,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.data.prescriptionItems[key].description_routes = [];
                 $scope.data.prescriptionItems[key].description_routes = result[0].description_routes;
                 $scope.data.prescriptionItems[key].available_quantity = result[0].availableQuantity;
-                $scope.data.prescriptionItems[key].in_stock = (parseInt(result[0].availableQuantity) > parseInt(qty_count));
+                $scope.data.prescriptionItems[key].in_stock = (parseInt(result[0].availableQuantity) >= parseInt(qty_count));
                 $scope.data.prescriptionItems[key].price = result[0].latest_price;
                 $scope.data.prescriptionItems[key].product_description_id = result[0].product_description_id;
                 $scope.data.prescriptionItems[key].description_name = result[0].description_name;
@@ -624,7 +624,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             'qty': qty_count,
                             'product_description_id': $scope.addData.product.product_description_id,
                             'description_name': $scope.addData.product.description_name,
-                            'in_stock': (parseInt($scope.addData.product.availableQuantity) > parseInt(qty_count)),
+                            'in_stock': (parseInt($scope.addData.product.availableQuantity) >= parseInt(qty_count)),
                             'freqType': '3'
                         };
                         var fav = $filter('filter')($scope.child.favourites, {product_id: $scope.addData.product.product_id});
@@ -689,7 +689,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     'qty': qty_count,
                     'product_description_id': value.product.product_description_id,
                     'description_name': value.product.description_name,
-                    'in_stock': (parseInt(value.product.availableQuantity) > parseInt(qty_count)),
+                    'in_stock': (parseInt(value.product.availableQuantity) >= parseInt(qty_count)),
                     'freqType': value.freqType
                 };
                 var fav = $filter('filter')($scope.child.favourites, {product_id: value.product_id});
@@ -811,7 +811,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         'qty': qty_count,
                                         'product_description_id': product.product_description_id,
                                         'description_name': product.description_name,
-                                        'in_stock': (parseInt(product.availableQuantity) > parseInt(qty_count)),
+                                        'in_stock': (parseInt(product.availableQuantity) >= parseInt(qty_count)),
                                         'freqType': '3',
                                     };
                                     //Multiple entries created, Check duplicate once again 
@@ -968,7 +968,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 qty_count = prescriptionItem.qty;
                 _that.data.prescriptionItems[key].quantity = qty_count;
                 _that.data.prescriptionItems[key].total = $scope.calculate_price(qty_count, prescriptionItem.price);
-                _that.data.prescriptionItems[key].in_stock = (parseInt(prescriptionItem.available_quantity) > parseInt(qty_count));
+                _that.data.prescriptionItems[key].in_stock = (parseInt(prescriptionItem.available_quantity) >= parseInt(qty_count));
             });
             var valueArr = _that.data.prescriptionItems.map(function (item) {
                 return item.product_name
@@ -1331,7 +1331,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                                 'qty': qty_count,
                                                                 'product_description_id': item.product.product_description_id,
                                                                 'description_name': item.product.description_name,
-                                                                'in_stock': (parseInt(item.product.availableQuantity) > parseInt(qty_count)),
+                                                                'in_stock': (parseInt(item.product.availableQuantity) >= parseInt(qty_count)),
                                                                 'freqType': item.freqType
                                                             };
                                                             var fav = $filter('filter')($scope.child.favourites, {product_id: item.product_id});
@@ -1773,7 +1773,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.data.prescriptionItems[key].freqType = ftype;
                 $scope.data.prescriptionItems[key].qty = $scope.calculate_qty(freq, item.number_of_days, item.product_description_id, item.description_name);
                 $scope.data.prescriptionItems[key].total = $scope.calculate_price($scope.data.prescriptionItems[key].qty, item.price);
-                $scope.data.prescriptionItems[key].in_stock = (parseInt(item.available_quantity) > parseInt($scope.data.prescriptionItems[key].qty));
+                $scope.data.prescriptionItems[key].in_stock = (parseInt(item.available_quantity) >= parseInt($scope.data.prescriptionItems[key].qty));
             }
 
             angular.forEach($scope.tableform.$editables, function (editableValue, editableKey) {
@@ -2085,7 +2085,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         'qty': qty_count,
                                         'product_description_id': product.product_description_id,
                                         'description_name': product.description_name,
-                                        'in_stock': (parseInt(product.availableQuantity) > parseInt(qty_count)),
+                                        'in_stock': (parseInt(product.availableQuantity) >= parseInt(qty_count)),
                                         'freqType': $scope.globalData.freq_type,
                                         'remarks': $scope.globalData.remarks,
                                     };
