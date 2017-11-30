@@ -75,7 +75,7 @@ class PatientbillingotherchargeController extends ActiveController {
                 $model->patient_id = $value['patient_id'];
                 $valid = $model->validate();
                 if (!$valid) {
-                    $error_message = "The combination has already been taken this patient ".$value['patient_name'];
+                    $error_message = "The combination has already been taken this patient " . $value['patient_name'];
                     return ['success' => false, 'message' => $error_message];
                 }
             }
@@ -91,14 +91,48 @@ class PatientbillingotherchargeController extends ActiveController {
             return ['success' => false, 'message' => Html::errorSummary($model)];
         }
     }
-    
+
     public function actionGetotherchargeamount() {
         $post = Yii::$app->getRequest()->post();
-        if($post['encounter_type']=='IP')
+        if ($post['encounter_type'] == 'IP')
             $category = $post['room_category'];
         else
             $category = $post['pat_category'];
         return $charge_amount = CoChargePerCategory::getChargeAmount($post['charge_category'], 'C', $post['charge_sub_category'], $post['encounter_type'], $category);
-    } 
+    }
+
+    public function actionGetallothercharges() {
+        $post = Yii::$app->getRequest()->post();
+        $data = PatBillingOtherCharges::find()->where(['other_charge_id' => $post['id']])->one();
+        if (!empty($data)) {
+            $allCharges = PatBillingOtherCharges::find()
+                    ->status()
+                    ->active()
+                    ->where(['charge_cat_id' => '2', 'encounter_id' => $data['encounter_id'], 'charge_subcat_id' => $data['charge_subcat_id']])
+                    ->all();
+            return $allCharges;
+        }
+    }
+
+    public function actionUpdatecharges() {
+        $post = Yii::$app->getRequest()->post();
+        if (!empty($post)) {
+            $model = new PatBillingOtherCharges;
+            $model->attributes = $post['data'];
+            $valid = $model->validate();
+            if ($valid) {
+                foreach ($post['sub_data'] as $data) {
+                    $otherchargeItem = PatBillingOtherCharges::find()->tenant()->andWhere(['other_charge_id' => $data['other_charge_id']])->one();
+                    $otherchargeItem->charge_amount = $data['charge_amount'];
+                    $otherchargeItem->charge_cat_id = $post['data']['charge_cat_id'];
+                    $otherchargeItem->charge_subcat_id = $post['data']['charge_subcat_id'];
+                    $otherchargeItem->save(false);
+                }
+                return ['success' => true];
+            } else {
+                return ['success' => false, 'message' => Html::errorSummary($model)];
+            }
+        }
+    }
 
 }
