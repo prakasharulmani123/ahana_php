@@ -72,26 +72,32 @@ app.controller('BillingOtherChargeController', ['$rootScope', '$scope', '$timeou
                     patient_id: $scope.patientObj.patient_id,
                     encounter_id: $scope.encounter.encounter_id
                 });
+                data = _that.data;
             } else {
-                post_url = $rootScope.IRISOrgServiceUrl + '/patientbillingothercharges/' + _that.data.other_charge_id;
-                method = 'PUT';
+                post_url = $rootScope.IRISOrgServiceUrl + '/patientbillingothercharge/updatecharges';
+                method = 'POST';
                 succ_msg = 'Billing other charge updated successfully';
+                data = {data: _that.data, sub_data: _that.alldata};
             }
 
             $scope.loadbar('show');
             $http({
                 method: method,
                 url: post_url,
-                data: _that.data,
+                data: data,
             }).success(
                     function (response) {
-                        $scope.loadbar('hide');
-                        $scope.msg.successMessage = succ_msg;
-                        $scope.data = {};
-                        $timeout(function () {
-                            $state.go('patient.billing', {id: $state.params.id});
-                        }, 1000)
-
+                        if (response.success == false) {
+                            $scope.errorData = response.message;
+                            $scope.loadbar('hide');
+                        } else {
+                            $scope.loadbar('hide');
+                            $scope.msg.successMessage = succ_msg;
+                            $scope.data = {};
+                            $timeout(function () {
+                                $state.go('patient.billing', {id: $state.params.id});
+                            }, 1000)
+                        }
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -108,15 +114,18 @@ app.controller('BillingOtherChargeController', ['$rootScope', '$scope', '$timeou
             _that = this;
             $scope.errorData = "";
             $http({
-                url: $rootScope.IRISOrgServiceUrl + "/patientbillingothercharges/" + $state.params.other_charge_id,
-                method: "GET"
+                url: $rootScope.IRISOrgServiceUrl + "/patientbillingothercharge/getallothercharges",
+                data: {id: $state.params.other_charge_id},
+                method: "POST"
             }).success(
                     function (response) {
+                        console.log(response);
                         $scope.loadbar('hide');
-                        $scope.data = response;
+                        $scope.alldata = response;
+                        $scope.data = response[0];
                         $scope.category();
                         $scope.subCategorylist();
-                        $scope.encounter = {encounter_id: response.encounter_id};
+                        $scope.encounter = {encounter_id: response[0].encounter_id};
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
@@ -161,7 +170,7 @@ app.controller('BillingOtherChargeController', ['$rootScope', '$scope', '$timeou
             angular.forEach($scope.subCategory, function (value) {
                 if (_that.data.charge_cat_id == 'undefined' || _that.data.charge_cat_id == null)
                 {
-                    catId = data.charge_cat_id;
+                    catId = _that.data.charge_cat_id;
                 } else {
                     catId = _that.data.charge_cat_id;
                 }
@@ -181,11 +190,11 @@ app.controller('BillingOtherChargeController', ['$rootScope', '$scope', '$timeou
             var pat_category = $scope.patientObj.patient_category_id;
             var room_category_id = $scope.patientObj.current_room_type_id;
             var charge_sub_category = _that.data.charge_subcat_id;
-            
+
             $http({
                 url: $rootScope.IRISOrgServiceUrl + "/patientbillingothercharge/getotherchargeamount",
                 method: "POST",
-                data: {encounter_type: encounter_type, pat_category: pat_category, charge_sub_category: charge_sub_category, charge_category:charge_category_id, room_category : room_category_id}
+                data: {encounter_type: encounter_type, pat_category: pat_category, charge_sub_category: charge_sub_category, charge_category: charge_category_id, room_category: room_category_id}
             }).then(
                     function (response) {
                         $scope.data.charge_amount = response.data;

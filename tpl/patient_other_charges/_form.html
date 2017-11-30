@@ -32,9 +32,18 @@
 
         <div class="form-group">
             <label class="col-sm-3 control-label">Charge * </label>
-            <div class="col-sm-9">
+            <div ng-if="data.formtype == 'add'" class="col-sm-9">
                 <input type="text" ng-model="data.charge_amount" maxlength="50" class="form-control" placeholder="Charge" number-mask="">
             </div>
+            <div ng-if="data.formtype != 'add'" class="col-sm-9">
+                <table>
+                    <tr ng-repeat="singledata in alldata">
+                        <td class="col-sm-1">{{singledata.created_at | moment:'DD/MM/YYYY - hh:mm A'}}</td>
+                        <td class="col-sm-1"><input type="text" ng-model="singledata.charge_amount" maxlength="50" class="form-control" placeholder="Charge" number-mask=""></td>
+                    </tr>
+                </table>
+            </div>
+
         </div>
         <div class="line line-dashed b-b line-lg "></div>
     </div>
