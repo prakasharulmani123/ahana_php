@@ -395,8 +395,8 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                     function (response) {
                         $scope.pharmacy_charge = response.sale;
                         var grandTotal = 0;
-                        angular.forEach($scope.pharmacy_charge, function(obj){
-                            grandTotal += parseFloat(obj.billings_total_balance_amount);
+                        angular.forEach($scope.pharmacy_charge, function (obj) {
+                            grandTotal += $scope.parseFloatIgnoreCommas(obj.billings_total_balance_amount);
                             obj.net_amount = grandTotal;
                         });
                     }
@@ -631,6 +631,11 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading billing history!";
                     });
+        }
+
+        $scope.parseFloatIgnoreCommas = function (amount) {
+            var numberNoCommas = amount.replace(/,/g, '');
+            return parseFloat(numberNoCommas);
         }
 
     }]);

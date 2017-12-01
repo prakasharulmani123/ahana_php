@@ -180,7 +180,7 @@
                                 <td align="center">
                                     <span ng-repeat="(key, row) in pharmacy_charge">
                                         <span ng-init="
-                                            row_total = parseFloat(row.billings_total_balance_amount);
+                                            row_total = parseFloatIgnoreCommas(row.billings_total_balance_amount);
                                             bill_summary.pharmacy_total = bill_summary.pharmacy_total + row_total;">    
                                         </span>
                                     </span>
@@ -498,7 +498,7 @@
                                 <td>{{row.sale_date| moment:'DD-MMM-YYYY'}}</td>
                                 <td>{{row.bill_no}}</td>
                                 <td align="center" ng-init="
-                                            row_total = parseFloat(row.billings_total_balance_amount);
+                                            row_total = parseFloatIgnoreCommas(row.billings_total_balance_amount);
                                             detailed_non_billing.total.charge = detailed_non_billing.total.charge + row_total;
                                             detailed_billing.total.pharmacy_total = detailed_billing.total.pharmacy_total + row_total;
                                             detailed_billing.total.pharmacy_net_total = detailed_billing.total.other_net_total + parseFloat(row.net_amount);

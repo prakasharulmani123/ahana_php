@@ -51,6 +51,11 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
         $scope.parseFloat = function (row) {
             return parseFloat(row);
         }
+        
+        $scope.parseFloatIgnoreCommas = function (amount) {
+            var numberNoCommas = amount.replace(/,/g, '');
+            return parseFloat(numberNoCommas);
+        }
 
         $scope.open = function ($event) {
             $event.preventDefault();
@@ -258,7 +263,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
             if ($scope.pharmacy_charge.length > 0) {
                 var pharmacy_charge = 0;
                 angular.forEach($scope.pharmacy_charge, function (row, key) {
-                    pharmacy_charge += parseFloat(row.billings_total_balance_amount);
+                    pharmacy_charge += $scope.parseFloatIgnoreCommas(row.billings_total_balance_amount);
                 });
                 bill.push([
                     {text: 'Pharmacy charges', style: 'rows', colSpan: 5},
@@ -571,7 +576,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 angular.forEach($scope.pharmacy_charge, function (row, key) {
                     var profe_date = moment(row.sale_date).format('DD/MM/YYYY');
                     detailed_billing.total.net_step_41_total = detailed_billing.total.other_net_total;
-                    var row_total =parseFloat(row.billings_total_balance_amount);
+                    var row_total = $scope.parseFloatIgnoreCommas(row.billings_total_balance_amount);
                     var net_total = parseFloat(detailed_billing.total.net_step_41_total) + parseFloat(row.net_amount)
                     bill.push([
                         {text: profe_date, style: 'rows'},
