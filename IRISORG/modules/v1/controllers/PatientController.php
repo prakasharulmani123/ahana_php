@@ -825,19 +825,21 @@ class PatientController extends ActiveController {
         $allencounterlist = '';
         $model = PatEncounter::find()->tenant()->status();
         if ($post['encounter_type'] == 'IP') {
-            $model->joinWith(['patient'])
+            $model->joinWith(['patient', 'patAdmissions'])
                     ->andWhere(['encounter_type' => $post['encounter_type']])
+                    ->andFilterWhere(['pat_admission.consultant_id' => $post['consultant_id']])
                     ->orderBy(['encounter_date' => SORT_DESC]);
         }
         if ($post['encounter_type'] == 'OP') {
             $model->joinWith(['patient', 'patAppointments'])
                     ->andFilterWhere(['DATE(encounter_date)' => date('Y-m-d')])
+                    ->andFilterWhere(['pat_appointment.consultant_id' => $post['consultant_id']])
                     ->orderBy(['pat_appointment.appt_status' => SORT_ASC,
                         'pat_appointment.status_time' => SORT_ASC,]);
         }
 
         $encounter = $model->all();
-
+        
         if (count($encounter) != 1) {
             foreach ($encounter as $index => $enc) {
                 if ($enc['patient']['patient_guid'] == $post['guid'])

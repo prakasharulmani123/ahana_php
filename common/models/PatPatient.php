@@ -259,7 +259,7 @@ class PatPatient extends RActiveRecord {
     public function getPatGlobalPatient() {
         return $this->hasOne(PatGlobalPatient::className(), ['patient_global_guid' => 'patient_global_guid']);
     }
-    
+
     public function getPatMergedGlobalPatient() {
         return $this->hasOne(PatGlobalPatient::className(), ['patient_global_guid' => 'migration_id']);
     }
@@ -618,6 +618,17 @@ class PatPatient extends RActiveRecord {
                     return '-';
                 }
             },
+            'consultant_id' => function ($model) {
+                if (isset($model->patActiveIp)) {
+                    $consultant = $model->patActiveIp->patCurrentAdmission->consultant;
+                    return $consultant->user_id;
+                } else if (isset($model->patActiveOp)) {
+                    $consultant = $model->patActiveOp->patLiveAppointmentBooking->consultant;
+                    return $consultant->user_id;
+                } else {
+                    return '-';
+                }
+            },
             'have_encounter' => function($model) {
                 return (isset($model->patHaveEncounter));
             },
@@ -680,7 +691,7 @@ class PatPatient extends RActiveRecord {
             },
             'have_patient_group' => function ($model) {
                 return !empty($model->patGlobalPatient->patientGroups);
-            },          
+            },
         ];
 
         foreach ($this->_global_fields as $global_field) {
