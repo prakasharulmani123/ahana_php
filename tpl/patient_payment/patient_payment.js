@@ -237,12 +237,12 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
                 return false;
             }
             
-            if ((pharmacy.length > 0) && (_that.data.pharmacy_pending_amount!=0) && (parseFloat(_that.data.pharmacy_pending_amount) < parseFloat(_that.data.pharmacy_paid_amount))) {
-                $scope.totalErrormessage = '';
-                $scope.billErrormessage = '';
-                $scope.pharmacyErrormessage = "Invalid amount";
-                return false;
-            }
+//            if ((pharmacy.length > 0) && (_that.data.pharmacy_pending_amount!=0) && (parseFloat(_that.data.pharmacy_pending_amount) < parseFloat(_that.data.pharmacy_paid_amount))) {
+//                $scope.totalErrormessage = '';
+//                $scope.billErrormessage = '';
+//                $scope.pharmacyErrormessage = "Invalid amount";
+//                return false;
+//            }
 
             post_url = $rootScope.IRISOrgServiceUrl + '/patientbillingpayment/savesettlementbill';
             method = 'POST';
