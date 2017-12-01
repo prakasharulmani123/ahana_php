@@ -203,7 +203,7 @@ angular.module('app')
                                     } else {
                                         $scope.patientObj = patient;
                                         if ($scope.patientObj.have_encounter) {
-                                            $http.post($rootScope.IRISOrgServiceUrl + '/patient/getpreviousnextpatient?addtfields=shortcut', {guid: $state.params.id, encounter_type: patient.encounter_type})
+                                            $http.post($rootScope.IRISOrgServiceUrl + '/patient/getpreviousnextpatient?addtfields=shortcut', {guid: $state.params.id, encounter_type: patient.encounter_type, consultant_id: patient.consultant_id})
                                                     .success(function (patientlist) {
                                                         $scope.patientObj.nextPatient = patientlist.next;
                                                         $scope.patientObj.prevPatient = patientlist.prev;
