@@ -3,6 +3,7 @@ app.controller('AddnoteController', ['$rootScope', '$scope', '$timeout', '$http'
         $scope.checkboxes = {'checked': false, items: []};
 
         $scope.data = {};
+        $scope.vitalcong = {};
         $scope.data.vital_time = moment().format('YYYY-MM-DD HH:mm:ss');
 
         $scope.loadPatientsList = function (type) {
@@ -20,7 +21,26 @@ app.controller('AddnoteController', ['$rootScope', '$scope', '$timeout', '$http'
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading!";
                     });
+            $scope.checkAddVitalaccess(type);
         };
+
+        $scope.checkAddVitalaccess = function (type) {
+            $scope.vital_enable_count = true;
+            url = $rootScope.IRISOrgServiceUrl + '/patientvitals/checkvitalaccess?patient_type=' + type;
+            $http.get(url)
+                    .success(function (vitals) {
+                        angular.forEach(vitals, function (row) {
+                            var listName = row.code;
+                            listName = listName.replace(/ /g, "_"); //Space replace to '_' like pain score convert to pain_score
+                            $scope.vitalcong[listName] = row.value;
+                            if (row.value == 1)
+                                $scope.vital_enable_count = false;
+                        });
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading patientvital!";
+                    });
+        }
 
         $scope.updateCheckbox = function () {
             angular.forEach($scope.rowCollection, function (row) {
@@ -55,6 +75,17 @@ app.controller('AddnoteController', ['$rootScope', '$scope', '$timeout', '$http'
         $scope.saveForm = function () {
             _that = this;
             _that.data.patientdata = [];
+            if ((typeof _that.data.temperature == 'undefined' || _that.data.temperature == '') &&
+                    (typeof _that.data.blood_pressure_systolic == 'undefined' || _that.data.blood_pressure_systolic == '') &&
+                    (typeof _that.data.blood_pressure_diastolic == 'undefined' || _that.data.blood_pressure_diastolic == '') &&
+                    (typeof _that.data.pulse_rate == 'undefined' || _that.data.pulse_rate == '') &&
+                    (typeof _that.data.weight == 'undefined' || _that.data.weight == '') &&
+                    (typeof _that.data.height == 'undefined' || _that.data.height == '') &&
+                    (typeof _that.data.sp02 == 'undefined' || _that.data.sp02 == '') &&
+                    (typeof _that.data.pain_score == 'undefined' || _that.data.pain_score == '')) {
+                $scope.msg.errorMessage = "Cannot create blank entry";
+                return;
+            }
             angular.forEach($scope.checkboxes.items, function (value) {
                 _that.data.patientdata.push({
                     encounter_id: value.encounter_id,
@@ -95,5 +126,11 @@ app.controller('AddnoteController', ['$rootScope', '$scope', '$timeout', '$http'
                     $scope.errorData = data.message;
             });
         };
+
+        $scope.Calculatebmi = function () {
+            if ($scope.data.height && $scope.data.weight) {
+                $scope.data.bmi = (($scope.data.weight / $scope.data.height / $scope.data.height) * 10000).toFixed(2);
+            }
+        }
 
     }]);
