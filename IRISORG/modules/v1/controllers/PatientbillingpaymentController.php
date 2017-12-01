@@ -98,6 +98,7 @@ class PatientbillingpaymentController extends ActiveController {
                 'payment_date' => $post['payment_date'],
                 'payment_mode' => $post['payment_mode'],
                 'payment_amount' => $post['billing_paid_amount'],
+                'category' => 'S',
             ];
             $model->save();
         }

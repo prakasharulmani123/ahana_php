@@ -46,7 +46,7 @@ class PatBillingPayment extends RActiveRecord {
         return [
             [['payment_date', 'payment_amount', 'payment_mode'], 'required'],
             [['tenant_id', 'encounter_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
-            [['payment_date', 'created_at', 'modified_at', 'deleted_at', 'card_type', 'card_number', 'bank_name', 'bank_number', 'bank_date'], 'safe'],
+            [['payment_date', 'created_at', 'modified_at', 'deleted_at', 'card_type', 'card_number', 'bank_name', 'bank_number', 'bank_date', 'category'], 'safe'],
             [['payment_amount'], 'number'],
             [['payment_mode', 'status'], 'string'],
             [['card_type', 'card_number'], 'required', 'when' => function($model) {
@@ -69,6 +69,7 @@ class PatBillingPayment extends RActiveRecord {
             'patient_id' => 'Patient ID',
             'payment_date' => 'Date of Payment',
             'payment_amount' => 'Amount Paid',
+            'category' => 'Category',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
