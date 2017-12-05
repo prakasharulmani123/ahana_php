@@ -41,7 +41,7 @@
                 a sum of rupees <span><strong>{{printVoucher.total_charge}}</strong></span> 
                 <br />
                 <br />
-                <span><strong>{{printVoucher.total_charge| words}}</strong></span> on account of 
+                <span><strong>{{printVoucher.total_charge| words}}</strong></span> on account of <strong>{{printVoucher.category == 'Settlement Charge' ? 'Discharge' : 'Advance'}}</strong>
                 <br />
                 <br />
                 <br />
@@ -99,7 +99,7 @@
                 <br />
                 a sum of rupees <span><strong>{{printVoucher.total_charge}}</strong></span> <br />
                 <br />
-                <span><strong>{{printVoucher.total_charge| words}}</strong></span> on account of <br />
+                <span><strong>{{printVoucher.total_charge| words}}</strong></span> on account of <strong>{{printVoucher.category == 'Settlement Charge' ? 'Discharge' : 'Advance'}}</strong> <br />
                 <br />
                 <br />
                 <div class="amount">{{printVoucher.total_charge}}</div>

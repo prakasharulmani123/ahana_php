@@ -28,16 +28,20 @@
             <label class="col-sm-3 control-label">Type Of Payment * </label>
             <div class="col-sm-9">
                 <div class="radio">
-                    <label class="i-checks">
-                        <input type="radio" value="option1" name="a" ng-click="PaymentType('advance')">
-                        <i></i>
-                        Advance
-                    </label>
-                    <label class="i-checks">
-                        <input type="radio" value="option1" name="a" ng-click="PaymentType('settlement')">
-                        <i></i>
-                        Settlement
-                    </label>
+                    <div ng-show="enc.selected.finalize == '0' && !enc.selected.discharge_date">
+                        <label class="i-checks">
+                            <input type="radio" value="option1" name="a" ng-click="PaymentType('advance')">
+                            <i></i>
+                            Advance
+                        </label>
+                    </div>
+                    <div>
+                        <label class="i-checks">
+                            <input type="radio" value="option1" name="a" ng-click="PaymentType('settlement')">
+                            <i></i>
+                            Settlement
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -123,7 +127,7 @@
         </div>
 
         <div ng-show="payment_type == 'settlement'">
-            
+
             <div class="form-group">
                 <label class="col-sm-3 control-label">Amount * </label>
                 <div class="col-sm-9">
@@ -132,8 +136,8 @@
                 </div>
             </div>
             <div class="line line-dashed b-b line-lg "></div>
-            
-            
+
+
             <div class="form-group">
                 <label class="col-sm-3 control-label">Paying Bills</label>
                 <div class="col-sm-9">
@@ -147,7 +151,7 @@
                             </tr>
                         </thead>
                         <tbody>
-<!--                            <tr>
+                            <tr>
                                 <td>
                                     <label class="i-checks "> 
                                         <input type="checkbox" ng-checked="" value="{{data.pharmacy_pending_amount}}" ng-model='pharmacy' class="chk" data-bill="purchase" ng-change="updatePaid(); data.pharmacy_paid_amount = !pharmacy ? '0' : data.pharmacy_paid_amount" /> 
@@ -157,11 +161,11 @@
                                 <td>Pharmacy Charges</td>
                                 <td>{{data.pharmacy_pending_amount}}</td>
                                 <td>
-                                    <input type="text" ng-model="data.pharmacy_paid_amount" ng-disabled="!pharmacy || data.pharmacy_pending_amount==0" maxlength="10" class="form-control" >
+                                    <input type="text" ng-model="data.pharmacy_paid_amount" ng-disabled="!pharmacy || data.pharmacy_pending_amount == 0" maxlength="10" class="form-control" >
                                     <span style="color:#a94442" ng-if="pharmacyErrormessage">{{pharmacyErrormessage}}</span>
                                 </td>
-                            </tr>-->
-                            
+                            </tr>
+
                             <tr>
                                 <td>
                                     <label class="i-checks "> 
@@ -172,11 +176,11 @@
                                 <td>Billing</td>
                                 <td>{{data.bill_pending_amount}}</td>
                                 <td>
-                                    <input type="text" ng-model="data.billing_paid_amount" ng-disabled="!billing || data.bill_pending_amount==0" maxlength="10" class="form-control">
+                                    <input type="text" ng-model="data.billing_paid_amount" ng-disabled="!billing || data.bill_pending_amount == 0" maxlength="10" class="form-control">
                                     <span style="color:#a94442" ng-if="billErrormessage">{{billErrormessage}}</span>
                                 </td>
                             </tr>
-                            
+
                             <tr>
                                 <td colspan="2" class="text-right"><b>Total</b></td>
                                 <td>{{total_select_bill_amount}}</td>
@@ -186,13 +190,13 @@
                     </table>
                 </div>
             </div>
-            
+
         </div>
     </div>
 
     <footer class="panel-footer text-right bg-light lter">
         <button class="btn m-b-xs  btn-success save-btn" ng-show="payment_type == 'advance'" ng-click="saveForm(data.formtype)">Save</button>
-        <button class="btn m-b-xs  btn-success save-btn" ng-show="payment_type == 'settlement'" ng-disabled="total_select_bill_amount==0 || !data.paid_amount" ng-click="saveSettleForm(data.formtype)">Save</button>
+        <button class="btn m-b-xs  btn-success save-btn" ng-show="payment_type == 'settlement'" ng-disabled="total_select_bill_amount == 0 || !data.paid_amount" ng-click="saveSettleForm(data.formtype)">Save</button>
         &nbsp;
         <button class="btn m-b-xs  btn-dark" ng-click="$state.go('patient.billing', {id: $state.params.id})"><i class="fa fa-times"></i> Cancel</button>
         &nbsp;

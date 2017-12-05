@@ -16,6 +16,39 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
                     });
         }
 
+        $scope.parseFloatIgnoreCommas = function (amount) {
+            var numberNoCommas = amount.replace(/,/g, '');
+            return parseFloat(numberNoCommas);
+        }
+
+        $scope.enc = {};
+        $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
+            if (newValue != '') {
+                $rootScope.commonService.GetEncounterListByPatientAndType('', '0,1', false, $scope.patientObj.patient_id, 'IP', function (response) {
+                    //Most probably because splice() mutates the array, and angular.forEach() uses invalid indexes
+                    //That's y used while instead of foreach
+                    var i = response.length;
+                    while (i--) {
+                        var patient_details = response[i];
+                        if (patient_details.encounter_type == 'IP') {
+                            patient_details.encounter_id = patient_details.encounter_id.toString();
+                        } else {
+                            response.splice(i, 1);
+                        }
+                    }
+                    $scope.encounters = response;
+                    if (response != null) {
+                        var sel_enc = $scope.encounters[0];
+                        if ($state.params.enc_id) {
+                            sel_enc = $filter('filter')($scope.encounters, {encounter_id: $state.params.enc_id});
+                            sel_enc = sel_enc[0];
+                        }
+                        $scope.enc.selected = sel_enc;
+                    }
+                });
+            }
+        }, true);
+
         $scope.initCanAddPayment = function () {
             $scope.isPatientHaveActiveEncounter(function (response) {
                 if (response.success == false) {
@@ -167,23 +200,7 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
                 $scope.total_select_bill_amount = 0;
                 $scope.data.billing_paid_amount = 0;
                 $scope.data.pharmacy_paid_amount = 0;
-                $http({
-                    method: 'GET',
-                    url: $rootScope.IRISOrgServiceUrl + '/encounter/getpendingamount?encounter_id=' + $state.params.enc_id,
-                }).success(
-                        function (response) {
-                            if (response.balance > 0)
-                                $scope.data.bill_pending_amount = response.balance;
-                            else
-                                $scope.data.bill_pending_amount = 0;
-                        }
-                ).error(function (data, status) {
-                    $scope.loadbar('hide');
-                    if (status == 422)
-                        $scope.errorData = $scope.errorSummary(data);
-                    else
-                        $scope.errorData = data.message;
-                });
+
                 $http({
                     method: 'GET',
                     url: $rootScope.IRISOrgServiceUrl + '/pharmacysale/getsalebilling?addtfields=patient_report&encounter_id=' + $state.params.enc_id,
@@ -193,10 +210,29 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
                             $scope.data.pharmacy_sale_id = [];
                             angular.forEach(response.sale, function (value) {
                                 if (value.billings_total_balance_amount)
-                                    total = total + parseFloat(value.billings_total_balance_amount);
+                                    total = total + $scope.parseFloatIgnoreCommas(value.billings_total_balance_amount);
                                 $scope.data.pharmacy_sale_id.push(value.sale_id);
                             });
                             $scope.data.pharmacy_pending_amount = total;
+                        }
+                ).error(function (data, status) {
+                    $scope.loadbar('hide');
+                    if (status == 422)
+                        $scope.errorData = $scope.errorSummary(data);
+                    else
+                        $scope.errorData = data.message;
+                });
+
+                $http({
+                    method: 'GET',
+                    url: $rootScope.IRISOrgServiceUrl + '/encounter/getpendingamount?encounter_id=' + $state.params.enc_id,
+                }).success(
+                        function (response) {
+                            if (response.balance > 0) {
+                                $scope.data.bill_pending_amount = response.balance - parseFloat($scope.data.pharmacy_pending_amount);
+                            } else {
+                                $scope.data.bill_pending_amount = 0;
+                            }
                         }
                 ).error(function (data, status) {
                     $scope.loadbar('hide');
@@ -225,24 +261,24 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
             _that = this;
             pharmacy = $filter('filter')($scope.data.bills, 'purchase');
             billing = $filter('filter')($scope.data.bills, 'billing');
-            
+
             if (parseFloat(_that.data.paid_amount) != parseFloat(_that.data.billing_paid_amount) + parseFloat(_that.data.pharmacy_paid_amount)) {
                 $scope.totalErrormessage = "Must be Payable amount is equal to total amount";
                 return false;
             }
-            
-            if ((billing.length > 0) && (_that.data.bill_pending_amount!=0) && (parseFloat(_that.data.bill_pending_amount) < parseFloat(_that.data.billing_paid_amount))) {
+
+            if ((billing.length > 0) && (_that.data.bill_pending_amount != 0) && (parseFloat(_that.data.bill_pending_amount) < parseFloat(_that.data.billing_paid_amount))) {
                 $scope.totalErrormessage = '';
                 $scope.billErrormessage = "Invalid amount";
                 return false;
             }
-            
-//            if ((pharmacy.length > 0) && (_that.data.pharmacy_pending_amount!=0) && (parseFloat(_that.data.pharmacy_pending_amount) < parseFloat(_that.data.pharmacy_paid_amount))) {
-//                $scope.totalErrormessage = '';
-//                $scope.billErrormessage = '';
-//                $scope.pharmacyErrormessage = "Invalid amount";
-//                return false;
-//            }
+
+            if ((pharmacy.length > 0) && (_that.data.pharmacy_pending_amount != 0) && (parseFloat(_that.data.pharmacy_pending_amount) < parseFloat(_that.data.pharmacy_paid_amount))) {
+                $scope.totalErrormessage = '';
+                $scope.billErrormessage = '';
+                $scope.pharmacyErrormessage = "Invalid amount";
+                return false;
+            }
 
             post_url = $rootScope.IRISOrgServiceUrl + '/patientbillingpayment/savesettlementbill';
             method = 'POST';
