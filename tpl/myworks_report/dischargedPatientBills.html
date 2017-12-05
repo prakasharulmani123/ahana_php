@@ -10,7 +10,7 @@
             <div class="col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-body p-b">
-                        <div class="form-group">
+                        <div class="form-group report-inst">
                             <ul>
                                 <li>Kindly select 'ALL' option for any one for the drop downs only</li>
                                 <li>If 'ALL' option is selected for both drop downs then either one will be reset to the option 'DESELECT ALL'</li>
@@ -48,11 +48,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <select id="consultant_wise" class="form-control selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: fullname" multiple required>
+                                <select id="consultant_wise" class="selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: fullname" multiple required>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <select id="branch_wise" class="form-control selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true"  ng-model="data.tenant_id" ng-options="key as value for (key , value) in tenants | orderBy: label" multiple required>
+                                <select id="branch_wise" class="selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true"  ng-model="data.tenant_id" ng-options="key as value for (key , value) in tenants | orderBy: label" multiple required>
                                 </select>
                             </div>
                             <button id="get_report" class="btn btn-success get-report" ng-disabled="searchForm.$invalid" ng-click="loadReport()">Get Report</button>

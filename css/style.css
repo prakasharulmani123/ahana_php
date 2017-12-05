@@ -920,3 +920,14 @@ select.form-control {
 {
 	margin-left:10px;
 }
+ul {
+    list-style-position: inside;
+}
+
+.report-inst ul {
+    margin: 0px;
+    padding: 0px;
+}
+.report-inst ul li {
+    padding-left: 4px;
+}

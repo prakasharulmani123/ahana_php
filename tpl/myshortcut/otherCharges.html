@@ -17,18 +17,18 @@
                                     <table class="table table-striped b-t b-light">
                                         <thead>
                                             <tr>
-                                                <th align="center" valign="middle" style="width:40px;">
+                                                <th style="width:2px;">
                                                     <label class="i-checks">
                                                         <input ng-model="selectall" ng-true-value="'1'" ng-false-value="'0'" ng-click="updateCheckbox()" type="checkbox" name="checkall" class="">
                                                         <i></i>
                                                     </label>&nbsp; &nbsp;
                                                 </th>
-                                                <th>Patient</th>
+                                                <th style="width:1px;">Patient</th>
                                             </tr>
                                         </thead>
                                         <tbody ng-if="isLoading == false">
                                             <tr ng-if='rowCollection.length > 0' ng-repeat="(ip_key, row) in rowCollection">
-                                                <td align="center" valign="middle" style="width:40px;">
+                                                <td style="width:2px;">
                                                     <label class="i-checks">
                                                         <input ng-model="row.selected" ng-checked="row.selected == '1'"  ng-click="moreOptions(ip_key, row)" ng-true-value="'1'" ng-false-value="'0'" class="iplistcheckbox iplistcheckbox_{{ip_key}}" id="iplist_{{ip_key}}" type="checkbox" name="status">
                                                         <i></i>

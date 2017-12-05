@@ -24,7 +24,7 @@
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-sm-9">
+                            <div class="col-sm-9 form-group">
                                 <button class="btn btn-sm btn-grey" ng-click="loadAllauditlog()">
                                     &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp;
                                 </button>
@@ -35,8 +35,8 @@
                                 <select class="selectpicker" data-live-search="true" ng-model="user_id" ng-options="user.user_id as user.fullname for user in users| orderBy: name">
                                     <option value="">Select User</option>
                                 </select>
-                                <input id="filter" type="text" placeholder="Search" class="form-control input-sm w-sm inline" ng-model="form_filter"/>
-                                <button ng-show="report_menu" ng-click="getReport()" class="btn btn-sm btn-info">
+                                <input id="filter" type="text" placeholder="Search" class="form-control w-sm inline" ng-model="form_filter"/>
+                                <button ng-show="report_menu" ng-click="getReport()" class="btn btn-info">
                                     Get Report
                                 </button>
                                 <button ng-show="report_menu" class="btn btn-dark" ng-click="clearReport()">Clear</button>
