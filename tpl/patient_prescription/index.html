@@ -263,7 +263,10 @@
                                                                                model-view-value="true" 
                                                                                class="form-control"
                                                                                number-mask=""
-                                                                               maxlength="4">
+                                                                               maxlength="4"
+                                                                               typeahead-editable="true"
+                                                                               typeahead="consFreq.freq_name_0 for consFreq in currPresMask3 | filter:$viewValue | unique: 'freq_name_0'"
+                                                                               typeahead-focus="">
                                                                         <input autocomplete="off" 
                                                                                ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null"
                                                                                type="text" 
@@ -272,7 +275,10 @@
                                                                                model-view-value="true" 
                                                                                class="form-control"
                                                                                number-mask=""
-                                                                               maxlength="4">
+                                                                               maxlength="4"
+                                                                               typeahead-editable="true"
+                                                                               typeahead="consFreq.freq_name_1 for consFreq in currPresMask3 | filter:$viewValue | unique: 'freq_name_1'"
+                                                                               typeahead-focus="">
                                                                         <input autocomplete="off"
                                                                                ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null"
                                                                                type="text" 
@@ -281,7 +287,10 @@
                                                                                model-view-value="true" 
                                                                                class="form-control"
                                                                                number-mask=""
-                                                                               maxlength="4">
+                                                                               maxlength="4"
+                                                                               typeahead-editable="true"
+                                                                               typeahead="consFreq.freq_name_2 for consFreq in currPresMask3 | filter:$viewValue | unique: 'freq_name_2'"
+                                                                               typeahead-focus="">
                                                                     </div>
                                                                     <div id="frequency_4" ng-show="globalData.freq_type == '4'">
                                                                         <input autocomplete="off" 
@@ -292,7 +301,10 @@
                                                                                model-view-value="true" 
                                                                                class="form-control"
                                                                                number-mask=""
-                                                                               maxlength="4">
+                                                                               maxlength="4"
+                                                                               typeahead-editable="true"
+                                                                               typeahead="consFreq.freq_name_0 for consFreq in currPresMask4 | filter:$viewValue | unique: 'freq_name_0'"
+                                                                               typeahead-focus="">
                                                                         <input autocomplete="off" 
                                                                                ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null"
                                                                                type="text" 
@@ -301,7 +313,10 @@
                                                                                model-view-value="true" 
                                                                                class="form-control"
                                                                                number-mask=""
-                                                                               maxlength="4">
+                                                                               maxlength="4"
+                                                                               typeahead-editable="true"
+                                                                               typeahead="consFreq.freq_name_1 for consFreq in currPresMask4 | filter:$viewValue | unique: 'freq_name_1'"
+                                                                               typeahead-focus="">
                                                                         <input autocomplete="off"
                                                                                ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null"
                                                                                type="text" 
@@ -310,7 +325,10 @@
                                                                                model-view-value="true" 
                                                                                class="form-control"
                                                                                number-mask=""
-                                                                               maxlength="4">
+                                                                               maxlength="4"
+                                                                               typeahead-editable="true"
+                                                                               typeahead="consFreq.freq_name_2 for consFreq in currPresMask4 | filter:$viewValue | unique: 'freq_name_2'"
+                                                                               typeahead-focus="">
                                                                         <input autocomplete="off"
                                                                                ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null"
                                                                                type="text" 
@@ -319,7 +337,10 @@
                                                                                model-view-value="true" 
                                                                                class="form-control"
                                                                                number-mask=""
-                                                                               maxlength="4">
+                                                                               maxlength="4"
+                                                                               typeahead-editable="true"
+                                                                               typeahead="consFreq.freq_name_3 for consFreq in currPresMask4 | filter:$viewValue | unique: 'freq_name_3'"
+                                                                               typeahead-focus="">
                                                                     </div>
                                                                     <div id="frequency_txt" ng-show="globalData.freq_type == 'txt'">
                                                                         <input autocomplete="off" 
@@ -1112,9 +1133,8 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata                   =                   {};
-                                        loadVitals();
-                                        vitaldata.formtype          =          'add'">
+                                    <div class="row" ng-init="vitaldata = {};
+                                        loadVitals();     vitaldata.formtype = 'add'">
                                         <div class="col-lg-12"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
