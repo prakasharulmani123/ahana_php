@@ -12,6 +12,15 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
 
         //Index Page
         $scope.loadSaleReturnItemList = function () {
+            $rootScope.commonService.GetDay(function (response) {
+                $scope.days = response;
+            });
+            $rootScope.commonService.GetMonth(function (response) {
+                $scope.months = response;
+            });
+            $rootScope.commonService.GetYear(function (response) {
+                $scope.years = response;
+            });
             $scope.errorData = $scope.msg.successMessage = '';
             $scope.isLoading = true;
 
@@ -29,7 +38,15 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
         };
 
         $scope.getSaleReturnList = function () {
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacysalereturn/getsalereturn?addtfields=sale_return_list&pageIndex=' + $scope.pageIndex + '&pageSize=' + $scope.pageSizeSelected)
+            var pageURL = $rootScope.IRISOrgServiceUrl + '/pharmacysalereturn/getsalereturn?addtfields=sale_return_list&pageIndex=' + $scope.pageIndex + '&pageSize=' + $scope.pageSizeSelected;
+            
+            if (typeof $scope.form_filter != 'undefined' && $scope.form_filter != '') {
+                pageURL += '&s=' + $scope.form_filter;
+            }
+            if (typeof $scope.day != 'undefined' && $scope.day != '' && typeof $scope.month != 'undefined' && $scope.month != '' && typeof $scope.year != 'undefined' && $scope.year != '') {
+                pageURL += '&dt=' +$scope.year+'-'+$scope.month+'-'+$scope.day;
+            }
+            $http.get(pageURL)
                     .success(function (saleReturnList) {
                         $scope.isLoading = false;
                         $scope.rowCollection = saleReturnList.result;

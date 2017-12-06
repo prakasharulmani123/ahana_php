@@ -12,6 +12,22 @@
                     <button class="btn btn-sm btn-grey" ng-click="loadSaleReturnItemList()"> 
                         &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
                     </button>
+                    <input id="filter" type="text" placeholder="Search" class="form-control input-sm w-sm inline m-r" ng-model="form_filter"/>
+                    <select class="form-control search-dropdown" ng-model="day" ng-options="day.value as day.label for day in days">
+                        <option value="">DD</option>
+                    </select>
+                    <select class="form-control search-dropdown" ng-model="month" ng-options="month.value as month.label for month in months">
+                        <option value="">MM</option>
+                    </select>
+                    <select class="form-control search-dropdown" ng-model="year" ng-options="year.value as year.label for year in years">
+                        <option value="">YYYY</option>
+                    </select>
+                    <button class="btn btn-sm btn-grey" ng-click="loadSaleReturnItemList()">
+                        &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
+                    </button>
+                    <button class="btn btn-sm btn-dark" title="clear filter" ng-click="form_filter = '';day = '';month = '';year = '';loadSaleReturnItemList()">
+                        <i class="fa fa-times"></i>
+                    </button>
                 </div>
                 <div class="col-sm-4">
                     <button check-access-button ng-click="$state.go('pharmacy.saleReturnCreate')" class="btn btn-sm btn-info pull-right">
@@ -63,11 +79,11 @@
                             <i ng-if="expanded" class="fa fa-minus text"></i>
                         </button>
                     </td>
-                    <td>{{row.patient.fullname || '-'}}</td>
+                    <td>{{row.patient.fullname|| '-'}}</td>
                     <td>{{row.bill_no}}</td>
                     <td>{{row.sale_bill_no}}</td>
                     <td>{{row.sale_payment_type}}</td>
-                    <td>{{row.sale_return_date | moment:'YYYY-MM-DD' || 'empty' }}</td>
+                    <td>{{row.sale_return_date| moment:'YYYY-MM-DD' || 'empty' }}</td>
                     <td>{{row.mobile_no}}</td>
                     <td>{{row.total_item_sale_amount}}</td>
                     <td>{{row.total_item_discount_amount}}</td>
