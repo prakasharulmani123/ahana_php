@@ -193,6 +193,13 @@ class PhaSale extends RActiveRecord {
         return $this->hasMany(PhaSaleBilling::className(), ['sale_id' => 'sale_id'])->sum('paid_amount');
     }
 
+    public function getPhaSaleTotalCgstAmount() {
+        return $this->hasMany(PhaSaleItem::className(), ['sale_id' => 'sale_id'])->andWhere("pha_sale_item.deleted_at = '0000-00-00 00:00:00'")->sum('cgst_amount');
+    }
+    
+    public function getPhaSaleTotalSgstAmount() {
+        return $this->hasMany(PhaSaleItem::className(), ['sale_id' => 'sale_id'])->andWhere("pha_sale_item.deleted_at = '0000-00-00 00:00:00'")->sum('sgst_amount');
+    }
     /**
      * @return ActiveQuery
      */
@@ -234,6 +241,12 @@ class PhaSale extends RActiveRecord {
             },
             'billings_total_paid_amount' => function ($model) {
                 return (isset($model->phaSaleBillingsTotalPaidAmount) ? $model->phaSaleBillingsTotalPaidAmount : '0');
+            },
+            'billing_total_cgst_amount' => function ($model) {
+                return (isset($model->phaSaleTotalCgstAmount) ? $model->phaSaleTotalCgstAmount : '0');
+            },
+            'billing_total_sgst_amount' => function ($model) {
+                return (isset($model->phaSaleTotalSgstAmount) ? $model->phaSaleTotalSgstAmount : '0');
             },
             'billings_total_balance_amount' => function ($model) {
                 $paid_amount = 0;
@@ -294,12 +307,13 @@ class PhaSale extends RActiveRecord {
                     ];
                     break;
                 case 'salevatreport':
-                    $addt_keys = ['patient_name'];
+                    $addt_keys = ['patient_name','billing_total_cgst_amount','billing_total_sgst_amount'];
                     $parent_fields = [
+                        'sale_date' => 'sale_date',
                         'bill_no' => 'bill_no',
                         'total_item_amount' => 'total_item_amount',
                         'total_item_vat_amount' => 'total_item_vat_amount',
-                        'bill_amount' => 'bill_amount',
+                        'roundoff_amount' => 'roundoff_amount',
                     ];
                     break;
                 case 'sale_list':
@@ -351,8 +365,8 @@ class PhaSale extends RActiveRecord {
         return ArrayHelper::map($this->phaSaleItems, 'sale_item_id', 'sale_item_id');
     }
 
-    public static function billpayment($sale_id,$paid,$date) {
-        $sales = PhaSale::find()->tenant()->andWhere(['sale_id' => $sale_id ])->all();
+    public static function billpayment($sale_id, $paid, $date) {
+        $sales = PhaSale::find()->tenant()->andWhere(['sale_id' => $sale_id])->all();
         $paid_amount = $paid;
 
         foreach ($sales as $key => $sale) {
