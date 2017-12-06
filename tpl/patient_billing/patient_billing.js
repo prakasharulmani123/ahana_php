@@ -216,6 +216,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
 
         $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
+                $('#view_billing').addClass('active');
                 $scope.loadBillingCharges(newValue);
                 $scope.loadRoomConcession(newValue);
                 $scope.loadPharmacybill(newValue);
