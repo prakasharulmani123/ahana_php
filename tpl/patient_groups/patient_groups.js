@@ -202,7 +202,8 @@ app.controller('PatientGroupsController', ['$rootScope', '$scope', '$timeout', '
                         $scope.msg.successMessage = succ_msg;
                         $scope.data = {};
                         $timeout(function () {
-                            $state.go('configuration.patientgroup');
+                            //$state.go('configuration.patientgroup');
+                            $scope.back();
                         }, 1000)
 
                     }
@@ -236,6 +237,10 @@ app.controller('PatientGroupsController', ['$rootScope', '$scope', '$timeout', '
                     $scope.errorData = data.message;
             });
         };
+        
+        $scope.back = function () {
+            window.history.back();
+        }
 
         //Delete
         $scope.removeRow = function (row) {

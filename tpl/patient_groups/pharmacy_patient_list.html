@@ -13,7 +13,15 @@
                     &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
                 </button>
             </div>
-            <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search" ng-model="form_filter"/>
+            <div class="col-sm-1 m-b-xs">
+                <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search" ng-model="form_filter"/>
+            </div>
+            <div class="col-sm-10 m-b-xs">
+                <button check-access-button ng-click="$state.go('configuration.patientgroupCreate')" class="btn btn-sm btn-info pull-right">
+                    <i class="fa fa-plus"></i> &nbsp; Add New Patient Group
+                </button>
+            </div>
+
         </div>
 
         <div>
@@ -30,7 +38,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat-start="row in rowCollection | orderBy: group_name">
+                    <tr ng-repeat-start="row in rowCollection| orderBy: group_name">
                         <td align="left" valign="top" width="5%">
                             <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
                                 <i ng-if="!expanded" class="fa fa-plus text"></i>
@@ -83,7 +91,7 @@
                                                     e-typeahead-editable="false" 
                                                     e-typeahead="patient as patient.name_with_int_code for patient in getPatients($viewValue) | filter:{name_with_int_code:$viewValue} | limitTo: 10"
                                                     >
-                                                    {{patient.fullname_globalcode || 'empty' }}
+                                                    {{patient.fullname_globalcode|| 'empty' }}
                                                 </span>
                                             </li>
                                         </ul>
