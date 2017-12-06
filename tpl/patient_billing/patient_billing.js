@@ -278,7 +278,11 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             _that = this;
 
             angular.extend(_that.data, {total_amount: total});
-
+            if((parseFloat(_that.data.concession_amount)=='0') || (!_that.data.concession_amount))
+            {
+                $scope.errorData = 'Concession Amount is invalid. Kindly check the amount';
+                return false;
+            }
             $scope.errorData = "";
             $scope.msg.successMessage = "";
 
