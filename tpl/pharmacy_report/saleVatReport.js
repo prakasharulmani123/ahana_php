@@ -106,38 +106,48 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 6}, "", "", "", "", ""
+                {text: branch_name, style: 'header', colSpan: 9}, "", "", "", "", "","","",""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
                 {text: 'Bill No', style: 'header'},
+                {text: 'Bill Date', style: 'header'},
                 {text: 'Patient Name', style: 'header'},
-                {text: 'Vat Sale Amount', style: 'header'},
-                {text: 'Vat Tax Amount', style: 'header'},
-                {text: 'Total Amount', style: 'header'},
+                {text: 'Gross Value', style: 'header'},
+                {text: 'TaxPer', style: 'header'},
+                {text: 'CGST', style: 'header'},
+                {text: 'SGST', style: 'header'},
+                {text: 'RndOff', style: 'header'},
             ]);
 
             var serial_no = 1;
             var result_count = $scope.records.length;
             var sale_amount = 0;
             var vat_amount = 0;
-            var total_amount = 0;
+            var cgst_amount = 0;
+            var sgst_amount = 0;
+            var roundoff_amount = 0;
             angular.forEach($scope.records, function (record, key) {
                 var s_no_string = serial_no.toString();
 
                 reports.push([
                     s_no_string,
                     record.bill_no,
+                    record.sale_date,
                     record.patient_name,
                     record.total_item_amount,
                     record.total_item_vat_amount,
-                    record.bill_amount,
+                    record.billing_total_cgst_amount,
+                    record.billing_total_sgst_amount,
+                    record.roundoff_amount,
                 ]);
 
                 sale_amount += parseFloat(record.total_item_amount);
                 vat_amount += parseFloat(record.total_item_vat_amount);
-                total_amount += parseFloat(record.bill_amount);
-
+                cgst_amount += parseFloat(record.billing_total_cgst_amount);
+                sgst_amount += parseFloat(record.billing_total_sgst_amount);
+                roundoff_amount +=parseFloat(record.roundoff_amount);
+                
                 if (serial_no == result_count) {
                     $scope.printloader = '';
                 }
@@ -148,8 +158,9 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                     text: 'Totals',
                     style: 'header',
                     alignment: 'right',
-                    colSpan: 3
+                    colSpan: 4
                 },
+                "",
                 "",
                 "",
                 {
@@ -163,7 +174,17 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                     alignment: 'right'
                 },
                 {
-                    text: total_amount.toFixed(2).toString(),
+                    text: cgst_amount.toFixed(2).toString(),
+                    style: 'header',
+                    alignment: 'right'
+                },
+                {
+                    text: sgst_amount.toFixed(2).toString(),
+                    style: 'header',
+                    alignment: 'right'
+                },
+                {
+                    text: roundoff_amount.toFixed(2).toString(),
                     style: 'header',
                     alignment: 'right'
                 },
@@ -208,7 +229,7 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                 style: 'demoTable',
                 table: {
                     headerRows: 2,
-                    widths: ['auto', 'auto', '*', 'auto', 'auto', 'auto'],
+                    widths: ['auto', 'auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
                     body: reports,
                     dontBreakRows: true,
                 },
