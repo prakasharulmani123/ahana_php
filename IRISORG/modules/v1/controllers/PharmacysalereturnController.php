@@ -57,7 +57,7 @@ class PharmacysalereturnController extends ActiveController {
         if ($id) {
             $model = PhaSaleReturn::find()->where(['sale_ret_id' => $id])->one();
             $model->remove();
-            $activity = 'Sale Return Deleted Successfully (#'. $model->bill_no.' )';
+            $activity = 'Sale Return Deleted Successfully (#' . $model->bill_no . ' )';
             CoAuditLog::insertAuditLog(PhaSaleReturn::tableName(), $get['id'], $activity);
             return ['success' => true];
         }
@@ -79,7 +79,7 @@ class PharmacysalereturnController extends ActiveController {
             $valid = $model->validate();
 
             foreach ($post['product_items'] as $key => $product_item) {
-                if($product_item['quantity'] > 0){
+                if ($product_item['quantity'] > 0) {
                     $item_model = new PhaSaleReturnItem();
                     if (isset($product_item['sale_ret_item_id'])) {
                         $item_model = PhaSaleReturnItem::find()->tenant()->andWhere(['sale_ret_item_id' => $product_item['sale_ret_item_id']])->one();
@@ -89,13 +89,13 @@ class PharmacysalereturnController extends ActiveController {
                     $valid = $item_model->validate() && $valid;
                     if (!$valid)
                         break;
-                }else{
+                }else {
                     unset($post['product_items'][$key]);
                 }
             }
             //End
-            
-            if(!$post['product_items']){
+
+            if (!$post['product_items']) {
                 $model->noitem = true;
                 $valid = $model->validate();
                 $item_model = new PhaSaleReturnItem();
@@ -139,14 +139,53 @@ class PharmacysalereturnController extends ActiveController {
             return ['success' => false, 'message' => 'Fill the Form'];
         }
     }
-    
-    public function actionGetsalereturn()
-    {
+
+    public function actionGetsalereturn() {
         $get = Yii::$app->getRequest()->get();
-        $offset = abs($get['pageIndex'] - 1) * $get['pageSize'];
-        $result = PhaSaleReturn::find()->tenant()->active()->orderBy(['created_at' => SORT_DESC])->limit($get['pageSize'])->offset($offset)->all();
-        $totalCount = PhaSaleReturn::find()->tenant()->active()->count();
-        return ['success' => true, 'result' => $result, 'totalCount' => $totalCount];
+        $searchCondition = '';
+        $condition = [];
+        if ($get) {
+            $offset = abs($get['pageIndex'] - 1) * $get['pageSize'];
+
+            if (isset($get['dt'])) {
+                $condition['sale_return_date'] = $get['dt'];
+            }
+            if (isset($get['s']) && !empty($get['s']) && $get['s'] != 'null') {
+                $text = $get['s'];
+                $searchCondition = [
+                    'or',
+                        ['like', 'patient_name', $text],
+                        ['like', 'bill_no', $text],
+                        ['like', 'pat_global_patient.patient_global_int_code', $text],
+                ];
+            }
+
+            $data = PhaSaleReturn::find()->tenant()->active()
+                    ->orderBy(['created_at' => SORT_DESC])
+                    ->limit($get['pageSize']);
+            if ($condition) {
+                $data->andWhere($condition);
+            }
+            if ($searchCondition) {
+                $data->joinWith(['patient.patGlobalPatient']);
+                $data->andFilterWhere($searchCondition);
+            }
+            $result = $data->offset($offset)->all();
+
+            $resultCount = PhaSaleReturn::find()->tenant()->active();
+            if ($condition) {
+                $resultCount->andWhere($condition);
+            }
+            if ($searchCondition) {
+                $resultCount->joinWith(['patient.patGlobalPatient']);
+                $resultCount->andFilterWhere($searchCondition);
+            }
+            $totalCount = $resultCount->count();
+
+            return ['success' => true, 'result' => $result, 'totalCount' => $totalCount];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
     }
 
 }
