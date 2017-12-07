@@ -2395,6 +2395,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //PHARMACY MAKE PAYMENT REPORT
+            .state('pharmacy.makepaymentReport', {
+                url: '/makepaymentReport',
+                templateUrl: 'tpl/pharmacy_report/makepaymetReport.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_report/makepaymetReport.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
 
             //PHARMACY PATIENT GROUP
             .state('configuration.patientgroupassign', {
