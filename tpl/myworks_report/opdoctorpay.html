@@ -146,7 +146,7 @@
                                             <td>{{branch_name}}</td>
                                             <td data-type="Number">
                                                 <span ng-repeat="(key, record) in records" ng-init="row_total_new = parseFloat(record.payment_amount);
-                                                branchwise_new.total = branchwise_new.total + row_total_new;">
+                                                    branchwise_new.total = branchwise_new.total + row_total_new;">
 
                                                 </span>
                                                 {{branchwise_new.total| number:2}}  
@@ -208,8 +208,8 @@
                                                     <td>{{record.patient_mobile}}</td>
                                                     <td>{{record.op_seen_date_time| moment:'DD-MM-YYYY hh:mm A'}}</td>
                                                     <td data-type="Number" ng-init="row_total = parseFloat(record.payment_amount);
-                                                    branchwise.total = branchwise.total + row_total;
-                                                    doctorwise.total = doctorwise.total + row_total;">
+                                                        branchwise.total = branchwise.total + row_total;
+                                                        doctorwise.total = doctorwise.total + row_total;">
                                                         {{row_total| number:2}}
                                                     </td>
                                                 </tr>
@@ -219,6 +219,42 @@
                                 </div>
                             </div>
                         </div>    
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12" ng-if='showTable && records.length > 0'>
+                <div id="table_doctorwise_report">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <b>Doctor Wise Report</b>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered">
+                                    <tbody ng-repeat="(branch_name, rec) in records | groupBy: 'branch_name'" >
+                                        <tr></tr>
+                                        <tr>
+                                            <td colspan="2">{{branch_name}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Doctor Name</td>
+                                            <td>Amount</td>
+                                        </tr>
+                                        <tr ng-repeat="(consultant_name, record) in rec | groupBy: 'consultant_name'" ng-init="branchwise_new = {}">    
+                                            <td>{{consultant_name}}</td>
+                                            <td>
+                                                <span ng-repeat="(key, bran) in record" ng-init="row_total_new = parseFloat(bran.payment_amount);
+                                                    branchwise_new.total = branchwise_new.total + row_total_new;">
+                                                </span>
+                                                {{branchwise_new.total| number:2}}  
+                                            </td>
+                                        </tr>
+                                    </tbody> 
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
