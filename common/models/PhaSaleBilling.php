@@ -39,19 +39,19 @@ class PhaSaleBilling extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['paid_date', 'paid_amount'], 'required'],
-            [['sale_id', 'tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['paid_date', 'created_at', 'modified_at', 'deleted_at', 'sale_ids'], 'safe'],
-            [['paid_amount'], 'number'],
-            [['status'], 'string'],
-            ['paid_amount', 'validateBillAmount'],
+                [['paid_date', 'paid_amount'], 'required'],
+                [['sale_id', 'tenant_id', 'created_by', 'modified_by'], 'integer'],
+                [['paid_date', 'created_at', 'modified_at', 'deleted_at', 'sale_ids'], 'safe'],
+                [['paid_amount'], 'number'],
+                [['status'], 'string'],
+                ['paid_amount', 'validateBillAmount'],
         ];
     }
 
     public function validateBillAmount($attribute, $params) {
         if (isset($this->sale_ids)) {
             $bill_amount = PhaSale::find()->tenant()->andWhere(['sale_id' => $this->sale_ids])->sum('bill_amount');
-            
+
             if ($this->paid_amount > $bill_amount) {
                 $this->addError($attribute, "Amount ({$this->paid_amount}) must be lesser than or equal to Bill Amount ({$bill_amount})");
             }
@@ -114,4 +114,22 @@ class PhaSaleBilling extends RActiveRecord {
         return parent::afterSave($insert, $changedAttributes);
     }
 
+    public function fields() {
+        $extend = [
+            'branch_name' => function ($model) {
+                return (isset($model->tenant) ? $model->tenant->tenant_name : '-');
+            },
+            'patient_name' => function ($model) {
+                return (isset($model->sale) ? $model->sale->patient_name : '-');
+            },
+            'bill_no' => function ($model) {
+                return (isset($model->sale) ? $model->sale->bill_no : '-');
+            },
+            'bill_date' => function ($model) {
+                return (isset($model->sale) ? $model->sale->sale_date : '-');
+            },
+            ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
 }

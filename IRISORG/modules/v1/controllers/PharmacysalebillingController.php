@@ -73,7 +73,7 @@ class PharmacysalebillingController extends ActiveController {
                 return ['success' => false, 'message' => 'Kindly check amount'];
 
             if ($valid) {
-                PhaSale::billpayment($post['sale_ids'],$post['paid_amount'],$post['paid_date']);
+                PhaSale::billpayment($post['sale_ids'], $post['paid_amount'], $post['paid_date']);
 
                 //$search = ['encounter_id' => $post['encounter_id'], 'payment_type' => $post['payment_type'], 'patient_id' => $sales[0]->patient_id];
 
@@ -102,4 +102,16 @@ class PharmacysalebillingController extends ActiveController {
         }
     }
 
+    public function actionGetmakepayment() {
+        $post = Yii::$app->getRequest()->post();
+        $model = PhaSaleBilling::find()->active()->joinWith(['sale']);
+        if (isset($post['from']) && isset($post['tenant_id'])) {
+            $tenant_ids = join("','", $post['tenant_id']);
+            $model->andWhere(["pha_sale.payment_type" => 'CR']);
+            $model->andWhere(["pha_sale_billing.paid_date" => $post['from']]);
+            $model->andWhere("pha_sale_billing.tenant_id IN ( '$tenant_ids' )");
+        }
+        $reports = $model->all();
+        return ['report' => $reports];
+    }
 }
