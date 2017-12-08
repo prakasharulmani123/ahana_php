@@ -1733,6 +1733,7 @@
                                                                 <th width="169">Date Of Visit</th>
                                                                 <th width="300">Consultant</th>
                                                                 <th width="300">Notes</th>
+                                                                <th width="300">Created By</th>
                                                                 <th width="150">Action</th>
                                                             </tr>
                                                         </thead>
@@ -1757,6 +1758,7 @@
                                                                 <td valign="middle">
                                                                     <div tooltip-placement="left" data-tooltip-html-unsafe="{{patConsultant.concatenate_notes ? patConsultant.full_notes : ''}}"> <span ng-bind-html="patConsultant.short_notes"></span> </div>
                                                                 </td>
+                                                                <td>{{patConsultant.created_by_name}}</td>
                                                                 <td>
                                                                     <div ng-if="patConsultant.tenant_id != null && patConsultant.encounter_status">
                                                                         <a ng-show="patConsultant.tenant_id == app.logged_tenant_id" data-button="patient.consultantUpdate({id: '{{$state.params.id}}', vital_id: '{{patConsultant.pat_consult_id}}'})" check-access-custom class="label bg-info dk" title="Edit" ng-click="updateconsulRow(patConsultant.pat_consult_id)">
