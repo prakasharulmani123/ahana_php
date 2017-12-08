@@ -188,6 +188,9 @@ class PatConsultant extends RActiveRecord {
             'branch_name' => function ($model) {
                 return (isset($model->tenant) ? $model->tenant->tenant_name : '-');
             },
+            'created_by_name' => function ($model) {
+                return (isset($model->createdUser) ? $model->createdUser->name : '-');
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
