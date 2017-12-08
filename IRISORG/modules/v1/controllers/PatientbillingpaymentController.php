@@ -88,9 +88,9 @@ class PatientbillingpaymentController extends ActiveController {
 
     public function actionSavesettlementbill() {
         $post = Yii::$app->getRequest()->post();
-        if (in_array("purchase", $post['bills'])  && $post['pharmacy_paid_amount']!=0)
+        if (in_array("purchase", $post['bills']) && $post['pharmacy_paid_amount'] != 0)
             PhaSale::billpayment($post['pharmacy_sale_id'], $post['pharmacy_paid_amount'], $post['payment_date']);
-        if (in_array("billing", $post['bills']) && $post['billing_paid_amount']!=0) {
+        if (in_array("billing", $post['bills']) && $post['billing_paid_amount'] != 0) {
             $model = new PatBillingPayment;
             $model->attributes = [
                 'encounter_id' => $post['encounter_id'],
@@ -103,6 +103,19 @@ class PatientbillingpaymentController extends ActiveController {
             $model->save();
         }
         return ['success' => true];
+    }
+
+    public function actionGetincomereport() {
+        $post = Yii::$app->getRequest()->post();
+        
+        $model = PatBillingPayment::find()->active();
+        if (isset($post['from']) && isset($post['tenant_id'])) {
+            $tenant_ids = join("','", $post['tenant_id']);
+            $model->andWhere(["DATE(payment_date)" => $post['from']]);
+            $model->andWhere("tenant_id IN ( '$tenant_ids' )");
+        }
+        $reports = $model->all();
+        return ['report' => $reports];
     }
 
 }

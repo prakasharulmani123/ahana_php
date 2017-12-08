@@ -44,15 +44,15 @@ class PatBillingPayment extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['payment_date', 'payment_amount', 'payment_mode'], 'required'],
-            [['tenant_id', 'encounter_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
-            [['payment_date', 'created_at', 'modified_at', 'deleted_at', 'card_type', 'card_number', 'bank_name', 'bank_number', 'bank_date', 'category'], 'safe'],
-            [['payment_amount'], 'number'],
-            [['payment_mode', 'status'], 'string'],
-            [['card_type', 'card_number'], 'required', 'when' => function($model) {
+                [['payment_date', 'payment_amount', 'payment_mode'], 'required'],
+                [['tenant_id', 'encounter_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
+                [['payment_date', 'created_at', 'modified_at', 'deleted_at', 'card_type', 'card_number', 'bank_name', 'bank_number', 'bank_date', 'category'], 'safe'],
+                [['payment_amount'], 'number'],
+                [['payment_mode', 'status'], 'string'],
+                [['card_type', 'card_number'], 'required', 'when' => function($model) {
                     return $model->payment_mode == 'CD';
                 }],
-            [['bank_name', 'bank_number', 'bank_date'], 'required', 'when' => function($model) {
+                [['bank_name', 'bank_number', 'bank_date'], 'required', 'when' => function($model) {
                     return $model->payment_mode == 'CH';
                 }],
         ];
@@ -96,13 +96,41 @@ class PatBillingPayment extends RActiveRecord {
     public static function find() {
         return new PatBillingPaymentQuery(get_called_class());
     }
-    
+
     public function afterSave($insert, $changedAttributes) {
         if ($insert)
             $activity = 'Billing Added Successfully (#' . $this->encounter_id . ' )';
-        else 
+        else
             $activity = 'Billing Updated Successfully (#' . $this->encounter_id . ' )';
         CoAuditLog::insertAuditLog(PatBillingPayment::tableName(), $this->payment_id, $activity);
+    }
+
+    public function fields() {
+        $extend = [
+            'branch_name' => function ($model) {
+                return (isset($model->tenant) ? $model->tenant->tenant_name : '-');
+            },
+            'patient_name' => function ($model) {
+                return (isset($model->encounter) ? $model->encounter->patient->fullname : '-');
+            },
+            'payment' => function ($model) {
+                if (isset($model->payment_mode)) {
+                    if ($model->payment_mode == 'CA') {
+                        return 'Cash';
+                    } elseif ($model->payment_mode == 'CD') {
+                        return 'Card';
+                    } elseif ($model->payment_mode == 'ON') {
+                        return 'Online';
+                    } else {
+                        return 'Cheque';
+                    }
+                } else {
+                    return '-';
+                }
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
     }
 
 }
