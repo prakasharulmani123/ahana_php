@@ -71,7 +71,7 @@
             </div>
 
             <div class="col-sm-12" ng-show='showTable && records.length > 0'>
-<!--                <div ng-hide='true' class="panel panel-default">
+                <div class="panel panel-default">
                     <div class="panel-heading font-bold">
                         {{app.org_name}}
                     </div>
@@ -100,7 +100,7 @@
                                     </td>
                                     <td>{{patientName}}</td>
                                     <td>{{record[0].patient_uhid}}</td>
-                                    <td>{{pending.pending_amount }}</td>
+                                    <td>{{pending.pending_amount}}</td>
                                 </tr>
                                 <tr ng-repeat-end ng-show="expanded">
                                     <td colspan="4">
@@ -117,12 +117,12 @@
                                             </thead>
                                             <tbody>
                                                 <tr ng-repeat="(Key, report) in record">
-                                                    <td>{{Key+1}}</td>
+                                                    <td>{{Key + 1}}</td>
                                                     <td>{{report.bill_no}}</td>
                                                     <td>{{report.bill_payment}}</td>
                                                     <td>{{report.bill_amount}}</td>
                                                     <td>{{report.billings_total_paid_amount}}</td>
-                                                    <td data-type="Number" ng-init="pending.pending_amount = total_pending(pending.pending_amount,report.billings_total_balance_amount);">
+                                                    <td data-type="Number" ng-init="pending.pending_amount = total_pending(pending.pending_amount, report.billings_total_balance_amount);">
                                                         {{report.billings_total_balance_amount}}
                                                     </td>
                                                 </tr>
@@ -132,9 +132,9 @@
                             </tbody>
                         </table>
                     </div>
-                </div>-->
+                </div>
 
-                <div id="patient_report">
+                <div ng-hide='true' id="patient_report">
                     <table style="display: none;" class="table table-bordered">
                         <tr>
                             <th>Report Name</th>
@@ -148,51 +148,51 @@
                             <td>{{generated_on}}</td>
                             <td>{{app.username}}</td>
                         </tr>
-                        <tr>
-                        </tr>
                     </table>
                     <div class="panel panel-default">
                         <div class="panel-heading font-bold">
                             {{app.org_name}}
                         </div>
-                        <div class="panel-body" ng-init="pending = {}">
-                            <table class="export-table print-table table table-bordered">
-                                <thead>
+                        <div class="panel-body">
+                            
+                            <div ng-repeat="(patientName, details) in records | orderBy:'patient_name' | groupBy:'patient_name'">
+                                <table>
+                                    <tr></tr>
+                                    <tr></tr>
                                     <tr>
-                                        <th id="work-base-grid_c0">S.No</th>
-                                        <th id="work-base-grid_c1">Bill No</th>
-                                        <th id="work-base-grid_c2">Patient Name</th>
-                                        <th id="work-base-grid_c3">Payment Type</th>
-                                        <th id="work-base-grid_c4">Total Amount</th>
-                                        <th id="work-base-grid_c5">Paid Amount</th>
-                                        <th id="work-base-grid_c6">Pending Amount</th>
+                                        <th>Patient Name</th>
+                                        <th>Total Pending Amount</th>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="(key, record) in records">
-                                        <td>{{key + 1}}</td>
-                                        <td>{{record.bill_no}}</td>
-                                        <td>{{record.patient_name}}</td>
-                                        <td>{{record.bill_payment}}</td>
-                                        <td>{{record.bill_amount}}</td>
-                                        <td>{{record.billings_total_paid_amount}}</td>
-                                        <td data-type="Number" ng-init="pending.total_amount = pending.total_amount + parseFloat(record.billings_total_balance_amount);">
-                                            {{record.billings_total_balance_amount}}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tfoot>
                                     <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th class="text-right">Total Pending Amount</th>
-                                        <th data-type="Number">{{pending.total_amount| number:2}}</th>
+                                        <td>{{patientName}}</td>
+                                        <td>{{pendingTotal.total_amount | number:2}}</td>
                                     </tr>
-                                </tfoot>
-                            </table>
+                                </table>
+                                <table class="export-table print-table table table-bordered" ng-init="pendingTotal = {}">
+                                    <thead>
+                                        <tr>
+                                            <th id="work-base-grid_c0">S.No</th>
+                                            <th id="work-base-grid_c1">Bill No</th>
+                                            <th id="work-base-grid_c2">Payment Type</th>
+                                            <th id="work-base-grid_c3">Total Amount</th>
+                                            <th id="work-base-grid_c4">Paid Amount</th>
+                                            <th id="work-base-grid_c5">Pending Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="(key, record) in details">
+                                            <td>{{key + 1}}</td>
+                                            <td>{{record.bill_no}}</td>
+                                            <td>{{record.bill_payment}}</td>
+                                            <td>{{record.bill_amount}}</td>
+                                            <td>{{record.billings_total_paid_amount}}</td>
+                                            <td data-type="Number" ng-init="pendingTotal.total_amount = pendingTotal.total_amount + parseFloat(record.billings_total_balance_amount);">
+                                                {{record.billings_total_balance_amount | number:2}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

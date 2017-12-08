@@ -110,52 +110,62 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
             var branch_name = $scope.app.org_name;
 
             var reports = [];
-            reports.push([
-                {text: branch_name, style: 'header', colSpan: 7}, "", "", "", "", "", ""
-            ]);
-            reports.push([
-                {text: 'S.No', style: 'header'},
-                {text: 'Bill No', style: 'header'},
-                {text: 'Patient Name', style: 'header'},
-                {text: 'Payment Type', style: 'header'},
-                {text: 'Total Amount', style: 'header'},
-                {text: 'Paid Amount', style: 'header'},
-                {text: 'Pending Amount', style: 'header'},
-            ]);
+//            reports.push([
+//                {text: branch_name, style: 'header', colSpan: 7}, "", "", "", "", "", ""
+//            ]);
 
-            var serial_no = 1;
-            var result_count = $scope.records.length;
-            var total = 0;
-            angular.forEach($scope.records, function (record, key) {
-                var s_no_string = serial_no.toString();
+            var patient_wise = $filter('groupBy')($scope.records, 'patient_name');
+
+            angular.forEach(patient_wise, function (detail, patient_name) {
                 reports.push([
-                    s_no_string,
-                    record.bill_no,
-                    record.patient_name,
-                    record.bill_payment,
-                    record.bill_amount,
-                    record.billings_total_paid_amount,
-                    record.billings_total_balance_amount
+                    {text: patient_name, style: 'header', colSpan: 7}, "", "", "", "", "", ""
                 ]);
-                total += parseFloat(record.billings_total_balance_amount);
-                if (serial_no == result_count) {
-                    $scope.printloader = '';
-                }
-                serial_no++;
+
+                reports.push([
+                    {text: 'S.No', style: 'header'},
+                    {text: 'Bill No', style: 'header'},
+                    {text: 'Patient Name', style: 'header'},
+                    {text: 'Payment Type', style: 'header'},
+                    {text: 'Total Amount', style: 'header'},
+                    {text: 'Paid Amount', style: 'header'},
+                    {text: 'Pending Amount', style: 'header'},
+                ]);
+
+                var serial_no = 1;
+                var result_count = $scope.records.length;
+                var total = 0;
+                angular.forEach(detail, function (record, key) {
+                    var s_no_string = serial_no.toString();
+                    reports.push([
+                        s_no_string,
+                        record.bill_no,
+                        record.patient_name,
+                        record.bill_payment,
+                        record.bill_amount,
+                        record.billings_total_paid_amount,
+                        record.billings_total_balance_amount
+                    ]);
+                    total += parseFloat(record.billings_total_balance_amount);
+                    if (serial_no == result_count) {
+                        $scope.printloader = '';
+                    }
+                    serial_no++;
+                });
+                reports.push([
+                    {
+                        text: 'Total Pending Amount',
+                        style: 'header',
+                        alignment: 'right',
+                        colSpan: 6
+                    }, "", "", "", "", "",
+                    {
+                        text: total.toString(),
+                        style: 'header',
+                        alignment: 'right'
+                    }
+                ]);
+
             });
-            reports.push([
-                {
-                    text: 'Total Pending Amount',
-                    style: 'header',
-                    alignment: 'right',
-                    colSpan: 6
-                }, "", "", "", "", "",
-                {
-                    text: total.toString(),
-                    style: 'header',
-                    alignment: 'right'
-                }
-            ]);
 
             var content = [];
             content.push({
@@ -192,6 +202,15 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
                         margin: [0, 0, 0, 20]
                     }
                 ]
+            },{
+                columns: [
+                    {
+                        text: [
+                            {text: 'Branch Name: ', bold: true},
+                            branch_name
+                        ],
+                        margin: [0, 0, 0, 20]
+                    },]
             }, {
                 style: 'demoTable',
                 table: {
@@ -244,7 +263,7 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
                 }
             }
         }, true);
-        
+
         $scope.$watch('data.from', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
                 $scope.toMinDate = new Date($scope.data.from);
