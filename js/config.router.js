@@ -3034,6 +3034,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //Myworks IP Income Report
+            .state('myworks.ipincomereport', {
+                url: '/ipIncomeReport',
+                templateUrl: 'tpl/myworks_report/ipIncomeReport.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myworks_report/ipIncomeReport.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
 
             //Myworks Patient Merge
             .state('myworks.patientMerge', {
