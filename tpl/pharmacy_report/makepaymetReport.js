@@ -15,6 +15,12 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
             }
         };
 
+        //Expand table in Index page
+        $scope.ctrl = {};
+        $scope.ctrl.expandAll = function (expanded) {
+            $scope.$broadcast('onExpandAll', {expanded: expanded});
+        };
+
         $scope.clearReport = function () {
             $scope.showTable = false;
             $scope.data = {};
@@ -45,7 +51,7 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                 $('#get_report').attr("disabled", true);
             });
         }
-        
+
         $scope.parseFloat = function (row) {
             return parseFloat(row);
         }
@@ -120,6 +126,7 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
 
         $scope.printloader = '';
         $scope.printContent = function () {
+
             var content = [];
 
             var date_rage = moment($scope.data.from).format('YYYY-MM-DD');
@@ -166,60 +173,72 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                         }
                     ]
                 });
-                //angular.forEach(branch, function (item) {
-                var items = [];
-                items.push([
-                    {text: 'S.No', style: 'header'},
-                    {text: 'Bill No', style: 'header'},
-                    {text: 'Bill Date', style: 'header'},
-                    {text: 'Patient Name', style: 'header'},
-                    {text: 'Paid Date', style: 'header'},
-                    {text: 'Paid Amount', style: 'header'}
-                ]);
-                var items_serial_no = 1;
-                var total = 0;
-                angular.forEach(branch, function (record, key) {
-                    var s_no_string = items_serial_no.toString();
+
+                var patient_wise = $filter('groupBy')(branch, 'patient_name');
+
+                angular.forEach(patient_wise, function (detail, patient_name) {
+                    var items = [];
                     items.push([
-                        s_no_string,
-                        record.bill_no,
-                        record.bill_date,
-                        record.patient_name,
-                        record.paid_date,
-                        record.paid_amount,
+                        {text: patient_name, style: 'header', colSpan: 5}, "", "", "", ""
                     ]);
-                    total += parseFloat(record.paid_amount);
-                    items_serial_no++;
-                });
-                items.push([
-                    {
-                        text: "Total",
-                        colSpan: 5,
-                        alignment: 'right',
-                        style: 'header'
-                    }, "", "", "", "", {
-                        text: total.toString(),
-                        style: 'header'
-                    }
-                ]);
-                content_info.push({
-                    style: 'demoTable',
-                    table: {
-                        widths: ['auto', '*', '*', 'auto', '*', 'auto'],
-                        headerRows: 1,
-                        body: items,
-                    },
-                    layout: {
-                        hLineWidth: function (i, node) {
-                            return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
+
+                    items.push([
+                        {text: 'S.No', style: 'header'},
+                        {text: 'Bill No', style: 'header'},
+                        {text: 'Bill Date', style: 'header'},
+                        {text: 'Paid Date', style: 'header'},
+                        {text: 'Paid Amount', style: 'header'},
+                    ]);
+
+                    var serial_no = 1;
+                    var result_count = $scope.records.length;
+                    var total = 0;
+                    angular.forEach(detail, function (record, key) {
+                        var s_no_string = serial_no.toString();
+                        items.push([
+                            s_no_string,
+                            record.bill_no,
+                            record.bill_date,
+                            record.paid_date,
+                            record.paid_amount,
+                        ]);
+                        total += parseFloat(record.paid_amount);
+                        if (serial_no == result_count) {
+                            $scope.printloader = '';
                         }
-                    },
-                    pageBreak: (index === result_count ? '' : 'after'),
+                        serial_no++;
+                    });
+                    items.push([
+                        {
+                            text: 'Total Pending Amount',
+                            style: 'header',
+                            alignment: 'right',
+                            colSpan: 4
+                        }, "", "", "",
+                        {
+                            text: total.toString(),
+                            style: 'header',
+                            alignment: 'right'
+                        }
+                    ]);
+                    content_info.push({
+                        style: 'demoTable',
+                        table: {
+                            widths: ['auto', '*', '*', '*', 'auto'],
+                            headerRows: 1,
+                            body: items,
+                        },
+                        layout: {
+                            hLineWidth: function (i, node) {
+                                return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
+                            }
+                        },
+                        //pageBreak: (index === result_count ? '' : 'after'),
+                    });
                 });
                 content.push(content_info);
-            });
 
-            //});
+            });
             return content;
         }
 
@@ -243,5 +262,15 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                     }
                 }
             }, 1000);
+        }
+
+        $scope.total_pending = function (a, b) {
+            if (a == undefined)
+                return b;
+            if (a != undefined)
+            {
+                var total = parseFloat(a.replace(',', '')) + parseFloat(b.replace(',', ''));
+                return total.toFixed(2);
+            }
         }
     }]);

@@ -48,7 +48,8 @@
             </div>
 
             <div class="col-sm-12" ng-if='showTable' ng-repeat="(branch_name, sales) in records | groupBy: 'branch_name'">
-                <div id="table_{{branch_name}}" >
+                <!-- Content to display in page start-->
+                <div>
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="col-sm-4 m-b-xs">
@@ -76,17 +77,78 @@
                             <div class="col-sm-4 text-right" ng-if=$first> 
                                 <p>
                                     <button ng-click="printReport();" class="btn btn-sm btn-icon btn-info"><i class="fa fa-print"></i></button>
-                                    <button ng-click="tablesToExcel({{tableid}}, {{sheet_name}}, 'MakePaymentReport.xls', 'Excel');" class="btn btn-sm btn-icon btn-danger"><i class="fa fa-file-excel-o"></i></button>
+                                    <button ng-click="tablesToExcel({{tableid}}, {{sheet_name}}, 'MakePaymentReport.xlsx', 'Excel');" class="btn btn-sm btn-icon btn-danger"><i class="fa fa-file-excel-o"></i></button>
                                 </p>
                             </div>
                         </div>
                     </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <table class="table m-b-none default" ng-init="pending = {}">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 5%" data-sort-ignore="true">
+                                            <button class="btn btn-sm btn-default hms-plus" type="button" ng-click="ctrl.expandAll(allExpanded = !allExpanded)">
+                                                <i ng-if="!allExpanded" class="fa fa-plus text"></i>
+                                                <i ng-if="allExpanded" class="fa fa-minus text"></i>
+                                            </button>
+                                        </th>
+                                        <th>Patient Name</th>
+                                        <th>Total Paid Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat-start="(patientName, record) in sales |orderBy:'patient_name' | groupBy:'patient_name'">
+                                        <td style="width: 5%" data-sort-ignore="true" data-value="{{row.all_dates}}">
+                                            <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
+                                                <i ng-if="!expanded" class="fa fa-plus text"></i>
+                                                <i ng-if="expanded" class="fa fa-minus text"></i>
+                                            </button>
+                                        </td>
+                                        <td>{{patientName}}</td>
+                                        <td>{{pending.pending_amount}}</td>
+                                    </tr>
+                                    <tr ng-repeat-end ng-show="expanded">
+                                        <td colspan="4">
+                                            <table class="table table-condensed table-bordered" ng-init="pending = {}">
+                                                <thead>
+                                                    <tr>
+                                                        <th>S.No</th>
+                                                        <th>Bill No</th>
+                                                        <th>Bill Date</th>
+                                                        <th>Paid Date</th>
+                                                        <th>Paid Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="(Key, report) in record">
+                                                        <td>{{Key + 1}}</td>
+                                                        <td>{{report.bill_no}}</td>
+                                                        <td>{{report.bill_date}}</td>
+                                                        <td>{{report.paid_date}}</td>
+                                                        <td data-type="Number" ng-init="pending.pending_amount = total_pending(pending.pending_amount, report.paid_amount);">
+                                                            {{report.paid_amount}}
+                                                        </td>
+                                                    </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Content to display in page end-->
+
+                <!-- print excel sheet section start -->
+                <div ng-hide="true" id="table_{{branch_name}}" >
                     <div class="panel panel-default">
                         <table style="display: none;" class="table table-bordered">
                             <tr>
                                 <th>Branch Name</th>
                                 <th>Report Name</th>
-                                <th>Date</th>
+                                <th>Date / Duration</th>
                                 <th>Generated On</th>
                                 <th>Generated By</th>
                             </tr>
@@ -97,46 +159,55 @@
                                 <td>{{generated_on}}</td>
                                 <td>{{app.username}}</td>
                             </tr>
-                            <tr>
-                            </tr>
                         </table>
-                        <div class="panel-body" ng-init="purchase = {}">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>S.No</th>
-                                        <th>Bill No</th>
-                                        <th>Bill Date</th>
-                                        <th>Patient Name</th>
-                                        <th>Paid Date</th>
-                                        <th>Paid Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="(key, payment) in sales" >
-                                        <td>{{key + 1}}</td>
-                                        <td>{{payment.bill_no}}</td>
-                                        <td>{{payment.bill_date}}</td>
-                                        <td>{{payment.patient_name}}</td>
-                                        <td>{{payment.paid_date}}</td> 
-                                        <td data-type="Number" ng-init="purchase.total_amount = purchase.total_amount + parseFloat(payment.paid_amount);">
-                                            {{payment.paid_amount}}</td>
-                                    </tr>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th class="text-right">Total Paid Amount</th>
-                                        <th data-type="Number">{{purchase.total_amount| number:2}}</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading font-bold">
+                            {{app.org_name}}
                         </div>
-                    </div>  
+                        <div class="panel-body">
+
+                            <div ng-repeat="(patientName, details) in records | orderBy:'patient_name' | groupBy:'patient_name'">
+                                <table>
+                                    <tr></tr>
+                                    <tr></tr>
+                                    <tr>
+                                        <th>Patient Name</th>
+                                        <th>Total Paid Amount</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{{patientName}}</td>
+                                        <td>{{pendingTotal.total_amount| number:2}}</td>
+                                    </tr>
+                                </table>
+                                <table class="export-table print-table table table-bordered" ng-init="pendingTotal = {}">
+                                    <thead>
+                                        <tr>
+                                            <th id="work-base-grid_c0">S.No</th>
+                                            <th id="work-base-grid_c1">Bill No</th>
+                                            <th id="work-base-grid_c2">Bill Date</th>
+                                            <th id="work-base-grid_c3">Paid Date</th>
+                                            <th id="work-base-grid_c4">Paid Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="(key, record) in details">
+                                            <td>{{key + 1}}</td>
+                                            <td>{{record.bill_no}}</td>
+                                            <td>{{record.bill_date}}</td>
+                                            <td>{{record.paid_date}}</td>
+                                            <td data-type="Number" ng-init="pendingTotal.total_amount = pendingTotal.total_amount + parseFloat(record.paid_amount);">
+                                                {{record.paid_amount| number:2}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <!-- print excel sheet section end -->
             </div>
         </div>
     </div>
