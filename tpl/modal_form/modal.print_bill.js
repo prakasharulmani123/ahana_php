@@ -104,7 +104,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 {
                     margin: [0, 20, 0, 20],
                     colSpan: 2,
-                    bold: true,
+                    bold: true, fontSize: 16,
                     alignment: 'center',
                     text: h1
                 },
@@ -847,10 +847,16 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
 
         $scope.printBill = function () {
             $timeout(function () {
+                if ($scope.enc.selected.finalize == 0) {
+                    var bill = 'DRAFT BILL';
+                } else {
+                    var bill = '';
+                }
                 var print_content = $scope.printIPBill();
 
                 if (print_content.length > 0) {
                     var docDefinition = {
+                        watermark: {text: bill, color: 'lightgrey', opacity: 0.3},
                         header: $scope.printHeader(),
                         footer: $scope.printFooter(),
                         styles: $scope.printStyle(),

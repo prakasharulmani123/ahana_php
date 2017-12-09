@@ -6,6 +6,10 @@
         </button>
     </div>
 
+    <div ng-show ="enc.selected.finalize == '0'" id="bill_background">
+        <p id="bg-text">DRAFT BILL</p>
+    </div>
+
     <div class="wrapper-md">
         <div class="panel panel-info" draggable="true">
             <div class="panel-heading">
@@ -362,7 +366,7 @@
                     </div>
                     <div class="clearfix"></div>
 
-                    <table cellspacing="0" cellpadding="0" border="0" ng-init="detailed_recurr_billing.total             =             {}; detailed_non_billing.total       =       {};">
+                    <table cellspacing="0" cellpadding="0" border="0" ng-init="detailed_recurr_billing.total =  {}; detailed_non_billing.total =  {};">
                         <thead>
                             <tr>
                                 <th class="unit"><strong>Date</strong></th>

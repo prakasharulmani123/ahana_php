@@ -931,3 +931,16 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 	width: 250px;
 }
 }
+#bg-text
+{
+    color:#000000;
+    font-size:150px;
+    transform:rotate(300deg);
+    -webkit-transform:rotate(300deg);
+    width: 100%;
+    float: left;
+    position: absolute;
+    top: 25%;   
+    opacity: 0.1;
+    filter: alpha(opacity=10); /* For IE8 and earlier */
+}
