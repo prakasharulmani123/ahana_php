@@ -1,9 +1,14 @@
 <div ng-controller="BillingController">
     <div class="bg-light lter b-b wrapper-md" style="width: 100%; float: left">
-        <div class="col-sm-8">
+        <div class="col-sm-4">
             <h1 class="m-n h3">Billing</h1>
         </div>
-        <div class="col-sm-4 text-right">
+        <div class="col-sm-8 text-right">
+            <a data-button="patient.finalize" check-access-custom class="btn btn-default" ng-show="enc.selected.finalize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '1', 'Finalize')"> <i class="fa fa-check-square-o"></i> Finalize</a>
+            <a data-button="patient.unfinalize" check-access-custom class="btn btn-default" ng-show="enc.selected.authorize == '0' && enc.selected.finalize != '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '0', 'Unfinalize')"> <i class="fa fa-ban"></i> Unfinalize</a>
+            <a data-button="patient.authorize" check-access-custom class="btn btn-default" ng-show="enc.selected.finalize != '0' && enc.selected.authorize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '1', 'Authorize')"> <i class="fa fa-eye"></i> Authorize</a>
+            <a data-button="patient.unathorize" check-access-custom class="btn btn-default" ng-show="enc.selected.authorize != '0' && enc.selected.discharge == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '0', 'Unauthorize')"> <i class="fa fa-eye-slash"></i> Unauthorize</a>
+            <a data-button="patient.admindischarge" check-access-custom class="btn btn-default" ng-show="enc.selected.authorize != '0' && enc.selected.discharge == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'discharge', '1', 'Administrative Discharge')"> <i class="fa fa-home"></i> Administrative Discharge</a>
             <button check-access-button ng-click="$state.go('patient.viewBillingHistory', {id: $state.params.id, enc_id: enc.selected.encounter_id})" class="btn btn-sm btn-info">
                 <i class="fa fa-file-text"></i> &nbsp; View Billing History
             </button>
@@ -95,9 +100,9 @@
                                 <div class="col-sm-7"> 	<span class="label bg-dark"> {{billing.total_price = (billing.total.price + recurr_billing.total.recurring_total + billing.total.concession + recurr_billing.total_pharmacy.recurring_total) | number:2}} </span> </div>
                             </div>
                             <div class="form-group">
-                                    <div class="col-sm-5">  <b>Total Discount :</b>   </div>
-                                    <div class="col-sm-7"> <span class="label bg-light dk"> {{billing.discount = billing.total.concession + parseFloat(enc.selected.concession_amount) | number:2}} </span> </div>
-                                </div>
+                                <div class="col-sm-5">  <b>Total Discount :</b>   </div>
+                                <div class="col-sm-7"> <span class="label bg-light dk"> {{billing.discount = billing.total.concession + parseFloat(enc.selected.concession_amount) | number:2}} </span> </div>
+                            </div>
                             <div class="form-group">
                                 <div class="col-sm-5">  <b>Amount Paid : </b>   </div>
                                 <div class="col-sm-7"> 
@@ -107,9 +112,9 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-5">  <b>Amount Payable : </b>   </div>
-                                <div class="col-sm-7"> <span class="label bg-danger">{{(billing.total_price) - (billing.total.advance_charge+billing.discount)| number:2}}</span> </div>
+                                <div class="col-sm-7"> <span class="label bg-danger">{{(billing.total_price) - (billing.total.advance_charge + billing.discount) | number:2}}</span> </div>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -121,11 +126,6 @@
                 <div class="panel-body">
                     <div class="form-group">
                         <a check-access-button class="btn btn-default" ng-show="enc.selected.finalize == '0'" ng-click="$state.go('patient.roomConcession', {id: $state.params.id, encounter_id: enc.selected.encounter_id})"> <i class="fa fa-plus-square"></i> &nbsp;Room Concession</a>
-                        <a data-button="patient.finalize" check-access-custom class="btn btn-default" ng-show="enc.selected.finalize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '1', 'Finalize')"> <i class="fa fa-check-square-o"></i> Finalize</a>
-                        <a data-button="patient.unfinalize" check-access-custom class="btn btn-default" ng-show="enc.selected.authorize == '0' && enc.selected.finalize != '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '0', 'Un Finalize')"> <i class="fa fa-ban"></i> Un Finalize</a>
-                        <a data-button="patient.authorize" check-access-custom class="btn btn-default" ng-show="enc.selected.finalize != '0' && enc.selected.authorize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '1', 'Authorize')"> <i class="fa fa-eye"></i> Authorize</a>
-                        <a data-button="patient.unathorize" check-access-custom class="btn btn-default" ng-show="enc.selected.authorize != '0' && enc.selected.discharge == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '0', 'Un Authorize')"> <i class="fa fa-eye-slash"></i> Un Authorize</a>
-                        <a data-button="patient.admindischarge" check-access-custom class="btn btn-default" ng-show="enc.selected.authorize != '0' && enc.selected.discharge == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'discharge', '1', 'Administrative Discharge')"> <i class="fa fa-home"></i> Administrative Discharge</a>
                         <span class="pull-right"> <b> Concession amount : </b><span class="label bg-success"> {{enc.selected.concession_amount| number:2}} </span></span>
                     </div>
                     <div class="m-b-sm">
@@ -317,7 +317,7 @@
                 <div class="panel-heading no-border bg-primary"> <i class="fa fa-medkit"></i> Pharmacy Charges</div>
                 <div class="panel-body" ng-init="pharmacy = {}">
                     <div class="form-group">
-                        <span class="pull-right"> <b> Total Pending Amount : </b><span class="label bg-success"> {{pharmacy.total | number:2}} </span></span>
+                        <span class="pull-right"> <b> Total Pending Amount : </b><span class="label bg-success"> {{pharmacy.total| number:2}} </span></span>
                     </div>
                     <div class="m-b-sm">
                     </div>
@@ -333,7 +333,7 @@
                         <tr ng-repeat="(key, row) in pharmacy_charge | orderBy:'sale_id'">
                             <td>{{key + 1}}</td>
                             <td>{{row.bill_no}}</td>
-                            <td>{{row.sale_date | moment:'DD/MM/YYYY'}}</td>
+                            <td>{{row.sale_date| moment:'DD/MM/YYYY'}}</td>
                             <td>{{row.bill_payment}}</td>
                             <td>{{row.bill_amount}}</td>
                             <td align="right" ng-init="pharmacy.total = pharmacy.total + parseFloatIgnoreCommas(row.billings_total_balance_amount);

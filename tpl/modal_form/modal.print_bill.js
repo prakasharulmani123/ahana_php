@@ -51,7 +51,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
         $scope.parseFloat = function (row) {
             return parseFloat(row);
         }
-        
+
         $scope.parseFloatIgnoreCommas = function (amount) {
             var numberNoCommas = amount.replace(/,/g, '');
             return parseFloat(numberNoCommas);
@@ -127,22 +127,22 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 var discharge_date = moment($scope.enc.selected.discharge_date).format('DD/MM/YYYY - hh:mm A');
             else
                 var discharge_date = '-';
-            
+
             if ($scope.enc.selected.bill_no)
                 var bill_no = $scope.enc.selected.bill_no;
             else
                 var bill_no = '-';
-            
+
             var patient_details_right = [];
             patient_details_right.push([{text: 'Admission Date', bold: true}, ':', admission_date]);
             patient_details_right.push([{text: 'Discharge Date', bold: true}, ':', discharge_date]);
             patient_details_right.push([{text: 'Ward No', bold: true}, ':', $scope.enc.selected.currentAdmission.room_details]);
             patient_details_right.push([{text: 'No.ofDays', bold: true}, ':', $scope.enc.selected.stay_duration.toString()]);
             patient_details_right.push([{text: 'Consultant Name', bold: true}, ':', $scope.enc.selected.currentAdmission.consultant_name]);
-            if($scope.enc.selected.authorize == 0){
-                patient_details_right.push([{text: ''}, '', {text: 'NOT DISCHARGED', bold: true}]);
+            if ($scope.enc.selected.authorize == 0) {
+                patient_details_right.push([{text: 'Discharge Date'}, ':', {text: 'NOT YET DISCHARGED', bold: true}]);
             }
-            
+
             return [
                 {
                     colSpan: 3,
@@ -274,7 +274,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     {text: pharmacy_charge.toFixed(2).toString(), alignment: 'right'}
                 ]);
             }
-            if(typeof $scope.billing.total == 'undefined'){
+            if (typeof $scope.billing.total == 'undefined') {
                 charge = 0.00;
                 extra = 0.00;
                 advance_charge = 0.00;
@@ -286,8 +286,8 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 price = (typeof $scope.billing.total.price == 'undefined') ? '0.00' : $scope.billing.total.price.toFixed(2);
             }
             pharmacy = (typeof pharmacy_charge == 'undefined') ? '0.00' : pharmacy_charge.toFixed(2);
-            
-            
+
+
             bill.push([
                 {
                     text: 'Grand Total : ' + (parseFloat(charge) + parseFloat(extra) + parseFloat($scope.recurr_billing.total.recurring_total) + parseFloat(pharmacy)).toFixed(2).toString(),
@@ -303,7 +303,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 '',
                 '',
             ]);
-            
+
             bill.push([
                 {
                     text: 'Advance : ' + advance_charge.toString(),
@@ -562,7 +562,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 detailed_billing.total.other_net_total = detailed_billing.total.consultant_net_total;
             }
             //Other charges END
-            
+
             //Pharmacy charges START
             if ($scope.pharmacy_charge.length > 0) {
                 bill.push([
@@ -607,6 +607,14 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
 
             //Advance START
             if ($scope.advances) {
+                bill.push([
+                    {text: 'Date', bold: true, fillColor: '#eeeeee'},
+                    {text: 'Description', bold: true, colSpan: 2, fillColor: '#eeeeee'},
+                    {},
+                    {text: 'Debit', bold: true, alignment: 'right', fillColor: '#eeeeee'},
+                    {text: 'Credit', bold: true, alignment: 'right', fillColor: '#eeeeee'},
+                    {text: 'Net', bold: true, alignment: 'right', fillColor: '#eeeeee'},
+                ]);
                 bill.push([
                     {text: 'Advance', bold: true, colSpan: 6, margin: [2, 10, 0, 10]},
                     {},
@@ -710,7 +718,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     ]);
                 }
             }
-            if(typeof $scope.billing.total == 'undefined'){
+            if (typeof $scope.billing.total == 'undefined') {
                 charge = 0.00;
                 extra = 0.00;
                 advance_charge = 0.00;
@@ -723,7 +731,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 price = (typeof $scope.billing.total.price == 'undefined') ? '0.00' : $scope.billing.total.price;
                 disconcession = (typeof $scope.billing.total.concession == 'undefined') ? '0.00' : $scope.billing.total.concession;
             }
-            
+
             pharmacy = (typeof detailed_billing.total.pharmacy_total == 'undefined') ? '0.00' : detailed_billing.total.pharmacy_total;
             bill.push([
                 {
@@ -755,7 +763,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 '',
                 '',
             ]);
-                        bill.push([
+            bill.push([
                 {
                     text: 'Discount : ' + (parseFloat((typeof $scope.enc.selected.concession_amount == 'undefined') ? '0.00' : $scope.enc.selected.concession_amount) + parseFloat(disconcession)).toString(),
                     fillColor: '#eeeeee',

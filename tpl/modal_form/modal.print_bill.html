@@ -114,11 +114,14 @@
                                                     </span>
                                                 </td>
                                             </tr>
-                                            <tr ng-if="enc.selected.authorize==0">
-                                                <td colspan="3" rowspan="2"> 
-                                                    <br>
-                                                    <h2 class="not_yet_discharge">NOT<br> DISCHARGED</h2>
-                                                </td>
+                                            <tr ng-if="enc.selected.authorize == 0">
+                                                <td><strong>Discharge Date</strong></td>
+                                                <td>:</td>
+                                                <td class="not_yet_discharge">NOT YET DISCHARGED</td>
+                                                <!--                                                <td colspan="3" rowspan="2"> 
+                                                                                                    <br>
+                                                                                                    <h2 class="not_yet_discharge">NOT<br> DISCHARGED</h2>
+                                                                                                </td>-->
                                             </tr>
                                         </table>
                                     </td>
@@ -180,8 +183,8 @@
                                 <td align="center">
                                     <span ng-repeat="(key, row) in pharmacy_charge">
                                         <span ng-init="
-                                            row_total = parseFloatIgnoreCommas(row.billings_total_balance_amount);
-                                            bill_summary.pharmacy_total = bill_summary.pharmacy_total + row_total;">    
+                                                    row_total = parseFloatIgnoreCommas(row.billings_total_balance_amount);
+                                                    bill_summary.pharmacy_total = bill_summary.pharmacy_total + row_total;">    
                                         </span>
                                     </span>
                                     {{bill_summary.pharmacy_total| number:2}}
@@ -341,12 +344,16 @@
                                                     </span>
                                                 </td>
                                             </tr>
-                                            <tr ng-if="enc.selected.authorize==0">
-                                                <td colspan="3" rowspan="2"> 
-                                                    <br>
-                                                    <h2 class="not_yet_discharge">NOT<br> DISCHARGED</h2>
-                                                </td>
+                                            <tr ng-if="enc.selected.authorize == 0">
+                                                <td><strong>Discharge Date</strong></td>
+                                                <td>:</td>
+                                                <td class="not_yet_discharge">NOT YET DISCHARGED</td>
+                                                <!--                                                <td colspan="3" rowspan="2"> 
+                                                                                                    <br>
+                                                                                                    <h2 class="not_yet_discharge">NOT<br> DISCHARGED</h2>
+                                                                                                </td>-->
                                             </tr>
+
                                         </table>
                                     </td>
                                 </tr>
@@ -355,7 +362,7 @@
                     </div>
                     <div class="clearfix"></div>
 
-                    <table cellspacing="0" cellpadding="0" border="0" ng-init="detailed_recurr_billing.total       =       {}; detailed_non_billing.total    =    {};">
+                    <table cellspacing="0" cellpadding="0" border="0" ng-init="detailed_recurr_billing.total             =             {}; detailed_non_billing.total       =       {};">
                         <thead>
                             <tr>
                                 <th class="unit"><strong>Date</strong></th>
@@ -489,7 +496,7 @@
                             <tr ng-if="!detailed_billing.total.other_net_total">
                                 <td colspan="5" ng-init="detailed_billing.total.other_net_total = detailed_billing.total.consultant_net_total"></td>
                             </tr>
-                            
+
                             <!----Pharmacy charges--->                            
                             <tr ng-if="pharmacy_charge.length > 0 && pharmacy_charge.length != ''">
                                 <td colspan="5"><h3> Pharmacy Charges:</h3></td>
@@ -505,7 +512,7 @@
                                     ">{{row_total| number:2}}</td>
                                 <td class="qty">&nbsp;</td>
                                 <td align="center">
-                                    {{detailed_billing.total.net_step_41_total + row.net_amount | number:2}}
+                                    {{detailed_billing.total.net_step_41_total + row.net_amount| number:2}}
                                 </td>
                             </tr>
                             <tr ng-if="pharmacy_charge.length > 0 && pharmacy_charge.length != ''">
@@ -520,6 +527,13 @@
                             </tr>
 
                             <!----Advance--->
+                            <tr ng-if="advances.length > 0 && advances.length != ''">
+                                <th class="unit"><strong>Date</strong></th>
+                                <th class="unit"><strong>DESCRIPTION </strong></th>
+                                <th class="unit"><strong>Debit</strong></th>
+                                <th class="unit"><strong>Credit</strong></th>
+                                <th class="unit"><strong>Net TOTAL</strong></th>
+                            </tr>
                             <tr ng-if="advances.length > 0 && advances.length != ''">
                                 <td colspan="5"><h3> Advance: </h3></td>
                             </tr>
