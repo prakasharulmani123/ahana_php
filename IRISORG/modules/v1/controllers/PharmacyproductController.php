@@ -336,20 +336,19 @@ class PharmacyproductController extends ActiveController {
 
 //            $text_search = str_replace([' ', '(', ')'], ['* ', '', ''], $text);
             $text_search = "+" . str_replace([' ', '(', ')'], [' +', '', ''], $text) . "*";
+            $like_text_search = $text . "%";
 
             //Get Products
-            $products = $this->_getProducts($text_search, $tenant_id, $limit);
+//            $products = $this->_getProducts($text_search, $tenant_id, $limit);
+            $products = $this->_getProducts($like_text_search, $tenant_id, $limit);
 
             //Get Routes
             //$routes = $this->_getRoutes($products, $text_search, $tenant_id, $limit);
-
 //            if (!empty($routes)) {
 //                $products = $this->_mergeArrayWithProducts($products, $routes, 'route');
 //            }
-
             //Get Frequencies
             //$frequencies = $this->_getFrequencies($text, $tenant_id, $limit);
-
 //            if (!empty($frequencies)) {
 //                $products = $this->_mergeArrayWithProducts($products, $frequencies, 'frequency');
 //            }
@@ -358,10 +357,9 @@ class PharmacyproductController extends ActiveController {
         return ['prescription' => $products];
     }
 
-    private function _getProducts($text_search, $tenant_id, $limit) {
+    private function _getProducts($like_text_search, $tenant_id, $limit) {
         $post = Yii::$app->getRequest()->post();
         $products = [];
-
         if (isset($post['product_id'])) {
             //Retrieve One product
             $command = $this->_connection->createCommand("
@@ -389,38 +387,6 @@ class PharmacyproductController extends ActiveController {
                     LIMIT 0,:limit", [':limit' => $limit, ':tenant_id' => $tenant_id, ':product_id' => $post['product_id']]
             );
         } else {
-            //Retrieve (product && generic || drug)            
-            $command = $this->_connection->createCommand("
-                    SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name,
-                    MATCH(a.product_name) AGAINST (:search_text IN BOOLEAN MODE) AS score,
-                    CONCAT(
-                        IF(b.generic_name IS NOT NULL, b.generic_name, ''),
-                        IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
-                        IF(a.product_unit_count IS NOT NULL, CONCAT(' ', a.product_unit_count), ''),
-                        IF(a.product_unit IS NOT NULL, CONCAT('', a.product_unit), '')
-                    ) AS prescription, '' as selected, a.product_description_id,
-                    (
-                        SELECT IF(SUM(d.available_qty) IS NOT NULL, SUM(d.available_qty), 0)
-                        FROM pha_product_batch d
-                        WHERE d.tenant_id = a.tenant_id
-                        AND d.product_id = a.product_id
-                    ) as available_quantity
-                    FROM pha_product a
-                    LEFT OUTER JOIN pha_generic b
-                    ON b.generic_id = a.generic_id
-                    LEFT OUTER JOIN pha_drug_class c
-                    ON c.drug_class_id = a.drug_class_id
-                    WHERE (a.tenant_id = :tenant_id AND MATCH(a.product_name) AGAINST(:search_text IN BOOLEAN MODE))
-                    AND (b.tenant_id = :tenant_id AND MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE))
-                    OR (c.tenant_id = :tenant_id AND MATCH(c.drug_name) AGAINST(:search_text IN BOOLEAN MODE))
-                    ORDER BY score DESC, a.product_name
-                    LIMIT 0,:limit", [':search_text' => $text_search, ':limit' => $limit, ':tenant_id' => $tenant_id]
-            );
-        }
-        $products = $command->queryAll();
-
-        //Below not need
-        if (empty($products) && !isset($post['product_id'])) {
             //Retrieve (product || generic || drug)
             $command = $this->_connection->createCommand("
                     SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name,
@@ -441,16 +407,111 @@ class PharmacyproductController extends ActiveController {
                     ON b.generic_id = a.generic_id
                     LEFT OUTER JOIN pha_drug_class c
                     ON c.drug_class_id = a.drug_class_id
-                    WHERE (a.tenant_id = :tenant_id AND MATCH(a.product_name) AGAINST(:search_text IN BOOLEAN MODE))
-                    OR (b.tenant_id = :tenant_id AND MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE))
-                    OR (c.tenant_id = :tenant_id AND MATCH(c.drug_name) AGAINST(:search_text IN BOOLEAN MODE))
+                    WHERE (a.tenant_id = :tenant_id AND a.product_name LIKE :search_text)
+                    OR (b.tenant_id = :tenant_id AND b.generic_name LIKE :search_text)
+                    OR (c.tenant_id = :tenant_id AND c.drug_name LIKE :search_text)
                     ORDER BY a.product_name
-                    LIMIT 0,:limit", [':search_text' => $text_search, ':limit' => $limit, ':tenant_id' => $tenant_id]
+                    LIMIT 0,:limit", [':search_text' => $like_text_search, ':limit' => $limit, ':tenant_id' => $tenant_id]
             );
-            $products = $command->queryAll();
         }
+        $products = $command->queryAll();
         return $products;
     }
+
+    // Below function hide because - FullText Search issue when product name with hypen or Space
+//    private function _getProducts($text_search, $tenant_id, $limit) {
+//        $post = Yii::$app->getRequest()->post();
+//        $products = [];
+//
+//        if (isset($post['product_id'])) {
+//            //Retrieve One product
+//            $command = $this->_connection->createCommand("
+//                    SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name,
+//                    CONCAT(
+//                        IF(b.generic_name IS NOT NULL, b.generic_name, ''),
+//                        IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
+//                        IF(a.product_unit_count IS NOT NULL, CONCAT(' ', a.product_unit_count), ''),
+//                        IF(a.product_unit IS NOT NULL, CONCAT('', a.product_unit), '')
+//                    ) AS prescription, '' as selected, a.product_description_id,
+//                    (
+//                        SELECT IF(SUM(d.available_qty) IS NOT NULL, SUM(d.available_qty), 0)
+//                        FROM pha_product_batch d
+//                        WHERE d.tenant_id = a.tenant_id
+//                        AND d.product_id = a.product_id
+//                    ) as available_quantity
+//                    FROM pha_product a
+//                    LEFT OUTER JOIN pha_generic b
+//                    ON b.generic_id = a.generic_id
+//                    LEFT OUTER JOIN pha_drug_class c
+//                    ON c.drug_class_id = a.drug_class_id
+//                    WHERE a.tenant_id = :tenant_id
+//                    AND a.product_id = :product_id
+//                    ORDER BY a.product_name
+//                    LIMIT 0,:limit", [':limit' => $limit, ':tenant_id' => $tenant_id, ':product_id' => $post['product_id']]
+//            );
+//        } else {
+//            //Retrieve (product && generic || drug)            
+//            $command = $this->_connection->createCommand("
+//                    SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name,
+//                    MATCH(a.product_name) AGAINST (:search_text IN BOOLEAN MODE) AS score,
+//                    CONCAT(
+//                        IF(b.generic_name IS NOT NULL, b.generic_name, ''),
+//                        IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
+//                        IF(a.product_unit_count IS NOT NULL, CONCAT(' ', a.product_unit_count), ''),
+//                        IF(a.product_unit IS NOT NULL, CONCAT('', a.product_unit), '')
+//                    ) AS prescription, '' as selected, a.product_description_id,
+//                    (
+//                        SELECT IF(SUM(d.available_qty) IS NOT NULL, SUM(d.available_qty), 0)
+//                        FROM pha_product_batch d
+//                        WHERE d.tenant_id = a.tenant_id
+//                        AND d.product_id = a.product_id
+//                    ) as available_quantity
+//                    FROM pha_product a
+//                    LEFT OUTER JOIN pha_generic b
+//                    ON b.generic_id = a.generic_id
+//                    LEFT OUTER JOIN pha_drug_class c
+//                    ON c.drug_class_id = a.drug_class_id
+//                    WHERE (a.tenant_id = :tenant_id AND MATCH(a.product_name) AGAINST(:search_text IN BOOLEAN MODE))
+//                    AND (b.tenant_id = :tenant_id AND MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE))
+//                    OR (c.tenant_id = :tenant_id AND MATCH(c.drug_name) AGAINST(:search_text IN BOOLEAN MODE))
+//                    ORDER BY score DESC, a.product_name
+//                    LIMIT 0,:limit", [':search_text' => $text_search, ':limit' => $limit, ':tenant_id' => $tenant_id]
+//            );
+//        }
+//        $products = $command->queryAll();
+//
+//        //Below not need
+//        if (empty($products) && !isset($post['product_id'])) {
+//            //Retrieve (product || generic || drug)
+//            $command = $this->_connection->createCommand("
+//                    SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name,
+//                    CONCAT(
+//                        IF(b.generic_name IS NOT NULL, b.generic_name, ''),
+//                        IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
+//                        IF(a.product_unit_count IS NOT NULL, CONCAT(' ', a.product_unit_count), ''),
+//                        IF(a.product_unit IS NOT NULL, CONCAT('', a.product_unit), '')
+//                    ) AS prescription, '' as selected, a.product_description_id,
+//                    (
+//                        SELECT IF(SUM(d.available_qty) IS NOT NULL, SUM(d.available_qty), 0)
+//                        FROM pha_product_batch d
+//                        WHERE d.tenant_id = a.tenant_id
+//                        AND d.product_id = a.product_id
+//                    ) as available_quantity
+//                    FROM pha_product a
+//                    LEFT OUTER JOIN pha_generic b
+//                    ON b.generic_id = a.generic_id
+//                    LEFT OUTER JOIN pha_drug_class c
+//                    ON c.drug_class_id = a.drug_class_id
+//                    WHERE (a.tenant_id = :tenant_id AND MATCH(a.product_name) AGAINST(:search_text IN BOOLEAN MODE))
+//                    OR (b.tenant_id = :tenant_id AND MATCH(b.generic_name) AGAINST(:search_text IN BOOLEAN MODE))
+//                    OR (c.tenant_id = :tenant_id AND MATCH(c.drug_name) AGAINST(:search_text IN BOOLEAN MODE))
+//                    ORDER BY a.product_name
+//                    LIMIT 0,:limit", [':search_text' => $text_search, ':limit' => $limit, ':tenant_id' => $tenant_id]
+//            );
+//            $products = $command->queryAll();
+//        }
+//        return $products;
+//    }
 
     private function _getRoutes($products, $text_search, $tenant_id, $limit) {
         $post = Yii::$app->getRequest()->post();
@@ -1520,6 +1581,7 @@ class PharmacyproductController extends ActiveController {
             return $result[0];
         }
     }
+
     // * Note 
     //PhaProduct - After save Not working. 
     //When import, Just hide the After save in PhaProduct and then use this function.
@@ -1587,7 +1649,7 @@ class PharmacyproductController extends ActiveController {
         }
         return $return;
     }
-    
+
     //Gst Product is starting
     public function actionProductpriceupdate() {
         //return ['success' => true, 'message' => ['total_rows' => '1990', 'id' => '817', 'max_id' => '1990']];
@@ -1642,7 +1704,7 @@ class PharmacyproductController extends ActiveController {
             return $result[0];
         }
     }
-    
+
     public function actionProductpriceupdatestart() {
         $post = Yii::$app->getRequest()->post();
         $id = $post['id'];
