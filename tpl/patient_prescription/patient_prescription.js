@@ -34,6 +34,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.app.settings.patientSideMenu = true;
         $scope.app.settings.patientContentClass = 'app-content patient_content ';
         $scope.app.settings.patientFooterClass = 'app-footer';
+        $scope.show_prescription_loader = false;
         $scope.today = new Date();
         $scope.globalData = {};
         $scope.globalData.freq_type = 3;
@@ -1194,6 +1195,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.prescription_lists = {};
         $scope.$watch('prescription', function (newValue, oldValue) {
             if (newValue != '' && newValue.length > 1 && !$scope.pickProduct) {
+                $scope.show_prescription_loader = true;
                 if (changeTimer !== false)
                     clearTimeout(changeTimer);
                 changeTimer = setTimeout(function () {
@@ -1213,6 +1215,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             function (response) {
                                 $scope.prescription_lists = response.prescription;
                                 if ($scope.lastSelected) {
+                                    $scope.show_prescription_loader = false;
                                     var result = $filter('filter')($scope.prescription_lists, {prescription: $scope.lastSelected.prescription});
                                     if (result.length > 0)
                                         result[0].selected = 'selected';

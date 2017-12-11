@@ -87,7 +87,9 @@
                                                 <table  class="table table-striped b-t b-light">
                                                     <thead>
                                                         <tr>
-                                                            <th  align="left" class="pres-top-pro" valign="top" >Products </th>
+                                                            <th  align="left" class="pres-top-pro" valign="top" >Products <span ng-show="show_prescription_loader">&nbsp;&nbsp;
+                                                                    <i class="fa fa-spin fa-refresh"></i>
+                                                                </span></th>
                                                             <th  align="left" class="pres-top-freq" valign="top" >Frequency</th>
                                                             <th align="left" class="pres-top-qty" valign="top">No.Of Days</th>
                                                             <th  align="left" class="pres-top-remarks" valign="top">Remarks</th>
@@ -1133,8 +1135,8 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata = {};
-                                        loadVitals();     vitaldata.formtype = 'add'">
+                                    <div class="row" ng-init="vitaldata  =    {};
+                                        loadVitals();       vitaldata.formtype  =  'add'">
                                         <div class="col-lg-12"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
