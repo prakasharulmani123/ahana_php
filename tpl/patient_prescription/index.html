@@ -72,7 +72,7 @@
                                     <div ng-include="'tpl/blocks/alert.html'">
                                         {% include 'tpl/blocks/alert.html' %}
                                     </div>
-                                    <div class="pres-tab-btn-cont">
+                                    <div class="pres-tab-btn-cont pres-tab-btn-cont1">
                                         <button tooltip="Back" ng-show="pres_status != 'current'" ng-click="pres_status = 'current'" class="btn btn-default btn-dark"><i class="fa fa-arrow-left"></i></button>
                                         <button tooltip="Previous Prescription" tooltip-placement="left" ng-click="pres_status = 'prev'" class="btn btn-default btn-primary"><i class="fa fa-history"></i> </button>
                                         <button tooltip="Favourite" ng-click="pres_status = 'favourite'" class="btn btn-default btn-primary"><i class="fa fa-heart"></i> </button>
@@ -933,10 +933,10 @@
                                     </div>
                                     <div ng-show="pres_status == 'prev'">
                                         <div class="notes-table">
-                                            <div class="bg-light lter b-b wrapper-md">
+                                            <div class="lter wrapper-md prev-h1">
                                                 <h1 class="m-n h3">Previous Prescription</h1>
                                             </div>
-                                            <div class="wrapper-md p-b">
+                                            <div class="">
                                                 <div class="panel panel-default">
                                                     <div class="row wrapper pb-sm">
                                                         <div class="col-sm-6">
@@ -984,10 +984,10 @@
                                     </div>
                                     <div ng-show="pres_status == 'favourite'">
                                         <div class="notes-table">
-                                            <div class="bg-light lter b-b wrapper-md">
+                                            <div class="lter b-b wrapper-md prev-h1">
                                                 <h1 class="m-n h3">Favourites</h1>
                                             </div>
-                                            <div class="wrapper-md p-b">
+                                            <div class="">
                                                 <div class="panel panel-default">
                                                     <ul class="list-group no-radius ">
                                                         <li class="list-group-item" ng-repeat="favourite in child.favourites">

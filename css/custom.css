@@ -727,6 +727,10 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 	text-align: right;
 	margin-bottom:10px;
 }
+.pres-tab-btn-cont1 {
+    width: auto;
+    float: right;
+}
 .graph1 .panel-heading {
 	background:#36C558;
 	color:#ffffff;
@@ -943,4 +947,8 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
     top: 25%;   
     opacity: 0.1;
     filter: alpha(opacity=10); /* For IE8 and earlier */
+}
+
+.prev-h1{
+    padding-left: 0px;
 }
