@@ -113,6 +113,9 @@ class PatBillingPayment extends RActiveRecord {
             'patient_name' => function ($model) {
                 return (isset($model->encounter) ? $model->encounter->patient->fullname : '-');
             },
+            'patient_uhid' => function ($model) {
+                return (isset($model->encounter) ? $model->encounter->patient->patGlobalPatient->patient_global_int_code : '-');
+            },        
             'payment' => function ($model) {
                 if (isset($model->payment_mode)) {
                     if ($model->payment_mode == 'CA') {
