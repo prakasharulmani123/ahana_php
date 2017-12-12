@@ -196,10 +196,11 @@ class PhaSale extends RActiveRecord {
     public function getPhaSaleTotalCgstAmount() {
         return $this->hasMany(PhaSaleItem::className(), ['sale_id' => 'sale_id'])->andWhere("pha_sale_item.deleted_at = '0000-00-00 00:00:00'")->sum('cgst_amount');
     }
-    
+
     public function getPhaSaleTotalSgstAmount() {
         return $this->hasMany(PhaSaleItem::className(), ['sale_id' => 'sale_id'])->andWhere("pha_sale_item.deleted_at = '0000-00-00 00:00:00'")->sum('sgst_amount');
     }
+
     /**
      * @return ActiveQuery
      */
@@ -307,7 +308,7 @@ class PhaSale extends RActiveRecord {
                     ];
                     break;
                 case 'salevatreport':
-                    $addt_keys = ['patient_name','billing_total_cgst_amount','billing_total_sgst_amount'];
+                    $addt_keys = ['patient_name', 'billing_total_cgst_amount', 'billing_total_sgst_amount'];
                     $parent_fields = [
                         'sale_date' => 'sale_date',
                         'bill_no' => 'bill_no',
@@ -352,6 +353,14 @@ class PhaSale extends RActiveRecord {
                         'payment_type' => 'payment_type',
                         'bill_amount' => 'bill_amount',
                         'sale_date' => 'sale_date',
+                    ];
+                    break;
+                case 'make_payment_report':
+                    $addt_keys = ['billing_total_cgst_amount', 'billing_total_sgst_amount', 'patient_uhid'];
+                    $parent_fields = [
+                        'total_item_vat_amount' => 'total_item_vat_amount',
+                        'roundoff_amount' => 'roundoff_amount',
+                        'total_item_amount' => 'total_item_amount',
                     ];
                     break;
             endswitch;

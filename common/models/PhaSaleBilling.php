@@ -128,6 +128,9 @@ class PhaSaleBilling extends RActiveRecord {
             'bill_date' => function ($model) {
                 return (isset($model->sale) ? $model->sale->sale_date : '-');
             },
+            'sale_details' => function ($model) {
+                return (isset($model->sale) ? $model->sale : '-');
+            },        
             ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
