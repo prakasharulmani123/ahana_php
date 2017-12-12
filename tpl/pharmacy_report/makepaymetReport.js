@@ -73,7 +73,7 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                 angular.extend(data, {tenant_id: $scope.data.tenant_id});
 
             // Get data's from service
-            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacysalebilling/getmakepayment', data)
+            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacysalebilling/getmakepayment?addtfields=make_payment_report', data)
                     .success(function (response) {
                         $scope.loadbar('hide');
                         $scope.loading = false;

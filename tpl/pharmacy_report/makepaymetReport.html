@@ -94,6 +94,7 @@
                                                 <i ng-if="allExpanded" class="fa fa-minus text"></i>
                                             </button>
                                         </th>
+                                        <th>Patient UHID</th>
                                         <th>Patient Name</th>
                                         <th>Total Paid Amount</th>
                                     </tr>
@@ -106,6 +107,7 @@
                                                 <i ng-if="expanded" class="fa fa-minus text"></i>
                                             </button>
                                         </td>
+                                        <td>{{record[0].sale_details.patient_uhid}}</td>
                                         <td>{{patientName}}</td>
                                         <td>{{pending.pending_amount}}</td>
                                     </tr>
@@ -119,6 +121,11 @@
                                                         <th>Bill Date</th>
                                                         <th>Paid Date</th>
                                                         <th>Paid Amount</th>
+                                                        <th>Taxable Amount</th>
+                                                        <th>Tax Per</th>
+                                                        <th>SGST</th>
+                                                        <th>CGST</th>
+                                                        <th>Round off</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -130,6 +137,11 @@
                                                         <td data-type="Number" ng-init="pending.pending_amount = total_pending(pending.pending_amount, report.paid_amount);">
                                                             {{report.paid_amount}}
                                                         </td>
+                                                        <td>{{report.sale_details.total_item_amount}}</td>
+                                                        <td>{{report.sale_details.total_item_vat_amount}}</td>
+                                                        <td>{{report.sale_details.billing_total_cgst_amount}}</td>
+                                                        <td>{{report.sale_details.billing_total_sgst_amount}}</td>
+                                                        <td>{{report.sale_details.roundoff_amount}}</td>
                                                     </tr>
                                             </table>
                                         </td>
@@ -173,10 +185,12 @@
                                     <tr></tr>
                                     <tr></tr>
                                     <tr>
+                                        <th>Patient UHID</th>
                                         <th>Patient Name</th>
                                         <th>Total Paid Amount</th>
                                     </tr>
                                     <tr>
+                                        <td>{{details[0].sale_details.patient_uhid}}</td>
                                         <td>{{patientName}}</td>
                                         <td>{{pendingTotal.total_amount| number:2}}</td>
                                     </tr>
@@ -189,6 +203,11 @@
                                             <th id="work-base-grid_c2">Bill Date</th>
                                             <th id="work-base-grid_c3">Paid Date</th>
                                             <th id="work-base-grid_c4">Paid Amount</th>
+                                            <th id="work-base-grid_c5">Taxable Amount</th>
+                                            <th id="work-base-grid_c6">Tax Per</th>
+                                            <th id="work-base-grid_c7">SGST</th>
+                                            <th id="work-base-grid_c8">CGST</th>
+                                            <th id="work-base-grid_c9">Round off</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -200,6 +219,11 @@
                                             <td data-type="Number" ng-init="pendingTotal.total_amount = pendingTotal.total_amount + parseFloat(record.paid_amount);">
                                                 {{record.paid_amount}}
                                             </td>
+                                            <td>{{record.sale_details.total_item_amount}}</td>
+                                            <td>{{record.sale_details.total_item_vat_amount}}</td>
+                                            <td>{{record.sale_details.billing_total_cgst_amount}}</td>
+                                            <td>{{record.sale_details.billing_total_sgst_amount}}</td>
+                                            <td>{{record.sale_details.roundoff_amount}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
