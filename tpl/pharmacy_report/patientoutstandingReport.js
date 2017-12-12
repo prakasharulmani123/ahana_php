@@ -288,4 +288,8 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
                 return total.toFixed(2);
             }
         }
+        
+        $scope.nameReplace = function (a) {
+            return a.replace('&', '');
+        }
     }]);
