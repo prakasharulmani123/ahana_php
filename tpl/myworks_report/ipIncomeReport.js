@@ -171,10 +171,14 @@ app.controller('IpincomereportController', ['$rootScope', '$scope', '$timeout', 
                 items.push([
                     {text: 'S.No', style: 'header'},
                     {text: 'Encounter ID', style: 'header'},
+                    {text: 'Voucher No', style: 'header'},
                     {text: 'Payment Category', style: 'header'},
+                    {text: 'Patient UHID', style: 'header'},
                     {text: 'Patient Name', style: 'header'},
                     {text: 'Payment Mode', style: 'header'},
-                    {text: 'Paid Amount', style: 'header'}
+                    {text: 'Paid Amount', style: 'header'},
+                    {text: 'Card Type', style: 'header'},
+                    {text: 'Card Number', style: 'header'}
                 ]);
                 var items_serial_no = 1;
                 var total = 0;
@@ -187,10 +191,14 @@ app.controller('IpincomereportController', ['$rootScope', '$scope', '$timeout', 
                     items.push([
                         s_no_string,
                         record.encounter_id,
+                        record.payment_id,
                         category,
+                        record.patient_uhid,
                         record.patient_name,
                         record.payment,
                         record.payment_amount,
+                        record.card_type,
+                        record.card_number
                     ]);
                     total += parseFloat(record.payment_amount);
                     items_serial_no++;
@@ -198,18 +206,19 @@ app.controller('IpincomereportController', ['$rootScope', '$scope', '$timeout', 
                 items.push([
                     {
                         text: "Total",
-                        colSpan: 5,
+                        colSpan: 7,
                         alignment: 'right',
                         style: 'header'
-                    }, "", "", "", "", {
+                    }, "", "", "", "", "","", {
                         text: total.toString(),
-                        style: 'header'
-                    }
+                        style: 'header',
+                        colSpan: 3,
+                    }, "",""
                 ]);
                 content_info.push({
                     style: 'demoTable',
                     table: {
-                        widths: ['auto', '*', '*', 'auto', '*', 'auto'],
+                        widths: ['auto', '*', '*', 'auto', '*', 'auto','auto', 'auto', 'auto', 'auto'],
                         headerRows: 1,
                         body: items,
                     },

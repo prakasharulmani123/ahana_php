@@ -106,21 +106,29 @@
                                         <tr>
                                             <th>S.No</th>
                                             <th>Encounter ID</th>
+                                            <th>Voucher No</th>
                                             <th>Payment Category</th>
+                                            <th>Patient UHID</th>
                                             <th>Patient Name</th>
                                             <th>Payment Mode</th>
                                             <th>Paid Amount</th>
+                                            <th>Card Type</th>
+                                            <th>Card Number</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr ng-repeat="(key, payment) in sales" >
                                             <td>{{key + 1}}</td>
                                             <td>{{payment.encounter_id}}</td>
+                                            <td>{{payment.payment_id}}</td>
                                             <td>{{payment.category == 'A' ? 'Advance' : 'Discharge'}}</td>
+                                            <td>{{payment.patient_uhid}}</td>
                                             <td>{{payment.patient_name}}</td>
                                             <td>{{payment.payment}}</td> 
                                             <td data-type="Number" ng-init="purchase.total_amount = purchase.total_amount + parseFloat(payment.payment_amount);">
                                                 {{payment.payment_amount}}</td>
+                                            <td>{{payment.card_type}}</td>
+                                            <td>{{payment.card_number}}</td>
                                         </tr>
                                     </tbody>
                                     <tfoot>
@@ -129,8 +137,12 @@
                                             <th></th>
                                             <th></th>
                                             <th></th>
+                                            <th></th>
+                                            <th></th>
                                             <th class="text-right">Total Paid Amount</th>
                                             <th data-type="Number">{{purchase.total_amount| number:2}}</th>
+                                            <th></th>
+                                            <th></th>
                                         </tr>
                                     </tfoot>
                                 </table>
