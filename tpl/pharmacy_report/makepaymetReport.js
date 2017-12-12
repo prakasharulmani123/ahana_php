@@ -179,7 +179,7 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                 angular.forEach(patient_wise, function (detail, patient_name) {
                     var items = [];
                     items.push([
-                        {text: patient_name, style: 'header', colSpan: 5}, "", "", "", ""
+                        {text: [patient_name ,{text: detail[0].sale_details.patient_uhid}], style: 'header', colSpan: 10}, "", "", "", "", "", "", "","",""
                     ]);
 
                     items.push([
@@ -188,6 +188,11 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                         {text: 'Bill Date', style: 'header'},
                         {text: 'Paid Date', style: 'header'},
                         {text: 'Paid Amount', style: 'header'},
+                        {text: 'Taxable Amount', style: 'header'},
+                        {text: 'Tax Per', style: 'header'},
+                        {text: 'SGST', style: 'header'},
+                        {text: 'CGST', style: 'header'},
+                        {text: 'Round off', style: 'header'},
                     ]);
 
                     var serial_no = 1;
@@ -201,6 +206,11 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                             record.bill_date,
                             record.paid_date,
                             record.paid_amount,
+                            record.sale_details.total_item_amount,
+                            record.sale_details.total_item_vat_amount,
+                            record.sale_details.billing_total_cgst_amount,
+                            record.sale_details.billing_total_sgst_amount,
+                            record.sale_details.roundoff_amount
                         ]);
                         total += parseFloat(record.paid_amount);
                         if (serial_no == result_count) {
@@ -213,8 +223,8 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                             text: 'Total Pending Amount',
                             style: 'header',
                             alignment: 'right',
-                            colSpan: 4
-                        }, "", "", "",
+                            colSpan: 9
+                        }, "", "", "","","","","","",
                         {
                             text: total.toString(),
                             style: 'header',
@@ -224,7 +234,7 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                     content_info.push({
                         style: 'demoTable',
                         table: {
-                            widths: ['auto', '*', '*', '*', 'auto'],
+                            widths: ['auto', '*', '*', '*', '*', 'auto', 'auto','auto', 'auto', 'auto'],
                             headerRows: 1,
                             body: items,
                         },
