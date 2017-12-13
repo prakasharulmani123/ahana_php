@@ -67,7 +67,6 @@
                             </ul>
 
                             <div class="tab-content">
-
                                 <div ng-show="tab == 1">
                                     <div ng-include="'tpl/blocks/alert.html'">
                                         {% include 'tpl/blocks/alert.html' %}
@@ -77,8 +76,6 @@
                                         <button tooltip="Previous Prescription" tooltip-placement="left" ng-click="pres_status = 'prev'" class="btn btn-default btn-primary"><i class="fa fa-history"></i> </button>
                                         <button tooltip="Favourite" ng-click="pres_status = 'favourite'" class="btn btn-default btn-primary"><i class="fa fa-heart"></i> </button>
                                     </div>
-
-
                                     <div ng-show="pres_status == 'current'">
                                         <div class="row wrapper pb-sm">
 
@@ -87,9 +84,11 @@
                                                 <table  class="table table-striped b-t b-light">
                                                     <thead>
                                                         <tr>
-                                                            <th  align="left" class="pres-top-pro" valign="top" >Products <span ng-show="show_prescription_loader">&nbsp;&nbsp;
+                                                            <th  align="left" class="pres-top-pro" valign="top" >Products 
+                                                                <span ng-show="show_prescription_loader">&nbsp;&nbsp;
                                                                     <i class="fa fa-spin fa-refresh"></i>
-                                                                </span></th>
+                                                                </span>
+                                                            </th>
                                                             <th  align="left" class="pres-top-freq" valign="top" >Frequency</th>
                                                             <th align="left" class="pres-top-qty" valign="top">No.Of Days</th>
                                                             <th  align="left" class="pres-top-remarks" valign="top">Remarks</th>
@@ -1793,14 +1792,12 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
     <div ng-hide="true" id='printMedicaldocument'>
         <table id="medical_case_history" style="width:100%">
