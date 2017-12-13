@@ -266,7 +266,7 @@
                                                                                number-mask=""
                                                                                maxlength="4"
                                                                                typeahead-editable="true"
-                                                                               typeahead="consFreq.freq_name_0 for consFreq in currPresMask3 | filter:$viewValue | unique: 'freq_name_0'"
+                                                                               typeahead="consFreq.freq_name_0 for consFreq in currPresMask3 | filter:{freq_name_0:$viewValue} | unique: 'freq_name_0'"
                                                                                typeahead-focus="">
                                                                         <input autocomplete="off" 
                                                                                ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null"
@@ -278,7 +278,7 @@
                                                                                number-mask=""
                                                                                maxlength="4"
                                                                                typeahead-editable="true"
-                                                                               typeahead="consFreq.freq_name_1 for consFreq in currPresMask3 | filter:$viewValue | unique: 'freq_name_1'"
+                                                                               typeahead="consFreq.freq_name_1 for consFreq in currPresMask3 | filter:{freq_name_1:$viewValue} | unique: 'freq_name_1'"
                                                                                typeahead-focus="">
                                                                         <input autocomplete="off"
                                                                                ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null"
@@ -290,7 +290,7 @@
                                                                                number-mask=""
                                                                                maxlength="4"
                                                                                typeahead-editable="true"
-                                                                               typeahead="consFreq.freq_name_2 for consFreq in currPresMask3 | filter:$viewValue | unique: 'freq_name_2'"
+                                                                               typeahead="consFreq.freq_name_2 for consFreq in currPresMask3 | filter:{freq_name_2:$viewValue} | unique: 'freq_name_2'"
                                                                                typeahead-focus="">
                                                                     </div>
                                                                     <div id="frequency_4" ng-show="globalData.freq_type == '4'">
@@ -304,7 +304,7 @@
                                                                                number-mask=""
                                                                                maxlength="4"
                                                                                typeahead-editable="true"
-                                                                               typeahead="consFreq.freq_name_0 for consFreq in currPresMask4 | filter:$viewValue | unique: 'freq_name_0'"
+                                                                               typeahead="consFreq.freq_name_0 for consFreq in currPresMask4 | filter:{freq_name_0:$viewValue} | unique: 'freq_name_0'"
                                                                                typeahead-focus="">
                                                                         <input autocomplete="off" 
                                                                                ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null"
@@ -316,7 +316,7 @@
                                                                                number-mask=""
                                                                                maxlength="4"
                                                                                typeahead-editable="true"
-                                                                               typeahead="consFreq.freq_name_1 for consFreq in currPresMask4 | filter:$viewValue | unique: 'freq_name_1'"
+                                                                               typeahead="consFreq.freq_name_1 for consFreq in currPresMask4 | filter:{freq_name_1:$viewValue} | unique: 'freq_name_1'"
                                                                                typeahead-focus="">
                                                                         <input autocomplete="off"
                                                                                ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null"
@@ -328,7 +328,7 @@
                                                                                number-mask=""
                                                                                maxlength="4"
                                                                                typeahead-editable="true"
-                                                                               typeahead="consFreq.freq_name_2 for consFreq in currPresMask4 | filter:$viewValue | unique: 'freq_name_2'"
+                                                                               typeahead="consFreq.freq_name_2 for consFreq in currPresMask4 | filter:{freq_name_2:$viewValue} | unique: 'freq_name_2'"
                                                                                typeahead-focus="">
                                                                         <input autocomplete="off"
                                                                                ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null"
@@ -340,7 +340,7 @@
                                                                                number-mask=""
                                                                                maxlength="4"
                                                                                typeahead-editable="true"
-                                                                               typeahead="consFreq.freq_name_3 for consFreq in currPresMask4 | filter:$viewValue | unique: 'freq_name_3'"
+                                                                               typeahead="consFreq.freq_name_3 for consFreq in currPresMask4 | filter:{freq_name_3:$viewValue} | unique: 'freq_name_3'"
                                                                                typeahead-focus="">
                                                                     </div>
                                                                     <div id="frequency_txt" ng-show="globalData.freq_type == 'txt'">

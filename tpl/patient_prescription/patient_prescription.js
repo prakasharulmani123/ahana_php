@@ -2155,7 +2155,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.prescription_lists = {};
             $scope.lastSelected = {};
             $scope.prescription = e.prescription;
-            $('#globalDataFreq').find('input:first').focus();
+            //Avoid Form submission. 
+            $timeout(function(){
+                $('#globalDataFreq').find('input:first').focus();
+            }, 100);
             $scope.globalData.globalprescription = e;
             $scope.pickProduct = true;
         }
