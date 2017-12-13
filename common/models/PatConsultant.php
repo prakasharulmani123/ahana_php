@@ -191,6 +191,12 @@ class PatConsultant extends RActiveRecord {
             'created_by_name' => function ($model) {
                 return (isset($model->createdUser) ? $model->createdUser->name : '-');
             },
+            'patient_name' => function ($model) {
+                return (isset($model->patient) ? $model->patient->fullname : '-');
+            },
+            'patient_UHID' => function ($model) {
+                return isset($model->patient) ? $model->patient->patient_global_int_code : '-';
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;

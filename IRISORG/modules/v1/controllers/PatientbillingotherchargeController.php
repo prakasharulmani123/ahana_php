@@ -135,4 +135,27 @@ class PatientbillingotherchargeController extends ActiveController {
         }
     }
 
+    public function actionGetcharges() {
+        $post = Yii::$app->getRequest()->post();
+        if (!empty($post)) {
+            $tenant_ids = join("','", $post['tenant_id']);
+            $billingOthercharges = PatBillingOtherCharges::find()
+                    ->andWhere("tenant_id IN ( '$tenant_ids' )")
+                    ->andWhere("date(created_at) between '{$post['from']}' AND '{$post['to']}'")
+                    ->all();
+
+            $consultant = \common\models\PatConsultant::find()
+                    ->andWhere("tenant_id IN ( '$tenant_ids' )")
+                    ->andWhere("date(consult_date) between '{$post['from']}' AND '{$post['to']}'")
+                    ->all();
+
+            $procedure = \common\models\PatProcedure::find()
+                    ->andWhere("tenant_id IN ( '$tenant_ids' )")
+                    ->andWhere("date(proc_date) between '{$post['from']}' AND '{$post['to']}'")
+                    ->all();
+
+            return ['billingOthercharges' => $billingOthercharges, 'consultant' => $consultant, 'procedure' => $procedure];
+        }
+    }
+
 }

@@ -42,12 +42,12 @@ class PatBillingOtherCharges extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['charge_cat_id', 'charge_subcat_id', 'charge_cat_id', 'charge_amount'], 'required'],
-            [['tenant_id', 'encounter_id', 'patient_id', 'charge_cat_id', 'charge_subcat_id', 'created_by', 'modified_by'], 'integer'],
-            [['charge_amount'], 'number'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            //[['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'encounter_id', 'patient_id', 'charge_cat_id', 'charge_subcat_id', 'deleted_at'], 'message' => 'The combination has already been taken.']
+                [['charge_cat_id', 'charge_subcat_id', 'charge_cat_id', 'charge_amount'], 'required'],
+                [['tenant_id', 'encounter_id', 'patient_id', 'charge_cat_id', 'charge_subcat_id', 'created_by', 'modified_by'], 'integer'],
+                [['charge_amount'], 'number'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                //[['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'encounter_id', 'patient_id', 'charge_cat_id', 'charge_subcat_id', 'deleted_at'], 'message' => 'The combination has already been taken.']
         ];
     }
 
@@ -110,11 +110,33 @@ class PatBillingOtherCharges extends RActiveRecord {
     public static function find() {
         return new PatBillingOtherChargesQuery(get_called_class());
     }
-    
+
+    public function fields() {
+        $extend = [
+            'patient_name' => function ($model) {
+                return isset($model->patient) ? $model->patient->fullname : '-';
+            },
+            'patient_UHID' => function ($model) {
+                return isset($model->patient) ? $model->patient->patient_global_int_code : '-';
+            },
+            'charge_category' => function ($model) {
+                return isset($model->chargeCat) ? $model->chargeCat->charge_cat_name : '-';
+            },
+            'sub_category' => function ($model) {
+                return isset($model->chargeSubcat) ? $model->chargeSubcat->charge_subcat_name : '-';
+            },
+            'tenant_name' => function ($model) {
+                return isset($this->tenant) ? $this->tenant->tenant_name : '-';
+            },
+            ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+
     public function afterSave($insert, $changedAttributes) {
         if ($insert)
             $activity = 'Other Charges Added Successfully (#' . $this->encounter_id . ' )';
-        else 
+        else
             $activity = 'Other Charges Updated Successfully (#' . $this->encounter_id . ' )';
         CoAuditLog::insertAuditLog(PatBillingOtherCharges::tableName(), $this->other_charge_id, $activity);
     }

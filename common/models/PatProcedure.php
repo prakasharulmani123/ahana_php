@@ -255,6 +255,12 @@ class PatProcedure extends RActiveRecord {
             'branch_name' => function ($model) {
                 return (isset($model->tenant) ? $model->tenant->tenant_name : '-');
             },
+            'patient_name' => function ($model) {
+                return (isset($model->patient) ? $model->patient->fullname : '-');
+            },
+            'patient_UHID' => function ($model) {
+                return isset($model->patient) ? $model->patient->patient_global_int_code : '-';
+            },
         ];
 
         $parent_fields = parent::fields();
