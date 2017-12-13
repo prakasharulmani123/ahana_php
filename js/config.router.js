@@ -3050,6 +3050,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //Myworks IP Income Report
+            .state('myworks.nonrecurringChargeReport', {
+                url: '/Non-RecurringChargeReport',
+                templateUrl: 'tpl/myworks_report/nonrecurringChargeReport.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myworks_report/nonrecurringChargeReport.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
 
             //Myworks Patient Merge
             .state('myworks.patientMerge', {
