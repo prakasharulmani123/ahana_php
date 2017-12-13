@@ -334,6 +334,13 @@ class PharmacyproductController extends ActiveController {
             $this->_connection = Yii::$app->client;
             $limit = 10;
 
+            //Check generic name exists in the search word.
+            //Remove unwanted whitespace in the product name.
+            if (strpos($text, '//') !== false) {
+                $search_word = explode('//', $text);
+                $text = trim(preg_replace('/\s+/', ' ', $search_word[1]));
+            }
+
 //            $text_search = str_replace([' ', '(', ')'], ['* ', '', ''], $text);
             $text_search = "+" . str_replace([' ', '(', ')'], [' +', '', ''], $text) . "*";
             $like_text_search = $text . "%";
@@ -394,7 +401,7 @@ class PharmacyproductController extends ActiveController {
                         IF(b.generic_name IS NOT NULL, b.generic_name, ''),
                         IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
                         IF(a.product_unit_count IS NOT NULL, CONCAT(' ', a.product_unit_count), ''),
-                        IF(a.product_unit IS NOT NULL, CONCAT('', a.product_unit), '')
+                        IF(a.product_unit IS NOT NULL, CONCAT(' ', a.product_unit), '')
                     ) AS prescription, '' as selected, a.product_description_id,
                     (
                         SELECT IF(SUM(d.available_qty) IS NOT NULL, SUM(d.available_qty), 0)
@@ -407,7 +414,7 @@ class PharmacyproductController extends ActiveController {
                     ON b.generic_id = a.generic_id
                     LEFT OUTER JOIN pha_drug_class c
                     ON c.drug_class_id = a.drug_class_id
-                    WHERE (a.tenant_id = :tenant_id AND a.product_name LIKE :search_text)
+                    WHERE (a.tenant_id = :tenant_id AND CONCAT_WS(' ', TRIM(a.product_name), TRIM(a.product_unit_count), TRIM(a.product_unit)) LIKE :search_text)
                     OR (b.tenant_id = :tenant_id AND b.generic_name LIKE :search_text)
                     OR (c.tenant_id = :tenant_id AND c.drug_name LIKE :search_text)
                     ORDER BY a.product_name
