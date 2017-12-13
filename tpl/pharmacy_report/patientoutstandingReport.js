@@ -116,55 +116,31 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
 
             var patient_wise = $filter('groupBy')($scope.records, 'patient_name');
 
+            reports.push([
+                {text: 'S.No', style: 'header'},
+                {text: 'Patient Name', style: 'header'},
+                {text: 'Patient UHID', style: 'header'},
+                {text: 'Total Pending Amount', style: 'header'},
+            ]);
+
+            var serial_no = 1;
+            var result_count = $scope.records.length;
             angular.forEach(patient_wise, function (detail, patient_name) {
-                reports.push([
-                    {text: patient_name, style: 'header', colSpan: 7}, "", "", "", "", "", ""
-                ]);
-
-                reports.push([
-                    {text: 'S.No', style: 'header'},
-                    {text: 'Bill No', style: 'header'},
-                    {text: 'Patient Name', style: 'header'},
-                    {text: 'Payment Type', style: 'header'},
-                    {text: 'Total Amount', style: 'header'},
-                    {text: 'Paid Amount', style: 'header'},
-                    {text: 'Pending Amount', style: 'header'},
-                ]);
-
-                var serial_no = 1;
-                var result_count = $scope.records.length;
                 var total = 0;
+                var s_no_string = serial_no.toString();
                 angular.forEach(detail, function (record, key) {
-                    var s_no_string = serial_no.toString();
-                    reports.push([
-                        s_no_string,
-                        record.bill_no,
-                        record.patient_name,
-                        record.bill_payment,
-                        record.bill_amount,
-                        record.billings_total_paid_amount,
-                        record.billings_total_balance_amount
-                    ]);
-                    total += parseFloat(record.billings_total_balance_amount);
-                    if (serial_no == result_count) {
-                        $scope.printloader = '';
-                    }
-                    serial_no++;
+                    total += $scope.parseFloatIgnoreCommas(record.billings_total_balance_amount);
                 });
                 reports.push([
-                    {
-                        text: 'Total Pending Amount',
-                        style: 'header',
-                        alignment: 'right',
-                        colSpan: 6
-                    }, "", "", "", "", "",
-                    {
-                        text: total.toString(),
-                        style: 'header',
-                        alignment: 'right'
-                    }
+                    s_no_string,
+                    patient_name,
+                    detail[0].patient_uhid,
+                    total
                 ]);
-
+                serial_no++;
+                if (serial_no == result_count) {
+                    $scope.printloader = '';
+                }
             });
 
             var content = [];
@@ -202,7 +178,7 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
                         margin: [0, 0, 0, 20]
                     }
                 ]
-            },{
+            }, {
                 columns: [
                     {
                         text: [
@@ -210,12 +186,12 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
                             branch_name
                         ],
                         margin: [0, 0, 0, 20]
-                    },]
+                    }, ]
             }, {
                 style: 'demoTable',
                 table: {
                     headerRows: 1,
-                    widths: ['auto', 'auto', '*', 'auto', 'auto', 'auto', 'auto'],
+                    widths: ['auto', 'auto', '*', 'auto'],
                     body: reports,
                     dontBreakRows: true,
                 },
@@ -288,8 +264,13 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
                 return total.toFixed(2);
             }
         }
-        
+
         $scope.nameReplace = function (a) {
             return a.replace('&', '');
+        }
+
+        $scope.parseFloatIgnoreCommas = function (amount) {
+            var numberNoCommas = amount.replace(/,/g, '');
+            return parseFloat(numberNoCommas);
         }
     }]);

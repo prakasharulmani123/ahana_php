@@ -154,44 +154,55 @@
                             {{app.org_name}}
                         </div>
                         <div class="panel-body">
-                            
-                            <div ng-repeat="(patientName, details) in records | orderBy:'patient_name' | groupBy:'patient_name'">
-                                <table>
+
+                            <div>
+                                <table class="export-table print-table table table-bordered">
                                     <tr></tr>
                                     <tr></tr>
                                     <tr>
+                                        <th>S.No</th>
                                         <th>Patient Name</th>
+                                        <th>Patient UHID</th>
                                         <th>Total Pending Amount</th>
                                     </tr>
-                                    <tr>
+                                    <tr ng-repeat="(patientName, details) in records | orderBy:'patient_name' | groupBy:'patient_name'">
+                                        <td>{{$index+1}}</td>
                                         <td>{{nameReplace(patientName)}}</td>
-                                        <td>{{pendingTotal.total_amount | number:2}}</td>
+                                        <td>{{details[0].patient_uhid}}</td>
+                                        <td>{{pendingTotal.total_amount}}</td>
+                                        <td ng-init="pendingTotal = {}">
+                                            <div ng-repeat="(key, record) in details">
+                                                <span ng-init="pendingTotal.total_amount = pendingTotal.total_amount + parseFloatIgnoreCommas(record.billings_total_balance_amount);"></span>
+                                            </div>
+                                        </td>
                                     </tr>
+
                                 </table>
-                                <table class="export-table print-table table table-bordered" ng-init="pendingTotal = {}">
-                                    <thead>
-                                        <tr>
-                                            <th id="work-base-grid_c0">S.No</th>
-                                            <th id="work-base-grid_c1">Bill No</th>
-                                            <th id="work-base-grid_c2">Payment Type</th>
-                                            <th id="work-base-grid_c3">Total Amount</th>
-                                            <th id="work-base-grid_c4">Paid Amount</th>
-                                            <th id="work-base-grid_c5">Pending Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr ng-repeat="(key, record) in details">
-                                            <td>{{key + 1}}</td>
-                                            <td>{{record.bill_no}}</td>
-                                            <td>{{record.bill_payment}}</td>
-                                            <td>{{record.bill_amount}}</td>
-                                            <td>{{record.billings_total_paid_amount}}</td>
-                                            <td data-type="Number" ng-init="pendingTotal.total_amount = pendingTotal.total_amount + parseFloat(record.billings_total_balance_amount);">
-                                                {{record.billings_total_balance_amount}}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+
+                                <!--                                <table class="export-table print-table table table-bordered" ng-init="pendingTotal = {}">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th id="work-base-grid_c0">S.No</th>
+                                                                            <th id="work-base-grid_c1">Bill No</th>
+                                                                            <th id="work-base-grid_c2">Payment Type</th>
+                                                                            <th id="work-base-grid_c3">Total Amount</th>
+                                                                            <th id="work-base-grid_c4">Paid Amount</th>
+                                                                            <th id="work-base-grid_c5">Pending Amount</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr ng-repeat="(key, record) in details">
+                                                                            <td>{{key + 1}}</td>
+                                                                            <td>{{record.bill_no}}</td>
+                                                                            <td>{{record.bill_payment}}</td>
+                                                                            <td>{{record.bill_amount}}</td>
+                                                                            <td>{{record.billings_total_paid_amount}}</td>
+                                                                            <td data-type="Number" ng-init="pendingTotal.total_amount = pendingTotal.total_amount + parseFloat(record.billings_total_balance_amount);">
+                                                                                {{record.billings_total_balance_amount}}
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>-->
                             </div>
                         </div>
                     </div>
