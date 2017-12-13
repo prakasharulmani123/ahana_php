@@ -137,6 +137,7 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
             var result_count = Object.keys(branch_wise).length;
             var index = 1;
             angular.forEach(branch_wise, function (branch, branch_name) {
+                var items = [];
                 var content_info = [];
                 content_info.push({
                     columns: [
@@ -176,75 +177,46 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
 
                 var patient_wise = $filter('groupBy')(branch, 'patient_name');
 
+                items.push([
+                    {text: 'S.No', style: 'header'},
+                    {text: 'Patient UHID', style: 'header'},
+                    {text: 'Patient Name', style: 'header'},
+                    {text: 'Total Paid Amount', style: 'header'},
+                ]);
+                var serial_no = 1;
+                var result_count = $scope.records.length;
+
+
                 angular.forEach(patient_wise, function (detail, patient_name) {
-                    var items = [];
-                    items.push([
-                        {text: [patient_name ,{text: detail[0].sale_details.patient_uhid}], style: 'header', colSpan: 10}, "", "", "", "", "", "", "","",""
-                    ]);
-
-                    items.push([
-                        {text: 'S.No', style: 'header'},
-                        {text: 'Bill No', style: 'header'},
-                        {text: 'Bill Date', style: 'header'},
-                        {text: 'Paid Date', style: 'header'},
-                        {text: 'Paid Amount', style: 'header'},
-                        {text: 'Taxable Amount', style: 'header'},
-                        {text: 'Tax Per', style: 'header'},
-                        {text: 'SGST', style: 'header'},
-                        {text: 'CGST', style: 'header'},
-                        {text: 'Round off', style: 'header'},
-                    ]);
-
-                    var serial_no = 1;
-                    var result_count = $scope.records.length;
                     var total = 0;
                     angular.forEach(detail, function (record, key) {
-                        var s_no_string = serial_no.toString();
-                        items.push([
-                            s_no_string,
-                            record.bill_no,
-                            record.bill_date,
-                            record.paid_date,
-                            record.paid_amount,
-                            record.sale_details.total_item_amount,
-                            record.sale_details.total_item_vat_amount,
-                            record.sale_details.billing_total_cgst_amount,
-                            record.sale_details.billing_total_sgst_amount,
-                            record.sale_details.roundoff_amount
-                        ]);
-                        total += parseFloat(record.paid_amount);
-                        if (serial_no == result_count) {
-                            $scope.printloader = '';
-                        }
-                        serial_no++;
+                        total += $scope.parseFloatIgnoreCommas(record.paid_amount);
                     });
+                    var s_no_string = serial_no.toString();
                     items.push([
-                        {
-                            text: 'Total Pending Amount',
-                            style: 'header',
-                            alignment: 'right',
-                            colSpan: 9
-                        }, "", "", "","","","","","",
-                        {
-                            text: total.toString(),
-                            style: 'header',
-                            alignment: 'right'
-                        }
+                        s_no_string,
+                        detail[0].sale_details.patient_uhid,
+                        patient_name,
+                        total
                     ]);
-                    content_info.push({
-                        style: 'demoTable',
-                        table: {
-                            widths: ['auto', '*', '*', '*', '*', 'auto', 'auto','auto', 'auto', 'auto'],
-                            headerRows: 1,
-                            body: items,
-                        },
-                        layout: {
-                            hLineWidth: function (i, node) {
-                                return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
-                            }
-                        },
-                        //pageBreak: (index === result_count ? '' : 'after'),
-                    });
+                    serial_no++;
+                    if (serial_no == result_count) {
+                        $scope.printloader = '';
+                    }
+                });
+                content_info.push({
+                    style: 'demoTable',
+                    table: {
+                        widths: ['auto', '*', '*', '*'],
+                        headerRows: 1,
+                        body: items,
+                    },
+                    layout: {
+                        hLineWidth: function (i, node) {
+                            return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
+                        }
+                    },
+                    //pageBreak: (index === result_count ? '' : 'after'),
                 });
                 content.push(content_info);
 
@@ -282,5 +254,9 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                 var total = parseFloat(a.replace(',', '')) + parseFloat(b.replace(',', ''));
                 return total.toFixed(2);
             }
+        }
+        $scope.parseFloatIgnoreCommas = function (amount) {
+            var numberNoCommas = amount.replace(/,/g, '');
+            return parseFloat(numberNoCommas);
         }
     }]);
