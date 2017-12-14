@@ -365,9 +365,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             });
             //$scope.data.next_visit = moment().format('YYYY-MM-DD');
             //$scope.getDays();
-            $scope.globalData.frequency_3_0 = '';
-            $scope.globalData.frequency_3_1 = '';
-            $scope.globalData.frequency_3_2 = '';
+            $scope.globalData.frequency_3_0 = '0';
+            $scope.globalData.frequency_3_1 = '0';
+            $scope.globalData.frequency_3_2 = '0';
             $("#current_prescription").focus();
             $rootScope.commonService.GetDay(function (response) {
                 $scope.days = response;
@@ -1389,10 +1389,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 .error(function () {
                                     $scope.errorData = "An Error has occured while loading list!";
                                 });
-                                $timeout(function () {
-                                    $scope.spinnerbar('hide');
-                                }, 3000);
-                                
+                        $timeout(function () {
+                            $scope.spinnerbar('hide');
+                        }, 3000);
+
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading brand!";
@@ -2005,14 +2005,20 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 }
             }
             if ($scope.globalData.freq_type == '3') {
-                if ((!$scope.globalData.frequency_3_0) && (!$scope.globalData.frequency_3_1) && (!$scope.globalData.frequency_3_2)) {
+                if ((!$scope.globalData.frequency_3_0) || (!$scope.globalData.frequency_3_1) || (!$scope.globalData.frequency_3_2)) {
                     $scope.errorData = 'Frequency cannot be empty';
+                    return false;
+                } else if ($scope.globalData.frequency_3_0 == 0 && $scope.globalData.frequency_3_1 == 0 && $scope.globalData.frequency_3_2 == 0) {
+                    $scope.errorData = 'All values of frequency cannot be 0';
                     return false;
                 }
             }
             if ($scope.globalData.freq_type == '4') {
                 if ((!$scope.globalData.frequency_4_0) && (!$scope.globalData.frequency_4_1) && (!$scope.globalData.frequency_4_2) && (!$scope.globalData.frequency_4_3)) {
                     $scope.errorData = 'Frequency cannot be empty';
+                    return false;
+                } else if ($scope.globalData.frequency_4_0 == 0 && $scope.globalData.frequency_4_1 == 0 && $scope.globalData.frequency_4_2 == 0 && $scope.globalData.frequency_4_3 == 0){
+                    $scope.errorData = 'All values of frequency cannot be 0';
                     return false;
                 }
             }
@@ -2156,7 +2162,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.lastSelected = {};
             $scope.prescription = e.prescription;
             //Avoid Form submission. 
-            $timeout(function(){
+            $timeout(function () {
                 $('#globalDataFreq').find('input:first').focus();
             }, 100);
             $scope.globalData.globalprescription = e;
