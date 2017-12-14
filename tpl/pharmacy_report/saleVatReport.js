@@ -106,18 +106,19 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 9}, "", "", "", "", "","","",""
+                {text: branch_name, style: 'header', colSpan: 10}, "", "", "", "", "","","","",""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
                 {text: 'Bill No', style: 'header'},
                 {text: 'Bill Date', style: 'header'},
+                {text: 'Patient UHID', style: 'header'},
                 {text: 'Patient Name', style: 'header'},
-                {text: 'Gross Value', style: 'header'},
-                {text: 'TaxPer', style: 'header'},
-                {text: 'CGST', style: 'header'},
+                {text: 'Taxable Amount', style: 'header'},
+                {text: 'Tax Per', style: 'header'},
                 {text: 'SGST', style: 'header'},
-                {text: 'RndOff', style: 'header'},
+                {text: 'CGST', style: 'header'},
+                {text: 'Round Off', style: 'header'},
             ]);
 
             var serial_no = 1;
@@ -134,11 +135,12 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                     s_no_string,
                     record.bill_no,
                     record.sale_date,
+                    record.patient_uhid,
                     record.patient_name,
                     record.total_item_amount,
                     record.total_item_vat_amount,
-                    record.billing_total_cgst_amount,
                     record.billing_total_sgst_amount,
+                    record.billing_total_cgst_amount,
                     record.roundoff_amount,
                 ]);
 
@@ -153,42 +155,43 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                 }
                 serial_no++;
             });
-            reports.push([
-                {
-                    text: 'Totals',
-                    style: 'header',
-                    alignment: 'right',
-                    colSpan: 4
-                },
-                "",
-                "",
-                "",
-                {
-                    text: sale_amount.toFixed(2).toString(),
-                    style: 'header',
-                    alignment: 'right'
-                },
-                {
-                    text: vat_amount.toFixed(2).toString(),
-                    style: 'header',
-                    alignment: 'right'
-                },
-                {
-                    text: cgst_amount.toFixed(2).toString(),
-                    style: 'header',
-                    alignment: 'right'
-                },
-                {
-                    text: sgst_amount.toFixed(2).toString(),
-                    style: 'header',
-                    alignment: 'right'
-                },
-                {
-                    text: roundoff_amount.toFixed(2).toString(),
-                    style: 'header',
-                    alignment: 'right'
-                },
-            ]);
+//            reports.push([
+//                {
+//                    text: 'Totals',
+//                    style: 'header',
+//                    alignment: 'right',
+//                    colSpan: 5
+//                },
+//                "",
+//                "",
+//                "",
+//                "",
+//                {
+//                    text: sale_amount.toFixed(2).toString(),
+//                    style: 'header',
+//                    alignment: 'right'
+//                },
+//                {
+//                    text: vat_amount.toFixed(2).toString(),
+//                    style: 'header',
+//                    alignment: 'right'
+//                },
+//                {
+//                    text: cgst_amount.toFixed(2).toString(),
+//                    style: 'header',
+//                    alignment: 'right'
+//                },
+//                {
+//                    text: sgst_amount.toFixed(2).toString(),
+//                    style: 'header',
+//                    alignment: 'right'
+//                },
+//                {
+//                    text: roundoff_amount.toFixed(2).toString(),
+//                    style: 'header',
+//                    alignment: 'right'
+//                },
+//            ]);
 
             var content = [];
             content.push({
@@ -229,15 +232,16 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                 style: 'demoTable',
                 table: {
                     headerRows: 2,
-                    widths: ['auto', 'auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                    widths: ['auto', 'auto', '*', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                    //widths: [20, 'auto', 'auto', 'auto', '*', 'auto', 25, 25, 25, 25],
                     body: reports,
-                    dontBreakRows: true,
+                    //dontBreakRows: true,
                 },
-                layout: {
-                    hLineWidth: function (i, node) {
-                        return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
-                    }
-                }
+//                layout: {
+//                    hLineWidth: function (i, node) {
+//                        return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
+//                    }
+//                }
             });
 
             return content;

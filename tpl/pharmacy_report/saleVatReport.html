@@ -105,12 +105,13 @@
                                         <th id="work-base-grid_c0">S.No</th>
                                         <th id="work-base-grid_c1">Bill No</th>
                                         <th id="work-base-grid_c2">Bill Date</th>
-                                        <th id="work-base-grid_c3">Patient Name</th>
-                                        <th id="work-base-grid_c4">Gross Value</th>
-                                        <th id="work-base-grid_c5">TaxPer</th>
-                                        <th id="work-base-grid_c6">CGST</th>
+                                        <th id="work-base-grid_c3">Patient UHID</th>
+                                        <th id="work-base-grid_c4">Patient Name</th>
+                                        <th id="work-base-grid_c5">Taxable Amount</th>
+                                        <th id="work-base-grid_c6">Tax Per</th>
                                         <th id="work-base-grid_c7">SGST</th>
-                                        <th id="work-base-grid_c8">RndOff</th>
+                                        <th id="work-base-grid_c8">CGST</th>
+                                        <th id="work-base-grid_c9">Round Off</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -118,6 +119,7 @@
                                         <td>{{key + 1}}</td>
                                         <td>{{record.bill_no}}</td>
                                         <td>{{record.sale_date | date:'dd-MM-yyyy'}}</td>
+                                        <td>{{record.patient_uhid}}</td>
                                         <td>{{record.patient_name}}</td>
                                         <td data-type="Number" ng-init="sale.sale_amount = sale.sale_amount + parseFloat(record.total_item_amount);">
                                             {{record.total_item_amount}}
@@ -126,10 +128,10 @@
                                             {{record.total_item_vat_amount}}
                                         </td>
                                         <td data-type="Number" ng-init="sale.cgst_amount = sale.cgst_amount + parseFloat(record.billing_total_cgst_amount);">
-                                            {{record.billing_total_cgst_amount}}
+                                            {{record.billing_total_sgst_amount}}
                                         </td>
                                         <td data-type="Number" ng-init="sale.sgst_amount = sale.sgst_amount + parseFloat(record.billing_total_sgst_amount);">
-                                            {{record.billing_total_sgst_amount}}
+                                            {{record.billing_total_cgst_amount}}
                                         </td>
                                         <td data-type="Number" ng-init="sale.roundoff_amount = sale.roundoff_amount + parseFloat(record.roundoff_amount);">
                                             {{record.roundoff_amount}}
