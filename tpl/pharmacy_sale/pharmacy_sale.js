@@ -211,7 +211,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 pageURL += '&s=' + $scope.form_filter;
             }
             if (typeof $scope.day != 'undefined' && $scope.day != '' && typeof $scope.month != 'undefined' && $scope.month != '' && typeof $scope.year != 'undefined' && $scope.year != '') {
-                pageURL += '&dt=' +$scope.year+'-'+$scope.month+'-'+$scope.day;
+                pageURL += '&dt=' + $scope.year + '-' + $scope.month + '-' + $scope.day;
             }
             // Get data's from service
             //$http.get($rootScope.IRISOrgServiceUrl + '/pharmacysale/getsales?payment_type=' + payment_type + '&addtfields=sale_list')
@@ -850,8 +850,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             var total_amount = (item_amount - disc_amount).toFixed(2);
 //            var vat_amount = (item_amount * (vat_perc / 100)).toFixed(2); // Exculding vat
             var vat_amount = ((total_amount * vat_perc) / (100 + vat_perc)).toFixed(2);
-            var cgst_amount = ((total_amount * cgst_perc) / (100 + cgst_perc)).toFixed(2); // Including vat
-            var sgst_amount = ((total_amount * sgst_perc) / (100 + sgst_perc)).toFixed(2); // Including vat
+
+            var taxable_value = ((mrp / (100 + sgst_perc + cgst_perc)) * 100).toFixed(2);
+
+            //var cgst_amount = ((total_amount * cgst_perc) / (100 + cgst_perc)).toFixed(2); // Including vat
+            //var sgst_amount = ((total_amount * sgst_perc) / (100 + sgst_perc)).toFixed(2); // Including vat
+            var cgst_amount = (((taxable_value * cgst_perc) / 100) * qty).toFixed(2); // Including vat
+            var sgst_amount = (((taxable_value * sgst_perc) / 100) * qty).toFixed(2); // Including vat
 
             $scope.saleItems[key].item_amount = item_amount;
             $scope.saleItems[key].discount_percentage = disc_perc;
@@ -861,7 +866,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
             $scope.saleItems[key].cgst_amount = cgst_amount;
             $scope.saleItems[key].sgst_amount = sgst_amount;
-            $scope.saleItems[key].taxable_value = parseFloat(cgst_amount) + parseFloat(sgst_amount);
+            $scope.saleItems[key].taxable_value = taxable_value;
 
             if (tableform) {
                 angular.forEach(tableform.$editables, function (editableValue, editableKey) {
