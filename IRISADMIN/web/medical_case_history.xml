@@ -496,8 +496,8 @@
                     <PROPERTY name="name">habit[]</PROPERTY>
                 </PROPERTIES>
                 <LISTITEMS>
-                    <LISTITEM value="Smoking" id="RBhabit1" Selected="false">Smoking</LISTITEM>
-                    <LISTITEM value="Alcohol" id="RBhabit2" Selected="false">Alcohol</LISTITEM>
+                    <LISTITEM value="Exercise" id="RBhabit1" Selected="false">Exercise</LISTITEM>
+                    <LISTITEM value="Diet" id="RBhabit2" Selected="false">Diet</LISTITEM>
                     <LISTITEM value="Others" id="RBhabit3" Selected="false" onclick="OThersvisible(this.id, 'habitother_div');">Others</LISTITEM>
                 </LISTITEMS>
                 <FIELD id="habitother" type="TextBox" label="Habit Notes: ">
@@ -515,8 +515,8 @@
                     <PROPERTY name="name">drug_dependence[]</PROPERTY>
                 </PROPERTIES>
                 <LISTITEMS>
-                    <LISTITEM value="Exercise" id="RBdrugdependence1" Selected="false">Exercise</LISTITEM>
-                    <LISTITEM value="Diet" id="RBdrugdependence2" Selected="false">Diet</LISTITEM>
+                    <LISTITEM value="Smoking" id="RBdrugdependence1" Selected="false">Smoking</LISTITEM>
+                    <LISTITEM value="Alcohol" id="RBdrugdependence2" Selected="false">Alcohol</LISTITEM>
                     <LISTITEM value="Others" id="RBdrugdependence3" Selected="false" onclick="OThersvisible(this.id, 'drug_dependence_other_div');">Others</LISTITEM>
                 </LISTITEMS>
                 <FIELD id="drug_dependence_other" type="TextBox" label="Drug Dependence Notes: ">

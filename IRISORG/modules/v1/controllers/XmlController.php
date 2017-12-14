@@ -102,7 +102,7 @@ class XmlController extends Controller {
     }
     
     public function actionCheckfile() {
-        $all_files = $this->getAllFiles();
+        $all_files = $this->getAllMCHFiles();
         print_r($all_files); die;
     }
 
