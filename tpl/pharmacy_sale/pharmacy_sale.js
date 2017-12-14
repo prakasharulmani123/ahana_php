@@ -1979,7 +1979,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                                 style: 'h2'
                                             },
                                             {
-                                                text: sale_info.total_item_vat_amount,
+                                                text: (parseFloat(cgst_total) + parseFloat(sgst_total)).toFixed(2),
                                                 alignment: 'right'
                                             },
                                         ],
