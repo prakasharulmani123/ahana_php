@@ -2057,7 +2057,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 var no_of_days = $scope.globalData.no_of_days;
                                 var g_no_of_days = $scope.trimSpace($scope.globalData.no_of_days);
                                 var f_no_of_days = $scope.trimSpace($scope.data.number_of_days);
-                                
+
                                 if (!$scope.globalData.no_of_days || g_no_of_days.length < 1) {
                                     if (!$scope.data.number_of_days || f_no_of_days.length < 1) {
                                         var no_of_days = 0;
@@ -2167,6 +2167,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.resetGlobalForm = function () {
             $scope.globalData = {};
             $scope.globalData.freq_type = 3;
+            $scope.globalData.frequency_3_0 = '0';
+            $scope.globalData.frequency_3_1 = '0';
+            $scope.globalData.frequency_3_2 = '0';
             $scope.prescription = '';
             $scope.errorData = '';
         }
