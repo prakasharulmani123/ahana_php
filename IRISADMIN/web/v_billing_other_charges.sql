@@ -16,9 +16,9 @@ SELECT
   `a`.`created_at`         AS `date`
 FROM ((`pat_billing_other_charges` `a`
     JOIN `co_room_charge_category` `b`
-      ON ((`b`.`charge_cat_id` = `a`.`charge_cat_id`)))
+      ON (`b`.`charge_cat_id` = `a`.`charge_cat_id`))
    JOIN `co_room_charge_subcategory` `c`
-     ON ((`c`.`charge_subcat_id` = `a`.`charge_subcat_id`)))
-WHERE ((`a`.`status` = '1')
-       AND (`a`.`deleted_at` = '0000-00-00 00:00:00'))
+     ON (`c`.`charge_subcat_id` = `a`.`charge_subcat_id`))
+WHERE `a`.`status` = '1'
+    AND `a`.`deleted_at` = '0000-00-00 00:00:00'
 GROUP BY `a`.`encounter_id`,`a`.`charge_subcat_id`)
