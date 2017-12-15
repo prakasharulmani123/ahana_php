@@ -2031,6 +2031,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.prescription = '';
                 $scope.globalData = {};
                 $scope.globalData.freq_type = 3;
+                $scope.globalData.frequency_3_0 = '0';
+                $scope.globalData.frequency_3_1 = '0';
+                $scope.globalData.frequency_3_2 = '0';
                 $("#prescription_global_search").focus();
             } else {
                 var fav = $filter('filter')($scope.child.favourites, {product_id: globalPrescription.product_id});
@@ -2123,6 +2126,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                     $scope.prescription = '';
                                     $scope.globalData = {};
                                     $scope.globalData.freq_type = 3;
+                                    $scope.globalData.frequency_3_0 = '0';
+                                    $scope.globalData.frequency_3_1 = '0';
+                                    $scope.globalData.frequency_3_2 = '0';
                                     $("#prescription_global_search").focus();
                                 } else {
                                     alert('Quantity is not available');
@@ -2163,7 +2169,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.prescription = e.prescription;
             //Avoid Form submission. 
             $timeout(function () {
-                $('#globalDataFreq').find('input:first').focus();
+                $('#globalDataFreq').find('input:first').focus().select();
             }, 100);
             $scope.globalData.globalprescription = e;
             $scope.pickProduct = true;
