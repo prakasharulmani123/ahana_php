@@ -106,7 +106,7 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 10}, "", "", "", "", "","","","",""
+                {text: branch_name, style: 'header', colSpan: 9}, "", "", "", "","","","",""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
@@ -115,7 +115,7 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                 {text: 'Patient UHID', style: 'header'},
                 {text: 'Patient Name', style: 'header'},
                 {text: 'Taxable Amount', style: 'header'},
-                {text: 'Tax Per', style: 'header'},
+//                {text: 'Tax Per', style: 'header'},
                 {text: 'SGST', style: 'header'},
                 {text: 'CGST', style: 'header'},
                 {text: 'Round Off', style: 'header'},
@@ -137,15 +137,15 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                     record.sale_date,
                     record.patient_uhid,
                     record.patient_name,
-                    record.total_item_amount,
-                    record.total_item_vat_amount,
+                    record.billing_total_taxable_amount,
+                    //record.total_item_vat_amount,
                     record.billing_total_sgst_amount,
                     record.billing_total_cgst_amount,
                     record.roundoff_amount,
                 ]);
 
                 sale_amount += parseFloat(record.total_item_amount);
-                vat_amount += parseFloat(record.total_item_vat_amount);
+                //vat_amount += parseFloat(record.total_item_vat_amount);
                 cgst_amount += parseFloat(record.billing_total_cgst_amount);
                 sgst_amount += parseFloat(record.billing_total_sgst_amount);
                 roundoff_amount +=parseFloat(record.roundoff_amount);
@@ -232,7 +232,7 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                 style: 'demoTable',
                 table: {
                     headerRows: 2,
-                    widths: ['auto', 'auto', '*', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                    widths: ['auto', 'auto', '*', '*', 'auto', 'auto', 'auto', 'auto', 'auto'],
                     //widths: [20, 'auto', 'auto', 'auto', '*', 'auto', 25, 25, 25, 25],
                     body: reports,
                     //dontBreakRows: true,

@@ -108,7 +108,7 @@
                                         <th id="work-base-grid_c3">Patient UHID</th>
                                         <th id="work-base-grid_c4">Patient Name</th>
                                         <th id="work-base-grid_c5">Taxable Amount</th>
-                                        <th id="work-base-grid_c6">Tax Per</th>
+<!--                                        <th id="work-base-grid_c6">Tax Per</th>-->
                                         <th id="work-base-grid_c7">SGST</th>
                                         <th id="work-base-grid_c8">CGST</th>
                                         <th id="work-base-grid_c9">Round Off</th>
@@ -121,12 +121,12 @@
                                         <td>{{record.sale_date | date:'dd-MM-yyyy'}}</td>
                                         <td>{{record.patient_uhid}}</td>
                                         <td>{{record.patient_name}}</td>
-                                        <td data-type="Number" ng-init="sale.sale_amount = sale.sale_amount + parseFloat(record.total_item_amount);">
-                                            {{record.total_item_amount}}
+                                        <td data-type="Number" ng-init="sale.sale_amount = sale.sale_amount + parseFloat(record.billing_total_taxable_amount);">
+                                            {{record.billing_total_taxable_amount}}
                                         </td>
-                                        <td data-type="Number" ng-init="sale.vat_amount = sale.vat_amount + parseFloat(record.total_item_vat_amount);">
+<!--                                        <td data-type="Number" ng-init="sale.vat_amount = sale.vat_amount + parseFloat(record.total_item_vat_amount);">
                                             {{record.total_item_vat_amount}}
-                                        </td>
+                                        </td>-->
                                         <td data-type="Number" ng-init="sale.cgst_amount = sale.cgst_amount + parseFloat(record.billing_total_cgst_amount);">
                                             {{record.billing_total_sgst_amount}}
                                         </td>
@@ -143,9 +143,10 @@
                                         <th></th>
                                         <th></th>
                                         <th></th>
+                                        <th></th>
                                         <th class="text-right">Totals</th>
                                         <th data-type="Number">{{sale.sale_amount| number:2}}</th>
-                                        <th data-type="Number">{{sale.vat_amount| number:2}}</th>
+<!--                                        <th data-type="Number">{{sale.vat_amount| number:2}}</th>-->
                                         <th data-type="Number">{{sale.cgst_amount| number:2}}</th>
                                         <th data-type="Number">{{sale.sgst_amount| number:2}}</th>
                                         <th data-type="Number">{{sale.roundoff_amount| number:2}}</th>
