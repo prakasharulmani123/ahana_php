@@ -1134,8 +1134,8 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata  =    {};
-                                        loadVitals();       vitaldata.formtype  =  'add'">
+                                    <div class="row" ng-init="vitaldata = {};
+                                        loadVitals(); vitaldata.formtype = 'add'">
                                         <div class="col-lg-12"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
@@ -1616,7 +1616,8 @@
                                                                 </td>
                                                                 <td valign="middle"> {{result.created_at| moment:'DD/MM/YYYY'}} </td>
                                                                 <td>
-                                                                    <div tooltip-placement="left" data-tooltip-html-unsafe="{{result.concatenate_results ? result.full_results : ''}}"> <span ng-bind-html="result.short_results"></span> </div>
+                                                                    <!--                                                                    <div tooltip-placement="left" data-tooltip-html-unsafe="{{result.concatenate_results ? result.full_results : ''}}"> <span ng-bind-html="result.short_results"></span> </div>-->
+                                                                    <span ng-bind-html="result.full_results"></span>
                                                                 </td>
                                                                 <td valign="middle">
                                                                     <a ng-show="result.tenant_id == app.logged_tenant_id" class="label bg-dark" title="Edit" ng-click="updateResultFormRow(result.pat_result_id)">
@@ -1757,7 +1758,8 @@
                                                                 </td>
                                                                 <td> {{patConsultant.consultant_name}} </td>
                                                                 <td valign="middle">
-                                                                    <div tooltip-placement="left" data-tooltip-html-unsafe="{{patConsultant.concatenate_notes ? patConsultant.full_notes : ''}}"> <span ng-bind-html="patConsultant.short_notes"></span> </div>
+<!--                                                                    <div tooltip-placement="left" data-tooltip-html-unsafe="{{patConsultant.concatenate_notes ? patConsultant.full_notes : ''}}"> <span ng-bind-html="patConsultant.short_notes"></span> </div>-->
+                                                                    <span ng-bind-html="patConsultant.full_notes"></span>
                                                                 </td>
                                                                 <td>{{patConsultant.created_by_name}}</td>
                                                                 <td>
