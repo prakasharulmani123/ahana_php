@@ -75,7 +75,7 @@
                             </div>
                             <div class="col-sm-4 text-right" ng-if=$first> 
                                 <p>
-                                    <button ng-click="printReport();" class="btn btn-sm btn-icon btn-info"><i class="fa fa-print"></i></button>
+<!--                                    <button ng-click="printReport();" class="btn btn-sm btn-icon btn-info"><i class="fa fa-print"></i></button>-->
                                     <button ng-click="tablesToExcel({{tableid}}, {{sheet_name}}, 'ipIncomeReport.xls', 'Excel');" class="btn btn-sm btn-icon btn-danger"><i class="fa fa-file-excel-o"></i></button>
                                 </p>
                             </div>
@@ -100,8 +100,17 @@
                             <tr>
                             </tr>
                         </table>
-                        <div class="panel-body">
-                            <table class="table table-bordered" ng-init='purchase={}'>
+                        
+                        <div ng-repeat="(payment, details) in sales | groupBy: 'payment'">
+                            <div class="panel-heading">
+                                {{payment}}
+                                <table style="display: none">
+                                    <tr></tr>
+                                    <tr><th>{{payment}}</th></tr>
+                                </table>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-bordered" ng-init='purchase = {}'>
                                     <thead>
                                         <tr>
                                             <th>S.No</th>
@@ -110,25 +119,29 @@
                                             <th>Payment Category</th>
                                             <th>Patient UHID</th>
                                             <th>Patient Name</th>
-                                            <th>Payment Mode</th>
                                             <th>Paid Amount</th>
-                                            <th>Card Type</th>
-                                            <th>Card Number</th>
+                                            <th ng-if="payment == 'Card'">Card Type</th>
+                                            <th ng-if="payment == 'Card'">Card Number</th>
+                                            <th ng-if="payment == 'Cheque'">Bank Name</th>
+                                            <th ng-if="payment == 'Cheque'">Account Number</th>
+                                            <th ng-if="payment == 'Cheque'">Date</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="(key, payment) in sales" >
+                                        <tr ng-repeat="(key, report) in details" >
                                             <td>{{key + 1}}</td>
-                                            <td>{{payment.encounter_id}}</td>
-                                            <td>{{payment.payment_id}}</td>
-                                            <td>{{payment.category == 'A' ? 'Advance' : 'Discharge'}}</td>
-                                            <td>{{payment.patient_uhid}}</td>
-                                            <td>{{payment.patient_name}}</td>
-                                            <td>{{payment.payment}}</td> 
-                                            <td data-type="Number" ng-init="purchase.total_amount = purchase.total_amount + parseFloat(payment.payment_amount);">
-                                                {{payment.payment_amount}}</td>
-                                            <td>{{payment.card_type}}</td>
-                                            <td>{{payment.card_number}}</td>
+                                            <td>{{report.encounter_id}}</td>
+                                            <td>{{report.payment_id}}</td>
+                                            <td>{{report.category == 'A' ? 'Advance' : 'Discharge'}}</td>
+                                            <td>{{report.patient_uhid}}</td>
+                                            <td>{{report.patient_name}}</td>
+                                            <td data-type="Number" ng-init="purchase.total_amount = purchase.total_amount + parseFloat(report.payment_amount);">
+                                                {{report.payment_amount}}</td>
+                                            <td ng-if="payment == 'Card'">{{report.card_type}}</td>
+                                            <td ng-if="payment == 'Card'">{{report.card_number}}</td>
+                                            <td ng-if="payment == 'Cheque'">{{report.bank_name}}</td>
+                                            <td ng-if="payment == 'Cheque'">{{report.bank_number}}</td>
+                                            <td ng-if="payment == 'Cheque'">{{report.bank_date}}</td>
                                         </tr>
                                     </tbody>
                                     <tfoot>
@@ -138,14 +151,15 @@
                                             <th></th>
                                             <th></th>
                                             <th></th>
-                                            <th></th>
                                             <th class="text-right">Total Paid Amount</th>
                                             <th data-type="Number">{{purchase.total_amount| number:2}}</th>
-                                            <th></th>
-                                            <th></th>
+                                            <th ng-if="((payment == 'Cheque') || (payment == 'Card'))"></th>
+                                            <th ng-if="((payment == 'Cheque') || (payment == 'Card'))"></th>
+                                            <th ng-if="payment == 'Cheque'"></th>
                                         </tr>
                                     </tfoot>
                                 </table>
+                            </div>
                         </div>
                     </div>  
                 </div>
