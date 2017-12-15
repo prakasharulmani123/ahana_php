@@ -1991,6 +1991,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $log.info('Modal dismissed at: ' + new Date());
             });
         };
+
+        $scope.trimSpace = function (string) {
+            if (!angular.isString(string)) {
+                return string;
+            }
+            return string.replace(/[\s]/g, '');
+        }
         //New prescription top add Form
         $scope.addGlobalForm = function () {
             globalPrescription = $scope.globalData.globalprescription;
@@ -2017,7 +2024,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 if ((!$scope.globalData.frequency_4_0) && (!$scope.globalData.frequency_4_1) && (!$scope.globalData.frequency_4_2) && (!$scope.globalData.frequency_4_3)) {
                     $scope.errorData = 'Frequency cannot be empty';
                     return false;
-                } else if ($scope.globalData.frequency_4_0 == 0 && $scope.globalData.frequency_4_1 == 0 && $scope.globalData.frequency_4_2 == 0 && $scope.globalData.frequency_4_3 == 0){
+                } else if ($scope.globalData.frequency_4_0 == 0 && $scope.globalData.frequency_4_1 == 0 && $scope.globalData.frequency_4_2 == 0 && $scope.globalData.frequency_4_3 == 0) {
                     $scope.errorData = 'All values of frequency cannot be 0';
                     return false;
                 }
@@ -2048,8 +2055,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         .success(function (product) {
                             $scope.getRelatedProducts(globalPrescription.generic_id).then(function () {
                                 var no_of_days = $scope.globalData.no_of_days;
-                                if (!$scope.globalData.no_of_days) {
-                                    if (!$scope.data.number_of_days) {
+                                var g_no_of_days = $scope.trimSpace($scope.globalData.no_of_days);
+                                var f_no_of_days = $scope.trimSpace($scope.data.number_of_days);
+                                
+                                if (!$scope.globalData.no_of_days || g_no_of_days.length < 1) {
+                                    if (!$scope.data.number_of_days || f_no_of_days.length < 1) {
                                         var no_of_days = 0;
                                         $scope.globalData.no_of_days = 1;
                                     } else {
