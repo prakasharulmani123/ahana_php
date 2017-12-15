@@ -200,6 +200,10 @@ class PhaSale extends RActiveRecord {
     public function getPhaSaleTotalSgstAmount() {
         return $this->hasMany(PhaSaleItem::className(), ['sale_id' => 'sale_id'])->andWhere("pha_sale_item.deleted_at = '0000-00-00 00:00:00'")->sum('sgst_amount');
     }
+    
+    public function getPhaSaleTotalTaxableAmount() {
+        return $this->hasMany(PhaSaleItem::className(), ['sale_id' => 'sale_id'])->andWhere("pha_sale_item.deleted_at = '0000-00-00 00:00:00'")->sum('taxable_value');
+    }
 
     /**
      * @return ActiveQuery
@@ -248,6 +252,9 @@ class PhaSale extends RActiveRecord {
             },
             'billing_total_sgst_amount' => function ($model) {
                 return (isset($model->phaSaleTotalSgstAmount) ? $model->phaSaleTotalSgstAmount : '0');
+            },
+            'billing_total_taxable_amount' => function ($model) {
+                return (isset($model->phaSaleTotalTaxableAmount) ? $model->phaSaleTotalTaxableAmount : '0');
             },
             'billings_total_balance_amount' => function ($model) {
                 $paid_amount = 0;
@@ -308,7 +315,7 @@ class PhaSale extends RActiveRecord {
                     ];
                     break;
                 case 'salevatreport':
-                    $addt_keys = ['patient_name', 'billing_total_cgst_amount', 'billing_total_sgst_amount', 'patient_uhid'];
+                    $addt_keys = ['patient_name', 'billing_total_cgst_amount', 'billing_total_sgst_amount', 'patient_uhid', 'billing_total_taxable_amount'];
                     $parent_fields = [
                         'sale_date' => 'sale_date',
                         'bill_no' => 'bill_no',
