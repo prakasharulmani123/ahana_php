@@ -92,7 +92,7 @@ class PharmacyproductController extends ActiveController {
     public function actionGetproductlistbyname() {
         $get = Yii::$app->getRequest()->get();
         $name = $get['name'];
-        return ['productList' => PhaProduct::find()->tenant()->nameLike($name)->active()->all()];
+        return ['productList' => PhaProduct::find()->tenant()->status()->nameLike($name)->active()->all()];
     }
 
     public function actionGetdrugclasslistbyname() {
@@ -106,7 +106,7 @@ class PharmacyproductController extends ActiveController {
         $id = $get['drug_class_id'];
 
         $generics = PhaDrugGeneric::find()->tenant()->andWhere(['drug_class_id' => $id])->active()->all();
-        $products = PhaProduct::find()->tenant()->andWhere(['drug_class_id' => $id])->active()->all();
+        $products = PhaProduct::find()->tenant()->status()->andWhere(['drug_class_id' => $id])->active()->all();
 
         return ['genericList' => $generics, 'productList' => $products];
     }
@@ -116,7 +116,7 @@ class PharmacyproductController extends ActiveController {
         $id = $get['generic_id'];
 
         $drug = PhaDrugGeneric::find()->tenant()->andWhere(['generic_id' => $id])->active()->one();
-        $products = PhaProduct::find()->tenant()->andWhere(['generic_id' => $id])->active()->all();
+        $products = PhaProduct::find()->tenant()->status()->andWhere(['generic_id' => $id])->active()->all();
 
         return ['drug' => $drug, 'productList' => $products];
     }
@@ -125,7 +125,7 @@ class PharmacyproductController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
         $id = $get['generic_id'];
 
-        return ['productList' => PhaProduct::find()->tenant()->andWhere(['generic_id' => $id])->active()->all()];
+        return ['productList' => PhaProduct::find()->tenant()->status()->andWhere(['generic_id' => $id])->active()->all()];
     }
 
     public function actionGetproductdescriptionlist() {
@@ -372,7 +372,7 @@ class PharmacyproductController extends ActiveController {
             $command = $this->_connection->createCommand("
                     SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name,
                     CONCAT(
-                        IF(b.generic_name IS NOT NULL, b.generic_name, ''),
+                        IF(b.generic_nme IS NOT NULL, b.generic_name, ''),
                         IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
                         IF(a.product_unit_count IS NOT NULL, CONCAT(' ', a.product_unit_count), ''),
                         IF(a.product_unit IS NOT NULL, CONCAT('', a.product_unit), '')
@@ -389,7 +389,7 @@ class PharmacyproductController extends ActiveController {
                     LEFT OUTER JOIN pha_drug_class c
                     ON c.drug_class_id = a.drug_class_id
                     WHERE a.tenant_id = :tenant_id
-                    AND a.product_id = :product_id
+                    AND a.product_id = :product_id AND a.status='1'
                     ORDER BY a.product_name
                     LIMIT 0,:limit", [':limit' => $limit, ':tenant_id' => $tenant_id, ':product_id' => $post['product_id']]
             );
@@ -414,7 +414,7 @@ class PharmacyproductController extends ActiveController {
                     ON b.generic_id = a.generic_id
                     LEFT OUTER JOIN pha_drug_class c
                     ON c.drug_class_id = a.drug_class_id
-                    WHERE (a.tenant_id = :tenant_id AND CONCAT_WS(' ', TRIM(a.product_name), TRIM(a.product_unit_count), TRIM(a.product_unit)) LIKE :search_text)
+                    WHERE (a.tenant_id = :tenant_id AND a.status='1' AND CONCAT_WS(' ', TRIM(a.product_name), TRIM(a.product_unit_count), TRIM(a.product_unit)) LIKE :search_text)
                     OR (b.tenant_id = :tenant_id AND b.generic_name LIKE :search_text)
                     OR (c.tenant_id = :tenant_id AND c.drug_name LIKE :search_text)
                     ORDER BY a.product_name
@@ -662,7 +662,7 @@ class PharmacyproductController extends ActiveController {
                     ->joinWith(['productDescription', 'brand', 'generic'])
                     ->andWhere([
                         'pha_product.tenant_id' => $tenant_id,
-                        'pha_product.status' => '1',
+                        //'pha_product.status' => '1',
                     ])
                     ->andFilterWhere([
                         'OR',
@@ -677,7 +677,7 @@ class PharmacyproductController extends ActiveController {
                     ->joinWith(['productDescription', 'brand', 'generic'])
                     ->andWhere([
                         'pha_product.tenant_id' => $tenant_id,
-                        'pha_product.status' => '1',
+                        //'pha_product.status' => '1',
                     ])
                     ->andFilterWhere([
                         'OR',
@@ -708,6 +708,7 @@ class PharmacyproductController extends ActiveController {
             $nestedData['product_code'] = $product->product_code;
             $nestedData['product_type'] = $product->productDescription->description_name;
             $nestedData['product_brand'] = $product->brand->brand_name;
+            $nestedData['status'] = $product->status;
             if ($product->generic_id) {
                 $nestedData['product_generic'] = $product->generic->generic_name;
             } else
