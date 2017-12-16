@@ -68,6 +68,7 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
             DTColumnBuilder.newColumn('product_type').withTitle('Product Type'),
             DTColumnBuilder.newColumn('product_brand').withTitle('Product Brand'),
             DTColumnBuilder.newColumn('product_generic').withTitle('Generic Name'),
+            DTColumnBuilder.newColumn('status').withTitle('Status').notSortable().renderWith(statusHtml),
             DTColumnBuilder.newColumn(null).withTitle('Actions').notSortable().renderWith(actionsHtml)
         ];
 
@@ -83,6 +84,20 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
                     '<a class="hide" title="Delete" ng-click="removeRow(row)">' +
                     '   <i class="fa fa-trash"></i>' +
                     '</a>';
+        }
+
+        vm.selected = {};
+        function statusHtml(data, type, full, meta) {
+            if (full.status === '1') {
+                vm.selected[full.product_id] = true;
+            } else {
+                vm.selected[full.product_id] = false;
+            }
+            var model_name = "'" + "PhaProduct" + "'";
+            return '<label class="i-checks ">' +
+                    '<input type="checkbox" ng-model="showCase.selected[' + full.product_id + ']" ng-change="updateStatus(' + model_name + ', ' + full.product_id + ')">' +
+                    '<i></i>' +
+                    '</label>';
         }
 
         //Index Page
