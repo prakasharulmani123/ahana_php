@@ -14,7 +14,7 @@ app.controller('stockReportController', ['$rootScope', '$scope', '$timeout', '$h
                     break;
             }
         };
-        
+
         $scope.clearReport = function () {
             $scope.showTable = false;
             $scope.data = {};
@@ -32,8 +32,8 @@ app.controller('stockReportController', ['$rootScope', '$scope', '$timeout', '$h
             });
             $scope.clearReport();
         }
-        
-        $scope.selectTenantname = function () {           
+
+        $scope.selectTenantname = function () {
             $scope.data.tenant_name = $scope.tenants[$scope.data.tenant_id];
         }
 
@@ -45,13 +45,14 @@ app.controller('stockReportController', ['$rootScope', '$scope', '$timeout', '$h
             $scope.loading = true;
             $scope.errorData = "";
             $scope.msg.successMessage = "";
-            
+
             var data = {};
-            if (typeof $scope.data.from !== 'undefined' && $scope.data.from != ''){
+            if (typeof $scope.data.from !== 'undefined' && $scope.data.from != '') {
                 $scope.data.from = moment($scope.data.from).format('YYYY-MM-DD');
                 angular.extend(data, {from: moment($scope.data.from).format('YYYY-MM-DD')});
-            };
-                
+            }
+            ;
+
             if (typeof $scope.data.tenant_id !== 'undefined' && $scope.data.tenant_id != '')
                 angular.extend(data, {tenant_id: $scope.data.tenant_id});
 
@@ -75,5 +76,11 @@ app.controller('stockReportController', ['$rootScope', '$scope', '$timeout', '$h
             });
             saveAs(blob, "stockReport.xls");
         };
+        $scope.parseFloat = function (row) {
+            if (row)
+                return parseFloat(row);
+            else
+                return parseFloat(0);
+        }
 
     }]);
