@@ -60,7 +60,7 @@
 
             <div class="col-sm-12" ng-if='showTable' ng-repeat="(charge_category, category) in othercharges | groupBy: 'charge_category'">
                 <div id="table_othercharges">
-                    <div ng-repeat="(subcategory,details) in category | groupBy: 'sub_category'">
+                    <div ng-repeat="(sub_category,details) in category | groupBy: 'sub_category'">
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <div class="col-sm-4 m-b-xs">
@@ -95,7 +95,7 @@
                                     </span>
                                     <span>
                                         <b>Sub Category Name : </b> 
-                                        {{subcategory}}<br>
+                                        {{sub_category}}<br>
                                     </span>
                                 </div>
 
@@ -130,7 +130,7 @@
                                             <td>{{ data.from | date:'dd-MM-yyyy'}}</td>
                                             <td>{{ data.to | date:'dd-MM-yyyy'}}</td>
                                             <td>{{charge_category}}</td>
-                                            <td>{{subcategory}}</td>
+                                            <td>{{sub_category}}</td>
                                         </tr>
                                         <tr></tr>
                                     </tbody>
@@ -147,7 +147,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="(key, charge) in othercharges" >
+                                        <tr ng-repeat="(key, charge) in details" >
                                             <td>{{key + 1}}</td>
                                             <td>{{charge.created_at| moment:'DD-MM-YYYY'}}</td>
                                             <td>{{charge.tenant_name}}</td>
