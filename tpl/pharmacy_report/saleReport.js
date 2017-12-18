@@ -55,11 +55,25 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
         $scope.$watch('data.from', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
                 $scope.toMinDate = new Date($scope.data.from);
+                var from = moment($scope.data.from);
+                var to = moment($scope.data.to);
+                var difference = to.diff(from, 'days') + 1;
+
+                if (difference > 31) {
+                    $scope.data.to = moment($scope.data.from).add(+30, 'days').format('YYYY-MM-DD');
+                }
             }
         }, true);
         $scope.$watch('data.to', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
                 $scope.fromMaxDate = new Date($scope.data.to);
+                var from = moment($scope.data.from);
+                var to = moment($scope.data.to);
+                var difference = to.diff(from, 'days') + 1;
+
+                if (difference > 31) {
+                    $scope.data.from = moment($scope.data.to).add(-30, 'days').format('YYYY-MM-DD');
+                }
             }
         }, true);
 
@@ -146,7 +160,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 8}, "", "", "", "", "", "",""
+                {text: branch_name, style: 'header', colSpan: 8}, "", "", "", "", "", "", ""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
@@ -241,7 +255,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                 style: 'demoTable',
                 table: {
                     headerRows: 2,
-                    widths: ['auto', 'auto', 'auto', 'auto','auto', 'auto', 'auto', '*'],
+                    widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', '*'],
                     body: reports,
                     dontBreakRows: true,
                 },
@@ -268,7 +282,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                         pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 75 : 50),
                         pageSize: 'A4',
                     };
-                    
+
                     var pdf_document = pdfMake.createPdf(docDefinition);
                     var doc_content_length = Object.keys(pdf_document).length;
                     if (doc_content_length > 0) {

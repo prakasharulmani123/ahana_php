@@ -9,6 +9,17 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="panel panel-default">
+                    <div class="panel-body p-b">
+                        <div class="form-group report-inst">
+                            <ul>
+                                <li>This report will be generated only for a 30 days.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="panel panel-default">
                     <div class="panel-body p-b form-horizontal">
                         <form role="form" class="form-inline" name="searchForm">
                             <div class="form-group">
@@ -34,12 +45,12 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <select id="payment_type" class="form-control" ng-model="data.payment_type" ng-options="paymentType.value as paymentType.label for paymentType in paymentTypes">
+                                <select id="payment_type" class="selectpicker" ng-model="data.payment_type" ng-options="paymentType.value as paymentType.label for paymentType in paymentTypes">
                                     <option value="">Select Payment Type</option>
                                 </select>
                             </div>
                             <div class="form-group" ng-show="data.payment_type == 'CR' && saleGroupsLength > 0">
-                                <select id="patient_group" class="form-control selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true"  ng-model="data.patient_group_name" ng-options="key as value for (key , value) in saleGroups" multiple>
+                                <select id="patient_group" class="selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true"  ng-model="data.patient_group_name" ng-options="key as value for (key , value) in saleGroups" multiple>
                                 </select>
                             </div>
                             <button class="btn btn-success get-report" ng-disabled="searchForm.$invalid" ng-click="loadReport()">Get Report</button>
@@ -136,7 +147,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th colspan="6" class="text-right"><b>Total Sale Value</b></th>
+                                        <th colspan="7" class="text-right"><b>Total Sale Value</b></th>
                                         <td data-type="Number"><b>{{sale.total_amount| number:2}}</b></td>
                                     </tr>
                                 </tfoot>
