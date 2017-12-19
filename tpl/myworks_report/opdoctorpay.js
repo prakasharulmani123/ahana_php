@@ -229,7 +229,7 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
             angular.forEach(consultant_wise, function (details, doctor_name) {
                 var content_info = [];
                 var date_rage = moment($scope.data.from).format('DD-MM-YYYY') + " - " + moment($scope.data.to).format('DD-MM-YYYY');
-                var generated_on = moment($scope.generated_on).format('DD-MM-YYYY hh:mm A');
+                var generated_on = $scope.generated_on;
                 var generated_by = $scope.app.username;
                 var consultant_wise_total = 0;
                 //Branchwise
