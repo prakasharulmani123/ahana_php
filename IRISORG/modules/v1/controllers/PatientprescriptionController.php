@@ -246,7 +246,7 @@ class PatientprescriptionController extends ActiveController {
                     ->status()
                     ->active()
                     ->andWhere(['consultant_id' => $get['consultant_id']])
-                    ->orderBy(['created_at' => SORT_DESC])
+                    ->orderBy(['modified_at' => SORT_DESC])
                     ->all();
             return ['success' => true, 'freq' => $freq];
         } else {
