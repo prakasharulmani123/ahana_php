@@ -3106,6 +3106,18 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $('#time').html(time);
             }, 100);
         }
+        
+        // Prescription - Frequency Tab Navigation.
+        var ps_typeahead_content = ''; //ps - current prescription search
+        $scope.psTypeaheadKeyup = function (event, ng_model_name) {
+            ps_typeahead_content = $scope['globalData'][ng_model_name];
+        }
+        $scope.psTypeaheadKeydown = function (event, ng_model_name) {
+            if (event.keyCode === 9) {
+                $scope['globalData'][ng_model_name] = ps_typeahead_content;
+                ps_typeahead_content = '';
+            }
+        }
 
 //Not Used
 //        $scope.changeFreqMask = function (key, freq) {
