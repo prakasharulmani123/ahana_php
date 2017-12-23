@@ -106,7 +106,7 @@ class PharmacyproductController extends ActiveController {
         $id = $get['drug_class_id'];
 
         $generics = PhaDrugGeneric::find()->tenant()->andWhere(['drug_class_id' => $id])->active()->all();
-        $products = PhaProduct::find()->tenant()->status()->andWhere(['drug_class_id' => $id])->active()->all();
+        $products = PhaProduct::find()->tenant()->status()->andWhere(['drug_class_id' => $id])->active()->orderBy(['product_name' => SORT_ASC])->all();
 
         return ['genericList' => $generics, 'productList' => $products];
     }
@@ -116,7 +116,7 @@ class PharmacyproductController extends ActiveController {
         $id = $get['generic_id'];
 
         $drug = PhaDrugGeneric::find()->tenant()->andWhere(['generic_id' => $id])->active()->one();
-        $products = PhaProduct::find()->tenant()->status()->andWhere(['generic_id' => $id])->active()->all();
+        $products = PhaProduct::find()->tenant()->status()->andWhere(['generic_id' => $id])->active()->orderBy(['product_name' => SORT_ASC])->all();
 
         return ['drug' => $drug, 'productList' => $products];
     }
@@ -125,7 +125,7 @@ class PharmacyproductController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
         $id = $get['generic_id'];
 
-        return ['productList' => PhaProduct::find()->tenant()->status()->andWhere(['generic_id' => $id])->active()->all()];
+        return ['productList' => PhaProduct::find()->tenant()->status()->andWhere(['generic_id' => $id])->active()->orderBy(['product_name' => SORT_ASC])->all()];
     }
 
     public function actionGetproductdescriptionlist() {
