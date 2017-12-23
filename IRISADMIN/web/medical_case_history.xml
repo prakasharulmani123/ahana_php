@@ -322,7 +322,9 @@
                         <PROPERTY name="id">txtdiabetesdate</PROPERTY>
                         <PROPERTY name="name">txtdiabetesdate</PROPERTY>
                         <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="placeholder">mm/yyyy</PROPERTY>
+                        <PROPERTY name="onkeydown">return isNumericSlashStroke(event)</PROPERTY>
+                        <PROPERTY name="placeholder">MM/YYYY</PROPERTY>
+                        <PROPERTY name="maxlength">7</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
             </FIELD>
@@ -339,7 +341,9 @@
                         <PROPERTY name="id">txthypertensiondate</PROPERTY>
                         <PROPERTY name="name">txthypertensiondate</PROPERTY>
                         <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="placeholder">mm/yyyy</PROPERTY>
+                        <PROPERTY name="onkeydown">return isNumericSlashStroke(event)</PROPERTY>
+                        <PROPERTY name="placeholder">MM/YYYY</PROPERTY>
+                        <PROPERTY name="maxlength">7</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
             </FIELD>
@@ -356,7 +360,9 @@
                         <PROPERTY name="id">txtcvadate</PROPERTY>
                         <PROPERTY name="name">txtcvadate</PROPERTY>
                         <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="placeholder">mm/yyyy</PROPERTY>
+                        <PROPERTY name="onkeydown">return isNumericSlashStroke(event)</PROPERTY>
+                        <PROPERTY name="placeholder">MM/YYYY</PROPERTY>
+                        <PROPERTY name="maxlength">7</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
             </FIELD>
@@ -373,7 +379,9 @@
                         <PROPERTY name="id">txttbdate</PROPERTY>
                         <PROPERTY name="name">txttbdate</PROPERTY>
                         <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="placeholder">mm/yyyy</PROPERTY>
+                        <PROPERTY name="onkeydown">return isNumericSlashStroke(event)</PROPERTY>
+                        <PROPERTY name="placeholder">MM/YYYY</PROPERTY>
+                        <PROPERTY name="maxlength">7</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
             </FIELD>
@@ -390,7 +398,9 @@
                         <PROPERTY name="id">txtcancerdate</PROPERTY>
                         <PROPERTY name="name">txtcancerdate</PROPERTY>
                         <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="placeholder">mm/yyyy</PROPERTY>
+                        <PROPERTY name="onkeydown">return isNumericSlashStroke(event)</PROPERTY>
+                        <PROPERTY name="placeholder">MM/YYYY</PROPERTY>
+                        <PROPERTY name="maxlength">7</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
             </FIELD>
@@ -407,7 +417,9 @@
                         <PROPERTY name="id">txtseizuredate</PROPERTY>
                         <PROPERTY name="name">txtseizuredate</PROPERTY>
                         <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="placeholder">mm/yyyy</PROPERTY>
+                        <PROPERTY name="onkeydown">return isNumericSlashStroke(event)</PROPERTY>
+                        <PROPERTY name="placeholder">MM/YYYY</PROPERTY>
+                        <PROPERTY name="maxlength">7</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
             </FIELD>
@@ -424,7 +436,9 @@
                         <PROPERTY name="id">txtcaddate</PROPERTY>
                         <PROPERTY name="name">txtcaddate</PROPERTY>
                         <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="placeholder">mm/yyyy</PROPERTY>
+                        <PROPERTY name="onkeydown">return isNumericSlashStroke(event)</PROPERTY>
+                        <PROPERTY name="placeholder">MM/YYYY</PROPERTY>
+                        <PROPERTY name="maxlength">7</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
             </FIELD>
@@ -441,7 +455,9 @@
                         <PROPERTY name="id">txtmentaldate</PROPERTY>
                         <PROPERTY name="name">txtmentaldate</PROPERTY>
                         <PROPERTY name="class">form-control</PROPERTY>
-                        <PROPERTY name="placeholder">mm/yyyy</PROPERTY>
+                        <PROPERTY name="onkeydown">return isNumericSlashStroke(event)</PROPERTY>
+                        <PROPERTY name="placeholder">MM/YYYY</PROPERTY>
+                        <PROPERTY name="maxlength">7</PROPERTY>
                     </PROPERTIES>
                 </FIELD>
             </FIELD>
