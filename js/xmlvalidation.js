@@ -62,6 +62,18 @@ function isNumericDateStroke(evt) {
     return returnValue;
 }
 
+function isNumericSlashStroke(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+
+    var returnValue = false;
+    // 8 - Backspace, 13 - Carriage Return (Enter), 9 - Tab Key 111, 191 - Slash
+    if (((charCode >= 48) && (charCode <= 57)) || (charCode == 8) || (charCode == 13) || (charCode == 111) || (charCode == 191) || (charCode == 9) || ((charCode >= 96) && (charCode <= 105)) || ((charCode >= 109) && (charCode <= 111)) || ((charCode >= 189) && (charCode <= 191)))
+        returnValue = true
+
+    return returnValue;
+}
+
 function Checkvisible(a, e)
 {
     if (a == 'menstrual_history')
