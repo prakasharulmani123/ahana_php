@@ -332,7 +332,7 @@ class PharmacyproductController extends ActiveController {
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
             $this->_connection = Yii::$app->client;
-            $limit = 10;
+            $limit = 1000;
 
             //Check generic name exists in the search word.
             //Remove unwanted whitespace in the product name.
