@@ -1747,13 +1747,25 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.printPres = function (pres_id) {
             $scope.presDetail(pres_id).then(function () {
                 delete $scope.data2.items;
-                $('#print_previous_pres').printThis({
-                    pageTitle: $scope.app.org_name,
-                    debug: false,
-                    importCSS: false,
-                    importStyle: false,
-                    loadCSS: [$rootScope.IRISOrgUrl + "/css/prescription_print.css"],
-                });
+                 $timeout(function () {
+                    $("#print_previous_pres").print({
+                        globalStyles: false,
+                        mediaPrint: false,
+                        stylesheet: $rootScope.IRISOrgUrl + "/css/prescription_print.css",
+                        noPrintSelector: ".no-print",
+                        iframe: false,
+                        append: '',
+                        prepend: '',
+                        title: $scope.app.org_name,
+                    });
+                }, 1000);
+//                $('#print_previous_pres').printThis({
+//                    pageTitle: $scope.app.org_name,
+//                    debug: false,
+//                    importCSS: false,
+//                    importStyle: false,
+//                    loadCSS: [$rootScope.IRISOrgUrl + "/css/prescription_print.css"],
+//                });
             });
         }
 
