@@ -2021,7 +2021,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 }
             }
             if ($scope.globalData.freq_type == '4') {
-                if ((!$scope.globalData.frequency_4_0) && (!$scope.globalData.frequency_4_1) && (!$scope.globalData.frequency_4_2) && (!$scope.globalData.frequency_4_3)) {
+                if ((!$scope.globalData.frequency_4_0) || (!$scope.globalData.frequency_4_1) || (!$scope.globalData.frequency_4_2) || (!$scope.globalData.frequency_4_3)) {
                     $scope.errorData = 'Frequency cannot be empty';
                     return false;
                 } else if ($scope.globalData.frequency_4_0 == 0 && $scope.globalData.frequency_4_1 == 0 && $scope.globalData.frequency_4_2 == 0 && $scope.globalData.frequency_4_3 == 0) {
@@ -2120,13 +2120,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                     $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
                                     $timeout(function () {
                                         $("#prescriptioncont-header.search-patientcont-header").hide();
-                                        if (!globalPrescription.hasOwnProperty('route')) {
-                                            $scope.setFocus('route', $scope.data.prescriptionItems.length - 1);
-                                        } else if (!globalPrescription.hasOwnProperty('frequency')) {
-                                            $scope.setFocus('frequency', $scope.data.prescriptionItems.length - 1);
-                                        } else {
-                                            $scope.setFocus('number_of_days', $scope.data.prescriptionItems.length - 1);
-                                        }
+//                                        if (!globalPrescription.hasOwnProperty('route')) {
+//                                            $scope.setFocus('route', $scope.data.prescriptionItems.length - 1);
+//                                        } else if (!globalPrescription.hasOwnProperty('frequency')) {
+//                                            $scope.setFocus('frequency', $scope.data.prescriptionItems.length - 1);
+//                                        } else {
+//                                            $scope.setFocus('number_of_days', $scope.data.prescriptionItems.length - 1);
+//                                        }
 
                                         if (typeof globalPrescription.frequency != 'undefined')
                                             $scope.showOrhideFrequency();
