@@ -270,6 +270,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                                             $scope.medicalcasecommonservice();
                                             $scope.ckeditorReplace();
                                         }, 2000);
+                                        $scope.medicalAutoSaveStart(auto_save_document.data.doc_id);
                                     });
                                 }
                             }
@@ -412,6 +413,46 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             // Make sure that the interval is destroyed too
             $scope.stopAutoSave();
         });
+
+        $scope.medicalAutoSaveStart = function (doc_id) {
+            // Don't start a new fight if we are already fighting
+            if (angular.isDefined(stop))
+                return;
+            stop = $interval(function () {
+                $scope.ckeditorupdate();
+                _data = $('#xmlform').serializeArray();
+                _data.push({
+                    name: 'encounter_id',
+                    value: $scope.encounter.encounter_id,
+                }, {
+                    name: 'patient_id',
+                    value: $state.params.id,
+                }, {
+                    name: 'novalidate',
+                    value: true,
+                }, {
+                    name: 'doc_id',
+                    value: doc_id,
+                });
+
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + "/patientprescription/savemedicaldocument",
+                    method: "POST",
+//                    transformRequest: transformRequestAsFormPost,
+                    data: _data
+                });
+            }, 6000);
+        };
+        $scope.medicalAutoSaveStop = function () {
+            if (angular.isDefined(stop)) {
+                $interval.cancel(stop);
+                stop = undefined;
+            }
+        };
+        $scope.$on('$destroy', function () {
+            // Make sure that the interval is destroyed too
+            $scope.medicalAutoSaveStop();
+        });
         // Initialize Update Form
         $scope.initFormUpdate = function () {
             $scope.document_type = $state.params.document;
@@ -439,6 +480,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         }, 500);
                         if ($scope.document_type == 'CH') {
                             $scope.startAutoSave(doc_id);
+                        } else {
+                            $scope.medicalAutoSaveStart(doc_id);
                         }
                     });
                 }

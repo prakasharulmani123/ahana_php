@@ -1,4 +1,4 @@
-app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll', '$http', '$state', '$filter', '$modal', '$location', '$log', '$timeout', 'IO_BARCODE_TYPES', 'toaster', 'PrescriptionService', '$q', 'hotkeys', 'modalService', function ($rootScope, $scope, $anchorScroll, $http, $state, $filter, $modal, $location, $log, $timeout, IO_BARCODE_TYPES, toaster, PrescriptionService, $q, hotkeys, modalService) {
+app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll', '$http', '$state', '$filter', '$modal', '$location', '$log', '$timeout', 'IO_BARCODE_TYPES', 'toaster', 'PrescriptionService', '$q', 'hotkeys', 'modalService', '$interval', function ($rootScope, $scope, $anchorScroll, $http, $state, $filter, $modal, $location, $log, $timeout, IO_BARCODE_TYPES, toaster, PrescriptionService, $q, hotkeys, modalService, $interval) {
         hotkeys.bindTo($scope)
                 .add({
                     combo: 'f6',
@@ -2767,12 +2767,54 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 $timeout(function () {
                                     $("#patient-details").parent().hide();
                                 }, 1500);
+                                $scope.medicalAutoSaveStart(auto_save_document.data.doc_id);
                             });
                         }
                     }, true);
                 }
             });
         }
+        
+        var stop;
+        $scope.medicalAutoSaveStart = function (doc_id) {
+            // Don't start a new fight if we are already fighting
+            if (angular.isDefined(stop))
+                return;
+            stop = $interval(function () {
+                $scope.ckeditorupdate();
+                _data = $('#xmlform').serializeArray();
+                _data.push({
+                    name: 'encounter_id',
+                    value: $scope.enc.selected.encounter_id,
+                }, {
+                    name: 'patient_id',
+                    value: $state.params.id,
+                }, {
+                    name: 'novalidate',
+                    value: true,
+                }, {
+                    name: 'doc_id',
+                    value: doc_id,
+                });
+
+                $http({
+                    url: $rootScope.IRISOrgServiceUrl + "/patientprescription/savemedicaldocument",
+                    method: "POST",
+//                    transformRequest: transformRequestAsFormPost,
+                    data: _data
+                });
+            }, 6000);
+        };
+        $scope.medicalAutoSaveStop = function () {
+            if (angular.isDefined(stop)) {
+                $interval.cancel(stop);
+                stop = undefined;
+            }
+        };
+        $scope.$on('$destroy', function () {
+            // Make sure that the interval is destroyed too
+            $scope.medicalAutoSaveStop();
+        });
 
         $scope.getDocumentType = function (callback) {
             $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getdocumenttype?doc_type=MCH')
@@ -2862,6 +2904,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $timeout(function () {
                             $("#patient-details").parent().hide();
                         }, 200);
+                        $scope.medicalAutoSaveStart(doc_id);
                     });
                 }
             });
