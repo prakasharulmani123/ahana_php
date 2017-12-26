@@ -136,7 +136,7 @@ class PharmacysaleController extends ActiveController {
 
                 if (!empty($sale->encounter_id))
                     $sale_item = PhaSale::find()->tenant()->active()->andWhere(['encounter_id' => $sale->encounter_id, 'payment_type' => $get['payment_type']]);
-                else if(!empty($sale->patient_id))
+                else if (!empty($sale->patient_id))
                     $sale_item = PhaSale::find()->tenant()->active()->andWhere(['patient_id' => $sale->patient_id, 'payment_type' => $get['payment_type']]);
                 else
                     $sale_item = PhaSale::find()->tenant()->active()->andWhere(['patient_name' => $sale->patient_name, 'payment_type' => $get['payment_type']]);
@@ -251,10 +251,16 @@ class PharmacysaleController extends ActiveController {
     public function actionOutstandingreport() {
         $post = Yii::$app->getRequest()->post();
 
-        $reports = PhaSale::find()
+        $model = PhaSale::find()
                 ->tenant()
-                ->andWhere("pha_sale.sale_date between '{$post['from']}' AND '{$post['to']}'")
-                ->andWhere("pha_sale.payment_status!='C'")
+                ->andWhere("pha_sale.sale_date between '{$post['from']}' AND '{$post['to']}'");
+
+        if (isset($post['patient_group_name'])) {
+            $patient_group_names = join("','", $post['patient_group_name']);
+            $model->andWhere("pha_sale.patient_group_name IN ( '$patient_group_names' )");
+        }
+
+        $reports = $model->andWhere("pha_sale.payment_status!='C'")
                 ->orderBy(['patient_name' => SORT_ASC])
                 ->all();
 

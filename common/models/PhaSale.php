@@ -360,6 +360,7 @@ class PhaSale extends RActiveRecord {
                         'payment_type' => 'payment_type',
                         'bill_amount' => 'bill_amount',
                         'sale_date' => 'sale_date',
+                        'patient_group_name' => 'patient_group_name',
                     ];
                     break;
                 case 'make_payment_report':
