@@ -2803,7 +2803,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 //                    transformRequest: transformRequestAsFormPost,
                     data: _data
                 });
-            }, 6000);
+            }, 60000);
         };
         $scope.medicalAutoSaveStop = function () {
             if (angular.isDefined(stop)) {

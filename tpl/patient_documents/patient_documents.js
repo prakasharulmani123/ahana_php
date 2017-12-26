@@ -441,7 +441,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 //                    transformRequest: transformRequestAsFormPost,
                     data: _data
                 });
-            }, 6000);
+            }, 60000);
         };
         $scope.medicalAutoSaveStop = function () {
             if (angular.isDefined(stop)) {
