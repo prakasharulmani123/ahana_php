@@ -140,13 +140,25 @@ app.controller('OtherDocumentsController', ['$rootScope', '$scope', '$timeout', 
         }
 
         $scope.printDocument = function () {
-            $('#printThis').printThis({
-                pageTitle: $scope.app.org_name,
-                debug: false,
-                importCSS: false,
-                importStyle: false,
-                loadCSS: [$rootScope.IRISOrgUrl + "/css/print.css"],
-            });
+            $timeout(function () {
+                $("#printThis").print({
+                    globalStyles: false,
+                    mediaPrint: false,
+                    stylesheet: $rootScope.IRISOrgUrl + "/css/print.css",
+                    noPrintSelector: ".no-print",
+                    iframe: false,
+                    append: '',
+                    prepend: '',
+                    title: $scope.app.org_name,
+                });
+            }, 1000);
+//            $('#printThis').printThis({
+//                pageTitle: $scope.app.org_name,
+//                debug: false,
+//                importCSS: false,
+//                importStyle: false,
+//                loadCSS: [$rootScope.IRISOrgUrl + "/css/print.css"],
+//            });
         }
     }]);
 
