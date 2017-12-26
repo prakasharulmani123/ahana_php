@@ -343,7 +343,7 @@ class PharmacyproductController extends ActiveController {
 
 //            $text_search = str_replace([' ', '(', ')'], ['* ', '', ''], $text);
             $text_search = "+" . str_replace([' ', '(', ')'], [' +', '', ''], $text) . "*";
-            $like_text_search = $text . "%";
+            $like_text_search = "%" . $text . "%";
 
             //Get Products
 //            $products = $this->_getProducts($text_search, $tenant_id, $limit);
