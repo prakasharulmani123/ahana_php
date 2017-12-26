@@ -33,6 +33,10 @@
                                     </span>
                                 </div>
                             </div>
+                            <div class="form-group" ng-show="saleGroupsLength > 0">
+                                <select id="patient_group" class="selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true"  ng-model="data.patient_group_name" ng-options="key as value for (key , value) in saleGroups" multiple>
+                                </select>
+                            </div>
                             <button class="btn btn-success get-report" ng-click="loadReport()">Get Report</button>
                             <button class="btn btn-dark" ng-click="clearReport()">Clear</button>
                         </form>
@@ -87,6 +91,7 @@
                                     </th>
                                     <th>Patient Name</th>
                                     <th>Patient UHID</th>
+                                    <th>Patient Group</th>
                                     <th>Total</th>
                                 </tr>
                             </thead>
@@ -100,10 +105,11 @@
                                     </td>
                                     <td>{{patientName}}</td>
                                     <td>{{record[0].patient_uhid}}</td>
+                                    <td>{{record[0].patient_group_name}}</td>
                                     <td>{{pending.pending_amount}}</td>
                                 </tr>
                                 <tr ng-repeat-end ng-show="expanded">
-                                    <td colspan="4">
+                                    <td colspan="5">
                                         <table class="table table-condensed table-bordered" ng-init="pending = {}">
                                             <thead>
                                                 <tr>
@@ -163,12 +169,14 @@
                                         <th>S.No</th>
                                         <th>Patient Name</th>
                                         <th>Patient UHID</th>
+                                        <th>Patient Group</th>
                                         <th>Total Pending Amount</th>
                                     </tr>
                                     <tr ng-repeat="(patientName, details) in records | orderBy:'patient_name' | groupBy:'patient_name'">
-                                        <td>{{$index+1}}</td>
+                                        <td>{{$index + 1}}</td>
                                         <td>{{nameReplace(patientName)}}</td>
                                         <td>{{details[0].patient_uhid}}</td>
+                                        <td>{{details[0].patient_group_name}}</td>
                                         <td>{{pendingTotal.total_amount}}</td>
                                         <td ng-init="pendingTotal = {}">
                                             <div ng-repeat="(key, record) in details">

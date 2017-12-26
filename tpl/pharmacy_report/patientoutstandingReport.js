@@ -28,9 +28,27 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
             $scope.data.from = moment().subtract(1, 'months').format('YYYY-MM-DD');
             $scope.fromMaxDate = new Date($scope.data.to);
             $scope.toMinDate = new Date($scope.data.from);
+            $scope.data.patient_group_name = '';
+            $scope.deselectAll();
+        }
+        
+        $scope.deselectAll = function () {
+            $timeout(function () {
+                // anything you want can go here and will safely be run on the next digest.
+                var patient_group_button = $('button[data-id="patient_group"]').next();
+                var patient_group_deselect_all = patient_group_button.find(".bs-deselect-all");
+                patient_group_deselect_all.click();
+            });
         }
 
         $scope.initReport = function () {
+            $scope.saleGroups = {};
+            $scope.saleGroupsLength = 0;
+            $rootScope.commonService.GetSaleGroups('', '1', false, function (response) {
+                $scope.saleGroups = response.saleGroupsList;
+                $scope.saleGroupsLength = Object.keys($scope.saleGroups).length;
+            });
+            
             $scope.clearReport();
         }
 
@@ -58,6 +76,9 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
                 angular.extend(data, {from: moment($scope.data.from).format('YYYY-MM-DD')});
             if (typeof $scope.data.to !== 'undefined' && $scope.data.to != '')
                 angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
+            if (typeof $scope.data.patient_group_name !== 'undefined' && $scope.data.patient_group_name != '')
+                angular.extend(data, {patient_group_name: $scope.data.patient_group_name});
+            console.log(data);
 
             // Get data's from service
             $http.post($rootScope.IRISOrgServiceUrl + '/pharmacysale/outstandingreport?addtfields=patient_report', data)
@@ -120,6 +141,7 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
                 {text: 'S.No', style: 'header'},
                 {text: 'Patient Name', style: 'header'},
                 {text: 'Patient UHID', style: 'header'},
+                {text: 'Patient Group', style: 'header'},
                 {text: 'Total Pending Amount', style: 'header'},
             ]);
 
@@ -135,6 +157,7 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
                     s_no_string,
                     patient_name,
                     detail[0].patient_uhid,
+                    detail[0].patient_group_name,
                     total
                 ]);
                 serial_no++;
@@ -191,7 +214,7 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
                 style: 'demoTable',
                 table: {
                     headerRows: 1,
-                    widths: ['auto', 'auto', '*', 'auto'],
+                    widths: ['auto', 'auto', '*', 'auto', 'auto'],
                     body: reports,
                     dontBreakRows: true,
                 },
