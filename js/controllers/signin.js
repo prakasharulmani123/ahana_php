@@ -23,11 +23,14 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
 
                 if (!$localStorage.system_tenant)
                     $localStorage.system_tenant = $scope.tenants[Object.keys($scope.tenants)[0]];
+                
+                if (!$localStorage.system_tenant_id)
+                    $localStorage.system_tenant_id = Object.keys($scope.tenants)[0];
 
                 if ($localStorage.system_username)
                     $scope.user.username = $localStorage.system_username;
 
-                $scope.user.tenant_id = $localStorage.system_tenant;
+                $scope.user.tenant_id = $localStorage.system_tenant_id;
 
                 if ($localStorage.system_stay_logged_in) {
                     $scope.user.stay_logged_in = $localStorage.system_stay_logged_in;
