@@ -219,7 +219,7 @@ class PhaProduct extends RActiveRecord {
     }
 
     public function getPhaLatestBatch() {
-        return $this->hasOne(PhaProductBatch::className(), ['product_id' => 'product_id'])->andWhere('available_qty > 0')->andWhere("expiry_date >= '" . date('Y-m-d') . "'")->orderBy(['expiry_date' => SORT_ASC]);
+        return $this->hasOne(PhaProductBatch::className(), ['product_id' => 'product_id'])->andWhere('available_qty > 0')->andWhere("expiry_date >= '" . date('Y-m-d') . "'")->orderBy(['batch_id' => SORT_DESC]); //Changed expiry_date asc to batch_id desc refer BC141
     }
 
     public function getPhaProductBatchesAvailableQty() {
