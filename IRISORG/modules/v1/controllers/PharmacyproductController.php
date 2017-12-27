@@ -124,8 +124,17 @@ class PharmacyproductController extends ActiveController {
     public function actionGetproductlistbygeneric() {
         $get = Yii::$app->getRequest()->get();
         $id = $get['generic_id'];
-
-        return ['productList' => PhaProduct::find()->tenant()->status()->andWhere(['generic_id' => $id])->active()->orderBy(['product_name' => SORT_ASC])->all()];
+        $available = [];
+        $outofstock = [];
+        $products = PhaProduct::find()->tenant()->status()->andWhere(['generic_id' => $id])->active()->orderBy(['product_name' => SORT_ASC])->all();
+        foreach ($products as $produ) {
+            if ($produ->phaProductBatchesAvailableQty == 0) {
+                $outofstock[] = $produ;
+            } else {
+                $available[] = $produ;
+            }
+        }
+        return ['productList' => array_merge($available, $outofstock)];
     }
 
     public function actionGetproductdescriptionlist() {
@@ -662,7 +671,7 @@ class PharmacyproductController extends ActiveController {
                     ->joinWith(['productDescription', 'brand', 'generic'])
                     ->andWhere([
                         'pha_product.tenant_id' => $tenant_id,
-                        //'pha_product.status' => '1',
+                            //'pha_product.status' => '1',
                     ])
                     ->andFilterWhere([
                         'OR',
@@ -677,7 +686,7 @@ class PharmacyproductController extends ActiveController {
                     ->joinWith(['productDescription', 'brand', 'generic'])
                     ->andWhere([
                         'pha_product.tenant_id' => $tenant_id,
-                        //'pha_product.status' => '1',
+                            //'pha_product.status' => '1',
                     ])
                     ->andFilterWhere([
                         'OR',
