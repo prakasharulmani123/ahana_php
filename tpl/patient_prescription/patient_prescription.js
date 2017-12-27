@@ -3167,10 +3167,15 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.psTypeaheadKeyup = function (event, ng_model_name) {
             ps_typeahead_content = $scope['globalData'][ng_model_name];
         }
-        $scope.psTypeaheadKeydown = function (event, ng_model_name) {
+        $scope.psTypeaheadKeydown = function (event, ng_model_name, next_model_id) {
             if (event.keyCode === 9) {
                 $scope['globalData'][ng_model_name] = ps_typeahead_content;
                 ps_typeahead_content = '';
+                if (!event.shiftKey) { //Tab forward move 
+                    $timeout(function () {
+                        angular.element(document.querySelector('#'+next_model_id))[0].focus();
+                    }, 100);
+                }
             }
         }
 
