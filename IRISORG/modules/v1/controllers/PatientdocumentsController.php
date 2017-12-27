@@ -118,7 +118,8 @@ class PatientdocumentsController extends ActiveController {
             foreach ($data as $key => $value) {
                 $details = VDocuments::find()
                         ->where(['encounter_id' => $value['encounter_id'],
-                            'tenant_id' => $value['tenant_id']])
+                            'tenant_id' => $value['tenant_id'],])
+                        ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                         ->andWhere($condition)
                         ->orderBy(['date_time' => SORT_DESC])
                         ->asArray()
