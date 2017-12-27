@@ -2606,7 +2606,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load(['smart-table', 'ui.select', 'xeditable']).then(
+                            return $ocLazyLoad.load(['smart-table', 'xeditable']).then(
                                     function () {
                                         return $ocLazyLoad.load([
                                             'ckeditor/ckeditor.js?v=' + APP_VERSION,
