@@ -3183,7 +3183,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         // Prescription - Frequency Tab Navigation.
-        var acDefaultOptions = {minimumChars: 0, activateOnFocus: true};
+        var acDefaultOptions = {minimumChars: 0, activateOnFocus: true, positionUsingJQuery: false};
 
         $scope.autoCompleteOptions_3_0 = angular.extend({}, acDefaultOptions, {
             data: function (searchText) {
