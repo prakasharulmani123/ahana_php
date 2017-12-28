@@ -254,7 +254,7 @@ app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.msg.successMessage = succ_msg;
-                        $scope.allergies_data = {};
+                        $scope.allergies_data.notes = '';
                         $scope.allergies_data.formtype = 'add';
                         $scope.$emit('patient_allergies', {hasallergies: true, alert: response.notes});
                         $timeout(function () {
