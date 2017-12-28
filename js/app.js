@@ -34,6 +34,7 @@ angular.module('app', [
     'ng.deviceDetector',
     'angularLazyImg',
     'infinite-scroll',
+    'autoCompleteModule',
 //    'restangular'
 //    'LocalStorageModule',
 ]);

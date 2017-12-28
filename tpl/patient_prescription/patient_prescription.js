@@ -1747,7 +1747,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.printPres = function (pres_id) {
             $scope.presDetail(pres_id).then(function () {
                 delete $scope.data2.items;
-                 $timeout(function () {
+                $timeout(function () {
                     $("#print_previous_pres").print({
                         globalStyles: false,
                         mediaPrint: false,
@@ -1859,12 +1859,18 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
 //Consultant wise no of days 
         $scope.consultantNoofdays = [];
+        $scope.fillNoofdays = [];
         $scope.getConsultantNoofdays = function () {
             $scope.consultantNoofdays = [];
             $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getconsultantnoofdays?consultant_id=' + $scope.data.consultant_id)
                     .success(function (response) {
                         if (response.noofdays.length > 0)
                             $scope.consultantNoofdays = response.noofdays;
+                        angular.forEach($scope.consultantNoofdays, function (item, item_key) {
+                            if ($scope.fillNoofdays.indexOf(item.number_of_days) === -1) {
+                                $scope.fillNoofdays.push(item.number_of_days);
+                            }
+                        });
                     }, function (x) {
                         response = {success: false, message: 'Server Error'};
                     });
@@ -1881,6 +1887,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.currPresMask3 = [];
             $scope.currPresMask4 = [];
             $scope.currPresMaskTxt = [];
+            $scope.fillFrequency3 = {};
+            $scope.fillFrequency4 = {};
             //if (frequency.length > 0) {
             //check mask3 is exist, otherswise push default set
             var mask3 = $filter('filter')(frequency, {freq_type: '3'});
@@ -1917,12 +1925,24 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 var result = value.freq_name.split('-');
                 angular.forEach(result, function (item, item_key) {
                     value['freq_name_' + item_key] = item;
+                    if (typeof $scope.fillFrequency3[item_key] == 'undefined') {
+                        $scope.fillFrequency3[item_key] = [];
+                    }
+                    if ($scope.fillFrequency3[item_key].indexOf(item) === -1) {
+                        $scope.fillFrequency3[item_key].push(item);
+                    }
                 });
             });
             angular.forEach($scope.currPresMask4, function (value, key) {
                 var result = value.freq_name.split('-');
                 angular.forEach(result, function (item, item_key) {
                     value['freq_name_' + item_key] = item;
+                    if (typeof $scope.fillFrequency4[item_key] == 'undefined') {
+                        $scope.fillFrequency4[item_key] = [];
+                    }
+                    if ($scope.fillFrequency4[item_key].indexOf(item) === -1) {
+                        $scope.fillFrequency4[item_key].push(item);
+                    }
                 });
             });
         }
@@ -2774,7 +2794,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 }
             });
         }
-        
+
         var stop;
         $scope.medicalAutoSaveStart = function (doc_id) {
             // Don't start a new fight if we are already fighting
@@ -3161,24 +3181,73 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $('#time').html(time);
             }, 100);
         }
-        
-        // Prescription - Frequency Tab Navigation.
-        var ps_typeahead_content = ''; //ps - current prescription search
-        $scope.psTypeaheadKeyup = function (event, ng_model_name) {
-            ps_typeahead_content = $scope['globalData'][ng_model_name];
-        }
-        $scope.psTypeaheadKeydown = function (event, ng_model_name, next_model_id) {
-            if (event.keyCode === 9) {
-                $scope['globalData'][ng_model_name] = ps_typeahead_content;
-                ps_typeahead_content = '';
-                if (!event.shiftKey) { //Tab forward move 
-                    $timeout(function () {
-                        angular.element(document.querySelector('#'+next_model_id))[0].focus();
-                    }, 100);
-                }
-            }
-        }
 
+        // Prescription - Frequency Tab Navigation.
+        var acDefaultOptions = {minimumChars: 0, activateOnFocus: true};
+
+        $scope.autoCompleteOptions_3_0 = angular.extend({}, acDefaultOptions, {
+            data: function (searchText) {
+                return $scope.fillFrequency3[0];
+            }
+        });
+
+        $scope.autoCompleteOptions_3_1 = angular.extend({}, acDefaultOptions, {
+            data: function (searchText) {
+                return $scope.fillFrequency3[1];
+            }
+        });
+
+        $scope.autoCompleteOptions_3_2 = angular.extend({}, acDefaultOptions, {
+            data: function (searchText) {
+                return $scope.fillFrequency3[2];
+            }
+        });
+
+        $scope.autoCompleteOptions_4_0 = angular.extend({}, acDefaultOptions, {
+            data: function (searchText) {
+                return $scope.fillFrequency4[0];
+            }
+        });
+
+        $scope.autoCompleteOptions_4_1 = angular.extend({}, acDefaultOptions, {
+            data: function (searchText) {
+                return $scope.fillFrequency4[1];
+            }
+        });
+
+        $scope.autoCompleteOptions_4_2 = angular.extend({}, acDefaultOptions, {
+            data: function (searchText) {
+                return $scope.fillFrequency4[2];
+            }
+        });
+
+        $scope.autoCompleteOptions_4_3 = angular.extend({}, acDefaultOptions, {
+            data: function (searchText) {
+                return $scope.fillFrequency4[3];
+            }
+        });
+        
+        $scope.autoCompleteOptionsNoofdays = angular.extend({}, acDefaultOptions, {
+            data: function (searchText) {
+                return $scope.fillNoofdays;
+            }
+        });
+
+//        var ps_typeahead_content = ''; //ps - current prescription search
+//        $scope.psTypeaheadKeyup = function (event, ng_model_name) {
+//            ps_typeahead_content = $scope['globalData'][ng_model_name];
+//        }
+//        $scope.psTypeaheadKeydown = function (event, ng_model_name, next_model_id) {
+//            if (event.keyCode === 9) {
+//                $scope['globalData'][ng_model_name] = ps_typeahead_content;
+//                ps_typeahead_content = '';
+//                if (!event.shiftKey) { //Tab forward move 
+//                    $timeout(function () {
+//                        angular.element(document.querySelector('#'+next_model_id))[0].focus();
+//                    }, 100);
+//                }
+//            }
+//        }
 //Not Used
 //        $scope.changeFreqMask = function (key, freq) {
 //            $('.freq_div_' + key).addClass('hide');

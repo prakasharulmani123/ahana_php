@@ -159,7 +159,7 @@
                                                                                                     <div class="col-sm-3">
                                                                                                         <label> Product</label>
                                                                                                         <select class="form-control" name="Product" ng-model="addData.product" ng-options="product as product.full_name for product in products| filter:$viewValue" data-ng-change="setGeneric();
-                                                                                                            getRoutes(false, null, null)">
+                                                                                                                getRoutes(false, null, null)">
                                                                                                             <option value="">Select Product</option>
                                                                                                         </select>                                                                    
                                                                                                     </div>
@@ -256,113 +256,72 @@
                                                             <td align="left" valign="top">
                                                                 <div class="pre-freq-new1" id="globalDataFreq">
                                                                     <div id="frequency_3" ng-show="globalData.freq_type == '3'">
-                                                                        <input autocomplete="off" 
-                                                                               select-on-click="" 
-                                                                               ng-keyup="psTypeaheadKeyup($event, 'frequency_3_0'); $event.keyCode == 13 ? addGlobalForm() : null"
-                                                                               ng-keydown="psTypeaheadKeydown($event, 'frequency_3_0', 'tyh_frequency_3_1')"
-                                                                               type="text" 
-                                                                               name="masked" 
-                                                                               ng-model="globalData.frequency_3_0" 
-                                                                               model-view-value="true" 
-                                                                               class="form-control"
-                                                                               id="tyh_frequency_3_0"
-                                                                               number-mask=""
+                                                                        <!--ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null"-->
+                                                                        <input type="text"
+                                                                               autocomplete="off" 
+                                                                               ng-model="globalData.frequency_3_0"
+                                                                               class="form-control text-center"
+                                                                               number-mask
                                                                                maxlength="4"
-                                                                               typeahead-editable="true"
-                                                                               typeahead="consFreq.freq_name_0 for consFreq in currPresMask3 | unique: 'freq_name_0'"
-                                                                               typeahead-focus="">
-                                                                        <input autocomplete="off" 
-                                                                               select-on-click="" 
-                                                                               ng-keyup="psTypeaheadKeyup($event, 'frequency_3_1'); $event.keyCode == 13 ? addGlobalForm() : null"
-                                                                               ng-keydown="psTypeaheadKeydown($event, 'frequency_3_1', 'tyh_frequency_3_2')"
-                                                                               type="text" 
-                                                                               name="masked" 
-                                                                               ng-model="globalData.frequency_3_1" 
-                                                                               model-view-value="true" 
-                                                                               class="form-control"
-                                                                               id="tyh_frequency_3_1"
-                                                                               number-mask=""
+                                                                               auto-complete
+                                                                               ac-options="autoCompleteOptions_3_0"
+                                                                               />
+                                                                        <input type="text"
+                                                                               autocomplete="off" 
+                                                                               ng-model="globalData.frequency_3_1"
+                                                                               class="form-control text-center"
+                                                                               number-mask
                                                                                maxlength="4"
-                                                                               typeahead-editable="true"
-                                                                               typeahead="consFreq.freq_name_1 for consFreq in currPresMask3 | unique: 'freq_name_1'"
-                                                                               typeahead-focus="">
-                                                                        <input autocomplete="off"
-                                                                               select-on-click="" 
-                                                                               ng-keyup="psTypeaheadKeyup($event, 'frequency_3_2'); $event.keyCode == 13 ? addGlobalForm() : null"
-                                                                               ng-keydown="psTypeaheadKeydown($event, 'frequency_3_2', 'tyh_no_of_days')"
-                                                                               type="text" 
-                                                                               name="masked" 
-                                                                               ng-model="globalData.frequency_3_2" 
-                                                                               model-view-value="true" 
-                                                                               class="form-control"
-                                                                               id="tyh_frequency_3_2"
-                                                                               number-mask=""
+                                                                               auto-complete
+                                                                               ac-options="autoCompleteOptions_3_1"
+                                                                               />
+                                                                        <input type="text"
+                                                                               autocomplete="off" 
+                                                                               ng-model="globalData.frequency_3_2"
+                                                                               class="form-control text-center"
+                                                                               number-mask
                                                                                maxlength="4"
-                                                                               typeahead-editable="true"
-                                                                               typeahead="consFreq.freq_name_2 for consFreq in currPresMask3 | unique: 'freq_name_2'"
-                                                                               typeahead-focus="">
+                                                                               auto-complete
+                                                                               ac-options="autoCompleteOptions_3_2"
+                                                                               />
                                                                     </div>
                                                                     <div id="frequency_4" ng-show="globalData.freq_type == '4'">
-                                                                        <input autocomplete="off" 
-                                                                               select-on-click="" 
-                                                                               ng-keyup="psTypeaheadKeyup($event, 'frequency_4_0'); $event.keyCode == 13 ? addGlobalForm() : null"
-                                                                               ng-keydown="psTypeaheadKeydown($event, 'frequency_4_0', 'tyh_frequency_4_1')"
-                                                                               type="text" 
-                                                                               name="masked" 
-                                                                               ng-model="globalData.frequency_4_0" 
-                                                                               model-view-value="true" 
-                                                                               class="form-control"
-                                                                               id="tyh_frequency_4_0"
-                                                                               number-mask=""
+                                                                        <input type="text"
+                                                                               autocomplete="off" 
+                                                                               ng-model="globalData.frequency_4_0"
+                                                                               class="form-control text-center"
+                                                                               number-mask
                                                                                maxlength="4"
-                                                                               typeahead-editable="true"
-                                                                               typeahead="consFreq.freq_name_0 for consFreq in currPresMask4 | unique: 'freq_name_0'"
-                                                                               typeahead-focus="">
-                                                                        <input autocomplete="off" 
-                                                                               select-on-click="" 
-                                                                               ng-keyup="psTypeaheadKeyup($event, 'frequency_4_1'); $event.keyCode == 13 ? addGlobalForm() : null"
-                                                                               ng-keydown="psTypeaheadKeydown($event, 'frequency_4_1', 'tyh_frequency_4_2')"
-                                                                               type="text" 
-                                                                               name="masked" 
-                                                                               ng-model="globalData.frequency_4_1" 
-                                                                               model-view-value="true" 
-                                                                               class="form-control"
-                                                                               id="tyh_frequency_4_1"
-                                                                               number-mask=""
+                                                                               auto-complete
+                                                                               ac-options="autoCompleteOptions_4_0"
+                                                                               />
+                                                                        <input type="text"
+                                                                               autocomplete="off" 
+                                                                               ng-model="globalData.frequency_4_1"
+                                                                               class="form-control text-center"
+                                                                               number-mask
                                                                                maxlength="4"
-                                                                               typeahead-editable="true"
-                                                                               typeahead="consFreq.freq_name_1 for consFreq in currPresMask4 | unique: 'freq_name_1'"
-                                                                               typeahead-focus="">
-                                                                        <input autocomplete="off"
-                                                                               select-on-click="" 
-                                                                               ng-keyup="psTypeaheadKeyup($event, 'frequency_4_2'); $event.keyCode == 13 ? addGlobalForm() : null"
-                                                                               ng-keydown="psTypeaheadKeydown($event, 'frequency_4_2', 'tyh_frequency_4_3')"
-                                                                               type="text" 
-                                                                               name="masked" 
-                                                                               ng-model="globalData.frequency_4_2" 
-                                                                               model-view-value="true" 
-                                                                               class="form-control"
-                                                                               id="tyh_frequency_4_2"
-                                                                               number-mask=""
+                                                                               auto-complete
+                                                                               ac-options="autoCompleteOptions_4_1"
+                                                                               />
+                                                                        <input type="text"
+                                                                               autocomplete="off" 
+                                                                               ng-model="globalData.frequency_4_2"
+                                                                               class="form-control text-center"
+                                                                               number-mask
                                                                                maxlength="4"
-                                                                               typeahead-editable="true"
-                                                                               typeahead="consFreq.freq_name_2 for consFreq in currPresMask4 | unique: 'freq_name_2'"
-                                                                               typeahead-focus="">
-                                                                        <input autocomplete="off"
-                                                                               select-on-click="" 
-                                                                               ng-keyup="psTypeaheadKeyup($event, 'frequency_4_3'); $event.keyCode == 13 ? addGlobalForm() : null"
-                                                                               ng-keydown="psTypeaheadKeydown($event, 'frequency_4_3', 'tyh_no_of_days')"
-                                                                               type="text" 
-                                                                               name="masked" 
-                                                                               ng-model="globalData.frequency_4_3" 
-                                                                               model-view-value="true" 
-                                                                               class="form-control"
-                                                                               id="tyh_frequency_4_3"
-                                                                               number-mask=""
+                                                                               auto-complete
+                                                                               ac-options="autoCompleteOptions_4_2"
+                                                                               />
+                                                                        <input type="text"
+                                                                               autocomplete="off" 
+                                                                               ng-model="globalData.frequency_4_3"
+                                                                               class="form-control text-center"
+                                                                               number-mask
                                                                                maxlength="4"
-                                                                               typeahead-editable="true"
-                                                                               typeahead="consFreq.freq_name_3 for consFreq in currPresMask4 | unique: 'freq_name_3'"
-                                                                               typeahead-focus="">
+                                                                               auto-complete
+                                                                               ac-options="autoCompleteOptions_4_3"
+                                                                               />
                                                                     </div>
                                                                     <div id="frequency_txt" ng-show="globalData.freq_type == 'txt'">
                                                                         <input autocomplete="off" 
@@ -372,7 +331,6 @@
                                                                                ng-model="globalData.frequency_txt" 
                                                                                model-view-value="true" 
                                                                                class="form-control"
-                                                                               number-mask=""
                                                                                maxlength="4">
                                                                     </div>
 
@@ -457,22 +415,16 @@
 
                                                             </td>
                                                             <td align="left" valign="top">
-                                                                <!--| filter:$viewValue:stateComparator-->
-                                                                <input 
-                                                                    typeahead-editable="true"
-                                                                    typeahead="consNoofdays.number_of_days for consNoofdays in consultantNoofdays | unique: 'number_of_days' | limitTo:10" 
-                                                                    typeahead-focus=""
-                                                                    autocomplete="off" 
-                                                                    type="text" 
-                                                                    ng-model="globalData.no_of_days" 
-                                                                    class="form-control" 
-                                                                    id="tyh_no_of_days"
-                                                                    drop-disable 
-                                                                    number-mask="" 
-                                                                    select-on-click="" 
-                                                                    ng-keyup="psTypeaheadKeyup($event, 'no_of_days'); $event.keyCode == 13 ? addGlobalForm() : null"
-                                                                    ng-keydown="psTypeaheadKeydown($event, 'no_of_days', 'ps_remarks')"
-                                                                    >
+                                                                <input type="text"
+                                                                       autocomplete="off" 
+                                                                       ng-model="globalData.no_of_days" 
+                                                                       class="form-control text-center"
+                                                                       drop-disable 
+                                                                       number-mask
+                                                                       maxlength="4"
+                                                                       auto-complete
+                                                                       ac-options="autoCompleteOptionsNoofdays"
+                                                                       />
                                                             </td>
                                                             <td align="left" valign="top"><input id="ps_remarks" name="" ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null" ng-model="globalData.remarks" type="text"  class="form-control"></td>
                                                             <td align="left" valign="top" style="width:100px;" class="top-prescription-buttons">
@@ -904,7 +856,7 @@
                                                                                         <div class="form-group">
                                                                                             <label for="exampleInputEmail2"><i class="fa fa-calendar"></i> <b> Next Vist </b></label> &nbsp; &nbsp;
                                                                                             <input type="text" id="next_visit_date_picker" class="form-control multimonthdatepicker" ng-model="data.next_visit" ng-click="open($event)" drop-disable prevent-enter="true" ng-change="setDayEmpty();
-                                                                                                getDays();"/>
+                                                                                                   getDays();"/>
                                                                                         </div>
                                                                                         <div class="form-group">
                                                                                             <label for="exampleInputEmail2">
@@ -1159,7 +1111,7 @@
 
                                 <div ng-show="tab == 3" class="vitals-tab">
                                     <div class="row" ng-init="vitaldata = {};
-                                        loadVitals(); vitaldata.formtype = 'add'">
+                                         loadVitals(); vitaldata.formtype = 'add'">
                                         <div class="col-lg-12"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
@@ -1782,7 +1734,7 @@
                                                                 </td>
                                                                 <td> {{patConsultant.consultant_name}} </td>
                                                                 <td valign="middle">
-<!--                                                                    <div tooltip-placement="left" data-tooltip-html-unsafe="{{patConsultant.concatenate_notes ? patConsultant.full_notes : ''}}"> <span ng-bind-html="patConsultant.short_notes"></span> </div>-->
+                                                                    <!--                                                                    <div tooltip-placement="left" data-tooltip-html-unsafe="{{patConsultant.concatenate_notes ? patConsultant.full_notes : ''}}"> <span ng-bind-html="patConsultant.short_notes"></span> </div>-->
                                                                     <span ng-bind-html="patConsultant.full_notes"></span>
                                                                 </td>
                                                                 <td>{{patConsultant.created_by_name}}</td>
@@ -1847,34 +1799,34 @@
 
 <script>
     $(document).ready(function () {
-    //var site_url = $('[ng-controller="PrescriptionController"]').scope().IRISOrgUrl;
-    $('#search-form').on('click', function (e) {
-    e.stopPropagation();
-    });
-    $.getScript("js/slidebars.js", function (data, textStatus, jqxhr) {
-    slidebar();
-    });
+        //var site_url = $('[ng-controller="PrescriptionController"]').scope().IRISOrgUrl;
+        $('#search-form').on('click', function (e) {
+            e.stopPropagation();
+        });
+        $.getScript("js/slidebars.js", function (data, textStatus, jqxhr) {
+            slidebar();
+        });
 //        prescription right navigation
-    $('.expand-notes').click(function (e) {
-    $('#makeit-full').toggleClass('fullscreen');
-    $('.note-full').toggleClass('fullscreen');
-    var div_width = '-' + $('#makeit-full').css('width');
-    $('#sb-site').css('transform', 'translate(' + div_width + ')');
-    $('#sb-site').css('transition', 'none');
-    });
-    $(".multimonthdatepicker").datepicker({
+        $('.expand-notes').click(function (e) {
+            $('#makeit-full').toggleClass('fullscreen');
+            $('.note-full').toggleClass('fullscreen');
+            var div_width = '-' + $('#makeit-full').css('width');
+            $('#sb-site').css('transform', 'translate(' + div_width + ')');
+            $('#sb-site').css('transition', 'none');
+        });
+        $(".multimonthdatepicker").datepicker({
 //            showOn: "button",
 //            buttonImage: site_url + "/img/calendar.gif",
 //            buttonText: "Select date",
-    numberOfMonths: 2,
+            numberOfMonths: 2,
             showButtonPanel: true,
             dateFormat: 'yy-mm-dd',
             minDate: 0
-    });
+        });
     });
     function slidebar() {
-    $.slidebars({
-    scrollLock: true
-    });
+        $.slidebars({
+            scrollLock: true
+        });
     }
 </script>
