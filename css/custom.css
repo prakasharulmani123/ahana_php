@@ -224,7 +224,7 @@ tfoot {
 	padding: 5px;
 }
 .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
-	padding: 6px 7px;
+	padding: 6px 6px;
 	line-height: 15px;
 }
 .in-patient-table label.i-checks {
@@ -776,7 +776,7 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 	width: 152px;
 }
 .freq_3_times, .freq_4_times, .freq_1_times {
-	width: 87.9% !important;
+	width: 86.5% !important;
 }
 .freq_1_times > span {
 	width: 100% !important;
