@@ -101,7 +101,8 @@
                                 </td>
                                 <td>
                                     <label class="i-checks "> 
-                                        <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateAlert(row, row.pat_alert_id)'> 
+<!--                                        <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateAlert(row, row.pat_alert_id)'> -->
+                                            <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status"  ng-change='updateStatus("PatAlert", row.pat_alert_id)'>
                                         <i></i>
                                     </label>
                                 </td>
@@ -226,7 +227,8 @@
                                 </td>
                                 <td>
                                     <label class="i-checks "> 
-                                        <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateAllergies(row, row.pat_allergies_id)'> 
+<!--                                        <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateAllergies(row, row.pat_allergies_id)'> -->
+                                            <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("PatAllergies", row.pat_allergies_id)'>
                                         <i></i>
                                     </label>
                                 </td>

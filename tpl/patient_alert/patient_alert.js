@@ -23,6 +23,8 @@ app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '
             $('.op-btn-group button, .op-btn-group a').removeClass('active');
             $('.op-btn-group button.' + type + '-tab').addClass('active');
             $scope.current_tab = type;
+            $scope.errorData = "";
+            $scope.msg.successMessage = "";
         }
 
         selected = [];
@@ -171,6 +173,8 @@ app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '
 
         //Delete
         $scope.removeRow = function (row) {
+            $scope.errorData = "";
+            $scope.msg.successMessage = "";
             var modalOptions = {
                 closeButtonText: 'No',
                 actionButtonText: 'Yes',
@@ -231,6 +235,8 @@ app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '
             });
         }
         $scope.allergiesSave = function (mode) {
+            $scope.errorData = "";
+            $scope.msg.successMessage = "";
             _that = this;
 
             if (mode == 'add') {
@@ -329,6 +335,8 @@ app.controller('PatientAlertsController', ['$rootScope', '$scope', '$timeout', '
                     data: {id: row.pat_allergies_id}
                 }).then(
                         function (response) {
+                            $scope.errorData = "";
+                            $scope.msg.successMessage = "";
                             $scope.loadbar('hide');
                             if (response.data.success === true) {
                                 $scope.loadPatientAllergiesList();
