@@ -126,7 +126,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
             if (typeof $scope.day != 'undefined' && $scope.day != '' && typeof $scope.month != 'undefined' && $scope.month != '' && typeof $scope.year != 'undefined' && $scope.year != '') {
                 //pageURL += '&dt=' + moment($scope.form_filter1).format('YYYY-MM-DD');
-                pageURL += '&dt=' +$scope.year+'-'+$scope.month+'-'+$scope.day;
+                pageURL += '&dt=' + $scope.year + '-' + $scope.month + '-' + $scope.day;
             }
             // Get data's from service
             $http.get(pageURL)
@@ -242,6 +242,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
         // add Row
         $scope.addRow = function () {
+            $scope.product_item_error = '';
             $scope.inserted = {
                 product_id: '',
                 full_name: '',
@@ -266,7 +267,15 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 is_temp: '0',
                 exp_warning: ''
             };
-            $scope.purchaseitems.push($scope.inserted);
+            if ($scope.purchaseitems.length > 0) {
+                if((!$scope.purchaseitems[$scope.purchaseitems.length-1].product_id) || ($scope.purchaseitems[$scope.purchaseitems.length-1].batch_no=='0')) {
+                    $scope.product_item_error = "Kindly fill the items details";
+                } else {
+                    $scope.purchaseitems.push($scope.inserted);
+                }
+            } else {
+                $scope.purchaseitems.push($scope.inserted);
+            }
 
             if ($scope.purchaseitems.length > 1) {
                 $timeout(function () {

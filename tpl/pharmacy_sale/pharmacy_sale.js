@@ -399,6 +399,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.saleItems = [];
         // Add first row in sale item table.
         $scope.addRow = function (focus) {
+            $scope.sale_item_error = '';
             $scope.inserted = {
                 product_id: '',
                 product_name: '',
@@ -418,7 +419,15 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 total_amount: '0',
                 generic_id: '',
             };
-            $scope.saleItems.push($scope.inserted);
+            if ($scope.saleItems.length > 0) {
+                if ((!$scope.saleItems[$scope.saleItems.length - 1].product_id) || (!$scope.saleItems[$scope.saleItems.length - 1].batch_no)) {
+                    $scope.sale_item_error = "Kindly fill the items details";
+                } else {
+                    $scope.saleItems.push($scope.inserted);
+                }
+            } else {
+                $scope.saleItems.push($scope.inserted);
+            }
 
             if (focus) {
                 if ($scope.saleItems.length > 1) {
