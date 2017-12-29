@@ -32,12 +32,13 @@ app.controller('RoomTypesRoomsController', ['$scope', '$http', '$filter', '$stat
                 .withOption('serverSide', true)
                 .withOption('stateSave', true)
                 .withOption('bLengthChange', false)
+                .withOption('order', [0, 'asc'])
                 .withPaginationType('full_numbers')
                 .withOption('createdRow', createdRow);
 
         vm.dtColumns = [
             DTColumnBuilder.newColumn('bed_name').withTitle('Bed No.'),
-            DTColumnBuilder.newColumn('roomTypes').withTitle('Bed Types').renderWith(typesDTHtml),
+            DTColumnBuilder.newColumn('room_type_name').withTitle('Bed Types').notSortable().renderWith(typesDTHtml),
             DTColumnBuilder.newColumn(null).withTitle('Actions').notSortable().renderWith(actionsDTHtml)
         ];
 
