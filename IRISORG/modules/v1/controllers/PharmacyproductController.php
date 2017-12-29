@@ -381,7 +381,7 @@ class PharmacyproductController extends ActiveController {
             $command = $this->_connection->createCommand("
                     SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name,
                     CONCAT(
-                        IF(b.generic_nme IS NOT NULL, b.generic_name, ''),
+                        IF(b.generic_name IS NOT NULL, b.generic_name, ''),
                         IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
                         IF(a.product_unit_count IS NOT NULL, CONCAT(' ', a.product_unit_count), ''),
                         IF(a.product_unit IS NOT NULL, CONCAT('', a.product_unit), '')
