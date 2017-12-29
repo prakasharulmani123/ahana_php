@@ -72,11 +72,14 @@ class RoomController extends ActiveController {
         // Order Records
         if (isset($requestData['order'])) {
             if ($requestData['order'][0]['dir'] == 'asc') {
-                $sort_dir = SORT_ASC;
+                //$sort_dir = SORT_ASC ;
+                $order_array = '(bed_name+0) ASC';      //bed_name field is varchar its convert to interger field - columname + '0' 
             } elseif ($requestData['order'][0]['dir'] == 'desc') {
-                $sort_dir = SORT_DESC;
+                //$sort_dir = SORT_DESC;
+                $order_array = '(bed_name+0) DESC';     //bed_name field is varchar its convert to interger field - columname + '0'
             }
-            $order_array = [$requestData['columns'][$requestData['order'][0]['column']]['data'] => $sort_dir];
+            //$order_array = [$requestData['columns'][$requestData['order'][0]['column']]['data'] => $sort_dir];
+            //$order_array = '(bed_name+0)';
         }
 
         if (!empty($requestData['search']['value'])) {
