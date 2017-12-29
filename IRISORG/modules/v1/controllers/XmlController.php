@@ -627,7 +627,8 @@ class XmlController extends Controller {
 
                     $fileContent = file_get_contents($files);
                     //PatDocumentTypes::updateAllCounters(["document_xml" => $fileContent]);
-                    $docModel = PatDocumentTypes::find()->andWhere(['doc_type' => 'CH'])->all();
+                    $docModel = PatDocumentTypes::find()->andWhere(['doc_type' => 'CH'])
+                            ->where(['IN', 'tenant_id', [1,2,3,4,6,7,11,13]])->all();
                     foreach ($docModel as $doc) {
                         if (basename($files) == 'case_history.xml') {
                             $doc->document_xml = $fileContent;
