@@ -147,7 +147,7 @@
                 element.on('blur', function () {
                     $timeout(function () {
                         ctrl.hide();
-                    }, 100);
+                    }, 1000);
                 });
                 
                 // element.on('input', function () {
