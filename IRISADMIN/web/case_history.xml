@@ -421,7 +421,7 @@
                     </PROPERTIES>
                 </FIELD>
             </FIELD>
-            <FIELD id="DDLpredisposing_factor" header2Class="Occupational_History" type="DropDownList" label="Predisposing factor">
+            <FIELD id="DDLpredisposing_factor" type="DropDownList" label="Predisposing factor">
                 <PROPERTIES>
                     <PROPERTY name="id">DDLpredisposing_factor</PROPERTY>
                     <PROPERTY name="name">DDLpredisposing_factor</PROPERTY>
