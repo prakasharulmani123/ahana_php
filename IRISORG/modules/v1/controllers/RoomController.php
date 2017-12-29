@@ -68,6 +68,16 @@ class RoomController extends ActiveController {
         $modelClass = $this->modelClass;
         $totalData = $modelClass::find()->tenant()->active()->count();
         $totalFiltered = $totalData;
+        
+        // Order Records
+        if (isset($requestData['order'])) {
+            if ($requestData['order'][0]['dir'] == 'asc') {
+                $sort_dir = SORT_ASC;
+            } elseif ($requestData['order'][0]['dir'] == 'desc') {
+                $sort_dir = SORT_DESC;
+            }
+            $order_array = [$requestData['columns'][$requestData['order'][0]['column']]['data'] => $sort_dir];
+        }
 
         if (!empty($requestData['search']['value'])) {
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
@@ -89,7 +99,7 @@ class RoomController extends ActiveController {
                     ])
                     ->limit($requestData['length'])
                     ->offset($requestData['start'])
-                    ->orderBy(['created_at' => SORT_DESC])
+                    ->orderBy($order_array)
                     ->all();
         } else {
             $rooms = $modelClass::find()
@@ -97,7 +107,7 @@ class RoomController extends ActiveController {
                     ->active()
                     ->limit($requestData['length'])
                     ->offset($requestData['start'])
-                    ->orderBy(['created_at' => SORT_DESC])
+                    ->orderBy($order_array)
                     ->all();
         }
 
@@ -106,7 +116,7 @@ class RoomController extends ActiveController {
             $nestedData = array();
             $nestedData['room_id'] = $room->room_id;
             $nestedData['bed_name'] = $room->bed_name;
-            $nestedData['roomTypes'] = \yii\helpers\ArrayHelper::map($room->roomTypes, 'room_type_id', 'room_type_name');
+            $nestedData['room_type_name'] = \yii\helpers\ArrayHelper::map($room->roomTypes, 'room_type_id', 'room_type_name');
             $data[] = $nestedData;
         }
 
