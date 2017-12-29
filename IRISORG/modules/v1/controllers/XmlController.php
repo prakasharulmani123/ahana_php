@@ -398,8 +398,8 @@ class XmlController extends Controller {
     public function actionChangetxtattrval() {
         //$xpath = "/FIELDS/GROUP/PANELBODY//LISTITEM[@id='RBnatureofdelusion2']";
         //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD/LISTITEMS/LISTITEM[@value='Other']";
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD/LISTITEMS/LISTITEM[@id='RBgaitdisurbances3']";
-        //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='diagnosis_notes']";
+        //$xpath = "/FIELDS/GROUP/PANELBODY//FIELD/LISTITEMS/LISTITEM[@id='RBgaitdisurbances3']";
+        $xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='DDLpredisposing_factor']";
 
         $all_files = $this->getAllFiles();
         $error_files = [];
@@ -416,11 +416,10 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            $target['value'] = 'Limp';
-                            $target[0] = 'Limp';
+                            $target['header2Class'] = '';
                         }
                     }
-                    $xml->asXML($files); //die;
+                    $xml->asXML($files); 
                 }
             }
         }
