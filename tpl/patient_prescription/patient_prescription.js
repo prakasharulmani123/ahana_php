@@ -1605,6 +1605,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         selected.next().addClass("selected");
                     }
                 }
+                
+                //Scroll dropdown when key up / down
+                $timeout(function(){
+                    var selected_li = $('ul.search-patientcont-header li.selected');
+                    $('ul.search-patientcont-header')[0].scrollTop = selected_li.index() * selected_li.outerHeight();
+                });
 
                 var a = $("#prescriptioncont-header .selected a");
                 if (a.length > 0) {

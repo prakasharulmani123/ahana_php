@@ -379,7 +379,7 @@ out-patient-table .table > thead > tr > th label.i-checks {
 	padding-top: 7px;
 }
 .search-patientcont-header {
-	max-height: 450px;
+	max-height: 330px;
 	overflow-y: auto;
 }
 .search-patientcont-div {
