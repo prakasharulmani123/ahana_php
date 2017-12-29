@@ -330,7 +330,7 @@ class PatEncounter extends RActiveRecord {
                 return (isset($model->patAppointmentSeen) ? Yii::$app->hepler->convert_number_to_words((int) ($model->patAppointmentSeen->amount)) . ' Rupees Only' : '-');
             },
             'room_name' => function ($model) {
-                return (isset($model->patCurrentAdmission->room->bed_name) ? $model->patCurrentAdmission->room->bed_name : '-');
+                return (isset($model->patCurrentAdmission->room->bed_name) ? (int)$model->patCurrentAdmission->room->bed_name : '-');
             },
             'liveAppointmentConsultant' => function ($model) {
                 return (isset($model->patLiveAppointmentBooking->consultant) ? $model->patLiveAppointmentBooking->consultant : '-');
