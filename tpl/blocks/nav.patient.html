@@ -19,7 +19,7 @@
     <li ui-sref-active="active"> <a check-access ui-sref="patient.consultant({id: $state.params.id})"  ng-class="{'linkDisabled': !patientObj.have_atleast_encounter}">  <img src="img/icon6.png"  alt="" /> <br/> Consultation </a>  </li>
     <li ui-sref-active="active"> <a check-access ui-sref="patient.procedure({id: $state.params.id})" ng-class="{'linkDisabled': !patientObj.have_atleast_encounter}">  <img src="img/icon7.png"  alt="" /> <br/> Procedures </a>  </li>
     <li ui-sref-active="active"> <a check-access ui-sref="patient.encounter({id: $state.params.id})">  <img src="img/icon4.png"  alt="" /> <br/> Encounters </a>  </li>
-<!--    <li ui-sref-active="active"> 
+    <li ui-sref-active="active"> 
         <a check-access ui-sref="patient.notes({id: $state.params.id})"  ng-class="{'linkDisabled': !patientObj.have_atleast_encounter}" ng-click="seen_notes_left_notification()">  
             <img src="img/icon5.png"  alt="" /> 
             <span class="badge badge-sm up bg-danger pull-right-xs" ng-show="app.patientDetail.patientUnseenNotesCount > 0">
@@ -27,7 +27,7 @@
             </span>
             <br/> Notes 
         </a>  
-    </li>-->
+    </li>
     <li ui-sref-active="active"> <a check-access ui-sref="patient.view({id: $state.params.id})">  <img src="img/icon1.png"  alt="" /> <br/> Details </a>  </li>
     <li id='view_billing' ui-sref-active="active"> <a check-access ui-sref="patient.allbilling({id: $state.params.id})" ng-class="{'linkDisabled': !patientObj.have_atleast_encounter}">  <img src="img/icon11.png"  alt="" /> <br/> Billing </a>  </li>
     <li ui-sref-active="active"> <a check-access ui-sref="patient.alert({id: $state.params.id,type:'alert'})" ng-class="{'linkDisabled': !patientObj.have_atleast_encounter}">  <img src="img/icon9.png"  alt="" /> <br/> alerts & allergies </a>   </li>
