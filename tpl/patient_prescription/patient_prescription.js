@@ -58,6 +58,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.ctrl.expandAll = function (expanded) {
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
+        Array.prototype.max = function () {
+            return Math.max.apply(null, this);
+        };
+
+        Array.prototype.min = function () {
+            return Math.min.apply(null, this);
+        };
         $scope.openTabsetting = function (size, ctrlr, tmpl, update_col) {
             var modalInstance = $modal.open({
                 templateUrl: tmpl,
@@ -2283,14 +2290,19 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         //Weight chart data
                         $scope.weight_graph_data = [];
                         $scope.weight_graph_tick = [];
+                        var weight_max_min = [];
                         var wht = vitals.weight.length;
                         angular.forEach(vitals.weight, function (row) {
                             if (row.weight) {
+                                weight_max_min.push(row.weight);
                                 $scope.weight_graph_data.push([wht, row.weight]);
                                 $scope.weight_graph_tick.push([wht, moment(row.vital_time).format('DD-MM-YY')]);
                                 wht--;
                             }
                         });
+                        $scope.min_weight = weight_max_min.min()-5;
+                        $scope.max_weight = weight_max_min.max()+5;
+
                         //Height chart data
                         $scope.height_graph_data = [];
                         $scope.height_graph_tick = [];
@@ -3232,7 +3244,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 return $scope.fillFrequency4[3];
             }
         });
-        
+
         $scope.autoCompleteOptionsNoofdays = angular.extend({}, acDefaultOptions, {
             data: function (searchText) {
                 return $scope.fillNoofdays;

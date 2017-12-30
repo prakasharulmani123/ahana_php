@@ -1239,8 +1239,8 @@
                                                                          position: 'bottom',
                                                                          ticks: {{weight_graph_tick}}
                                                                          },
-                                                                         yaxis:{ font: { color: '#444444' },min:0,
-                                                                         max:150 },
+                                                                         yaxis:{ font: { color: '#444444' },min:{{min_weight}},
+                                                                         max:{{max_weight}},ticks:8 },
                                                                          grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#444444' },
                                                                          tooltip: true,
                                                                          tooltipOpts: { content: '%x is %y',  defaultTheme: false, shifts: { x: 0, y: 20 } }
