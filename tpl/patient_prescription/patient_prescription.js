@@ -1612,9 +1612,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         selected.next().addClass("selected");
                     }
                 }
-                
+
                 //Scroll dropdown when key up / down
-                $timeout(function(){
+                $timeout(function () {
                     var selected_li = $('ul.search-patientcont-header li.selected');
                     $('ul.search-patientcont-header')[0].scrollTop = selected_li.index() * selected_li.outerHeight();
                 });
@@ -2300,8 +2300,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 wht--;
                             }
                         });
-                        $scope.min_weight = weight_max_min.min()-5;
-                        $scope.max_weight = weight_max_min.max()+5;
+                        $scope.min_weight = weight_max_min.min() - 5;
+                        $scope.max_weight = weight_max_min.max() + 5;
 
                         //Height chart data
                         $scope.height_graph_data = [];
@@ -2642,6 +2642,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.consFormData = {};
             $scope.consFormData.formtype = 'add';
             $scope.consFormData.consult_date = moment().format('YYYY-MM-DD HH:mm:ss');
+            $timeout(function () {
+                $scope.consFormData.consultant_id = $scope.data.consultant_id;
+            }, 2000)
+
         };
         $scope.saveConsultantForm = function (mode) {
             consData = $scope.consFormData;
@@ -2672,6 +2676,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.msg.successMessage = succ_msg;
                         $scope.consFormData = {};
                         $scope.consFormData.formtype = 'add';
+                        $scope.consFormData.consultant_id = $scope.data.consultant_id;
                         $timeout(function () {
                             $scope.loadConsultantsList();
                         }, 1000)
@@ -2710,6 +2715,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.resetconsultantForm = function () {
             $scope.consFormData = {};
             $scope.consFormData.formtype = 'add';
+            $scope.consFormData.consultant_id = $scope.data.consultant_id;
         }
 
         $scope.removeconsultantRow = function (consult_id) {
