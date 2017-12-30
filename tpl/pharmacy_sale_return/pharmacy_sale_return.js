@@ -106,6 +106,8 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
                         $scope.data.patient_id = result.patient_id;
                         $scope.data.patient_name = result.patient_name ? result.patient_name : '-';
                         $scope.data.mobile_no = result.mobile_no ? result.mobile_no : '-';
+                        $scope.data.bill_payment = result.bill_payment ? result.bill_payment : '-';
+                        $scope.data.patient_group_name = result.patient_group_name ? result.patient_group_name : '-';
 
                         angular.forEach(result.items, function (item, key) {
                             $scope.inserted = {

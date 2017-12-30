@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="panel panel-default">
-            <div class="panel-heading font-bold">Sale Return Details</div>
+            <div class="panel-heading font-bold">Sale Details</div>
             <div class="panel-body">
                 <div class="row">
                     <div class="col-sm-6">
@@ -11,9 +11,6 @@
                                     <label class="col-lg-4 control-label">Sale Date</label>
                                     <div class="col-lg-8">
                                         {{data.sale_date}}
-                                        <!--                                        <select class="form-control" ng-model="data.patient_id" ng-options="patient.patient_id as patient.fullname for patient in patients | orderBy: fullname" ng-change="getPatientMobileNo(data.patient_id)">
-                                                                                    <option value="">Select Patient</option>
-                                                                                </select>-->
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
@@ -21,9 +18,6 @@
                                     <label class="col-lg-4 control-label">Patient Name </label>
                                     <div class="col-lg-8">
                                         {{data.patient_name}}
-                                        <!--                                        <select class="form-control" ng-model="data.patient_id" ng-options="patient.patient_id as patient.fullname for patient in patients | orderBy: fullname" ng-change="getPatientMobileNo(data.patient_id)">
-                                                                                    <option value="">Select Patient</option>
-                                                                                </select>-->
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
@@ -31,9 +25,6 @@
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">Mobile No </label>
                                     {{data.patient_mobile}}
-                                    <!--                                    <div class="col-lg-8">
-                                                                            <input type="text" class="form-control" ng-model="data.mobile_no"/>
-                                                                        </div>-->
                                 </div>
                                 <!--<div class="line line-dashed b-b line-lg "></div>-->
                             </div>
@@ -44,26 +35,43 @@
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <div class="form-group">
-                                    <label class="col-lg-4 control-label">Date *</label>
+                                    <label class="col-lg-4 control-label">Payment Type </label>
                                     <div class="col-lg-8">
+                                        {{data.bill_payment}}
+                                    </div>
+                                </div>
+                                <div class="line line-dashed b-b line-lg "></div>
+                                <div class="form-group">
+                                    <label class="col-lg-4 control-label">Patient Group </label>
+                                    <div class="col-lg-8">
+                                        {{data.patient_group_name}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading font-bold">Sale Return Details</div>
+            <div class="panel-body">
+                <div class="row">
+                    
+                    <div class="col-sm-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label">Sale Return Date *</label>
+                                    <div class="col-lg-4">
                                         <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.sale_return_date" is-open="$parent.opened1" datepicker-options="dateOptions" close-text="Close"  min-date="minDate" ng-click="open($event, 'opened1')" ng-focus="open($event, 'opened1')" prevent-enter="true"/>
                                     </div>
                                 </div>
-                                <!--<div class="line line-dashed b-b line-lg "></div>-->
-
-                                <!--                                <div class="form-group">
-                                                                    <label class="col-lg-4 control-label">Payment Type *</label>
-                                                                    <div class="col-lg-8 col-sm-9">
-                                                                        <div class="input-group w-md">
-                                                                            <label class="i-checks" ng-repeat="paymentType in paymentTypes">
-                                                                                <input type="radio" checked="" value="{{paymentType.value}}" name="paymentType" ng-model="data.payment_type">
-                                                                                <i></i>
-                                                                                {{paymentType.label}}&nbsp; &nbsp;
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="line line-dashed b-b line-lg "></div>-->
                             </div>
                         </div>
                     </div>
