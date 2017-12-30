@@ -150,7 +150,8 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             $http({
                 method: 'POST',
                 url: $rootScope.IRISOrgServiceUrl + '/organization/updatesharing',
-                transformRequest: transformRequestAsFormPost,
+//                transformRequest: transformRequestAsFormPost,
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}, // Need for Serialized form data.
                 data: _data,
             }).success(
                     function (response) {
