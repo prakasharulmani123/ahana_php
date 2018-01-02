@@ -71,11 +71,31 @@
                                     <div ng-include="'tpl/blocks/alert.html'">
                                         {% include 'tpl/blocks/alert.html' %}
                                     </div>
-                                    <div class="pres-tab-btn-cont pres-tab-btn-cont1">
-                                        <button tooltip="Back" ng-show="pres_status != 'current'" ng-click="pres_status = 'current'" class="btn btn-default btn-dark"><i class="fa fa-arrow-left"></i></button>
-                                        <button tooltip="Previous Prescription" tooltip-placement="left" ng-click="pres_status = 'prev'" class="btn btn-default btn-primary"><i class="fa fa-history"></i> </button>
-                                        <button tooltip="Favourite" ng-click="pres_status = 'favourite'" class="btn btn-default btn-primary"><i class="fa fa-heart"></i> </button>
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: name" ng-change="getConsultantFreq()">
+                                                <option value="">Select Consultant</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <input autocomplete="off"
+                                                   placeholder="Diagnosis"
+                                                   type="text"
+                                                   class="form-control"
+                                                   id="diagnosis"
+                                                   ng-model="diagnosis"
+                                                   typeahead="Diag as diagname_desc(Diag) for Diag in getdiagnosis($viewValue) | orderBy: bill_no"
+                                                   typeahead-on-select="setDiagid($item)"
+                                                   typeahead-wait-ms="400"
+                                                   />
+                                        </div>
+                                        <div class="col-sm-2 pres-tab-btn-cont1">
+                                            <button tooltip="Back" ng-show="pres_status != 'current'" ng-click="pres_status = 'current'" class="btn btn-default btn-dark"><i class="fa fa-arrow-left"></i></button>
+                                            <button tooltip="Previous Prescription" tooltip-placement="left" ng-click="pres_status = 'prev'" class="btn btn-default btn-primary"><i class="fa fa-history"></i> </button>
+                                            <button tooltip="Favourite" ng-click="pres_status = 'favourite'" class="btn btn-default btn-primary"><i class="fa fa-heart"></i> </button>
+                                        </div>
                                     </div>
+
                                     <div ng-show="pres_status == 'current'">
                                         <div class="row wrapper pb-sm">
 
@@ -159,7 +179,7 @@
                                                                                                     <div class="col-sm-3">
                                                                                                         <label> Product</label>
                                                                                                         <select class="form-control" name="Product" ng-model="addData.product" ng-options="product as product.full_name for product in products| filter:$viewValue" data-ng-change="setGeneric();
-                                                                                                                getRoutes(false, null, null)">
+                                                                                                            getRoutes(false, null, null)">
                                                                                                             <option value="">Select Product</option>
                                                                                                         </select>                                                                    
                                                                                                     </div>
@@ -439,25 +459,7 @@
                                         </div>
                                         <div class="in-patient-table pres-table">
                                             <div class=" p-b">
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: name" ng-change="getConsultantFreq()">
-                                                            <option value="">Select Consultant</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <input autocomplete="off"
-                                                               placeholder="Diagnosis"
-                                                               type="text"
-                                                               class="form-control"
-                                                               id="diagnosis"
-                                                               ng-model="diagnosis"
-                                                               typeahead="Diag as diagname_desc(Diag) for Diag in getdiagnosis($viewValue) | orderBy: bill_no"
-                                                               typeahead-on-select="setDiagid($item)"
-                                                               typeahead-wait-ms="400"
-                                                               />
-                                                    </div>
-                                                </div>
+
                                                 <div class="row">
                                                     <form editable-form name="tableform" name="prescForm" class="form-horizontal form-validation curPresForm" novalidate="" shown="true" onaftersave="saveForm()">
                                                         <div class="table-responsive prescription-1">
@@ -857,7 +859,7 @@
                                                                                         <div class="form-group">
                                                                                             <label for="exampleInputEmail2"><i class="fa fa-calendar"></i> <b> Next Vist </b></label> &nbsp; &nbsp;
                                                                                             <input type="text" id="next_visit_date_picker" class="form-control multimonthdatepicker" ng-model="data.next_visit" ng-click="open($event)" drop-disable prevent-enter="true" ng-change="setDayEmpty();
-                                                                                                   getDays();"/>
+                                                                                                getDays();"/>
                                                                                         </div>
                                                                                         <div class="form-group">
                                                                                             <label for="exampleInputEmail2">
@@ -1112,7 +1114,7 @@
 
                                 <div ng-show="tab == 3" class="vitals-tab">
                                     <div class="row" ng-init="vitaldata = {};
-                                         loadVitals(); vitaldata.formtype = 'add'">
+                                        loadVitals(); vitaldata.formtype = 'add'">
                                         <div class="col-lg-12"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
@@ -1800,34 +1802,34 @@
 
 <script>
     $(document).ready(function () {
-        //var site_url = $('[ng-controller="PrescriptionController"]').scope().IRISOrgUrl;
-        $('#search-form').on('click', function (e) {
-            e.stopPropagation();
-        });
-        $.getScript("js/slidebars.js", function (data, textStatus, jqxhr) {
-            slidebar();
-        });
+    //var site_url = $('[ng-controller="PrescriptionController"]').scope().IRISOrgUrl;
+    $('#search-form').on('click', function (e) {
+    e.stopPropagation();
+    });
+    $.getScript("js/slidebars.js", function (data, textStatus, jqxhr) {
+    slidebar();
+    });
 //        prescription right navigation
-        $('.expand-notes').click(function (e) {
-            $('#makeit-full').toggleClass('fullscreen');
-            $('.note-full').toggleClass('fullscreen');
-            var div_width = '-' + $('#makeit-full').css('width');
-            $('#sb-site').css('transform', 'translate(' + div_width + ')');
-            $('#sb-site').css('transition', 'none');
-        });
-        $(".multimonthdatepicker").datepicker({
+    $('.expand-notes').click(function (e) {
+    $('#makeit-full').toggleClass('fullscreen');
+    $('.note-full').toggleClass('fullscreen');
+    var div_width = '-' + $('#makeit-full').css('width');
+    $('#sb-site').css('transform', 'translate(' + div_width + ')');
+    $('#sb-site').css('transition', 'none');
+    });
+    $(".multimonthdatepicker").datepicker({
 //            showOn: "button",
 //            buttonImage: site_url + "/img/calendar.gif",
 //            buttonText: "Select date",
-            numberOfMonths: 2,
+    numberOfMonths: 2,
             showButtonPanel: true,
             dateFormat: 'yy-mm-dd',
             minDate: 0
-        });
+    });
     });
     function slidebar() {
-        $.slidebars({
-            scrollLock: true
-        });
+    $.slidebars({
+    scrollLock: true
+    });
     }
 </script>
