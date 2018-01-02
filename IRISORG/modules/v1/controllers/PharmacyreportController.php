@@ -5,6 +5,7 @@ namespace IRISORG\modules\v1\controllers;
 use common\models\PhaProductBatch;
 use common\models\PhaPurchase;
 use common\models\PhaSale;
+use common\models\PhaSaleReturn;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
@@ -66,15 +67,25 @@ class PharmacyreportController extends ActiveController {
 
         return ['report' => $reports];
     }
-    
+
     //Sale Return Report
     public function actionSalereturnreport() {
         $post = Yii::$app->getRequest()->post();
 
-        $reports = \common\models\PhaSaleReturn::find()
+        $model = PhaSaleReturn::find()
                 ->tenant()
-                ->andWhere("pha_sale_return.sale_return_date between '{$post['from']}' AND '{$post['to']}'")
-                ->all();
+                ->joinWith('sale')
+                ->andWhere("pha_sale_return.sale_return_date between '{$post['from']}' AND '{$post['to']}'");
+
+        if (isset($post['payment_type'])) {
+            $model->andWhere(['pha_sale.payment_type' => $post['payment_type']]);
+        }
+        if (isset($post['patient_group_name'])) {
+            $patient_group_names = join("','", $post['patient_group_name']);
+            $model->andWhere("pha_sale.patient_group_name IN ( '$patient_group_names' )");
+        }
+
+        $reports = $model->all();
 
         return ['report' => $reports];
     }
@@ -154,10 +165,10 @@ class PharmacyreportController extends ActiveController {
         $stock_report = $command->queryAll();
         return ['stock_report' => $stock_report];
     }
-    
+
     public function actionStockreport() {
         $post = Yii::$app->getRequest()->post();
-        if(!empty($post)) {
+        if (!empty($post)) {
             $conncection = Yii::$app->client;
             $command = $conncection->createCommand("CALL pha_stock_report_by_date({$post['tenant_id']}, '{$post['from']}');");
             $stock_report = $command->queryAll();
@@ -198,5 +209,4 @@ class PharmacyreportController extends ActiveController {
 //
 //        return ['report' => $reports];
 //    }
-
 }

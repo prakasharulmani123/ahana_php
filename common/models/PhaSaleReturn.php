@@ -178,7 +178,10 @@ class PhaSaleReturn extends RActiveRecord {
                 } else {
                     return '-';
                 }
-            }
+            },
+            'sale_group_name' => function ($model) {
+                return (isset($model->sale) ? $model->sale->patient_group_name : '-');
+            }        
         ];
         $parent_fields = parent::fields();
         $addt_keys = [];
@@ -200,7 +203,7 @@ class PhaSaleReturn extends RActiveRecord {
                     ];
                     break;
                 case 'salereturnreport':
-                    $addt_keys = ['patient_name', 'patient_uhid'];
+                    $addt_keys = ['patient_name', 'patient_uhid','sale_payment_type','sale_group_name'];
                     $parent_fields = [
                         'bill_no' => 'bill_no',
                         'bill_amount' => 'bill_amount',
