@@ -20,12 +20,36 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
             $scope.data = {};
             $scope.data.to = moment().format('YYYY-MM-DD');
             $scope.data.from = moment($scope.data.to).add(-1, 'days').format('YYYY-MM-DD');
+            $scope.data.payment_type = '';
+            $scope.data.patient_group_name = '';
+            $scope.deselectAll();
             $scope.fromMaxDate = new Date($scope.data.to);
             $scope.toMinDate = new Date($scope.data.from);
         }
 
         $scope.initReport = function () {
+            $scope.paymentTypes = [];
+            $rootScope.commonService.GetPaymentType(function (response) {
+                $scope.paymentTypes = response;
+                $scope.paymentTypes.push({value: 'COD', label: 'Cash On Delivery'});
+            });
+
+            $scope.saleGroups = {};
+            $scope.saleGroupsLength = 0;
+            $rootScope.commonService.GetSaleGroups('', '1', false, function (response) {
+                $scope.saleGroups = response.saleGroupsList;
+                $scope.saleGroupsLength = Object.keys($scope.saleGroups).length;
+            });
             $scope.clearReport();
+        }
+        
+        $scope.deselectAll = function () {
+            $timeout(function () {
+                // anything you want can go here and will safely be run on the next digest.
+                var patient_group_button = $('button[data-id="patient_group"]').next();
+                var patient_group_deselect_all = patient_group_button.find(".bs-deselect-all");
+                patient_group_deselect_all.click();
+            });
         }
 
         $scope.$watch('data.from', function (newValue, oldValue) {
@@ -53,7 +77,11 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 angular.extend(data, {from: moment($scope.data.from).format('YYYY-MM-DD')});
             if (typeof $scope.data.to !== 'undefined' && $scope.data.to != '')
                 angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
-
+            if (typeof $scope.data.payment_type !== 'undefined' && $scope.data.payment_type != '')
+                angular.extend(data, {payment_type: $scope.data.payment_type});
+            if (typeof $scope.data.patient_group_name !== 'undefined' && $scope.data.patient_group_name != '')
+                angular.extend(data, {patient_group_name: $scope.data.patient_group_name});
+            
             // Get data's from service
             $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyreport/salereturnreport?addtfields=salereturnreport', data)
                     .success(function (response) {
@@ -106,7 +134,7 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 6}, "", "", "", "", ""
+                {text: branch_name, style: 'header', colSpan: 8}, "", "", "", "", "","",""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
@@ -114,6 +142,8 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 {text: 'Bill No', style: 'header'},
                 {text: 'Patient Name', style: 'header'},
                 {text: 'UHID', style: 'header'},
+                {text: 'Payment Type', style: 'header'},
+                {text: 'Patient Group Name', style: 'header'},
                 {text: 'Sale Return Value', style: 'header'},
             ]);
 
@@ -124,10 +154,12 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 var s_no_string = serial_no.toString();
                 reports.push([
                     s_no_string,
-                    record.sale_date,
+                    record.sale_return_date,
                     record.bill_no,
                     record.patient_name,
                     record.patient_uhid,
+                    record.sale_payment_type,
+                    record.sale_group_name,
                     record.bill_amount,
                 ]);
                 total += parseFloat(record.bill_amount);
@@ -141,8 +173,10 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                     text: 'Total Sale Return Value',
                     style: 'header',
                     alignment: 'right',
-                    colSpan: 5
+                    colSpan: 7
                 },
+                "",
+                "",
                 "",
                 "",
                 "",
@@ -193,7 +227,7 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 style: 'demoTable',
                 table: {
                     headerRows: 2,
-                    widths: ['auto', 'auto', '*', '*', '*', '*'],
+                    widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
                     body: reports,
                     dontBreakRows: true,
                 },

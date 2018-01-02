@@ -33,6 +33,15 @@
                                     </span>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <select id="payment_type" class="selectpicker" ng-model="data.payment_type" ng-options="paymentType.value as paymentType.label for paymentType in paymentTypes">
+                                    <option value="">Select Payment Type</option>
+                                </select>
+                            </div>
+                            <div class="form-group" ng-show="data.payment_type == 'CR' && saleGroupsLength > 0">
+                                <select id="patient_group" class="selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true"  ng-model="data.patient_group_name" ng-options="key as value for (key , value) in saleGroups" multiple>
+                                </select>
+                            </div>
                             <button class="btn btn-success get-report" ng-disabled="searchForm.$invalid" ng-click="loadReport()">Get Report</button>
                             <button class="btn btn-dark" ng-click="clearReport()">Clear</button>
                         </form>
@@ -103,10 +112,12 @@
                                     <tr>
                                         <th id="work-base-grid_c0">S.No</th>
                                         <th id="work-base-grid_c1">Date</th>
-                                        <th id="work-base-grid_c1">Bill No</th>
-                                        <th id="work-base-grid_c2">Patient Name</th>
-                                        <th id="work-base-grid_c2">UHID</th>
-                                        <th id="work-base-grid_c3">Sale Return Value</th>
+                                        <th id="work-base-grid_c2">Bill No</th>
+                                        <th id="work-base-grid_c3">Patient Name</th>
+                                        <th id="work-base-grid_c4">UHID</th>
+                                        <th id="work-base-grid_c5">Payment Type</th>
+                                        <th id="work-base-grid_c6">Patient Group Name</th>
+                                        <th id="work-base-grid_c7">Sale Return Value</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -116,6 +127,8 @@
                                         <td>{{record.bill_no}}</td>
                                         <td>{{record.patient_name}}</td>
                                         <td>{{record.patient_uhid}}</td>
+                                        <td>{{record.sale_payment_type}}</td>
+                                        <td>{{record.sale_group_name || '-'}}</td>
                                         <td data-type="Number" ng-init="sale.total_amount = sale.total_amount + parseFloat(record.bill_amount);">
                                             {{record.bill_amount}}
                                         </td>
@@ -127,7 +140,9 @@
                                         <td style="display: none;" ></td> <!-- For Excel Export-->
                                         <td style="display: none;" ></td> <!-- For Excel Export-->
                                         <td style="display: none;" ></td> <!-- For Excel Export-->
-                                        <th colspan="5" class="text-right"><b>Total Sale Return Value</b></th>
+                                        <td style="display: none;" ></td> <!-- For Excel Export-->
+                                        <td style="display: none;" ></td> <!-- For Excel Export-->
+                                        <th colspan="7" class="text-right"><b>Total Sale Return Value</b></th>
                                         <td data-type="Number"><b>{{sale.total_amount| number:2}}</b></td>
                                     </tr>
                                 </tfoot>
