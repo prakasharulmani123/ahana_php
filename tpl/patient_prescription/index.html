@@ -424,6 +424,7 @@
                                                                        maxlength="4"
                                                                        auto-complete
                                                                        ac-options="autoCompleteOptionsNoofdays"
+                                                                       ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null"
                                                                        />
                                                             </td>
                                                             <td align="left" valign="top"><input id="ps_remarks" name="" ng-keyup="$event.keyCode == 13 ? addGlobalForm() : null" ng-model="globalData.remarks" type="text"  class="form-control"></td>
