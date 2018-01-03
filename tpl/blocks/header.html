@@ -43,6 +43,12 @@
                                             <br>
                                             <span class="pull-left" ng-bind-html="patient.Patient.patient_global_int_code | highlight:patientselected"></span> &nbsp; &nbsp;
                                             <span ng-bind-html="patient.Patient.patient_mobile | highlight:patientselected"> </span>
+                                            <br>
+                                            <p class="pull-left" ng-if="patient.same_branch == false">
+                                                <span>
+                                                    Organization: <b>{{patient.Patient.org_name}}</b>
+                                                </span>
+                                            </p>
                                         </div>
                                     </div>
                                     <div ng-if="patient.PatientMerged" class="col-xs-12 col-sm-5 col-md-6">
