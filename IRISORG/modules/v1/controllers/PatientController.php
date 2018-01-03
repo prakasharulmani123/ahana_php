@@ -208,28 +208,28 @@ class PatientController extends ActiveController {
                     $patients[$key]['same_org'] = true;
                 }
 
-                //Search from HMS Database
-//                if (empty($patients)) {
-//
-//                    $lists = GlPatient::find()
-//                            ->andWhere("status = '1' AND tenant_id != {$tenant_id} AND (parent_id IS NULL OR parent_id = '')")
-//                            ->andFilterWhere([
-//                                'or',
-//                                    ['like', 'patient_firstname', $text],
-//                                    ['like', 'patient_lastname', $text],
-//                                    ['like', 'patient_mobile', $text],
-////                                ['like', 'patient_global_int_code', $text],
-//                                ['like', 'casesheetno', $text],
-//                            ])
-//                            ->limit($limit)
-//                            ->all();
-//
-//                    foreach ($lists as $key => $patient) {
-//                        $patients[$key]['Patient'] = $patient;
-//                        $patients[$key]['same_branch'] = false;
-//                        $patients[$key]['same_org'] = false;
-//                    }
-//                }
+                //Search from HMS Database but need to check, org have a rights to share basic information.
+                $basic_share_enable = \common\models\AppConfiguration::getConfigurationByCode('BASIC');
+                if (empty($patients) && $basic_share_enable->value == 1) {
+
+                    $lists = GlPatient::find()
+                            ->andWhere("status = '1' AND tenant_id != {$tenant_id} AND (parent_id IS NULL OR parent_id = '')")
+                            ->andFilterWhere([
+                                'or',
+                                    ['like', 'patient_firstname', $text],
+                                    ['like', 'patient_lastname', $text],
+                                    ['like', 'patient_mobile', $text],
+                                    ['like', 'patient_global_int_code', $text],
+                            ])
+                            ->limit($limit)
+                            ->all();
+
+                    foreach ($lists as $key => $patient) {
+                        $patients[$key]['Patient'] = $patient;
+                        $patients[$key]['same_branch'] = false;
+                        $patients[$key]['same_org'] = false;
+                    }
+                }
             }
         }
         return ['patients' => $patients];
@@ -642,6 +642,42 @@ class PatientController extends ActiveController {
                 } else {
                     return ['success' => false, 'message' => 'Failed to import'];
                 }
+            } else {
+                //Check global patient exists.
+                $Patient = GlPatient::find()->where([
+                            'patient_global_guid' => $cond['patient_global_guid'],
+                        ])
+                        ->one();
+                if (!empty($Patient)) {
+                    $PatientData = ArrayHelper::toArray($Patient);
+                    $model = new PatPatient;
+
+                    $unset_attr = [
+                        'patient_id',
+                        'patient_guid',
+                        'patient_int_code',
+                        'tenant_id',
+                        'status',
+                        'created_by',
+                        'created_at',
+                        'modified_by',
+                        'modified_at',
+                        'fullname',
+                        'patient_age',
+                        'tenant_name',
+                        'org_name',
+                    ];
+                    $unset_attr = array_combine($unset_attr, $unset_attr);
+
+                    $model->attributes = array_diff_key($PatientData, $unset_attr);
+                    if ($model->save(false)) {
+                        //patGlobalPatient not set because of new patpatient records, that'y new find condition used.
+                        $patient = PatPatient::find()->where(['patient_id' => $model->patient_id])->one();
+                        return ['success' => true, 'patient' => $patient];
+                    } else {
+                        return ['success' => false, 'message' => 'Failed to import'];
+                    }
+                }
             }
         } else {
             return ['success' => true, 'patient' => $Parent_patient];
@@ -839,7 +875,7 @@ class PatientController extends ActiveController {
         }
 
         $encounter = $model->all();
-        
+
         if (count($encounter) != 1) {
             foreach ($encounter as $index => $enc) {
                 if ($enc['patient']['patient_guid'] == $post['guid'])
