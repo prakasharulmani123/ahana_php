@@ -308,6 +308,16 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
 //For Form
         $scope.initForm = function () {
+            if (localStorage.getItem("Show_available_medicine") === null) {
+                $scope.available_medicine = '0';
+                localStorage.setItem("Show_available_medicine", '0');
+            } else {
+                var available = localStorage.getItem("Show_available_medicine");
+                if(available ==1)
+                    $scope.available_medicine = '1';
+                else 
+                    $scope.available_medicine = '0';
+            }
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacydrugclass')
                     .success(function (response) {
                         $scope.drugs = response;
@@ -407,6 +417,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         return $scope.Diag;
                     }
             );
+        }
+        
+        $scope.checkAvailable = function (a) {
+            localStorage.setItem("Show_available_medicine", a);
         }
 
         $scope.setDiagid = function ($item) {
@@ -1213,7 +1227,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         if (typeof $scope.lastSelected.route_id != 'undefined')
                             _data['route_id'] = $scope.lastSelected.route_id;
                     }
-
+                    if(typeof $scope.available_medicine != 'undefined')
+                            _data['available_medicine'] = $scope.available_medicine;
                     $http({
                         method: 'POST',
                         url: $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getprescription',

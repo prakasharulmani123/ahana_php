@@ -72,12 +72,12 @@
                                         {% include 'tpl/blocks/alert.html' %}
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-5">
+                                        <div class="col-sm-3">
                                             <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: name" ng-change="getConsultantFreq()">
                                                 <option value="">Select Consultant</option>
                                             </select>
                                         </div>
-                                        <div class="col-sm-5">
+                                        <div class="col-sm-4">
                                             <input autocomplete="off"
                                                    placeholder="Diagnosis"
                                                    type="text"
@@ -88,6 +88,12 @@
                                                    typeahead-on-select="setDiagid($item)"
                                                    typeahead-wait-ms="400"
                                                    />
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="i-switch m-t-xs m-r"> 
+                                                <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="available_medicine" ng-change='checkAvailable(available_medicine)'> 
+                                                <i></i>
+                                            </label>Show only available medicines
                                         </div>
                                         <div class="col-sm-2 pres-tab-btn-cont1">
                                             <button tooltip="Back" ng-show="pres_status != 'current'" ng-click="pres_status = 'current'" class="btn btn-default btn-dark"><i class="fa fa-arrow-left"></i></button>
@@ -1116,8 +1122,8 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata = {};
-                                        loadVitals(); vitaldata.formtype = 'add'">
+                                    <div class="row" ng-init="vitaldata  =    {};
+                                        loadVitals();   vitaldata.formtype  =  'add'">
                                         <div class="col-lg-12"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
