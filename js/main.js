@@ -103,6 +103,7 @@ angular.module('app')
 
 //
                 $scope.logout = function () {
+                    localStorage.setItem("Show_available_medicine", '0');
                     var state_name = $state.current.name;
                     var state_params = $state.params;
 

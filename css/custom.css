@@ -851,6 +851,10 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 .patient-dropdown li:hover{
     background: #eeeeee;
 }
+.paitent-details2-CD {
+    float: right;
+    margin-right: 15px;
+}
  @media (min-width: 1280px) {
 .pre-freq-new1 input {
 	width: 27%;

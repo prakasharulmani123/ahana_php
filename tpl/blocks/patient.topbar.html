@@ -39,9 +39,8 @@
                         {{patientObj.patient_category| uppercase}}
                     </span> 
 
-                    <span ng-show="patientObj.patActiveIp">
-                        <i class="fa fa-calendar"></i>
-                        {{patientObj.doa}}
+                    <span class="paitent-details2-CD" ng-if="patientObj.clinical_discharge_date != '-'">
+                        <b> Clinical Discharge : </b> {{patientObj.clinical_discharge_date | moment:'DD/MM/YYYY - hh:mm A'}}
                     </span>
                 </div>
                 <br/>
@@ -50,8 +49,11 @@
                     <div class="patient-details-part patinet-id" ng-if="patientObj.activeCasesheetno">
                         <b> Casesheet No : </b> {{patientObj.activeCasesheetno}}
                     </div>
-                    <div class="patient-details-part patinet-id" ng-if="patientObj.clinical_discharge_date != '-'">
-                        <b> Clinical Discharge : </b> {{patientObj.clinical_discharge_date | moment:'DD/MM/YYYY - hh:mm A'}}
+                    <!--                    <div class="patient-details-part patinet-id" ng-if="patientObj.clinical_discharge_date != '-'">
+                                            <b> Clinical Discharge : </b> {{patientObj.clinical_discharge_date | moment:'DD/MM/YYYY - hh:mm A'}}
+                                        </div>-->
+                    <div class="patient-details-part patinet-id" ng-if="patientObj.patActiveIp">
+                        <b> D.O.A : </b> <i class="fa fa-calendar"></i> {{patientObj.doa}}
                     </div>
                     <div class="patient-details-part" ng-if="patientObj.current_room != '-'">
                         <i class="fa fa-wheelchair"></i> <b> Ward : </b>{{patientObj.current_room}}
