@@ -339,6 +339,7 @@ class PharmacyproductController extends ActiveController {
         if (isset($post['search']) && !empty($post['search']) && strlen($post['search']) > 1) {
             $text = rtrim($post['search'], '-');
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+            $available_medicine = $post['available_medicine'];
 
             $this->_connection = Yii::$app->client;
             $limit = 1000;
@@ -356,7 +357,7 @@ class PharmacyproductController extends ActiveController {
 
             //Get Products
 //            $products = $this->_getProducts($text_search, $tenant_id, $limit);
-            $products = $this->_getProducts($like_text_search, $tenant_id, $limit);
+            $products = $this->_getProducts($like_text_search, $tenant_id, $limit, $available_medicine);
 
             //Get Routes
             //$routes = $this->_getRoutes($products, $text_search, $tenant_id, $limit);
@@ -373,8 +374,13 @@ class PharmacyproductController extends ActiveController {
         return ['prescription' => $products];
     }
 
-    private function _getProducts($like_text_search, $tenant_id, $limit) {
+    private function _getProducts($like_text_search, $tenant_id, $limit, $available_medicine) {
         $post = Yii::$app->getRequest()->post();
+        if($available_medicine == '1') {
+            $filter_query = "HAVING available_quantity != '0'";
+        } else {
+            $filter_query = "HAVING available_quantity >= '0'";
+        }
         $products = [];
         if (isset($post['product_id'])) {
             //Retrieve One product
@@ -399,6 +405,7 @@ class PharmacyproductController extends ActiveController {
                     ON c.drug_class_id = a.drug_class_id
                     WHERE a.tenant_id = :tenant_id
                     AND a.product_id = :product_id AND a.status='1'
+                    $filter_query
                     ORDER BY a.product_name
                     LIMIT 0,:limit", [':limit' => $limit, ':tenant_id' => $tenant_id, ':product_id' => $post['product_id']]
             );
@@ -426,6 +433,7 @@ class PharmacyproductController extends ActiveController {
                     WHERE (a.tenant_id = :tenant_id AND a.status='1' AND CONCAT_WS(' ', TRIM(a.product_name), TRIM(a.product_unit_count), TRIM(a.product_unit)) LIKE :search_text)
                     OR (b.tenant_id = :tenant_id AND b.generic_name LIKE :search_text)
                     OR (c.tenant_id = :tenant_id AND c.drug_name LIKE :search_text)
+                    $filter_query
                     ORDER BY a.product_name
                     LIMIT 0,:limit", [':search_text' => $like_text_search, ':limit' => $limit, ':tenant_id' => $tenant_id]
             );
