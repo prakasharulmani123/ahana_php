@@ -134,7 +134,11 @@ class PharmacyproductController extends ActiveController {
                 $available[] = $produ;
             }
         }
-        return ['productList' => array_merge($available, $outofstock)];
+        if(isset($get['available_medicine']) && ($get['available_medicine']=='0')) {
+            return ['productList' => array_merge($available, $outofstock)];
+        } else {
+            return ['productList' => $available];
+        }
     }
 
     public function actionGetproductdescriptionlist() {
