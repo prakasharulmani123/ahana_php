@@ -134,11 +134,7 @@ class PharmacyproductController extends ActiveController {
                 $available[] = $produ;
             }
         }
-        if(isset($get['available_medicine']) && ($get['available_medicine']=='0')) {
-            return ['productList' => array_merge($available, $outofstock)];
-        } else {
-            return ['productList' => $available];
-        }
+        return ['productList' => array_merge($available, $outofstock)];
     }
 
     public function actionGetproductdescriptionlist() {
@@ -380,7 +376,7 @@ class PharmacyproductController extends ActiveController {
 
     private function _getProducts($like_text_search, $tenant_id, $limit, $available_medicine) {
         $post = Yii::$app->getRequest()->post();
-        if($available_medicine == '1') {
+        if ($available_medicine == '1') {
             $filter_query = "HAVING available_quantity > '0'";
         } else {
             $filter_query = "HAVING (available_quantity >= '0' OR available_quantity < '0')";
