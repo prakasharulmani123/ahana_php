@@ -55,7 +55,7 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                 angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
 
             // Get data's from service
-            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyreport/salereport?addtfields=salevatreport', data)
+            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyreport/salevatreport?addtfields=salevatreport', data)
                     .success(function (response) {
                         $scope.loadbar('hide');
                         $scope.records = response.report;
@@ -65,6 +65,14 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                         $scope.errorData = "An Error has occured";
                     });
         };
+        
+        $scope.checkNextrecord = function (a,b,c) {
+            if(a==b) {
+                return parseFloat(0);
+            } else {
+                return parseFloat(c);
+            }
+        }
 
         $scope.parseFloat = function (row) {
             return parseFloat(row);
@@ -106,7 +114,7 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 9}, "", "", "", "","","","",""
+                {text: branch_name, style: 'header', colSpan: 10}, "", "", "", "","","","","",""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
@@ -114,10 +122,10 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                 {text: 'Bill Date', style: 'header'},
                 {text: 'Patient UHID', style: 'header'},
                 {text: 'Patient Name', style: 'header'},
-                {text: 'Taxable Amount', style: 'header'},
-//                {text: 'Tax Per', style: 'header'},
-                {text: 'SGST', style: 'header'},
+                {text: 'Tax Rate', style: 'header'},
+                {text: 'Taxable Value', style: 'header'},
                 {text: 'CGST', style: 'header'},
+                {text: 'SGST', style: 'header'},
                 {text: 'Round Off', style: 'header'},
             ]);
 
@@ -135,19 +143,19 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                     s_no_string,
                     record.bill_no,
                     record.sale_date,
-                    record.patient_uhid,
+                    record.patient_global_int_code,
                     record.patient_name,
-                    record.billing_total_taxable_amount,
-                    //record.total_item_vat_amount,
-                    record.billing_total_sgst_amount,
-                    record.billing_total_cgst_amount,
+                    record.tax_rate,
+                    record.taxable_value,
+                    record.cgst_amount,
+                    record.sgst_amount,
                     record.roundoff_amount,
                 ]);
 
-                sale_amount += parseFloat(record.total_item_amount);
-                //vat_amount += parseFloat(record.total_item_vat_amount);
-                cgst_amount += parseFloat(record.billing_total_cgst_amount);
-                sgst_amount += parseFloat(record.billing_total_sgst_amount);
+                tax_rate += parseFloat(record.tax_rate);
+                taxable_value += parseFloat(record.taxable_value);
+                cgst_amount += parseFloat(record.cgst_amount);
+                sgst_amount += parseFloat(record.sgst_amount);
                 roundoff_amount +=parseFloat(record.roundoff_amount);
                 
                 if (serial_no == result_count) {
@@ -232,7 +240,7 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                 style: 'demoTable',
                 table: {
                     headerRows: 2,
-                    widths: ['auto', 'auto', '*', '*', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                    widths: ['auto', 'auto', '*', '*', 'auto', 'auto', 'auto', 'auto', 'auto','auto'],
                     //widths: [20, 'auto', 'auto', 'auto', '*', 'auto', 25, 25, 25, 25],
                     body: reports,
                     //dontBreakRows: true,
