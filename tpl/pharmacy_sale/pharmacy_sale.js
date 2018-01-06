@@ -851,22 +851,25 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             disc_amount = !isNaN(disc_amount) ? disc_amount : 0;
             vat_perc = !isNaN(vat_perc) ? vat_perc : 0;
 
-            var item_amount = (qty * mrp).toFixed(2);
+            
+//            var vat_amount = (item_amount * (vat_perc / 100)).toFixed(2); // Exculding vat
+            var vat_amount = ((total_amount * vat_perc) / (100 + vat_perc)).toFixed(2);
+            var taxable_value = (((mrp / (100 + sgst_perc + cgst_perc)) * 100).toFixed(2) * qty).toFixed(2);
+            //var cgst_amount = ((total_amount * cgst_perc) / (100 + cgst_perc)).toFixed(2); // Including vat
+            //var sgst_amount = ((total_amount * sgst_perc) / (100 + sgst_perc)).toFixed(2); // Including vat
+            var cgst_amount = (((taxable_value * cgst_perc) / 100)).toFixed(2); // Including vat
+            var sgst_amount = (((taxable_value * sgst_perc) / 100)).toFixed(2); // Including vat
+            
+            var item_amount = (parseFloat(taxable_value) + parseFloat(cgst_amount) + parseFloat(sgst_amount));
+            
+//            var item_amount = item_amount.toFixed(2);
             if (column && column == 'discount_amount')
                 var disc_perc = disc_amount > 0 ? ((disc_amount / item_amount) * 100).toFixed(2) : 0;
             if (column && column == 'discount_percentage')
                 var disc_amount = disc_perc > 0 ? (item_amount * (disc_perc / 100)).toFixed(2) : 0;
+            
             var total_amount = (item_amount - disc_amount).toFixed(2);
-//            var vat_amount = (item_amount * (vat_perc / 100)).toFixed(2); // Exculding vat
-            var vat_amount = ((total_amount * vat_perc) / (100 + vat_perc)).toFixed(2);
-
-            var taxable_value = ((mrp / (100 + sgst_perc + cgst_perc)) * 100).toFixed(2);
-
-            //var cgst_amount = ((total_amount * cgst_perc) / (100 + cgst_perc)).toFixed(2); // Including vat
-            //var sgst_amount = ((total_amount * sgst_perc) / (100 + sgst_perc)).toFixed(2); // Including vat
-            var cgst_amount = (((taxable_value * cgst_perc) / 100) * qty).toFixed(2); // Including vat
-            var sgst_amount = (((taxable_value * sgst_perc) / 100) * qty).toFixed(2); // Including vat
-
+            
             $scope.saleItems[key].item_amount = item_amount;
             $scope.saleItems[key].discount_percentage = disc_perc;
             $scope.saleItems[key].discount_amount = disc_amount;
