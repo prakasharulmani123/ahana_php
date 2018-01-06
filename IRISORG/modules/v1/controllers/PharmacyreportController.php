@@ -68,6 +68,35 @@ class PharmacyreportController extends ActiveController {
         return ['report' => $reports];
     }
 
+    //Sale Vat Report
+    public function actionSalevatreport() {
+        $post = Yii::$app->getRequest()->post();
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        $sql = "SELECT
+                    a.sale_id,a.bill_no,a.sale_date,
+                    d.patient_global_int_code, a.patient_name,
+                    (cgst_percent+sgst_percent) AS tax_rate,
+                    SUM(b.taxable_value) AS taxable_value,  
+                    SUM(b.cgst_amount) AS cgst_amount,
+                    SUM(b.sgst_amount) AS sgst_amount,
+                    a.roundoff_amount
+                FROM `pha_sale` `a`
+                    LEFT JOIN `pha_sale_item` `b`
+                    ON `a`.`sale_id` = `b`.`sale_id`
+                    LEFT JOIN pat_patient c
+                    ON c.patient_id = a.patient_id
+                    LEFT JOIN pat_global_patient d
+                    ON c.patient_global_guid = d.patient_global_guid
+                    WHERE ((`a`.`tenant_id` = '".$tenant_id."')
+                    AND (a.sale_date BETWEEN '".$post['from']."' AND '".$post['to']."'))
+                    AND (b.deleted_at = '0000-00-00 00:00:00')
+                    AND (a.deleted_at = '0000-00-00 00:00:00')
+                    GROUP BY `b`.`sale_id`,`b`.`cgst_percent` ";
+        $command = Yii::$app->client->createCommand($sql);
+        $reports = $command->queryAll();
+        return ['report' => $reports];
+    }
+
     //Sale Return Report
     public function actionSalereturnreport() {
         $post = Yii::$app->getRequest()->post();
