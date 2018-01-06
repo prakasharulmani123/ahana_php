@@ -131,8 +131,8 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
 
             var serial_no = 1;
             var result_count = $scope.records.length;
-            var sale_amount = 0;
-            var vat_amount = 0;
+            var tax_rate = 0;
+            var taxable_value = 0;
             var cgst_amount = 0;
             var sgst_amount = 0;
             var roundoff_amount = 0;
