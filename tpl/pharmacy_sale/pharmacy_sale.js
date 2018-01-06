@@ -853,7 +853,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
             
 //            var vat_amount = (item_amount * (vat_perc / 100)).toFixed(2); // Exculding vat
-            var vat_amount = ((total_amount * vat_perc) / (100 + vat_perc)).toFixed(2);
+            
             var taxable_value = (((mrp / (100 + sgst_perc + cgst_perc)) * 100).toFixed(2) * qty).toFixed(2);
             //var cgst_amount = ((total_amount * cgst_perc) / (100 + cgst_perc)).toFixed(2); // Including vat
             //var sgst_amount = ((total_amount * sgst_perc) / (100 + sgst_perc)).toFixed(2); // Including vat
@@ -869,6 +869,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 var disc_amount = disc_perc > 0 ? (item_amount * (disc_perc / 100)).toFixed(2) : 0;
             
             var total_amount = (item_amount - disc_amount).toFixed(2);
+            var vat_amount = ((total_amount * vat_perc) / (100 + vat_perc)).toFixed(2);
             
             $scope.saleItems[key].item_amount = item_amount;
             $scope.saleItems[key].discount_percentage = disc_perc;
