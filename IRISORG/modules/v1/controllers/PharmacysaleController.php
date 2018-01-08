@@ -253,7 +253,7 @@ class PharmacysaleController extends ActiveController {
 
         $model = PhaSale::find()
                 ->tenant()
-                ->andWhere("pha_sale.sale_date between '{$post['from']}' AND '{$post['to']}'");
+                ->andWhere("pha_sale.sale_date <= '{$post['to']}'");
 
         if (isset($post['patient_group_name'])) {
             $patient_group_names = join("','", $post['patient_group_name']);
