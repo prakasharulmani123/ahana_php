@@ -197,7 +197,16 @@ class PhaSaleReturn extends RActiveRecord {
             },
             'sale_group_name' => function ($model) {
                 return (isset($model->sale) ? $model->sale->patient_group_name : '-');
-            }
+            },
+            'billed_by' => function ($model) {
+                return $model->createdUser->title_code . ' ' . $model->createdUser->name;
+            },
+            'branch_address' => function ($model) {
+                return (isset($model->tenant->tenant_address) ? $model->tenant->tenant_address : '-');
+            },
+            'branch_phone' => function ($model) {
+                return (isset($model->tenant->tenant_contact1) ? $model->tenant->tenant_contact1 : '-');
+            },
         ];
         $parent_fields = parent::fields();
         $addt_keys = [];
