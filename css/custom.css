@@ -956,3 +956,6 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 .prev-h1{
     padding-left: 0px;
 }
+.i-switch i:before {
+    border: 1px solid #bbb;
+}

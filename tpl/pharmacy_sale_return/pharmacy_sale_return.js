@@ -39,12 +39,12 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
 
         $scope.getSaleReturnList = function () {
             var pageURL = $rootScope.IRISOrgServiceUrl + '/pharmacysalereturn/getsalereturn?addtfields=sale_return_list&pageIndex=' + $scope.pageIndex + '&pageSize=' + $scope.pageSizeSelected;
-            
+
             if (typeof $scope.form_filter != 'undefined' && $scope.form_filter != '') {
                 pageURL += '&s=' + $scope.form_filter;
             }
             if (typeof $scope.day != 'undefined' && $scope.day != '' && typeof $scope.month != 'undefined' && $scope.month != '' && typeof $scope.year != 'undefined' && $scope.year != '') {
-                pageURL += '&dt=' +$scope.year+'-'+$scope.month+'-'+$scope.day;
+                pageURL += '&dt=' + $scope.year + '-' + $scope.month + '-' + $scope.day;
             }
             $http.get(pageURL)
                     .success(function (saleReturnList) {
@@ -75,6 +75,8 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
 //            });
 //            Above code hide for slow response.
             $scope.patients = [];
+            $scope.sale_return_sales = false;
+            $scope.allow_sale = '0';
 
             //Payment types
             $rootScope.commonService.GetPaymentType(function (response) {
@@ -85,14 +87,30 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
                 $scope.formtype = 'update';
                 $scope.loadForm();
             } else {
+                $scope.SRdata = {};
                 $scope.data.sale_id = '';
                 $scope.data.sale_return_date = moment().format('YYYY-MM-DD');
                 $scope.addRow();
+                $scope.addSaleRow();
                 $scope.formtype = 'add';
             }
 
             $scope.products = [];
             $scope.batches = [];
+
+            $scope.productloader = '<i class="fa fa-spin fa-spinner"></i>';
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct?fields=product_id,full_name&not_expired=1&full_name_with_stock=1')
+                    .success(function (products) {
+                        $scope.saleproducts = products;
+                        $scope.productloader = '';
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading products!";
+                    });
+
+            $rootScope.commonService.GetHsnCode('1', false, function (response) {
+                $scope.hsncodes = response.hsncodeList;
+            });
 
         }
 
@@ -108,6 +126,14 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
                         $scope.data.mobile_no = result.mobile_no ? result.mobile_no : '-';
                         $scope.data.bill_payment = result.bill_payment ? result.bill_payment : '-';
                         $scope.data.patient_group_name = result.patient_group_name ? result.patient_group_name : '-';
+                        if (($scope.data.bill_payment == 'Cash')) {
+                            $scope.allow_sale = '1';
+                        } else {
+                            $scope.totalsalepaidamount = result.billings_total_paid_amount;
+                            $scope.totalbillamount = result.bill_amount;
+                            $scope.totalsalebalanceamount = result.billings_total_balance_amount;
+                            $scope.allow_sale = '0';
+                        }
 
                         angular.forEach(result.items, function (item, key) {
                             $scope.inserted = {
@@ -233,7 +259,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
         // Remove Sale Item
         $scope.removeSaleItem = function (index) {
             if ($scope.saleItems.length == 1) {
-                alert('Can\'t Delete. Sale Item must be atleast one.');
+                alert('Can\'t Delete. New Sale Item must be atleast one.');
                 return false;
             }
             $scope.saleItems.splice(index, 1);
@@ -393,6 +419,8 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
 
             $scope.errorData = "";
             $scope.msg.successMessage = "";
+            angular.extend(_that.data, {sale_items: ''});
+            angular.extend(_that.data, {sale_items_bill: ''});
 
             $scope.data.sale_date = moment($scope.data.sale_date).format('YYYY-MM-DD');
             $scope.data.sale_return_date = moment($scope.data.sale_return_date).format('YYYY-MM-DD');
@@ -416,6 +444,59 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
             });
 
             angular.extend(_that.data, {product_items: $scope.saleItems});
+
+            //New Sales in sale return 
+            angular.forEach($scope.SRsaleItems, function (SRsaleitem, key) {
+                $scope.SRsaleItems[key].expiry_date = moment(SRsaleitem.expiry_date).format('YYYY-MM-DD');
+
+                if (angular.isObject(SRsaleitem.full_name)) {
+                    $scope.SRsaleItems[key].full_name = SRsaleitem.full_name.full_name;
+                } else if (typeof SRsaleitem.full_name == 'undefined') {
+                    $scope.SRsaleItems[key].product_id = '';
+                }
+
+                if (SRsaleitem.temp_hsn_no) {
+                    $scope.SRsaleItems[key].hsn_no = SRsaleitem.temp_hsn_no;
+                }
+
+                if (angular.isObject(SRsaleitem.batch_details)) {
+                    $scope.SRsaleItems[key].batch_details = SRsaleitem.batch_details.batch_details;
+                } else if (typeof SRsaleitem.batch_details == 'undefined') {
+                    $scope.SRsaleItems[key].batch_no = '';
+                } else if ((SRsaleitem.batch_no == '0' || SRsaleitem.batch_no == '') && typeof SRsaleitem.batch_details !== 'undefined') {
+                    $scope.SRsaleItems[key].batch_no = SRsaleitem.batch_details;
+                }
+
+                //Unset unwanted columns 
+                delete SRsaleitem.alternate_product;
+                delete SRsaleitem.alternateproducts;
+//                delete saleitem.product_batches; // Need product batches if form success false.
+            });
+            if ($scope.sale_return_sales) {
+                if ($scope.data.bill_payment == 'Cash') {
+                    if (parseInt($scope.data.bill_amount) > parseInt($scope.SRdata.bill_amount)) {
+                        $scope.Errormessage = 'Sale Return amount must be less than sale amount';
+                        $timeout(function () {
+                            $("#edit_products").trigger("click");
+                        }, 100);
+                        return false;
+                    }
+                } else {
+                    $scope.credit_bill_pending_amount = parseInt($scope.data.bill_amount) - parseInt($scope.totalsalebalanceamount);
+                    if (parseInt($scope.credit_bill_pending_amount) > parseInt($scope.SRdata.bill_amount)) {
+                        $scope.Errormessage = 'Sale Return amount must be less than sale amount';
+                        $timeout(function () {
+                            $("#edit_products").trigger("click");
+                        }, 100);
+                        return false;
+                    } else {
+                        $scope.data.creditbillamount = $scope.totalsalebalanceamount;
+                    }
+                }
+                angular.extend(_that.data, {sale_items: $scope.SRsaleItems});
+                angular.extend(_that.data, {sale_items_bill: $scope.SRdata});
+            }
+
             $scope.loadbar('show');
             $http({
                 method: 'POST',
@@ -724,5 +805,436 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
                     }
             );
         };
+//Sale and Sale Return Concept
+        $scope.SRsaleItems = [];
+        // Add first row in sale item table.
+        $scope.addSaleRow = function (focus) {
+            $scope.sale_item_error = '';
+            $scope.inserted = {
+                product_id: '',
+                product_name: '',
+                product_location: '',
+                full_name: '',
+                batch_no: '',
+                batch_details: '',
+                expiry_date: '',
+                quantity: '0',
+                package_name: '',
+                mrp: '0',
+                item_amount: '0',
+                discount_percentage: '0',
+                discount_amount: '0',
+                vat_percent: '0',
+                vat_amount: '0',
+                total_amount: '0',
+                generic_id: '',
+            };
+            if ($scope.SRsaleItems.length > 0) {
+                if ((!$scope.SRsaleItems[$scope.SRsaleItems.length - 1].product_id) || (!$scope.SRsaleItems[$scope.SRsaleItems.length - 1].batch_no)) {
+                    $scope.sale_item_error = "Kindly fill the items details";
+                } else {
+                    $scope.SRsaleItems.push($scope.inserted);
+                }
+            } else {
+                $scope.SRsaleItems.push($scope.inserted);
+            }
+
+            if (focus) {
+                if ($scope.SRsaleItems.length > 1) {
+                    $timeout(function () {
+                        $scope.setFocus('full_name', $scope.saleItems.length - 1);
+                    });
+                }
+            }
+
+            if ($scope.SRsaleItems.length > 6) {
+                $scope.css = {
+                    'style': 'height:360px; overflow-y: auto; overflow-x: hidden;',
+                };
+            }
+        };
+
+        $scope.SRupdateProductRow = function (item, model, label, key) {
+            var selectedObj = $filter('filter')($scope.saleproducts, {product_id: item.product_id}, true)[0];
+            $scope.productDetail(item.product_id, selectedObj).then(function () {
+                $scope.SRsaleItems[key].product_id = selectedObj.product_id;
+                $scope.SRsaleItems[key].product_name = selectedObj.product_name;
+                $scope.SRsaleItems[key].product_location = selectedObj.product_location;
+                $scope.SRsaleItems[key].full_name = selectedObj.full_name;
+                $scope.SRsaleItems[key].vat_percent = selectedObj.salesVat.vat;
+                $scope.SRsaleItems[key].package_name = selectedObj.salesPackageName;
+                $scope.SRsaleItems[key].generic_id = selectedObj.generic_id;
+                $scope.SRsaleItems[key].product_batches = selectedObj.product_batches;
+                if (selectedObj.gst != '-') {
+                    $scope.SRsaleItems[key].sgst_percent = (parseFloat(selectedObj.gst) / 2).toFixed(2);
+                    $scope.SRsaleItems[key].cgst_percent = (parseFloat(selectedObj.gst) / 2).toFixed(2);
+                } else {
+                    $scope.SRsaleItems[key].sgst_percent = 2.5;
+                    $scope.SRsaleItems[key].cgst_percent = 2.5;
+                }
+                $scope.SRsaleItems[key].temp_hsn_no = selectedObj.hsnCode;
+
+                $scope.getreadyBatch(selectedObj, key);
+                $scope.productInlineAlert(selectedObj, key);
+                if (selectedObj.hsnCode)
+                    $scope.showOrHideRowEdit('hide', key);
+
+                $scope.SRupdateRow(key);
+            });
+        }
+
+        $scope.productDetail = function (product_id, product_obj) {
+            var deferred = $q.defer();
+            deferred.notify();
+            var Fields = 'product_name,product_location,product_reorder_min,full_name,salesVat,salesPackageName,availableQuantity,generic_id,product_batches,hsnCode,originalQuantity,gst';
+
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + product_id + '?fields=' + Fields + '&addtfields=pharm_sale_prod_json&full_name_with_stock=1')
+                    .success(function (product) {
+                        Fields.split(",").forEach(function (item) {
+                            product_obj[item] = product[item];
+                        });
+
+                        deferred.resolve();
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading product!";
+                        deferred.reject();
+                    });
+
+            return deferred.promise;
+        };
+
+        $scope.getreadyBatch = function (item, key) {
+            $scope.SRsaleItems[key].batch_details = '';
+            $scope.SRsaleItems[key].batch_no = '';
+            $scope.SRsaleItems[key].expiry_date = '';
+            $scope.SRsaleItems[key].mrp = 0;
+            $scope.SRsaleItems[key].quantity = 0;
+            if (item.availableQuantity <= 0) {
+                $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getproductlistbygeneric?generic_id=' + item.generic_id + '&addtfields=pharm_sale_alternateprod')
+                        .success(function (product) {
+                            //For alternate medicines
+                            item.alternateproducts = product.productList.filter(function (n) {
+                                return (n.product_id != item.product_id && n.product_batches_count > '0')
+                            });
+                            $scope.SRsaleItems[key].alternateproducts = item.alternateproducts;
+                            if ($scope.SRsaleItems[key].alternateproducts.length) {
+                                $('#i_alternate_medicine_' + key).removeClass('hide');
+                            } else {
+                                $('#i_alternate_medicine_' + key).addClass('hide');
+                            }
+                        })
+                        .error(function () {
+                            $scope.errorData = "An Error has occured while loading product!";
+                        });
+            }
+        }
+
+        $scope.productInlineAlert = function (item, key) {
+            $scope.SRsaleItems[key].min_reorder_msg = '';
+            $scope.SRsaleItems[key].out_of_stock_msg = '';
+
+            if (item.availableQuantity == 0) {
+                $scope.SRsaleItems[key].out_of_stock_msg = 'Out of stock';
+            } else if (item.availableQuantity <= item.product_reorder_min) {
+                $scope.SRsaleItems[key].min_reorder_msg = 'reached min order level (' + item.product_reorder_min + ')';
+            }
+        }
+
+        $scope.showOrHideRowEdit = function (mode, key) {
+            if (mode == 'hide') {
+                i_addclass = t_removeclass = 'hide';
+                i_removeclass = t_addclass = '';
+            } else {
+                i_addclass = t_removeclass = '';
+                i_removeclass = t_addclass = 'hide';
+            }
+            $('#i_hsn_no_' + key).addClass(i_addclass).removeClass(i_removeclass);
+
+            $('#t_hsn_no_' + key).addClass(t_addclass).removeClass(t_removeclass);
+        }
+
+        $scope.SRupdateRow = function (key, column, tableform) {
+            //Get Data
+            var qty = parseFloat($scope.SRsaleItems[key].quantity);
+            var mrp = parseFloat($scope.SRsaleItems[key].mrp);
+            var disc_perc = parseFloat($scope.SRsaleItems[key].discount_percentage);
+            var disc_amount = parseFloat($scope.SRsaleItems[key].discount_amount);
+            var vat_perc = parseFloat($scope.SRsaleItems[key].vat_percent);
+            var cgst_perc = parseFloat($scope.SRsaleItems[key].cgst_percent);
+            var sgst_perc = parseFloat($scope.SRsaleItems[key].sgst_percent);
+
+            //Validate isNumer
+            qty = !isNaN(qty) ? qty : 0;
+            disc_perc = !isNaN(disc_perc) ? disc_perc : 0;
+            disc_amount = !isNaN(disc_amount) ? disc_amount : 0;
+            vat_perc = !isNaN(vat_perc) ? vat_perc : 0;
+
+            var item_amount = (qty * mrp).toFixed(2);
+            if (column && column == 'discount_amount')
+                var disc_perc = disc_amount > 0 ? ((disc_amount / item_amount) * 100).toFixed(2) : 0;
+            if (column && column == 'discount_percentage')
+                var disc_amount = disc_perc > 0 ? (item_amount * (disc_perc / 100)).toFixed(2) : 0;
+            var total_amount = (item_amount - disc_amount).toFixed(2);
+//            var vat_amount = (item_amount * (vat_perc / 100)).toFixed(2); // Exculding vat
+            var vat_amount = ((total_amount * vat_perc) / (100 + vat_perc)).toFixed(2);
+
+            var taxable_value = ((mrp / (100 + sgst_perc + cgst_perc)) * 100).toFixed(2);
+
+            //var cgst_amount = ((total_amount * cgst_perc) / (100 + cgst_perc)).toFixed(2); // Including vat
+            //var sgst_amount = ((total_amount * sgst_perc) / (100 + sgst_perc)).toFixed(2); // Including vat
+            var cgst_amount = (((taxable_value * cgst_perc) / 100) * qty).toFixed(2); // Including vat
+            var sgst_amount = (((taxable_value * sgst_perc) / 100) * qty).toFixed(2); // Including vat
+
+            $scope.SRsaleItems[key].item_amount = item_amount;
+            $scope.SRsaleItems[key].discount_percentage = disc_perc;
+            $scope.SRsaleItems[key].discount_amount = disc_amount;
+            $scope.SRsaleItems[key].total_amount = total_amount;
+            $scope.SRsaleItems[key].vat_amount = vat_amount;
+
+            $scope.SRsaleItems[key].cgst_amount = cgst_amount;
+            $scope.SRsaleItems[key].sgst_amount = sgst_amount;
+            $scope.SRsaleItems[key].taxable_value = taxable_value;
+
+            if (tableform) {
+                angular.forEach(tableform.$editables, function (editableValue, editableKey) {
+                    if (editableValue.attrs.eIndex == key && editableValue.attrs.eName == 'discount_percentage') {
+                        editableValue.scope.$data = $scope.SRsaleItems[key].discount_percentage;
+                    }
+                });
+
+                angular.forEach(tableform.$editables, function (editableValue, editableKey) {
+                    if (editableValue.attrs.eIndex == key && editableValue.attrs.eName == 'discount_amount') {
+                        editableValue.scope.$data = $scope.SRsaleItems[key].discount_amount;
+                    }
+                });
+            }
+            $scope.SRupdateSaleRate();
+        }
+
+        $scope.SRupdateSaleRate = function (column) {
+
+            var roundoff_amount = bill_amount = total_item_discount_amount = total_item_amount = 0;
+
+            //Get Total Sale, VAT, Discount Amount
+            var total_item_vat_amount = total_item_sale_amount = 0;
+            angular.forEach($scope.SRsaleItems, function (item) {
+                total_item_vat_amount = total_item_vat_amount + parseFloat(item.taxable_value);
+                total_item_sale_amount = total_item_sale_amount + parseFloat(item.total_amount);
+            });
+
+            $scope.SRdata.total_item_sale_amount = total_item_sale_amount.toFixed(2);
+            $scope.SRdata.total_item_vat_amount = total_item_vat_amount.toFixed(2);
+
+            //Get Before Discount Amount (Total Sale Amount + Total VAT)
+//            var before_discount_total = (total_item_sale_amount + total_item_vat_amount).toFixed(2); // Exculding vat
+            var before_discount_total = (total_item_sale_amount).toFixed(2); // Inculding vat
+
+            if (column && column == 'amount')
+            {
+                var disc_amount = parseFloat($scope.SRdata.total_item_discount_amount);
+                disc_amount = !isNaN(disc_amount) ? (disc_amount).toFixed(2) : 0;
+
+                var disc_perc = disc_amount > 0 ? ((disc_amount / before_discount_total) * 100).toFixed(2) : 0;
+                $scope.SRdata.total_item_discount_percent = disc_perc;
+            } else {
+                var disc_perc = parseFloat($scope.SRdata.total_item_discount_percent);
+                disc_perc = !isNaN(disc_perc) ? (disc_perc).toFixed(2) : 0;
+
+                var disc_amount = disc_perc > 0 ? (total_item_sale_amount * (disc_perc / 100)).toFixed(2) : 0;
+                $scope.SRdata.total_item_discount_amount = disc_amount;
+            }
+
+            var after_discount_item_amount = (parseFloat(before_discount_total) - parseFloat(disc_amount));
+            $scope.SRdata.total_item_amount = after_discount_item_amount.toFixed(2);
+
+            //Get Welfare Amount
+            var welfare = 0;
+            if ($scope.data.welfare_amount) {
+                var welfare = parseFloat($scope.SRdata.welfare_amount).toFixed(2);
+            }
+
+            // Bill Amount = (Total Amount - Discount Amount) +- RoundOff
+            var total_bill_amount = parseFloat(after_discount_item_amount) + parseFloat(welfare);
+            bill_amount = Math.round(total_bill_amount);
+            roundoff_amount = Math.abs(bill_amount - total_bill_amount);
+
+            $scope.SRdata.roundoff_amount = roundoff_amount.toFixed(2);
+            $scope.SRdata.bill_amount = bill_amount.toFixed(2);
+            $scope.SRdata.amount_received = bill_amount;
+            $scope.updateBalance();
+            $scope.updateBatch('update');
+        }
+
+        $scope.updateBalance = function () {
+            $scope.SRdata.balance = $scope.SRdata.amount_received - $scope.SRdata.bill_amount;
+        }
+
+        $scope.updateBatch = function (action) {
+            angular.forEach($scope.SRsaleItems, function (item, key) {
+                var item_product_id = item.product_id;
+                var item_expiry_date = item.expiry_date;
+                var item_batch_no = item.batch_no;
+                var item_batch_details = item.batch_details;
+                var item_quantity = item.quantity;
+
+                angular.forEach($scope.SRsaleItems, function (item1, key1) {
+                    if (key != key1) {
+                        if (item_product_id == item1.product_id) {
+                            angular.forEach(item1.product_batches, function (batch) {
+                                if ((batch.batch_no == item_batch_no) && (batch.expiry_date == item_expiry_date)) {
+                                    if (action == 'update') {
+                                        batch.available_qty = batch.originalQuantity - item_quantity;
+                                        var batch_qty = batch.batch_details.split(" / ");
+                                        batch_qty[1] = batch.originalQuantity - item_quantity;
+                                        batch.batch_details = batch_qty[0] + ' / ' + batch_qty[1];
+                                    } else {
+                                        batch.available_qty = batch.originalQuantity;
+                                        var batch_qty = batch.batch_details.split(" / ");
+                                        batch_qty[1] = batch.originalQuantity;
+                                        batch.batch_details = batch_qty[0] + ' / ' + batch_qty[1];
+                                    }
+
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+        }
+
+        $scope.SRupdateBatchRow = function (batch, key) {
+            var prod_batches = $scope.SRsaleItems[key].product_batches;
+            var selected = $filter('filter')(prod_batches, {batch_details: batch}, true);
+            if (selected.length > 0) {
+                item = selected[0];
+                $scope.SRsaleItems[key].batch_details = item.batch_details;
+                $scope.SRsaleItems[key].batch_no = item.batch_no;
+                $scope.SRsaleItems[key].expiry_date = item.expiry_date;
+//            $scope.saleItems[key].mrp = item.mrp;
+                $scope.SRsaleItems[key].mrp = item.per_unit_price;
+
+                $scope.setFocus('quantity', key);
+                $scope.checkExpDate(item.expiry_date, key);
+//            $scope.addRowWhenFocus(key);
+            }
+        }
+
+        $scope.checkExpDate = function (data, key) {
+            var choosen_date = new Date(data);
+            var choosen_date_month = choosen_date.getMonth();
+            var choosen_date_year = choosen_date.getYear();
+
+            var today_date = new Date();
+            var today_date_month = today_date.getMonth();
+            var today_date_year = today_date.getYear();
+
+            var show_warning_count = '3';
+            var show_warning = parseFloat(choosen_date_month) - parseFloat(today_date_month);
+
+            if (show_warning < show_warning_count && today_date_year == choosen_date_year) {
+                $scope.SRsaleItems[key].exp_warning = 'short expiry drug';
+            } else {
+                $scope.SRsaleItems[key].exp_warning = '';
+            }
+        };
+
+        $scope.SRupdateColumn = function ($data, key, column, tableform) {
+            $scope.SRsaleItems[key][column] = $data;
+            $scope.SRupdateRow(key, column, tableform);
+        }
+
+        $scope.SRremoveSaleItem = function (index) {
+            if ($scope.SRsaleItems.length == 1) {
+                alert('Can\'t Delete. Sale Item must be atleast one.');
+                return false;
+            }
+            $scope.SRremoveSaleRow(index);
+        };
+
+        $scope.SRremoveSaleRow = function (index) {
+            $scope.updateBatch('delete');
+            $scope.SRsaleItems.splice(index, 1);
+            $scope.SRupdateSaleRate();
+            $timeout(function () {
+                $scope.setFocus('full_name', $scope.SRsaleItems.length - 1);
+            });
+
+            if ($scope.SRsaleItems.length <= 6) {
+                $scope.css = {
+                    'style': '',
+                };
+            }
+        };
+
+        $scope.$watch('data.bill_amount', function (newValue, oldValue) {
+            if (typeof newValue !== 'undefined' && newValue != '') {
+                if (($scope.data.bill_payment != 'Cash')) {
+                    if (parseInt(newValue) > parseInt($scope.totalsalebalanceamount)) {
+                        $scope.allow_sale = '1';
+                        $scope.data.new_sale_amount = parseInt($scope.data.bill_amount) - parseInt($scope.totalsalebalanceamount);
+                    } else {
+                        $scope.allow_sale = '0';
+                        $scope.data.new_sale_amount = '0.00';
+                    }
+                } else {
+                    $scope.data.new_sale_amount = $scope.data.bill_amount;
+                }
+            }
+        });
+        
+        $scope.$watch('allow_sale', function (newValue, oldValue) {
+            if (typeof newValue !== 'undefined' && newValue != '') {
+                if(newValue == '0') {
+                    $scope.sale_return_sales = false;
+                }
+            }
+        });
+
+        $scope.showExpiryDate = function (saleitem) {
+            if (saleitem.expiry_date) {
+                return moment(saleitem.expiry_date).format('MMM YYYY');
+            } else {
+                return 'empty';
+            }
+        };
+
+        $scope.checkInput = function (data, key, index) {
+            if ($scope.sale_return_sales) {
+                item = $scope.SRsaleItems[key];
+                if (typeof item != 'undefined') {
+                    if (key > 0 && item.product_name == '' && item.batch_no == '' && item.quantity == 0) {
+                        $scope.removeSaleItem(index);
+                    } else {
+                        if (!data) {
+                            return "Not empty";
+                        }
+                    }
+                }
+            }
+        };
+
+        $scope.checkHsn = function (data, key, index) {
+            if ($scope.sale_return_sales) {
+                item = $scope.SRsaleItems[key];
+                if (typeof item != 'undefined') {
+                    if (key > 0 && item.product_name == '' && item.batch_no == '' && item.quantity == 0) {
+
+                    } else {
+                        if (!data && !item.hsn_no && !item.temp_hsn_no) {
+                            return "Not empty";
+                        }
+                    }
+                }
+            }
+        };
+        
+        $scope.checkNewSale = function (a) {
+            if(a) {
+                $scope.sale_return_sales = true;
+            } else {
+                $scope.sale_return_sales = false;
+            }
+        }
 
     }]);
