@@ -4,6 +4,9 @@ namespace IRISORG\modules\v1\controllers;
 
 use common\models\PhaSaleReturn;
 use common\models\PhaSaleReturnItem;
+use common\models\PhaSaleBilling;
+use common\models\PhaSale;
+use common\models\PhaSaleItem;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -65,7 +68,6 @@ class PharmacysalereturnController extends ActiveController {
 
     public function actionSavesalereturn() {
         $post = Yii::$app->getRequest()->post();
-
         if (!empty($post)) {
             //Validation
             $model = new PhaSaleReturn;
@@ -103,6 +105,7 @@ class PharmacysalereturnController extends ActiveController {
 
             if ($valid) {
                 $model->save(false);
+                
 
                 $item_ids = [];
                 foreach ($post['product_items'] as $key => $product_item) {
@@ -128,6 +131,28 @@ class PharmacysalereturnController extends ActiveController {
                     foreach ($delete_ids as $delete_id) {
                         $item = PhaSaleReturnItem::find()->tenant()->andWhere(['sale_ret_item_id' => $delete_id])->one();
                         $item->delete();
+                    }
+                }
+
+                //New Sale
+                if (!empty($post['sale_items_bill'])) {
+                    $SRmodel = new PhaSale;
+                    $SRmodel->attributes = $post['sale_items_bill'];
+                    $SRmodel->sale_date = date('Y-m-d');
+                    $SRmodel->patient_id = $post['patient_id'];
+                    $SRmodel->patient_name = $post['patient_name'];
+                    $SRmodel->patient_group_name = $post['patient_group_name'];
+                    $SRmodel->payment_type = 'CA';
+                    $SRmodel->sale_return_id = $model->sale_ret_id;
+                    $SRmodel->save(false);
+
+                    $item_ids = [];
+                    foreach ($post['sale_items'] as $key => $product_item) {
+                        $SRitem_model = new PhaSaleItem();
+                        $SRitem_model->attributes = $product_item;
+                        $SRitem_model->sale_id = $SRmodel->sale_id;
+                        $SRitem_model->save(false);
+                        $item_ids[$SRitem_model->sale_item_id] = $SRitem_model->sale_item_id;
                     }
                 }
 

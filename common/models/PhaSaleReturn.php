@@ -140,6 +140,22 @@ class PhaSaleReturn extends RActiveRecord {
         } else
             $activity = 'Sales Return Updated Successfully (#' . $this->bill_no . ' )';
         CoAuditLog::insertAuditLog(PhaSaleReturn::tableName(), $this->sale_ret_id, $activity);
+        $post = Yii::$app->getRequest()->post();
+        if (($this->sale->payment_type == 'CR') || ($this->sale->payment_type == 'COD')) {
+            $billing_model = PhaSaleBilling::find()->tenant()->andWhere(['sale_ret_id' => $this->sale_ret_id])->one();
+            if (empty($billing_model)) {
+                $billing_model = new PhaSaleBilling();
+            }
+            $billing_model->sale_id = $this->sale_id;
+            $billing_model->sale_ret_id = $this->sale_ret_id;
+            if (isset($post['creditbillamount']) && !empty($post['creditbillamount'])) {
+                $billing_model->paid_amount = $post['creditbillamount'];
+            } else {
+                $billing_model->paid_amount = $post['bill_amount'];
+            }
+            $billing_model->paid_date = date('Y-m-d');
+            $billing_model->save();
+        }
         return parent::afterSave($insert, $changedAttributes);
     }
 
@@ -181,7 +197,7 @@ class PhaSaleReturn extends RActiveRecord {
             },
             'sale_group_name' => function ($model) {
                 return (isset($model->sale) ? $model->sale->patient_group_name : '-');
-            }        
+            }
         ];
         $parent_fields = parent::fields();
         $addt_keys = [];
@@ -203,7 +219,7 @@ class PhaSaleReturn extends RActiveRecord {
                     ];
                     break;
                 case 'salereturnreport':
-                    $addt_keys = ['patient_name', 'patient_uhid','sale_payment_type','sale_group_name'];
+                    $addt_keys = ['patient_name', 'patient_uhid', 'sale_payment_type', 'sale_group_name'];
                     $parent_fields = [
                         'bill_no' => 'bill_no',
                         'bill_amount' => 'bill_amount',
