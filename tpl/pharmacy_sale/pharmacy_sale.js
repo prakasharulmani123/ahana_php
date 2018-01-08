@@ -1651,7 +1651,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 var bar_image = $('#' + barcode).attr('src');
                 if (bar_image) //Check Bar image is empty or not
                 {
-                    var bar_img = [{image: bar_image, height: 20, width: 100, }];
+                    var bar_img = [{image: bar_image, height: 20, width: 100,alignment: 'right' }];
                 } else
                 {
                     var bar_img = [{text: ''}];
@@ -1697,14 +1697,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                                 {
                                                     text: 'DL Nos. : MDU/5263/20,21',
                                                     fontSize: 07,
-                                                    alignment: 'center'
+                                                    alignment: 'right'
                                                 }
                                             ],
                                             [
                                                 {
                                                     text: 'Cash on Delivery : ' + [sale_info.branch_phone],
-                                                    fontSize: 07,
-                                                    alignment: 'center'
+                                                    fontSize: 09,
+                                                    alignment: 'right'
                                                 }
                                             ],
                                             bar_img

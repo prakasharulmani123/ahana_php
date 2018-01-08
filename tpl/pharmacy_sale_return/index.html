@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div>
-
+        <img ng-hide="true" id="sale_logo" src="img/ahanalogo.jpg"/>
         <table st-table="displayedCollection"  st-safe-src="rowCollection" class="table table-bordered table-striped">
             <thead>
                 <tr>
@@ -78,6 +78,9 @@
                             <i ng-if="!expanded" class="fa fa-plus text"></i>
                             <i ng-if="expanded" class="fa fa-minus text"></i>
                         </button>
+                    </td>
+                    <td ng-hide="true">
+                        <io-barcode id="{{row.patient.patient_global_int_code}}" code="{{row.patient.patient_global_int_code}}" type="CODE128B" options="barcodeOptions"></io-barcode>
                     </td>
                     <td>{{row.patient.fullname|| '-'}}</td>
                     <td>{{row.bill_no}}</td>

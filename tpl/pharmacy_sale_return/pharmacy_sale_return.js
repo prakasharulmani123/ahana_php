@@ -629,16 +629,46 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
 
         $scope.printStyle = function () {
             return {
-                header: {
+                h1: {
+                    fontSize: 11,
                     bold: true,
-                    color: '#000',
-                    fontSize: 11
                 },
-                demoTable: {
-                    color: '#000',
-                    fontSize: 10
+                h2: {
+                    fontSize: 9,
+                    bold: true,
+                },
+                th: {
+                    fontSize: 9,
+                    bold: true,
+                    margin: [0, 3, 0, 3]
+                },
+                td: {
+                    fontSize: 8,
+                    margin: [0, 3, 0, 3]
+                },
+                normaltxt: {
+                    fontSize: 9,
+                },
+                grandtotal: {
+                    fontSize: 15,
+                    bold: true,
+                    margin: [5, 3, 5, 3]
                 }
             };
+        }
+
+        var createGroupedArray = function (arr, chunkSize) {
+            var groups = [], i;
+            for (i = 0; i < arr.length; i += chunkSize) {
+                groups.push(arr.slice(i, i + chunkSize));
+            }
+            return groups;
+        }
+        $scope.toTitleCase = function (str)
+        {
+            return str.replace(/\w\S*/g, function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
         }
 
         $scope.printloader = '';
@@ -652,110 +682,677 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
             var result_count = Object.keys($scope.saleItems2).length;
             var index = 1;
             var loop_count = 0;
+
+            var cgst_total = 0;
+            var sgst_total = 0;
             var sale = $scope.data2;
 
-            saleReturnItems.push([
-                {text: 'S.No', style: 'header'},
-                {text: 'Product Name', style: 'header'},
-                {text: 'Batch No', style: 'header'},
-                {text: 'Exp Date', style: 'header'},
-                {text: 'Qty', style: 'header'},
-                {text: 'MRP', style: 'header'},
-                {text: 'Line Total', style: 'header'},
-                {text: 'Dis %', style: 'header'},
-                {text: 'Dis Amt', style: 'header'},
-                {text: 'P.Vat%', style: 'header'},
-                {text: 'Vat Amt', style: 'header'},
-                {text: 'Total Amt', style: 'header'},
-            ]);
+            var groupedArr = createGroupedArray($scope.saleItems2, 6); //Changed Description rows
+            var sale_info = $scope.data2;
+            var group_total_count = Object.keys(groupedArr).length;
 
-            angular.forEach($scope.saleItems2, function (row, key) {
-                saleReturnItems.push([
-                    index.toString(),
-                    row.full_name,
-                    row.batch_no,
-                    moment(row.expiry_date).format('MM/YY'),
-                    row.quantity.toString(),
-                    row.mrp,
-                    row.item_amount,
-                    (row.discount_percent ? row.discount_percent : '-'),
-                    row.discount_amount,
-                    row.vat_percent,
-                    row.vat_amount,
-                    row.total_amount,
+            angular.forEach(groupedArr, function (sales, key) {
+
+
+                var group_key = key + 1;
+                var perPageInfo = [];
+                var perImageInfo = [];
+
+                var perPageItems = [];
+                perPageItems.push([
+                    {
+                        border: [false, true, false, false],
+                        rowspan: 2,
+                        text: 'S.No',
+                        style: 'th'
+                    },
+                    {
+                        border: [false, true, false, false],
+                        rowspan: 2,
+                        text: 'Description',
+                        style: 'th'
+                    },
+                    {
+                        border: [false, true, false, false],
+                        rowspan: 2,
+                        text: 'HSN Code',
+                        style: 'th'
+                    },
+//                {
+//                    border: [false, true, false, false],
+//                    rowspan: 2,
+//                    text: 'MFR',
+//                    style: 'th'
+//                },
+                    {
+                        border: [false, true, false, false],
+                        rowspan: 2,
+                        text: 'Batch',
+                        style: 'th'
+                    },
+                    {
+                        border: [false, true, false, false],
+                        rowspan: 2,
+                        text: 'Expiry',
+                        style: 'th'
+                    },
+                    {
+                        border: [false, true, false, false],
+                        rowspan: 2,
+                        text: 'Qty',
+                        style: 'th'
+                    },
+                    {
+                        border: [false, true, false, false],
+                        rowspan: 2,
+                        text: 'Price',
+                        style: 'th'
+                    },
+                    {
+                        border: [false, true, false, false],
+                        rowspan: 2,
+                        text: 'Taxable value',
+                        style: 'th'
+                    },
+                    {
+                        border: [false, true, false, true],
+                        colSpan: 2,
+                        alignmanet: 'center',
+                        text: 'CGST',
+                        style: 'th'
+                    }, {},
+                    {
+                        border: [false, true, false, true],
+                        colSpan: 2,
+                        alignmanet: 'center',
+                        text: 'SGST',
+                        style: 'th'
+                    }, {},
+                    {
+                        border: [false, true, false, false],
+                        rowspan: 2,
+                        text: 'Total',
+                        style: 'th'
+                    },
+                ], [
+                    {
+                        border: [false, false, false, true],
+                        text: ''
+                    }, {
+                        border: [false, false, false, true],
+                        text: ''
+                    }, {
+                        border: [false, false, false, true],
+                        text: ''
+                    }, {
+                        border: [false, false, false, true],
+                        text: ''
+                    },
+//                {
+//                    border: [false, false, false, true],
+//                    text: ''
+//                },
+                    {
+                        border: [false, false, false, true],
+                        text: ''
+                    }, {
+                        border: [false, false, false, true],
+                        text: ''
+                    }, {
+                        border: [false, false, false, true],
+                        text: ''
+                    }, {
+                        border: [false, false, false, true],
+                        text: ''
+                    },
+                    {
+                        border: [false, true, false, true],
+                        text: 'Rate %',
+                        fontSize: 05,
+                    },
+                    {
+                        border: [false, true, false, true],
+                        text: 'Amount',
+                        fontSize: 05,
+
+                    },
+                    {
+                        border: [false, true, false, true],
+                        text: 'Rate %',
+                        fontSize: 05,
+                    },
+                    {
+                        border: [false, false, false, true],
+                        text: 'Amount',
+                        fontSize: 05,
+
+                    },
+                    {
+                        border: [false, false, false, true],
+                        text: ''
+                    },
                 ]);
-                index++;
-                loop_count++;
-            });
 
-            saleReturnInfo.push({
-                columns: [
-                    {
-                        text: [
-                            {text: 'Invoice No: ', bold: true},
-                            sale.bill_no
-                        ],
-                        margin: [0, 0, 0, 10]
-                    },
-                    {
-                        text: [
-                            {text: 'Patient Name: ', bold: true},
-                            sale.patient_name
-                        ],
-                        margin: [0, 0, 0, 10]
+
+                angular.forEach(sales, function (row, key) {
+                    var percentage = parseInt(row.discount_percentage);
+                    if (percentage > 0) {
+                        var particulars = row.product.full_name + '(' + percentage.toString() + ')';
+                    } else {
+                        var particulars = row.product.full_name;
                     }
-                ]
-            }, {
-                columns: [
-                    {
-                        text: [
-                            {text: 'Invoice Date: ', bold: true},
-                            moment(sale.created_at).format('YYYY-MM-DD'),
-                        ],
-                        margin: [0, 0, 0, 10]
+
+                    cgst_total += parseFloat(row.cgst_amount);
+                    sgst_total += parseFloat(row.sgst_amount);
+
+                    if (loop_count % 2 == 0)
+                        var color = '';
+                    else
+                        var color = '#eeeeee';
+                    if (result_count == loop_count + 1)
+                        var border = [false, false, false, true];
+                    else
+                        var border = [false, false, false, false];
+                    perPageItems.push([
+                        {
+                            border: border,
+                            text: index,
+                            fillColor: color,
+                            style: 'td',
+                            alignment: 'left',
+                        },
+                        {
+                            border: border,
+                            text: particulars,
+                            fillColor: color,
+                            style: 'td'
+                        },
+                        {
+                            border: border,
+                            text: [row.hsn_no || '-'],
+                            fillColor: color,
+                            style: 'td'
+                        },
+                        {
+                            border: border,
+                            text: row.batch_no,
+                            fillColor: color,
+                            style: 'td'
+                        },
+                        {
+                            border: border,
+                            text: moment(row.expiry_date).format('MM/YY'),
+                            fillColor: color,
+                            style: 'td'
+                        },
+                        {
+                            border: border,
+                            text: row.quantity.toString(),
+                            fillColor: color,
+                            style: 'td'
+                        },
+                        {
+                            border: border,
+                            text: row.mrp,
+                            fillColor: color,
+                            style: 'td'
+                        },
+//                    {
+//                        border: border,
+//                        text: row.total_amount,
+//                        fillColor: color,
+//                        style: 'td',
+//                    },
+                        {
+                            border: border,
+                            text: [row.taxable_value || '-'],
+                            fillColor: color,
+                            style: 'td',
+                        },
+                        {
+                            border: border,
+                            text: [row.cgst_percent || '-'],
+                            fillColor: color,
+                            style: 'td',
+                        },
+                        {
+                            border: border,
+                            text: [row.cgst_amount || '-'],
+                            fillColor: color,
+                            style: 'td',
+                        },
+                        {
+                            border: border,
+                            text: [row.sgst_percent || '-'],
+                            fillColor: color,
+                            style: 'td',
+                        },
+                        {
+                            border: border,
+                            text: [row.sgst_amount || '-'],
+                            fillColor: color,
+                            style: 'td',
+                        },
+                        {
+                            border: border,
+                            text: row.total_amount,
+                            fillColor: color,
+                            style: 'td',
+                            alignment: 'right',
+                        },
+                    ]);
+                    index++;
+                    loop_count++;
+                });
+
+                var ahana_log = $('#sale_logo').attr('src');
+                var barcode = sale_info.patient.patient_global_int_code;
+                var bar_image = $('#' + barcode).attr('src');
+                if (bar_image) //Check Bar image is empty or not
+                {
+                    var bar_img = [{image: bar_image, height: 20, width: 100, alignment: 'right'}];
+                } else
+                {
+                    var bar_img = [{text: ''}];
+                }
+                perPageInfo.push({layout: 'noBorders',
+                    table: {
+                        widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                        body: [
+                            [
+                                {
+                                    colSpan: 6,
+                                    layout: 'noBorders',
+                                    table: {
+                                        body: [
+                                            [
+                                                {
+                                                    image: $scope.imgExport('sale_logo'),
+                                                    height: 20, width: 100,
+
+                                                }
+                                            ],
+                                            [
+                                                {
+                                                    text: 'GST No : 33AAQFA999IEIZI',
+                                                    fontSize: 07,
+                                                }
+                                            ],
+                                            [
+                                                {
+                                                    text: sale_info.branch_address,
+                                                    fontSize: 09,
+                                                }
+                                            ],
+                                        ]
+                                    },
+                                },
+                                {}, {}, {}, {}, {},
+                                {
+                                    layout: 'noBorders',
+                                    table: {
+                                        body: [
+                                            [
+                                                {
+                                                    text: 'DL Nos. : MDU/5263/20,21',
+                                                    fontSize: 07,
+                                                    alignment: 'right'
+                                                }
+                                            ],
+                                            [
+                                                {
+                                                    text: 'Cash on Delivery : ' + [sale_info.branch_phone],
+                                                    fontSize: 09,
+                                                    alignment: 'right'
+                                                }
+                                            ],
+                                            bar_img
+                                        ]
+                                    },
+                                },
+                            ],
+                        ]
                     },
-                    {
-                        text: [
-                            {text: 'Sale Type: ', bold: true},
-                            sale.sale_payment_type,
-                        ],
-                        margin: [0, 0, 0, 10]
+                });
+
+
+                perPageInfo.push({
+                    layout: 'Borders',
+                    table: {
+                        widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                        body: [
+                            [
+                                {
+                                    border: [false, true, false, false],
+                                    colSpan: 6,
+                                    layout: {
+                                        paddingLeft: function (i, node) {
+                                            return 0;
+                                        },
+                                        paddingRight: function (i, node) {
+                                            return 2;
+                                        },
+                                        paddingTop: function (i, node) {
+                                            return 0;
+                                        },
+                                        paddingBottom: function (i, node) {
+                                            return 0;
+                                        },
+                                    },
+                                    table: {
+                                        body: [
+                                            [
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: 'Patient',
+                                                    style: 'h2',
+                                                    margin: [-5, 0, 0, 0],
+                                                },
+                                                {
+                                                    text: ':',
+                                                    border: [false, false, false, false],
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: $scope.toTitleCase(sale_info.patient_name || '-'),
+                                                    style: 'normaltxt'
+                                                }
+                                            ],
+                                            [
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: 'UHID',
+                                                    style: 'h2',
+                                                    margin: [-5, 0, 0, 0],
+                                                },
+                                                {
+                                                    text: ':',
+                                                    border: [false, false, false, false],
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: [sale_info.patient.patient_global_int_code || '-'],
+                                                    style: 'normaltxt'
+                                                }
+                                            ],
+                                            [
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: 'Address',
+                                                    style: 'h2',
+                                                    margin: [-5, 0, 0, 0],
+                                                },
+                                                {
+                                                    text: ':',
+                                                    border: [false, false, false, false],
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: $scope.toTitleCase(sale_info.patient.printpermanentaddress || '-'),
+                                                    style: 'normaltxt'
+                                                }
+                                            ],
+                                            [
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: 'Doctor',
+                                                    style: 'h2',
+                                                    margin: [-5, 0, 0, 0],
+                                                },
+                                                {
+                                                    text: ':',
+                                                    border: [false, false, false, false],
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: [sale_info.consultant_name || '-'],
+                                                    style: 'normaltxt'
+                                                }
+                                            ],
+                                        ]
+                                    },
+                                },
+                                {}, {}, {}, {}, {},
+                                {
+                                    border: [false, true, false, false],
+                                    layout: 'noBorders',
+                                    table: {
+                                        body: [
+                                            [
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: 'Bill No',
+                                                    style: 'h2',
+                                                    margin: [-7, 0, 0, 0],
+                                                },
+                                                {
+                                                    text: ':',
+                                                    border: [false, false, false, false],
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    border: [false, false, false, false],
+                                                    text: [sale_info.bill_no] + '/' + [sale_info.sale_payment_type],
+                                                    style: 'normaltxt'
+                                                }
+                                            ],
+                                            [
+                                                {
+                                                    text: 'Date',
+                                                    style: 'h2',
+                                                    margin: [-7, 0, 0, 0],
+                                                },
+                                                {
+                                                    text: ':',
+                                                    style: 'h2'
+                                                },
+                                                {
+                                                    text: moment(sale_info.created_at).format('YYYY-MM-DD hh:mm A'),
+                                                    style: 'normaltxt'
+                                                }
+                                            ],
+                                        ]
+                                    },
+                                }
+                            ],
+                        ]
                     },
-                ]
-            }, {
-                style: 'demoTable',
-                margin: [0, 0, 0, 20],
-                table: {
-                    headerRows: 1,
-                    widths: [30, '*', 'auto', 50, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-                    body: saleReturnItems,
                 },
-//                pageBreak: (loop_count === result_count ? '' : 'after'),
-            }, {
-                columns: [
-                    {
-                        alignment: 'right',
-                        text: [
-                            {text: 'Total Vat Amount: ', bold: true},
-                            sale.total_item_vat_amount + '\n\n',
-                            {text: 'Total Item Sale Return Amount: ', bold: true},
-                            sale.total_item_sale_amount + '\n\n',
-                            {text: 'Disc(' + sale.total_item_discount_percent + ') %: ', bold: true},
-                            sale.total_item_discount_amount + '\n\n',
-                            {text: 'Total Return Amount: ', bold: true},
-                            sale.total_item_amount + '\n\n',
-                            {text: 'Round Off: ', bold: true},
-                            sale.roundoff_amount + '\n\n',
-                            {text: 'Bill Amount: ', bold: true},
-                            sale.bill_amount + '\n\n',
-                        ],
-                    }
-                ]
+                        {
+                            layout: {
+                                hLineWidth: function (i, node) {
+                                    return (i === 0) ? 3 : 1;
+                                }
+                            },
+                            table: {
+                                headerRows: 1,
+                                widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                                body: perPageItems,
+                            },
+
+                        }, {
+                    layout: 'noBorders',
+                    margin: [200, 10, 10, 10],
+                    table: {
+                        body: [
+                            [
+                                {
+                                    text: (group_total_count === group_key ? '' : 'To Be Continue'),
+                                    bold: true,
+                                    alignment: 'center',
+                                    fontSize: 14,
+                                    style: 'normaltxt'
+                                },
+                            ],
+                        ]
+                    },
+                    pageBreak: (loop_count === result_count ? '' : 'after'),
+                });
+
+//                perPageInfo.push({
+//                    text: [
+//                        $filter('words')(sale_info.bill_amount),
+//                        {text: 'RUPEES ONLY'},
+//                    ]});
+
+
+                content.push(perPageInfo);
+
+                if (index == result_count) {
+                    $scope.printloader = '';
+                }
+//                perPageInfo.push({
+//                    text: [
+//                        {text: 'To be continue'},
+//                    ]});
             });
-            content.push(saleReturnInfo);
-            if (index == result_count) {
-                $scope.printloader = '';
-            }
+            var perPageInfo = [];
+            perPageInfo.push({
+                layout: 'noBorders',
+                table: {
+                    widths: ['*', 'auto', 'auto', '*', 'auto', 'auto', 'auto'],
+                    body: [
+                        [
+                            {
+                                colSpan: 3,
+                                layout: 'noBorders',
+                                table: {
+                                    body: [
+                                        [
+                                            {
+                                                text: 'Billed By',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: ':',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: sale_info.billed_by,
+                                                style: 'normaltxt'
+                                            },
+                                        ],
+                                    ]
+                                },
+                            }, {}, {},
+                            {
+                                colSpan: 3,
+                                layout: 'noBorders',
+                                table: {
+                                    body: [
+                                        [
+                                            {
+                                                text: 'CGST',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: ':',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: cgst_total.toFixed(2),
+                                                style: 'normaltxt'
+                                            },
+                                        ],
+                                        [
+                                            {
+                                                text: 'SGST',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: ':',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: sgst_total.toFixed(2),
+                                                style: 'normaltxt'
+                                            },
+                                        ],
+                                    ]
+                                },
+                            },
+                            {}, {},
+                            {
+                                layout: 'noBorders',
+                                table: {
+                                    body: [
+                                        [
+                                            {
+                                                text: 'GST',
+                                                style: 'h2',
+                                                alignment: 'right'
+                                            },
+                                            {
+                                                text: ':',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: (parseFloat(cgst_total) + parseFloat(sgst_total)).toFixed(2),
+                                                alignment: 'right'
+                                            },
+                                        ],
+                                        [
+                                            {
+                                                text: 'Total Value',
+                                                style: 'h2',
+                                                alignment: 'right'
+                                            },
+                                            {
+                                                text: ':',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: sale_info.total_item_amount,
+                                                alignment: 'right'
+                                            },
+                                        ],
+                                        [
+                                            {
+                                                text: 'Round Off',
+                                                style: 'h2',
+                                                alignment: 'right'
+                                            },
+                                            {
+                                                text: ':',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: sale_info.roundoff_amount,
+                                                alignment: 'right'
+                                            },
+                                        ],
+                                        [
+                                            {
+                                                text: 'Grand Total',
+                                                fillColor: '#eeeeee',
+                                                style: 'grandtotal',
+                                                //color: 'white'
+                                            },
+                                            {
+                                                text: ':',
+                                                fillColor: '#eeeeee',
+                                                style: 'grandtotal',
+                                                //color: 'white'
+                                            },
+                                            {
+                                                text: 'INR ' + [sale_info.bill_amount],
+                                                fillColor: '#eeeeee',
+                                                style: 'grandtotal',
+                                                //color: 'white'
+                                            },
+                                        ],
+                                    ]
+                                },
+                            }
+                        ],
+                    ]
+                },
+            });
+            content.push(perPageInfo);
             return content;
         }
 
@@ -769,7 +1366,11 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
                         footer: $scope.printFooter(),
                         styles: $scope.printStyle(),
                         content: print_content,
-                        pageSize: 'A4',
+                        defaultStyle: {
+                            fontSize: 10
+                        },
+                        pageMargins: [20, 20, 20, 48],
+                        pageSize: 'A5',
                         pageOrientation: 'landscape',
                     };
                     var pdf_document = pdfMake.createPdf(docDefinition);
@@ -1182,10 +1783,10 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
                 }
             }
         });
-        
+
         $scope.$watch('allow_sale', function (newValue, oldValue) {
             if (typeof newValue !== 'undefined' && newValue != '') {
-                if(newValue == '0') {
+                if (newValue == '0') {
                     $scope.sale_return_sales = false;
                 }
             }
@@ -1228,9 +1829,9 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
                 }
             }
         };
-        
+
         $scope.checkNewSale = function (a) {
-            if(a) {
+            if (a) {
                 $scope.sale_return_sales = true;
             } else {
                 $scope.sale_return_sales = false;
