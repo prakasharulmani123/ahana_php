@@ -47,25 +47,25 @@
 
                 <div class="headerbg2">
                     <div class="patient-details-part patinet-id" ng-if="patientObj.activeCasesheetno">
-                        <b> Casesheet No : </b> {{patientObj.activeCasesheetno}}
+                        <b> CS No : </b> {{patientObj.activeCasesheetno}}
                     </div>
                     <!--                    <div class="patient-details-part patinet-id" ng-if="patientObj.clinical_discharge_date != '-'">
                                             <b> Clinical Discharge : </b> {{patientObj.clinical_discharge_date | moment:'DD/MM/YYYY - hh:mm A'}}
                                         </div>-->
                     <div class="patient-details-part patinet-id" ng-if="patientObj.patActiveIp">
-                        <b> D.O.A : </b> <i class="fa fa-calendar"></i> {{patientObj.doa}}
+                        <b> D.O.A : </b> {{patientObj.doa}}
                     </div>
                     <div class="patient-details-part" ng-if="patientObj.current_room != '-'">
-                        <i class="fa fa-wheelchair"></i> <b> Ward : </b>{{patientObj.current_room}}
+                        <i class="fa fa-bed"></i> {{patientObj.current_room}}
                     </div>
                     <div class="patient-details-part" ng-if="patientObj.active_op_current_status != '-'">
-                        <i class="fa fa-wheelchair"></i> <b> Status : </b> {{patientObj.active_op_current_status}}
+                        <i class="fa fa-bed"></i> <b> Status : </b> {{patientObj.active_op_current_status}}
                     </div>
                     <div class="patient-details-part" ng-if="patientObj.consultant_name != '-'">
                         <i class="fa fa-user-md"></i> {{patientObj.consultant_name}}
                     </div>
                     <div class="patient-details-part">
-                        <i class="fa fa-hospital-o"></i> <b> Org :  </b> {{patientObj.org_name}}
+                        <i class="fa fa-hospital-o"></i> {{patientObj.org_name}}
                     </div>
                     <!--                    <div class="patient-details-part" ng-if="patientObj.childrens_global_ids != ''">
                                             <i class="fa fa-bullseye"></i> <b> Secondary Patient Ids :  </b> {{patientObj.childrens_global_ids}}
