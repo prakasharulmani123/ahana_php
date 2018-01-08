@@ -188,7 +188,7 @@ app.controller('prescriptionRegisterController', ['$rootScope', '$scope', '$time
                         {text: 'Brand', style: 'header'},
                         {text: 'Batch', style: 'header'},
                         {text: 'Expiry', style: 'header'},
-                        {text: 'Pharmacy Signature', style: 'header'}
+                        {text: 'Pharmacist Signature', style: 'header'}
                     ]);
                     angular.forEach(sale.items, function (item, item_key) {
                         items.push([

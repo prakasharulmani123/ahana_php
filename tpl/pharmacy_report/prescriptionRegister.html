@@ -23,11 +23,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <select id="consultant_wise" class="form-control selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: 'name'" multiple required>
+                                <select id="consultant_wise" class="selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: 'name'" multiple required>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <select id="branch_wise" class="form-control selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true"  ng-model="data.tenant_id" ng-options="key as value for (key , value) in tenants | orderBy: label" multiple required>
+                                <select id="branch_wise" class="selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true"  ng-model="data.tenant_id" ng-options="key as value for (key , value) in tenants | orderBy: label" multiple required>
                                 </select>
                             </div>
                             <button id="get_report" class="btn btn-success get-report" ng-disabled="searchForm.$invalid" ng-click="loadReport()">Get Report</button>
@@ -145,7 +145,7 @@
                                                 <th id="work-base-grid_c0">Brand</th>
                                                 <th id="work-base-grid_c0">Batch</th>
                                                 <th id="work-base-grid_c0">Expiry</th>
-                                                <th id="work-base-grid_c1">Pharmacy Signature</th>
+                                                <th id="work-base-grid_c1">Pharmacist Signature</th>
                                             </tr>
                                         </thead>
                                         <tbody>
