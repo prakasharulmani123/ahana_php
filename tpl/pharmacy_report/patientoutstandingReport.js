@@ -25,9 +25,6 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
             $scope.showTable = false;
             $scope.data = {};
             $scope.data.to = moment().format('YYYY-MM-DD');
-            $scope.data.from = moment().subtract(1, 'months').format('YYYY-MM-DD');
-            $scope.fromMaxDate = new Date($scope.data.to);
-            $scope.toMinDate = new Date($scope.data.from);
             $scope.data.patient_group_name = '';
             $scope.deselectAll();
         }
@@ -52,17 +49,6 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
             $scope.clearReport();
         }
 
-        $scope.$watch('data.from', function (newValue, oldValue) {
-            if (newValue != '' && typeof newValue != 'undefined') {
-                $scope.toMinDate = new Date($scope.data.from);
-            }
-        }, true);
-        $scope.$watch('data.to', function (newValue, oldValue) {
-            if (newValue != '' && typeof newValue != 'undefined') {
-                $scope.fromMaxDate = new Date($scope.data.to);
-            }
-        }, true);
-
         //Index Page
         $scope.loadReport = function () {
             $scope.records = [];
@@ -72,13 +58,10 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
             $scope.msg.successMessage = "";
 
             var data = {};
-            if (typeof $scope.data.from !== 'undefined' && $scope.data.from != '')
-                angular.extend(data, {from: moment($scope.data.from).format('YYYY-MM-DD')});
             if (typeof $scope.data.to !== 'undefined' && $scope.data.to != '')
                 angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
             if (typeof $scope.data.patient_group_name !== 'undefined' && $scope.data.patient_group_name != '')
                 angular.extend(data, {patient_group_name: $scope.data.patient_group_name});
-            console.log(data);
 
             // Get data's from service
             $http.post($rootScope.IRISOrgServiceUrl + '/pharmacysale/outstandingreport?addtfields=patient_report', data)
@@ -127,7 +110,7 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
         $scope.printContent = function () {
             var generated_on = $scope.generated_on;
             var generated_by = $scope.app.username;
-            var date_rage = moment($scope.data.from).format('YYYY-MM-DD') + " - " + moment($scope.data.to).format('YYYY-MM-DD');
+            var date_rage = "Upto " + moment($scope.data.to).format('YYYY-MM-DD');
             var branch_name = $scope.app.org_name;
 
             var reports = [];
@@ -249,34 +232,6 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
                 }
             }, 1000);
         }
-
-        $scope.$watch('data.to', function (newValue, oldValue) {
-            if (newValue != '' && typeof newValue != 'undefined') {
-                $scope.fromMaxDate = new Date($scope.data.to);
-                var from = moment($scope.data.from);
-                var to = moment($scope.data.to);
-                var difference = to.diff(from, 'days') + 1;
-
-                if (difference > 31) {
-                    $scope.data.from = moment($scope.data.to).add(-30, 'days').format('YYYY-MM-DD');
-                }
-            }
-        }, true);
-
-        $scope.$watch('data.from', function (newValue, oldValue) {
-            if (newValue != '' && typeof newValue != 'undefined') {
-                $scope.toMinDate = new Date($scope.data.from);
-                var from = moment($scope.data.from);
-                var to = moment($scope.data.to);
-                var difference = to.diff(from, 'days') + 1;
-
-                if (difference > 31) {
-                    $scope.data.to = moment($scope.data.from).add(+30, 'days').format('YYYY-MM-DD');
-                }
-            }
-        }, true);
-
-
 
         $scope.total_pending = function (a, b) {
             if (a == undefined)
