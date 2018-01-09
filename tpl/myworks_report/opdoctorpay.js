@@ -431,6 +431,64 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                 content.push(doctor_info);
                 doctor_info = [];
             });
+            
+            var date_wise = $filter('groupBy')($scope.records, 'branch_name');
+            var date_info = [];
+            date_info.push({
+                columns: [
+                    {
+                        text: [
+                            {text: 'Date Wise Report: ', bold: true},
+                        ],
+                        margin: [0, 0, 0, 5]
+                    }, ]
+            });
+            angular.forEach(date_wise, function (detail, branch_name) {
+                var branch_item = [];
+                
+                branch_item.push([
+                    {text: branch_name, style: 'header', colSpan: 3}, "",""
+                ]);
+
+                branch_item.push([
+                    {text: 'Date', style: 'header'},
+                    {text: 'Doctor Name', style: 'header'},
+                    {text: 'Amount', style: 'header'},
+                ]);
+                detail = $filter('orderBy')(detail, 'op_seen_date');
+                var branch_doctor_wise = $filter('groupBy')(detail, '[op_seen_date, consultant_name]');
+                branch_doctor_wise = $filter('orderBy')(branch_doctor_wise, '-op_seen_date');
+                
+                angular.forEach(branch_doctor_wise, function (branch, consultant_name) {
+                    var branch_wise_total = 0;
+                    angular.forEach(branch, function (record, key) {
+                        branch_wise_total += parseFloat(record.payment_amount);
+                    });
+                    var branch_total = branch_wise_total.toString();
+                    branch_item.push([
+                        {text: branch[0].op_seen_date},
+                        {text: branch[0].consultant_name},
+                        {text: branch_total, alignment: 'right'}
+                    ]);
+                });
+
+                date_info.push({
+                    style: 'demoTable',
+                    table: {
+                        widths: ['auto', '*','auto'],
+                        headerRows: 2,
+                        dontBreakRows: true,
+                        body: branch_item,
+                    },
+                    layout: {
+                        hLineWidth: function (i, node) {
+                            return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
+                        }
+                    },
+                });
+                content.push(date_info);
+                date_info = [];
+            });
 
             return content;
         }
