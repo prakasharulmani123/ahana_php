@@ -95,6 +95,7 @@ class MyworkreportsController extends ActiveController {
             $reports[$key]['patient_mobile'] = $encounter['op_doctor_payment_patient_mobile'];
             $reports[$key]['payment_amount'] = $encounter['op_doctor_payment_amount'];
             $reports[$key]['op_seen_date_time'] = $encounter['op_doctor_payment_seen_date'] . " " . $encounter['op_doctor_payment_seen_time'];
+            $reports[$key]['op_seen_date'] = $encounter['op_doctor_payment_seen_date'];
         }
         $sheetname = array_map("unserialize", array_unique(array_map("serialize", $sheetname)));
         return ['report' => $reports,'sheetname' => $sheetname];
