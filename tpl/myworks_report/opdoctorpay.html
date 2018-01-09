@@ -258,6 +258,44 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="col-sm-12" ng-if='showTable && records.length > 0'>
+                <div id="table_datewise_report">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <b>Date Wise Report</b>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered">
+                                    <tbody ng-repeat="(branch_name, rec) in records | groupBy: 'branch_name'" >
+                                        <tr></tr>
+                                        <tr>
+                                            <td colspan="2">{{branch_name}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Date</td>
+                                            <td>Doctor Name</td>
+                                            <td>Amount</td>
+                                        </tr>
+                                        <tr ng-repeat="(consultant_name, record) in rec | groupBy: '[op_seen_date, consultant_name]'" ng-init="branchwise_new = {}">    
+                                            <td>{{record[0].op_seen_date}}</td>
+                                            <td>{{record[0].consultant_name}}</td>
+                                            <td data-type="Number" >
+                                                <span ng-repeat="(key, bran) in record" ng-init="row_total_new = parseFloat(bran.payment_amount);
+                                                    branchwise_new.total = branchwise_new.total + row_total_new;">
+                                                </span>
+                                                {{branchwise_new.total| number:2}}  
+                                            </td>
+                                        </tr>
+                                    </tbody> 
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

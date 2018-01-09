@@ -171,7 +171,9 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                             $scope.sheet_name.push(item.consultant_name);
                         });
                         $scope.tableid.push('table_doctorwise_report');
+                        $scope.tableid.push('table_datewise_report');
                         $scope.sheet_name.push('Doctorwise Report');
+                        $scope.sheet_name.push('Datewise Report');
                         $scope.generated_on = moment().format('YYYY-MM-DD hh:mm A');
                     })
                     .error(function () {
