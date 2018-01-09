@@ -167,6 +167,10 @@ class PhaSale extends RActiveRecord {
     public function getConsultant() {
         return $this->hasOne(CoUser::className(), ['user_id' => 'consultant_id']);
     }
+    
+    public function getSaleReturn() {
+        return $this->hasOne(PhaSaleReturn::className(), ['sale_ret_id' => 'sale_return_id']);
+    }
 
     /**
      * @return ActiveQuery
@@ -244,6 +248,9 @@ class PhaSale extends RActiveRecord {
             'items' => function ($model) {
                 return (isset($model->phaSaleItems) ? $model->phaSaleItems : '-');
             },
+            'sale_return_item' => function ($model) {
+                return (isset($model->saleReturn) ? $model->saleReturn : '');
+            },        
             'billings_total_paid_amount' => function ($model) {
                 return (isset($model->phaSaleBillingsTotalPaidAmount) ? $model->phaSaleBillingsTotalPaidAmount : '0');
             },
