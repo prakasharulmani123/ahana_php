@@ -25,6 +25,10 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
         }
 
         $scope.initReport = function () {
+            $scope.paymentTypes = [];
+            $rootScope.commonService.GetPaymentType(function (response) {
+                $scope.paymentTypes = response;
+            });
             $scope.clearReport();
         }
 
@@ -52,6 +56,8 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
                 angular.extend(data, {from: moment($scope.data.from).format('YYYY-MM-DD')});
             if (typeof $scope.data.to !== 'undefined' && $scope.data.to != '')
                 angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
+            if (typeof $scope.data.payment_type !== 'undefined' && $scope.data.payment_type != '')
+                angular.extend(data, {payment_type: $scope.data.payment_type});
 
             // Get data's from service
             $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyreport/purchasereport?addtfields=purchasereport', data)
@@ -105,12 +111,13 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 4}, "", "", ""
+                {text: branch_name, style: 'header', colSpan: 5}, "", "", "", ""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
                 {text: 'Invoice no', style: 'header'},
                 {text: 'Supplier', style: 'header'},
+                {text: 'Payment Type', style: 'header'},
                 {text: 'Purchase Value', style: 'header'},
             ]);
 
@@ -119,10 +126,16 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
             var total = 0;
             angular.forEach($scope.records, function (record, key) {
                 var s_no_string = serial_no.toString();
+                if (record.payment_type == 'CA') {
+                    var payment = 'Cash';
+                } else {
+                    var payment = 'Credit';
+                }
                 reports.push([
                     s_no_string,
                     record.invoice_no,
                     record.supplier_name,
+                    payment,
                     record.net_amount,
                 ]);
                 total += parseFloat(record.net_amount);
@@ -136,8 +149,9 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
                     text: 'Total Purchase Value',
                     style: 'header',
                     alignment: 'right',
-                    colSpan: 3
+                    colSpan: 4
                 },
+                "",
                 "",
                 "",
                 {
@@ -186,7 +200,7 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
                 style: 'demoTable',
                 table: {
                     headerRows: 2,
-                    widths: ['auto', 'auto', '*', 'auto'],
+                    widths: ['auto', 'auto', '*', 'auto', 'auto'],
                     body: reports,
                     dontBreakRows: true,
                 },
@@ -220,5 +234,9 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
                     }
                 }
             }, 1000);
+        }
+        
+        $scope.nameReplace = function (a) {
+            return a.replace('&', '');
         }
     }]);
