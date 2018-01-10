@@ -190,6 +190,7 @@ class PhaPurchase extends RActiveRecord {
                     $parent_fields = [
                         'invoice_no' => 'invoice_no',
                         'net_amount' => 'net_amount',
+                        'payment_type' => 'payment_type',
                     ];
                     break;
                 case 'purchasevatreport':

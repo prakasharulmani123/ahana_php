@@ -39,10 +39,13 @@ class PharmacyreportController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
-        $reports = PhaPurchase::find()
+        $model = PhaPurchase::find()
                 ->tenant()
-                ->andWhere("pha_purchase.invoice_date between '{$post['from']}' AND '{$post['to']}'")
-                ->all();
+                ->andWhere("pha_purchase.invoice_date between '{$post['from']}' AND '{$post['to']}'");
+        if (isset($post['payment_type'])) {
+            $model->andWhere(['pha_purchase.payment_type' => $post['payment_type']]);
+        }
+        $reports = $model->all();
 
         return ['report' => $reports];
     }
@@ -87,8 +90,8 @@ class PharmacyreportController extends ActiveController {
                     ON c.patient_id = a.patient_id
                     LEFT JOIN pat_global_patient d
                     ON c.patient_global_guid = d.patient_global_guid
-                    WHERE ((`a`.`tenant_id` = '".$tenant_id."')
-                    AND (a.sale_date BETWEEN '".$post['from']."' AND '".$post['to']."'))
+                    WHERE ((`a`.`tenant_id` = '" . $tenant_id . "')
+                    AND (a.sale_date BETWEEN '" . $post['from'] . "' AND '" . $post['to'] . "'))
                     AND (b.deleted_at = '0000-00-00 00:00:00')
                     AND (a.deleted_at = '0000-00-00 00:00:00')
                     GROUP BY `b`.`sale_id`,`b`.`cgst_percent` ";
