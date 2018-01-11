@@ -93,7 +93,7 @@
                                             <label class="i-switch m-t-xs m-r"> 
                                                 <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="available_medicine" ng-change='checkAvailable(available_medicine)'> 
                                                 <i></i>
-                                            </label>Search only available medicines
+                                            </label>Show only available medicines
                                         </div>
                                         <div class="col-sm-2 pres-tab-btn-cont1">
                                             <button tooltip="Back" ng-show="pres_status != 'current'" ng-click="pres_status = 'current'" class="btn btn-default btn-dark"><i class="fa fa-arrow-left"></i></button>
@@ -498,15 +498,15 @@
                                                                                 </td>
                                                                                 <td>
                                                                                     <!--e-ng-options="product.full_name as product.full_name for product in item.all_products | filter:$viewValue | filter:{generic_id : item.generic_id} : true"--> 
-                                                                                    <span editable-select="item.product_name"
+                                                                                    <span editable-select="item.product_id"
                                                                                           e-index ="{{item.item_key}}"
                                                                                           e-tabindex="2{{item.item_key}}1"
                                                                                           e-class="form-control"
-                                                                                          e-name="product_name" 
+                                                                                          e-name="product_id" 
                                                                                           e-form="tableform" 
                                                                                           onbeforesave="checkInput($data)" 
                                                                                           e-ng-change="setProductId($data, item.item_key, tableform)" 
-                                                                                          e-ng-options="product.full_name as product.full_name for product in item.all_products" 
+                                                                                          e-ng-options="product.product_id as product.full_name for product in item.all_products" 
                                                                                           e-options-class="{ 'in-stock' : availableQuantity, 'out-of-stock': !availableQuantity }"
                                                                                           e-required>
                                                                                         {{ showProduct(item)}}
