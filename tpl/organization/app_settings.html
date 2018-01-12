@@ -355,15 +355,19 @@
 
                 </div>
             </div>
+
+        </div>
+
+        <div class="col-sm-12">
             <div class="col-sm-6" ng-init="initPharmacyBranch()">
                 <div class="row">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <b>Pharmacy Branch</b>
+                            <b>Pharmacy Branch</b> 
+                            <div class="pull-right"><a class="label bg-primary" ng-click="updateEmptypharmacy('0')">Reset</a></div>
                         </div>
                         <div class="panel-body">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Print</label>
                                 <div class="col-sm-9">
                                     <div ng-repeat="branch in pha_branch">
                                         <label class="i-checks">
