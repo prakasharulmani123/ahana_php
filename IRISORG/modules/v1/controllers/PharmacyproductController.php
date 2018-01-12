@@ -336,7 +336,10 @@ class PharmacyproductController extends ActiveController {
     public function actionGetprescription() {
         $post = Yii::$app->getRequest()->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
-        $appConfiguration = AppConfiguration::find()->andWhere(['tenant_id' => $tenant_id, 'code' => 'PB'])->one();
+        $appConfiguration = AppConfiguration::find()
+                ->andWhere(['<>','value', '0'])
+                ->andWhere(['tenant_id' => $tenant_id, 'code' => 'PB'])
+                ->one();
         if (!empty($appConfiguration)) {
             $tenant_id = $appConfiguration['value'];
         }
