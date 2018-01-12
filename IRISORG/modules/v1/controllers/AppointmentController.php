@@ -107,7 +107,6 @@ class AppointmentController extends ActiveController {
         if (!empty($post)) {
             foreach ($post['appointments'] as $key => $value) {
                 $appointment = PatAppointment::find()->where(['appt_id' => $value['appt_id']])->one();
-
                 //Cancel Old appointment informations
                 $data = array();
                 $data['appt_status'] = "C";
@@ -123,11 +122,12 @@ class AppointmentController extends ActiveController {
                 //Create New Enconter and Book.
                 $en_model = new PatEncounter();
                 $appt_model = new PatAppointment();
-
+                $encounter_date = $post['data']['status_date'].' '.$value['status_time'];
+                
                 $model_attr = [
                     'patient_id' => $appointment->patient_id,
                     'encounter_type' => 'OP',
-                    'encounter_date' => @$post['data']['status_date'],
+                    'encounter_date' => $encounter_date,
                     'add_casesheet_no' => '',
                     'consultant_id' => @$post['data']['consultant_id']
                 ];

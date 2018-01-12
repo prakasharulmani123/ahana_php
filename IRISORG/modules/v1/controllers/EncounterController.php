@@ -84,11 +84,12 @@ class EncounterController extends ActiveController {
             $model = new PatEncounter();
             $appt_model = new PatAppointment();
             $case_model = new PatPatientCasesheet();
+            $encounter_date = $post['status_date'].' '.$post['status_time'];
 
             $model_attr = [
                 'patient_id' => (isset($post['patient_id']) ? $post['patient_id'] : ''),
                 'encounter_type' => 'OP',
-                'encounter_date' => @$post['status_date'],
+                'encounter_date' => $encounter_date,
                 'add_casesheet_no' => (isset($post['PatEncounter']['add_casesheet_no']) ? $post['PatEncounter']['add_casesheet_no'] : ''),
                 'consultant_id' => @$post['consultant_id']
             ];
