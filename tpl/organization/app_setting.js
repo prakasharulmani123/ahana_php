@@ -155,6 +155,31 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             });
         }
 
+        $scope.updateEmptypharmacy = function ($data) {
+            $scope.errorData = "";
+            $scope.msg.successMessage = "";
+
+            $scope.loadbar('show');
+            $data = {value: $data}
+
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/appconfiguration/updateprescription',
+                data: $data,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.msg.successMessage = 'Updated successfully';
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
         $scope.updateShareSetting = function () {
             $scope.errorData = "";
             $scope.msg.successMessage = "";
@@ -486,7 +511,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         $scope.showphaMastersUpdateErrorLog = function () {
 
         }
-        
+
         //Product GST update
         $scope.initProductGstParams = function () {
             $scope.product_gst_import_process_text = '';
@@ -499,7 +524,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             $scope.loadbar('show');
             $scope.product_gst_import_process_text = 'Fetching the Excel Data. Please wait until the importing begins. This might take few mins';
             $scope.import_log = Date.parse(moment().format());
-           //$scope.import_log = '1510558655000';
+            //$scope.import_log = '1510558655000';
             var currentUser = AuthenticationService.getCurrentUser();
 
             fileUpload.uploadFileToUrl($scope.productGSTImport, $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/productgstupdate?tenant_id=' + currentUser.credentials.logged_tenant_id + '&import_log=' + $scope.import_log).success(function (response) {
@@ -561,7 +586,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         $scope.showphaMastersUpdateErrorLog = function () {
 
         }
-        
+
         //Product Price update
         $scope.initProductPriceParams = function () {
             $scope.product_price_import_process_text = '';
@@ -574,7 +599,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             $scope.loadbar('show');
             $scope.product_price_import_process_text = 'Fetching the Excel Data. Please wait until the importing begins. This might take few mins';
             $scope.import_log = Date.parse(moment().format());
-           //$scope.import_log = '1510558655000';
+            //$scope.import_log = '1510558655000';
             var currentUser = AuthenticationService.getCurrentUser();
 
             fileUpload.uploadFileToUrl($scope.productPriceImport, $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/productpriceupdate?tenant_id=' + currentUser.credentials.logged_tenant_id + '&import_log=' + $scope.import_log).success(function (response) {
@@ -630,6 +655,20 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 else
                     $scope.errorData = data.message;
             });
+        }
+
+        $scope.initPharmacyBranch = function () {
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/productbranch?addtfields=app_setting_pharmacy')
+                    .success(function (response) {
+                        $scope.pha_branch = response.model;
+                        if (response.appConfig) {
+                            $scope.pharmacy_branch = response.appConfig.value;
+                        } else {
+                            $scope.pharmacy_branch = '';
+                        }
+                    }, function (x) {
+                        response = {success: false, message: 'Server Error'};
+                    });
         }
     }]);
 

@@ -73,7 +73,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <select class="form-control" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: name" ng-change="getConsultantFreq()">
+                                            <select class="form-control" ng-show="pres_status == 'current'" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: name" ng-change="getConsultantFreq()">
                                                 <option value="">Select Consultant</option>
                                             </select>
                                         </div>
@@ -86,19 +86,21 @@
                                                    ng-model="diagnosis"
                                                    typeahead="Diag as diagname_desc(Diag) for Diag in getdiagnosis($viewValue) | orderBy: bill_no"
                                                    typeahead-on-select="setDiagid($item)"
-                                                   typeahead-wait-ms="400"
+                                                   typeahead-wait-ms="400" ng-show="pres_status == 'current'"
                                                    />
                                         </div>
                                         <div class="col-sm-3">
-                                            <label class="i-switch m-t-xs m-r"> 
-                                                <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="available_medicine" ng-change='checkAvailable(available_medicine)'> 
-                                                <i></i>
-                                            </label>Show only available medicines
+                                            <div ng-show="pres_status == 'current'">
+                                                <label class="i-switch m-t-xs m-r"> 
+                                                    <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="available_medicine" ng-change='checkAvailable(available_medicine)'> 
+                                                    <i></i>
+                                                </label>Show only available medicines
+                                            </div>
                                         </div>
                                         <div class="col-sm-2 pres-tab-btn-cont1">
                                             <button tooltip="Back" ng-show="pres_status != 'current'" ng-click="pres_status = 'current'" class="btn btn-default btn-dark"><i class="fa fa-arrow-left"></i></button>
-                                            <button tooltip="Previous Prescription" tooltip-placement="left" ng-click="pres_status = 'prev'" class="btn btn-default btn-primary"><i class="fa fa-history"></i> </button>
-                                            <button tooltip="Favourite" ng-click="pres_status = 'favourite'" class="btn btn-default btn-primary"><i class="fa fa-heart"></i> </button>
+                                            <button tooltip="Previous Prescription" tooltip-placement="left" ng-show="pres_status != 'prev'" ng-click="pres_status = 'prev'" class="btn btn-default btn-primary"><i class="fa fa-history"></i> </button>
+                                            <button tooltip="Favourite" ng-click="pres_status = 'favourite'" ng-show="pres_status != 'favourite'" class="btn btn-default btn-primary"><i class="fa fa-heart"></i> </button>
                                         </div>
                                     </div>
 
@@ -239,7 +241,9 @@
                                                                                                     <div class="col-sm-3">
                                                                                                         <label> </label>
                                                                                                         <br/>
-                                                                                                        <button class="btn m-b-xs  btn-success save-btn" ng-click="addForm()"><i class="fa fa-plus"></i> Add</button>
+                                                                                                        <button class="btn m-b-xs  btn-success save-btn" 
+                                                                                                                ng-disabled="!addData.number_of_days || !addData.route || !addData.frequency_3_2 || !addData.frequency_3_1 || !addData.frequency_3_0 || !addData.product || !addData.drug_class || !addData.generic"
+                                                                                                                ng-click="addForm()"><i class="fa fa-plus"></i> Add</button>
                                                                                                         &nbsp;
                                                                                                     </div>
                                                                                                     <div class="col-sm-3">
@@ -874,21 +878,19 @@
                                                                                             <label for="exampleInputEmail2">
                                                                                                 &nbsp; &nbsp; <i class="fa fa-calendar-o"></i> <b> No.of.Days </b>
                                                                                             </label> &nbsp;&nbsp;
-                                                                                            <input 
-                                                                                                typeahead-editable="true"
-                                                                                                typeahead="consNoofdays.number_of_days for consNoofdays in consultantNoofdays | unique: 'number_of_days' | limitTo:10 | filter:$viewValue:stateComparator"
-                                                                                                typeahead-on-select="setDateEmpty(); getVisit();"
-                                                                                                typeahead-focus=""
-                                                                                                autocomplete="off" 
-                                                                                                type="text" 
-                                                                                                ng-model="data.number_of_days" 
-                                                                                                class="form-control m-b w-100" 
-                                                                                                drop-disable 
-                                                                                                number-mask="" 
-                                                                                                select-on-click="" 
-                                                                                                ng-blur="setDateEmpty(); getVisit();"
-                                                                                                ng-keypress="$event.keyCode == 13 && getVisit() && setDateEmpty()"
-                                                                                                >     
+                                                                                            <input type="text"
+                                                                                                   autocomplete="off" 
+                                                                                                   ng-model="data.number_of_days"  
+                                                                                                   class="form-control text-center"
+                                                                                                   drop-disable 
+                                                                                                   number-mask
+                                                                                                   maxlength="4"
+                                                                                                   auto-complete
+                                                                                                   ac-options="autoCompleteOptionsNoofdays"
+                                                                                                   ng-blur="setDateEmpty(); getVisit();"
+                                                                                                   ng-keypress="$event.keyCode == 13 && getVisit() && setDateEmpty()"
+                                                                                                   />
+
                                                                                         </div>
                                                                                         <div class="form-group prescription-btns">   
                                                                                             &nbsp; 
@@ -1122,8 +1124,8 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata  =    {};
-                                        loadVitals();   vitaldata.formtype  =  'add'">
+                                    <div class="row" ng-init="vitaldata        =          {};
+                                        loadVitals();         vitaldata.formtype     =     'add'">
                                         <div class="col-lg-12"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
