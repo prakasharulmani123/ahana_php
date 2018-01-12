@@ -49,7 +49,7 @@
                         <button class="btn btn-sm btn-grey" ng-click="loadSaleItemList(sale_payment_type)">
                             &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
                         </button>
-                        <button class="btn btn-sm btn-dark" title="clear filter" ng-click="form_filter = '';day='';month='';year='';loadSaleItemList(sale_payment_type)">
+                        <button class="btn btn-sm btn-dark" title="clear filter" ng-click="form_filter = '';day = '';month = '';year = '';loadSaleItemList(sale_payment_type)">
                             <i class="fa fa-times"></i>
                         </button>
                     </div>
@@ -113,12 +113,13 @@
                             </span>
                         </td>
                     </tr>
-                    <tr ng-repeat-end ng-show="expanded" data-value="{{row.patient_name}} {{row.encounter_id}} {{row.sum_bill_amount}} {{row.sum_paid_amount}} {{row.sum_balance_amount}}">
+                    <tr ng-show="expanded" data-value="{{row.patient_name}} {{row.encounter_id}} {{row.sum_bill_amount}} {{row.sum_paid_amount}} {{row.sum_balance_amount}}">
                         <td data-value="{{row.patient_name}} {{row.encounter_id}} {{row.sum_bill_amount}} {{row.sum_paid_amount}} {{row.sum_balance_amount}}"></td>
                         <td colspan="11" data-value="{{row.patient_name}} {{row.encounter_id}} {{row.sum_bill_amount}} {{row.sum_paid_amount}} {{row.sum_balance_amount}}">
                             <table class="table table-condensed table-bordered">
                                 <thead>
                                     <tr>
+                                        <th width='3%'></th>
                                         <th>Bill No</th>
                                         <th>Sale Date</th>
                                         <th>Bill Amount</th>
@@ -128,10 +129,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="(gKey, saleitem) in row.items | orderBy: sale_id">
+                                    <tr class="sale-bill" ng-repeat-start="(gKey, saleitem) in row.items | orderBy: sale_id">
                                         <td ng-hide="true">
                                 <io-barcode id="{{saleitem.patient_uhid}}" code="{{saleitem.patient_uhid}}" type="CODE128B" options="barcodeOptions"></io-barcode>
 
+                        </td>
+                        <td>
+                            <button ng-show="saleitem.sale_return_details.length != '0'" ng-click="value.seenExpanded = !value.seenExpanded;" expand class="btn btn-sm btn-default hms-plus sale_bill">
+                                <i ng-if="!value.seenExpanded" class="fa fa-plus text"></i>
+                                <i ng-if="value.seenExpanded" class="fa fa-minus text"></i>
+                            </button>&nbsp; &nbsp;
                         </td>
                         <td>{{saleitem.bill_no}}</td>
                         <td>{{saleitem.sale_date}}</td>
@@ -139,9 +146,9 @@
                         <td>{{saleitem.billings_total_paid_amount| number:2}}</td>
                         <td ng-class="{hide : activeMenu === 'CA'}">{{saleitem.billings_total_balance_amount| number:2}}</td>
                         <td>
-<!--                            <a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.saleUpdate({id: '{{saleitem.sale_id}}'})">
-                                <i class="fa fa-pencil"></i>
-                            </a>-->
+                            <!--                            <a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.saleUpdate({id: '{{saleitem.sale_id}}'})">
+                                                            <i class="fa fa-pencil"></i>
+                                                        </a>-->
                             <span ng-if="saleitem.payment_type != 'CA' && saleitem.payment_status != 'C'">
                                 <a class="label bg-dark" title="Make Payment" ng-click="make_payment(row.sale_id, saleitem.sale_id)" data-button="pharmacy.makePayment" check-access-custom>
                                     <i class="fa fa-money"></i>
@@ -156,10 +163,24 @@
                             </a>
                         </td> 
                     </tr>
+                    <tr ng-show="value.seenExpanded">
+                       <th></th>
+                        <th>Sale Return Bill No</th>
+                        <th>Sale Return Date</th>
+                        <th colspan="3">Sale Return Amount</th>
+                    </tr>
+                    <tr ng-show="value.seenExpanded" ng-repeat-end ng-repeat-start="(gKey, saleReturn) in saleitem.sale_return_details">
+                        <td></td>
+                        <td>{{saleReturn.bill_no}}</td>
+                        <td>{{saleReturn.sale_return_date}}</td>
+                        <td colspan="3">{{saleReturn.bill_amount}}</td>
+                    </tr>
+                    <tr ng-repeat-end ng-hide="true"></tr>
                 </tbody>
             </table>                            
             </td>
             </tr>
+            <tr ng-repeat-end><br></tr>
             </tbody>
             <tbody ng-if="isLoading == true">
                 <tr>

@@ -959,3 +959,6 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 .i-switch i:before {
     border: 1px solid #bbb;
 }
+.sale-bill {
+    background-color: #f7f7f7;
+}
