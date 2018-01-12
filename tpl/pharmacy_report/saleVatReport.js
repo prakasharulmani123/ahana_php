@@ -31,11 +31,25 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
         $scope.$watch('data.from', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
                 $scope.toMinDate = new Date($scope.data.from);
+                var from = moment($scope.data.from);
+                var to = moment($scope.data.to);
+                var difference = to.diff(from, 'days') + 1;
+
+                if (difference > 16) {
+                    $scope.data.to = moment($scope.data.from).add(+15, 'days').format('YYYY-MM-DD');
+                }
             }
         }, true);
         $scope.$watch('data.to', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
                 $scope.fromMaxDate = new Date($scope.data.to);
+                var from = moment($scope.data.from);
+                var to = moment($scope.data.to);
+                var difference = to.diff(from, 'days') + 1;
+
+                if (difference > 16) {
+                    $scope.data.from = moment($scope.data.to).add(-15, 'days').format('YYYY-MM-DD');
+                }
             }
         }, true);
 
@@ -81,7 +95,7 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
         //For Print
         $scope.printHeader = function () {
             return {
-                text: "Sale VAT Report",
+                text: "Sale GST Report",
                 margin: 5,
                 alignment: 'center'
             };
@@ -207,7 +221,7 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                     {
                         text: [
                             {text: 'Report Name: ', bold: true},
-                            'Sale VAT Report'
+                            'Sale GST Report'
                         ],
                         margin: [0, 0, 0, 20]
                     },
@@ -275,5 +289,9 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                     }
                 }
             }, 1000);
+        }
+        
+        $scope.nameReplace = function (a) {
+            return a.replace('&', '');
         }
     }]);

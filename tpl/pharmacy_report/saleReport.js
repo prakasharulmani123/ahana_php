@@ -59,8 +59,8 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                 var to = moment($scope.data.to);
                 var difference = to.diff(from, 'days') + 1;
 
-                if (difference > 31) {
-                    $scope.data.to = moment($scope.data.from).add(+30, 'days').format('YYYY-MM-DD');
+                if (difference > 16) {
+                    $scope.data.to = moment($scope.data.from).add(+15, 'days').format('YYYY-MM-DD');
                 }
             }
         }, true);
@@ -71,8 +71,8 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                 var to = moment($scope.data.to);
                 var difference = to.diff(from, 'days') + 1;
 
-                if (difference > 31) {
-                    $scope.data.from = moment($scope.data.to).add(-30, 'days').format('YYYY-MM-DD');
+                if (difference > 16) {
+                    $scope.data.from = moment($scope.data.to).add(-15, 'days').format('YYYY-MM-DD');
                 }
             }
         }, true);
