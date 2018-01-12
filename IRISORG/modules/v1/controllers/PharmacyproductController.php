@@ -7,6 +7,7 @@ use common\models\PhaDrugGeneric;
 use common\models\PhaProduct;
 use common\models\PhaProductBatch;
 use common\models\PhaProductDescription;
+use common\models\AppConfiguration;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\mssql\PDO;
@@ -334,11 +335,14 @@ class PharmacyproductController extends ActiveController {
 
     public function actionGetprescription() {
         $post = Yii::$app->getRequest()->post();
-
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        $appConfiguration = AppConfiguration::find()->andWhere(['tenant_id' => $tenant_id, 'code' => 'PB'])->one();
+        if (!empty($appConfiguration)) {
+            $tenant_id = $appConfiguration['value'];
+        }
         $products = [];
         if (isset($post['search']) && !empty($post['search']) && strlen($post['search']) > 1) {
             $text = rtrim($post['search'], '-');
-            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
             $available_medicine = $post['available_medicine'];
 
             $this->_connection = Yii::$app->client;
@@ -1778,6 +1782,21 @@ class PharmacyproductController extends ActiveController {
             $connection->close();
         }
         return $return;
+    }
+
+    public function actionProductbranch() {
+        $appConfig = AppConfiguration::find()
+                        ->tenant()
+                        ->andWhere([
+                            'code' => 'PB'
+                        ])->one();
+        $model = PhaProduct::find()
+                ->andWhere([
+                    'pha_product.status' => '1'
+                ])
+                ->groupBy('pha_product.tenant_id')
+                ->all();
+        return ['model' => $model, 'appConfig' => $appConfig];
     }
 
     //Not used for data table model

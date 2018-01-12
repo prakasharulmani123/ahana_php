@@ -70,11 +70,32 @@ class AppconfigurationController extends ActiveController {
     public function actionUpdatebykey() {
         $modelClass = $this->modelClass;
         $post = Yii::$app->getRequest()->post();
-        $vitals = "'" . implode( "','", $post['vitalkey'] ) . "'";
+        $vitals = "'" . implode("','", $post['vitalkey']) . "'";
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
         $update_value = $post['vitalvalue'];
 
         $modelClass::updateAll(['value' => "$update_value"], "`key` IN ($vitals) AND tenant_id=$tenant_id");
+        return ['success' => true];
+    }
+
+    public function actionUpdateprescription() {
+        $post = Yii::$app->getRequest()->post();
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        $appConfig = $this->modelClass::find()
+                        ->tenant()
+                        ->andWhere([
+                            'code' => 'PB'
+                        ])->one();
+        if (empty($appConfig)) {
+            $configuration = new $this->modelClass;
+            $configuration->tenant_id = $tenant_id;
+            $configuration->code = 'PB';
+        } else {
+            $configuration = $appConfig;
+        }
+        $configuration->value = $post['value'];
+        $configuration->status = 1;
+        $configuration->save();
         return ['success' => true];
     }
 

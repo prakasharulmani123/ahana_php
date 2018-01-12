@@ -65,7 +65,7 @@ class PhaProduct extends RActiveRecord {
     public function rules() {
         return [
                 [['product_name', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'purchase_vat_id'], 'required'],
-                [['product_name', 'product_unit', 'product_unit_count', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id' ,'purchase_vat_id'], 'required', 'on' => 'savepresproduct'],
+                [['product_name', 'product_unit', 'product_unit_count', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id', 'purchase_vat_id'], 'required', 'on' => 'savepresproduct'],
                 [['tenant_id', 'product_description_id', 'product_reorder_min', 'product_reorder_max', 'brand_id', 'division_id', 'generic_id', 'drug_class_id', 'purchase_vat_id', 'purchase_package_id', 'sales_vat_id', 'hsn_id', 'sales_package_id', 'created_by', 'modified_by'], 'integer'],
                 [['product_price'], 'number'],
                 [['status'], 'string'],
@@ -236,7 +236,7 @@ class PhaProduct extends RActiveRecord {
     public function getPhaHsn() {
         return $this->hasOne(PhaHsn::className(), ['hsn_id' => 'hsn_id']);
     }
-    
+
     public function getPhaGst() {
         return $this->hasOne(PhaGst::className(), ['gst_id' => 'sales_gst_id']);
     }
@@ -338,6 +338,9 @@ class PhaProduct extends RActiveRecord {
             'product_batches_count' => function ($model) {
                 return $model->getPhaProductBatches()->andWhere('available_qty > 0')->count();
             },
+            'tenant_name' => function ($model) {
+                return (isset($model->tenant) ? $model->tenant->tenant_name : '');
+            }
         ];
 
         $parent_fields = parent::fields();
@@ -453,6 +456,12 @@ class PhaProduct extends RActiveRecord {
                         'product_price' => 'product_price',
                     ];
                     break;
+                case 'app_setting_pharmacy':
+                    $addt_keys = ['tenant_name'];
+                    $parent_fields = [
+                        'tenant_id' => 'tenant_id',
+                    ];
+                    break;
             endswitch;
         }
 
@@ -498,7 +507,7 @@ class PhaProduct extends RActiveRecord {
         else
             $activity = 'Product Updated Successfully (#' . $this->product_name . ' )';
         CoAuditLog::insertAuditLog(PhaProduct::tableName(), $this->product_id, $activity);
-        
+
         //Check Generic already assigned
         $assigned = PhaDrugGeneric::find()
                 ->tenant()
@@ -506,9 +515,9 @@ class PhaProduct extends RActiveRecord {
                 ->andWhere([
                     'generic_id' => $this->generic_id,
                 ])
-                ->one(); 
+                ->one();
         //If not assigned then link in pivot table 
-        if(empty($assigned)) {
+        if (empty($assigned)) {
             $drugGeneric = new PhaDrugGeneric();
             $drugGeneric->drug_class_id = $this->drug_class_id;
             $drugGeneric->generic_id = $this->generic_id;
