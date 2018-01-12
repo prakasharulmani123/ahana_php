@@ -236,6 +236,14 @@ class PhaSaleReturn extends RActiveRecord {
                         'sale_return_date' => 'sale_return_date',
                     ];
                     break;
+                case 'sale_list':
+                    $addt_keys = ['patient_name'];
+                    $parent_fields = [
+                        'bill_no' => 'bill_no',
+                        'bill_amount' => 'bill_amount',
+                        'sale_return_date' => 'sale_return_date',
+                    ];
+                    break;
             endswitch;
         }
         $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;

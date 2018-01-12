@@ -167,7 +167,7 @@ class PhaSale extends RActiveRecord {
     public function getConsultant() {
         return $this->hasOne(CoUser::className(), ['user_id' => 'consultant_id']);
     }
-    
+
     public function getSaleReturn() {
         return $this->hasOne(PhaSaleReturn::className(), ['sale_ret_id' => 'sale_return_id']);
     }
@@ -204,7 +204,7 @@ class PhaSale extends RActiveRecord {
     public function getPhaSaleTotalSgstAmount() {
         return $this->hasMany(PhaSaleItem::className(), ['sale_id' => 'sale_id'])->andWhere("pha_sale_item.deleted_at = '0000-00-00 00:00:00'")->sum('sgst_amount');
     }
-    
+
     public function getPhaSaleTotalTaxableAmount() {
         return $this->hasMany(PhaSaleItem::className(), ['sale_id' => 'sale_id'])->andWhere("pha_sale_item.deleted_at = '0000-00-00 00:00:00'")->sum('taxable_value');
     }
@@ -214,6 +214,10 @@ class PhaSale extends RActiveRecord {
      */
     public function getPhaSaleItems() {
         return $this->hasMany(PhaSaleItem::className(), ['sale_id' => 'sale_id'])->andWhere("pha_sale_item.deleted_at = '0000-00-00 00:00:00'");
+    }
+
+    public function getPhaSaleReturnDetails() {
+        return $this->hasMany(PhaSaleReturn::className(), ['sale_id' => 'sale_id'])->andWhere("pha_sale_return.deleted_at = '0000-00-00 00:00:00'");
     }
 
     public static function find() {
@@ -250,7 +254,10 @@ class PhaSale extends RActiveRecord {
             },
             'sale_return_item' => function ($model) {
                 return (isset($model->saleReturn) ? $model->saleReturn : '');
-            },        
+            },
+            'sale_return_details' => function ($model) {
+                return (isset($model->phaSaleReturnDetails) ? $model->phaSaleReturnDetails : '');
+            },
             'billings_total_paid_amount' => function ($model) {
                 return (isset($model->phaSaleBillingsTotalPaidAmount) ? $model->phaSaleBillingsTotalPaidAmount : '0');
             },
@@ -332,7 +339,7 @@ class PhaSale extends RActiveRecord {
                     ];
                     break;
                 case 'sale_list':
-                    $addt_keys = ['patient_name', 'billings_total_paid_amount', 'billings_total_balance_amount', 'patient_uhid'];
+                    $addt_keys = ['patient_name', 'billings_total_paid_amount', 'billings_total_balance_amount', 'patient_uhid', 'sale_return_details'];
                     $parent_fields = [
                         'sale_id' => 'sale_id',
                         'bill_no' => 'bill_no',
