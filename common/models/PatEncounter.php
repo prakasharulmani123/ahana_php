@@ -542,7 +542,7 @@ class PatEncounter extends RActiveRecord {
                     $parent_fields = ['encounter_id' => 'encounter_id'];
                     break;
                 case 'sale_encounter_id':
-                    $addt_keys = ['cancel_appoitment', 'cancel_admission', 'branch_name','encounter_full_details'];
+                    $addt_keys = ['cancel_appoitment', 'cancel_admission','encounter_full_details'];
                     $parent_fields = ['encounter_id' => 'encounter_id', 'encounter_type' => 'encounter_type'];
                     break;
                 case 'encounter_details':
