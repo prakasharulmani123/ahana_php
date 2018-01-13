@@ -336,12 +336,12 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.getEncounter = function (patient_id, mode, encounter_id) {
             if (patient_id) {
                 $scope.show_encounter_loader = true;
-                $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, patient_id, function (response) {
+                $rootScope.commonService.GetEncounterListByTenantSamePatient('', '0,1', false, patient_id, function (response) {
+                //$rootScope.commonService.GetEncounterListByPatient('', '0,1', false, patient_id, function (response) {
                     angular.forEach(response, function (resp) {
                         resp.encounter_id = resp.encounter_id.toString();
                     });
                     $scope.encounters = response;
-
                     if (response.length > 0 && response != null && mode == 'add') {
                         $scope.data.encounter_id = response[0].encounter_id;
                         $scope.getPrescription(); //Waiting For testing

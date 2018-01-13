@@ -399,6 +399,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             }).success(
                     function (response) {
                         $scope.pharmacy_charge = response.sale;
+                        $scope.logged_tenant_id = response.logged_tenant;
                         var grandTotal = 0;
                         angular.forEach($scope.pharmacy_charge, function (obj) {
                             grandTotal += $scope.parseFloatIgnoreCommas(obj.billings_total_balance_amount);

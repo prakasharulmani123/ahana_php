@@ -332,7 +332,7 @@
                         </tr>
                         <tr ng-repeat="(key, row) in pharmacy_charge | orderBy:'sale_id'">
                             <td>{{key + 1}}</td>
-                            <td>{{row.bill_no}}</td>
+                            <td>{{row.bill_no}}<span ng-if="row.tenant_id != logged_tenant_id"> ({{row.branch_name}}) </span></td>
                             <td>{{row.sale_date| moment:'DD/MM/YYYY'}}</td>
                             <td>{{row.bill_payment}}</td>
                             <td>{{row.bill_amount}}</td>

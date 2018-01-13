@@ -507,7 +507,7 @@
                             </tr>
                             <tr ng-init="detailed_billing.total.net_step_41_total = detailed_billing.total.other_net_total" ng-repeat="(key, row) in pharmacy_charge">
                                 <td>{{row.sale_date| moment:'DD-MMM-YYYY'}}</td>
-                                <td>{{row.bill_no}}</td>
+                                <td>{{row.bill_no}}<span ng-if="row.tenant_id != logged_tenant_id"> ({{row.branch_name}}) </span></td>
                                 <td align="center" ng-init="
                                             row_total = parseFloatIgnoreCommas(row.billings_total_balance_amount);
                                             detailed_non_billing.total.charge = detailed_non_billing.total.charge + row_total;

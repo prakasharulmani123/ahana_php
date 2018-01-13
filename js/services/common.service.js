@@ -39,6 +39,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetRoomList = GetRoomList;
     service.GetChargeCategoryList = GetChargeCategoryList;
     service.GetEncounterListByPatient = GetEncounterListByPatient;
+    service.GetEncounterListByTenantSamePatient = GetEncounterListByTenantSamePatient;
     service.GetEncounterListByPatientAndType = GetEncounterListByPatientAndType;
     service.GetPatientList = GetPatientList;
     service.GetAlertList = GetAlertList;
@@ -506,6 +507,18 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
         var response;
 
         $http.get($rootScope.IRISOrgServiceUrl + '/encounter/getencounterlistbypatient?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&patient_id=' + pat_id + '&addtfields=' + addtfields + '&only=' + only + '&old_encounter=' + old_encounter)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+    
+    function GetEncounterListByTenantSamePatient(tenant, sts, del_sts, pat_id, callback, addtfields, only, old_encounter) {
+        var response;
+
+        $http.get($rootScope.IRISOrgServiceUrl + '/encounter/getencounterlistbytenantsamepatient?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&patient_id=' + pat_id + '&addtfields=' + addtfields + '&only=' + only + '&old_encounter=' + old_encounter)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {

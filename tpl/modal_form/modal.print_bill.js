@@ -17,6 +17,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
         $scope.other_charges = scope.other_charges;
         $scope.advances = scope.advances;
         $scope.enc = scope.enc;
+        $scope.logged_tenant_id = scope.logged_tenant_id;
 
         $scope.detailed_billing = {};
         $scope.detailed_recurr_billing = {};
@@ -578,9 +579,14 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     detailed_billing.total.net_step_41_total = detailed_billing.total.other_net_total;
                     var row_total = $scope.parseFloatIgnoreCommas(row.billings_total_balance_amount);
                     var net_total = parseFloat(detailed_billing.total.net_step_41_total) + parseFloat(row.net_amount)
+                    if(row.tenant_id != $scope.logged_tenant_id) {
+                        var bill_no = row.bill_no +' ('+ row.branch_name+ ')';
+                    } else {
+                        var bill_no = row.bill_no;
+                    }
                     bill.push([
                         {text: profe_date, style: 'rows'},
-                        {text: row.bill_no, style: 'rows', colSpan: 2},
+                        {text: bill_no, style: 'rows', colSpan: 2},
                         '',
                         {text: row_total.toString(), style: 'rows', alignment: 'right'},
                         '',

@@ -81,7 +81,7 @@
                                     <div class="col-lg-8">
                                         <select class="form-control selectpicker" data-live-search="true"
                                                 ng-model="data.encounter_id"
-                                                ng-options="encounter.encounter_id as encounter.encounter_id for encounter in encounters| orderBy: 'encounter_id'"
+                                                ng-options="encounter.encounter_id as encounter.encounter_full_details for encounter in encounters| orderBy: 'encounter_id'"
                                                 ng-change="getPrescription()"
                                                 >
                                             <option value="">Select Encounter</option>
