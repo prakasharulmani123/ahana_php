@@ -191,6 +191,7 @@ class PhaPurchase extends RActiveRecord {
                         'invoice_no' => 'invoice_no',
                         'net_amount' => 'net_amount',
                         'payment_type' => 'payment_type',
+                        'invoice_date' => 'invoice_date',
                     ];
                     break;
                 case 'purchasevatreport':
