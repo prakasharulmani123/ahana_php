@@ -268,6 +268,7 @@ class PharmacysaleController extends ActiveController {
     }
 
     public function actionGetsalebilling() {
+        $logged_tenant = Yii::$app->user->identity->logged_tenant_id;
         $get = Yii::$app->getRequest()->get();
         $sale = PhaSale::find()
                 ->where(['encounter_id' => $get['encounter_id'],
@@ -275,7 +276,7 @@ class PharmacysaleController extends ActiveController {
                 ->andWhere(['!=', 'payment_status', 'C'])
                 ->orderBy(['sale_id' => SORT_DESC])
                 ->all();
-        return ['sale' => $sale];
+        return ['sale' => $sale,'logged_tenant' => $logged_tenant ];
     }
 
 }

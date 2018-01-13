@@ -203,13 +203,19 @@ class PatientprescriptionController extends ActiveController {
 
         if (isset($get['patient_id'])) {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
+
+            $all_patient_id = PatPatient::find()
+                    ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                    ->where(['patient_global_guid' => $patient->patient_global_guid])
+                    ->one();
+
             if (isset($get['encounter_id'])) {
                 $encounter_id = $get['encounter_id'];
                 $data = PatPrescription::find()
                         ->tenant()
                         ->active()
+                        ->where("patient_id IN ($all_patient_id->allpatient)")
                         ->andWhere([
-                            'patient_id' => $patient->patient_id,
                             'encounter_id' => $encounter_id
                         ])
                         ->orderBy(['created_at' => SORT_DESC])
@@ -349,10 +355,10 @@ class PatientprescriptionController extends ActiveController {
             $patient_document = new PatDocuments;
             $xml = $case_history_xml->document_xml;
         }
-        if(isset($post['scenario']) && $post['scenario']) {
+        if (isset($post['scenario']) && $post['scenario']) {
             $patient_document->scenario = $type;
         }
- 
+
         $attr = [
             'patient_id' => $patient->patient_id,
             'encounter_id' => $post['encounter_id'],

@@ -297,6 +297,9 @@ class PatEncounter extends RActiveRecord {
             'branch_name' => function ($model) {
                 return (isset($model->tenant->tenant_name) ? $model->tenant->tenant_name : '-');
             },
+            'encounter_full_details' => function ($model) {
+                return $this->getEncounterFulldetails($model);
+            },
             'vital' => function ($model) {
                 return (isset($model->patVitals) ? $model->patVitals : '-');
             },
@@ -330,7 +333,7 @@ class PatEncounter extends RActiveRecord {
                 return (isset($model->patAppointmentSeen) ? Yii::$app->hepler->convert_number_to_words((int) ($model->patAppointmentSeen->amount)) . ' Rupees Only' : '-');
             },
             'room_name' => function ($model) {
-                return (isset($model->patCurrentAdmission->room->bed_name) ? (int)$model->patCurrentAdmission->room->bed_name : '-');
+                return (isset($model->patCurrentAdmission->room->bed_name) ? (int) $model->patCurrentAdmission->room->bed_name : '-');
             },
             'liveAppointmentConsultant' => function ($model) {
                 return (isset($model->patLiveAppointmentBooking->consultant) ? $model->patLiveAppointmentBooking->consultant : '-');
@@ -539,7 +542,7 @@ class PatEncounter extends RActiveRecord {
                     $parent_fields = ['encounter_id' => 'encounter_id'];
                     break;
                 case 'sale_encounter_id':
-                    $addt_keys = ['cancel_appoitment', 'cancel_admission'];
+                    $addt_keys = ['cancel_appoitment', 'cancel_admission', 'branch_name','encounter_full_details'];
                     $parent_fields = ['encounter_id' => 'encounter_id', 'encounter_type' => 'encounter_type'];
                     break;
                 case 'encounter_details':
@@ -599,6 +602,10 @@ class PatEncounter extends RActiveRecord {
                 ->sum('total_charge');
 
         return $total_charge;
+    }
+
+    public function getEncounterFulldetails($model) {
+        return ucwords("{$this->encounter_id} [".date('d/m/Y', strtotime($this->encounter_date))." | {$model->tenant->tenant_name}]");
     }
 
 //            public function getTotalConcession() {
@@ -718,6 +725,28 @@ class PatEncounter extends RActiveRecord {
             $list = $list->orderBy(['encounter_id' => SORT_DESC])->all();
         } else
             $list = self::find()->tenant($tenant)->encounterType($encounter_type)->deleted()->andWhere(['patient_id' => $patient_id])->orderBy(['encounter_id' => SORT_DESC])->all();
+
+        return $list;
+    }
+
+    public static function getEncounterListByTenantSamePatient($tenant = null, $status = '1', $deleted = false, $patient_id = null, $encounter_type = 'IP,OP', $oldencounter) {
+        $patient = PatPatient::find()
+                ->where(['patient_id' => $patient_id])
+                ->one();
+
+        $all_patient_id = PatPatient::find()
+                ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                ->where(['patient_global_guid' => $patient->patient_global_guid])
+                ->one();
+
+        if (!$deleted) {
+            $list = self::find()->where("patient_id IN ($all_patient_id->allpatient)")->status($status)->active()->encounterType($encounter_type);
+            if ($oldencounter != 'undefined') {
+                $list->andWhere(['<=', 'DATE(encounter_date)', date('Y-m-d')]);
+            }
+            $list = $list->orderBy(['encounter_id' => SORT_DESC])->all();
+        } else
+            $list = self::find()->where("patient_id IN ($all_patient_id->allpatient)")->encounterType($encounter_type)->deleted()->orderBy(['encounter_id' => SORT_DESC])->all();
 
         return $list;
     }

@@ -366,7 +366,7 @@ class PhaSale extends RActiveRecord {
                     ];
                     break;
                 case 'patient_report':
-                    $addt_keys = ['patient_name', 'billings_total_balance_amount', 'billings_total_paid_amount', 'bill_payment', 'patient_uhid'];
+                    $addt_keys = ['patient_name', 'billings_total_balance_amount', 'billings_total_paid_amount', 'bill_payment', 'patient_uhid', 'branch_name'];
                     $parent_fields = [
                         'sale_id' => 'sale_id',
                         'bill_no' => 'bill_no',
@@ -375,6 +375,7 @@ class PhaSale extends RActiveRecord {
                         'bill_amount' => 'bill_amount',
                         'sale_date' => 'sale_date',
                         'patient_group_name' => 'patient_group_name',
+                        'tenant_id' => 'tenant_id',
                     ];
                     break;
                 case 'make_payment_report':
@@ -397,7 +398,7 @@ class PhaSale extends RActiveRecord {
     }
 
     public static function billpayment($sale_id, $paid, $date) {
-        $sales = PhaSale::find()->tenant()->andWhere(['sale_id' => $sale_id])->all();
+        $sales = PhaSale::find()->andWhere(['sale_id' => $sale_id])->all();
         $paid_amount = $paid;
 
         foreach ($sales as $key => $sale) {
