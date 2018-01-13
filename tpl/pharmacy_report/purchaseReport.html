@@ -103,6 +103,7 @@
                                     <tr>
                                         <th id="work-base-grid_c0">S.No</th>
                                         <th id="work-base-grid_c1">Invoice no.</th>
+                                        <th id="work-base-grid_c1">Date Of Purchase</th>
                                         <th id="work-base-grid_c2">Supplier</th>
                                         <th id="work-base-grid_c3">Payment Type</th>
                                         <th id="work-base-grid_c4">Purchase Value</th>
@@ -112,6 +113,7 @@
                                     <tr ng-repeat="(key, record) in records">
                                         <td>{{key + 1}}</td>
                                         <td>{{record.invoice_no}}</td>
+                                        <td>{{record.invoice_date}}</td>
                                         <td>{{nameReplace(record.supplier_name)}}</td>
                                         <td>{{record.payment_type == "CA" ? "Cash" : "Credit"}}</td>
                                         <td data-type="Number" ng-init="purchase.total_amount = purchase.total_amount + parseFloat(record.net_amount);">
@@ -121,6 +123,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
+                                        <th></th>
                                         <th></th>
                                         <th></th>
                                         <th></th>
