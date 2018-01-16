@@ -2888,6 +2888,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 )
             }
         }
+        
+        $scope.check_sale_return = function(sale_return_id,sale_id) {
+            if(sale_return_id) {
+                alert("Can't Edit this sale bill, Because its depends sales return bill");
+            } else {
+                $state.go('pharmacy.saleUpdate', {id:sale_id});
+            }
+        }
 
 //        // Get Patient Name
 //        var changeTimer = false;

@@ -146,9 +146,9 @@
                         <td>{{saleitem.billings_total_paid_amount| number:2}}</td>
                         <td ng-class="{hide : activeMenu === 'CA'}">{{saleitem.billings_total_balance_amount| number:2}}</td>
                         <td>
-                            <!--                            <a class="label bg-dark" title="Edit" check-access  ui-sref="pharmacy.saleUpdate({id: '{{saleitem.sale_id}}'})">
-                                                            <i class="fa fa-pencil"></i>
-                                                        </a>-->
+                            <a class="label bg-dark" title="Edit" check-access-custom data-button="pharmacy.saleUpdate" ng-click="check_sale_return(saleitem.sale_return_id,saleitem.sale_id)">
+                                <i class="fa fa-pencil"></i>
+                            </a>
                             <span ng-if="saleitem.payment_type != 'CA' && saleitem.payment_status != 'C'">
                                 <a class="label bg-dark" title="Make Payment" ng-click="make_payment(row.sale_id, saleitem.sale_id)" data-button="pharmacy.makePayment" check-access-custom>
                                     <i class="fa fa-money"></i>
