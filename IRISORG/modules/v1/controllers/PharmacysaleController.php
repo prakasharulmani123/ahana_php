@@ -252,12 +252,19 @@ class PharmacysaleController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
 
         $model = PhaSale::find()
-                ->tenant()
+//                ->tenant()
                 ->andWhere("pha_sale.sale_date <= '{$post['to']}'");
 
         if (isset($post['patient_group_name'])) {
             $patient_group_names = join("','", $post['patient_group_name']);
             $model->andWhere("pha_sale.patient_group_name IN ( '$patient_group_names' )");
+        } else {
+            $model->andWhere('pha_sale.patient_group_name = "" OR pha_sale.patient_group_name IS NULL');
+        }
+
+        if (isset($post['tenant_id'])) {
+            $tenant_ids = join("','", $post['tenant_id']);
+            $model->andWhere("pha_sale.tenant_id IN ( '$tenant_ids' )");
         }
 
         $reports = $model->andWhere("pha_sale.payment_status!='C'")
