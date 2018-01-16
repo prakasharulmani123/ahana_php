@@ -12,7 +12,7 @@
         <div class="form-group">
             <label class="col-lg-3 control-label">Category Items *</label>
             <div class="col-lg-9">
-                <select class="form-control" ng-model="data.charge_code_id" ng-options="subcategory.charge_subcat_id as subcategory.charge_subcat_name for subcategory in availableSubcategories | orderBy: charge_subcat_name">
+                <select class="form-control" ng-model="data.charge_code_id" ng-options="subcategory.charge_subcat_id as subcategory.charge_subcat_name for subcategory in availableSubcategories | orderBy: 'charge_subcat_name'">
                     <option value="">Select Code / Names</option>
                 </select>
             </div>

@@ -73,7 +73,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <select class="form-control" ng-show="pres_status == 'current'" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: name" ng-change="getConsultantFreq()">
+                                            <select class="form-control" ng-show="pres_status == 'current'" ng-model="data.consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: 'name'" ng-change="getConsultantFreq()">
                                                 <option value="">Select Consultant</option>
                                             </select>
                                         </div>
@@ -1671,7 +1671,7 @@
                                                             </div>
                                                             <div class="col-sm-3">
                                                                 <label class="control-label">Consultant *</label> <br/>
-                                                                <select class="selectpicker" data-live-search="true" ng-model="consFormData.consultant_id" ng-options="doctor.user_id  as doctor.consult_speciality_name for doctor in doctors| orderBy: name" >
+                                                                <select class="selectpicker" data-live-search="true" ng-model="consFormData.consultant_id" ng-options="doctor.user_id  as doctor.consult_speciality_name for doctor in doctors| orderBy: 'name'" >
                                                                     <option value="">Select Consultant</option>
                                                                 </select>
                                                             </div>
