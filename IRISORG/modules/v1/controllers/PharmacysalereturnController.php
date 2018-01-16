@@ -212,5 +212,15 @@ class PharmacysalereturnController extends ActiveController {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
     }
+    
+    public function actionCheckreturnsale() {
+        $post = Yii::$app->getRequest()->post();
+        $return = PhaSale::find()->tenant()->andWhere(['sale_return_id' => $post['id']])->one();
+        if(empty($return)) {
+            return ['success' => true];
+        } else {
+            return ['success' => false];
+        }
+    }
 
 }
