@@ -201,6 +201,8 @@ class PhaPurchase extends RActiveRecord {
                         'total_item_purchase_amount' => 'total_item_purchase_amount',
                         'total_item_vat_amount' => 'total_item_vat_amount',
                         'net_amount' => 'net_amount',
+                        'payment_type' => 'payment_type',
+                        'invoice_date' => 'invoice_date',
                     ];
                     break;
                 case 'viewlist':
