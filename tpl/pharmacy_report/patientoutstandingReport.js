@@ -26,6 +26,7 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
             $scope.data = {};
             $scope.data.to = moment().format('YYYY-MM-DD');
             $scope.data.patient_group_name = '';
+            $scope.data.tenant_id = '';
             $scope.deselectAll();
         }
         
@@ -45,6 +46,12 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
                 $scope.saleGroups = response.saleGroupsList;
                 $scope.saleGroupsLength = Object.keys($scope.saleGroups).length;
             });
+            $scope.tenants = [];
+            $rootScope.commonService.GetTenantList(function (response) {
+                if (response.success == true) {
+                    $scope.tenants = response.tenantList;
+                }
+            });
             
             $scope.clearReport();
         }
@@ -62,6 +69,8 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
                 angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
             if (typeof $scope.data.patient_group_name !== 'undefined' && $scope.data.patient_group_name != '')
                 angular.extend(data, {patient_group_name: $scope.data.patient_group_name});
+            if (typeof $scope.data.tenant_id !== 'undefined' && $scope.data.tenant_id != '')
+                angular.extend(data, {tenant_id: $scope.data.tenant_id});
 
             // Get data's from service
             $http.post($rootScope.IRISOrgServiceUrl + '/pharmacysale/outstandingreport?addtfields=patient_report', data)
@@ -111,7 +120,7 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
             var generated_on = $scope.generated_on;
             var generated_by = $scope.app.username;
             var date_rage = "Upto " + moment($scope.data.to).format('YYYY-MM-DD');
-            var branch_name = $scope.app.org_name;
+            var branch_name = $scope.records[0].branch_name;
 
             var reports = [];
 //            reports.push([
