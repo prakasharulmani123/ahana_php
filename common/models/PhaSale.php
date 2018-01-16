@@ -90,6 +90,7 @@ class PhaSale extends RActiveRecord {
             'patient_id' => 'Patient',
             'mobile_no' => 'Mobile No',
             'consultant_id' => 'Consultant',
+            'sale_return_id' => 'Sale Return ID',
             'sale_date' => 'Sale Date',
             'payment_type' => 'Payment Type',
             'total_item_vat_amount' => 'Total Item Vat Amount',
@@ -348,6 +349,7 @@ class PhaSale extends RActiveRecord {
                         'sale_date' => 'sale_date',
                         'bill_amount' => 'bill_amount',
                         'encounter_id' => 'encounter_id',
+                        'sale_return_id' => 'sale_return_id'
                     ];
                     break;
                 case 'prescregister':
