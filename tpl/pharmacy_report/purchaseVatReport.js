@@ -25,6 +25,10 @@ app.controller('purchaseVatReportController', ['$rootScope', '$scope', '$timeout
         }
 
         $scope.initReport = function () {
+            $scope.paymentTypes = [];
+            $rootScope.commonService.GetPaymentType(function (response) {
+                $scope.paymentTypes = response;
+            });
             $scope.clearReport();
         }
 
@@ -52,6 +56,8 @@ app.controller('purchaseVatReportController', ['$rootScope', '$scope', '$timeout
                 angular.extend(data, {from: moment($scope.data.from).format('YYYY-MM-DD')});
             if (typeof $scope.data.to !== 'undefined' && $scope.data.to != '')
                 angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
+            if (typeof $scope.data.payment_type !== 'undefined' && $scope.data.payment_type != '')
+                angular.extend(data, {payment_type: $scope.data.payment_type});
 
             // Get data's from service
             $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyreport/purchasereport?addtfields=purchasevatreport', data)
@@ -105,12 +111,14 @@ app.controller('purchaseVatReportController', ['$rootScope', '$scope', '$timeout
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 6}, "", "", "", "", ""
+                {text: branch_name, style: 'header', colSpan: 8}, "", "", "", "", "", "", ""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
                 {text: 'Invoice no', style: 'header'},
+                {text: 'Date Of Purchase', style: 'header'},
                 {text: 'Supplier', style: 'header'},
+                {text: 'Payment Type', style: 'header'},
                 {text: 'Vat Purchase Amount', style: 'header'},
                 {text: 'Vat Tax Amount', style: 'header'},
                 {text: 'Total Amount', style: 'header'},
@@ -123,20 +131,26 @@ app.controller('purchaseVatReportController', ['$rootScope', '$scope', '$timeout
             var total_amount = 0;
             angular.forEach($scope.records, function (record, key) {
                 var s_no_string = serial_no.toString();
-                
+                if (record.payment_type == 'CA') {
+                    var payment = 'Cash';
+                } else {
+                    var payment = 'Credit';
+                }
                 reports.push([
                     s_no_string,
                     record.invoice_no,
+                    record.invoice_date,
                     record.supplier_name,
+                    payment,
                     record.total_item_purchase_amount,
                     record.total_item_vat_amount,
                     record.net_amount,
                 ]);
-                
+
                 purchase_amount += parseFloat(record.total_item_purchase_amount);
                 vat_amount += parseFloat(record.total_item_vat_amount);
                 total_amount += parseFloat(record.net_amount);
-                
+
                 if (serial_no == result_count) {
                     $scope.printloader = '';
                 }
@@ -147,8 +161,10 @@ app.controller('purchaseVatReportController', ['$rootScope', '$scope', '$timeout
                     text: 'Total Purchase Value',
                     style: 'header',
                     alignment: 'right',
-                    colSpan: 3
+                    colSpan: 5
                 },
+                "",
+                "",
                 "",
                 "",
                 {
@@ -207,7 +223,7 @@ app.controller('purchaseVatReportController', ['$rootScope', '$scope', '$timeout
                 style: 'demoTable',
                 table: {
                     headerRows: 2,
-                    widths: ['auto', 'auto', '*', 'auto', 'auto', 'auto'],
+                    widths: ['auto', 'auto', 'auto', '*', 'auto', 'auto', 'auto', 'auto'],
                     body: reports,
                     dontBreakRows: true,
                 },
@@ -241,5 +257,8 @@ app.controller('purchaseVatReportController', ['$rootScope', '$scope', '$timeout
                     }
                 }
             }, 1000);
+        }
+        $scope.nameReplace = function (a) {
+            return a.replace('&', '');
         }
     }]);
