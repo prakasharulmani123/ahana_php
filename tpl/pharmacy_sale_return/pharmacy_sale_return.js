@@ -1838,4 +1838,19 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
             }
         }
 
+        $scope.checkReturnsale = function (sale_id) {
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/pharmacysalereturn/checkreturnsale",
+                method: "POST",
+                data: {id: sale_id}
+            }).then(
+                    function (response) {
+                        if (response.data.success === true) {
+                            $state.go('pharmacy.saleReturnUpdate', {id:sale_id});
+                        } else {
+                            alert("Can't Edit this sale return bill, Because its depends sales bill");
+                        }
+                    }
+            )
+        }
     }]);
