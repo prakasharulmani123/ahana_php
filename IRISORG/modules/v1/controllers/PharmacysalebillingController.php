@@ -105,13 +105,24 @@ class PharmacysalebillingController extends ActiveController {
     public function actionGetmakepayment() {
         $post = Yii::$app->getRequest()->post();
         $model = PhaSaleBilling::find()->active()->joinWith(['sale']);
-        if (isset($post['from']) && isset($post['tenant_id'])) {
+        $model->andWhere(["pha_sale.payment_type" => 'CR']);
+        $model->andWhere("pha_sale_billing.paid_date between '{$post['from']}' AND '{$post['to']}'");
+
+        if (isset($post['tenant_id'])) {
             $tenant_ids = join("','", $post['tenant_id']);
-            $model->andWhere(["pha_sale.payment_type" => 'CR']);
-            $model->andWhere(["pha_sale_billing.paid_date" => $post['from']]);
             $model->andWhere("pha_sale_billing.tenant_id IN ( '$tenant_ids' )");
         }
+        if (isset($post['patient_group_name'])) {
+            $patient_group_names = join("','", $post['patient_group_name']);
+            $model->andWhere("pha_sale.patient_group_name IN ( '$patient_group_names' )");
+        }
+        if (isset($post['payment_mode'])) {
+            $payment_mode = join("','", $post['payment_mode']);
+            $model->andWhere("pha_sale_billing.payment_mode IN ( '$payment_mode' )");
+        }
+
         $reports = $model->all();
         return ['report' => $reports];
     }
+
 }

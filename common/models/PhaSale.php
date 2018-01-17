@@ -409,6 +409,7 @@ class PhaSale extends RActiveRecord {
                         'total_item_vat_amount' => 'total_item_vat_amount',
                         'roundoff_amount' => 'roundoff_amount',
                         'total_item_amount' => 'total_item_amount',
+                        'patient_group_name' => 'patient_group_name',
                     ];
                     break;
             endswitch;
