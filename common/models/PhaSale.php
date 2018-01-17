@@ -422,13 +422,16 @@ class PhaSale extends RActiveRecord {
         return ArrayHelper::map($this->phaSaleItems, 'sale_item_id', 'sale_item_id');
     }
 
-    public static function billpayment($sale_id, $paid, $date) {
+    public static function billpayment($sale_id, $paid, $date, $data= null) {
         $sales = PhaSale::find()->andWhere(['sale_id' => $sale_id])->all();
         $paid_amount = $paid;
 
         foreach ($sales as $key => $sale) {
             if ($paid_amount > 0) {
                 $model = new PhaSaleBilling;
+                if(isset($data) && !empty($data)) {
+                    $model->attributes = $data;
+                }
 
                 $total_bill_amount = $sale->bill_amount - $sale->PhaSaleBillingsTotalPaidAmount;
 

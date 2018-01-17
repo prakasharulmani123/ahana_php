@@ -73,7 +73,7 @@ class PharmacysalebillingController extends ActiveController {
                 return ['success' => false, 'message' => 'Kindly check amount'];
 
             if ($valid) {
-                PhaSale::billpayment($post['sale_ids'], $post['paid_amount'], $post['paid_date']);
+                PhaSale::billpayment($post['sale_ids'], $post['paid_amount'], $post['paid_date'], $post);
 
                 //$search = ['encounter_id' => $post['encounter_id'], 'payment_type' => $post['payment_type'], 'patient_id' => $sales[0]->patient_id];
 

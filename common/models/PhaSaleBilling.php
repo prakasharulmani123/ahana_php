@@ -41,10 +41,19 @@ class PhaSaleBilling extends RActiveRecord {
         return [
                 [['paid_date', 'paid_amount'], 'required'],
                 [['sale_id', 'tenant_id', 'created_by', 'modified_by'], 'integer'],
-                [['paid_date', 'created_at', 'modified_at', 'deleted_at', 'sale_ids'], 'safe'],
+                [['paid_date', 'created_at', 'modified_at', 'deleted_at', 'sale_ids','payment_mode','card_type','card_number','bank_name','bank_date','cheque_no','ref_no'], 'safe'],
                 [['paid_amount'], 'number'],
                 [['status'], 'string'],
                 ['paid_amount', 'validateBillAmount'],
+                [['card_type', 'card_number'], 'required', 'when' => function($model) {
+                    return ($model->payment_mode == 'CD');
+                }],
+                [['bank_name', 'cheque_no', 'bank_date'], 'required', 'when' => function($model) {
+                    return ($model->payment_mode == 'CH');
+                }],
+                [['bank_name', 'ref_no', 'bank_date'], 'required', 'when' => function($model) {
+                    return ($model->payment_mode == 'ON');
+                }],
         ];
     }
 
