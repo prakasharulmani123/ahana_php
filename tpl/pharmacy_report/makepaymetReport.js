@@ -25,10 +25,39 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
             $scope.showTable = false;
             $scope.data = {};
             $scope.data.tenant_id = '';
-            $scope.data.from = moment().format('YYYY-MM-DD');
-            $scope.fromMaxDate = new Date();
+            $scope.data.to = moment().format('YYYY-MM-DD');
+            $scope.data.from = moment($scope.data.to).add(-15, 'days').format('YYYY-MM-DD');
             $scope.deselectAll('branch_wise');
+            $scope.deselectAll('payment_wise');
+            $scope.deselectAll('group_wise');
+            $scope.fromMaxDate = new Date($scope.data.to);
+            $scope.toMinDate = new Date($scope.data.from);
         }
+
+        $scope.$watch('data.from', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.toMinDate = new Date($scope.data.from);
+                var from = moment($scope.data.from);
+                var to = moment($scope.data.to);
+                var difference = to.diff(from, 'days') + 1;
+
+                if (difference > 16) {
+                    $scope.data.to = moment($scope.data.from).add(+15, 'days').format('YYYY-MM-DD');
+                }
+            }
+        }, true);
+        $scope.$watch('data.to', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.fromMaxDate = new Date($scope.data.to);
+                var from = moment($scope.data.from);
+                var to = moment($scope.data.to);
+                var difference = to.diff(from, 'days') + 1;
+
+                if (difference > 16) {
+                    $scope.data.from = moment($scope.data.to).add(-15, 'days').format('YYYY-MM-DD');
+                }
+            }
+        }, true);
 
         $scope.initReport = function () {
             $scope.tenants = [];
@@ -36,6 +65,16 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                 if (response.success == true) {
                     $scope.tenants = response.tenantList;
                 }
+            });
+            $scope.saleGroups = {};
+            $scope.saleGroupsLength = 0;
+            $rootScope.commonService.GetSaleGroups('', '1', false, function (response) {
+                $scope.saleGroups = response.saleGroupsList;
+                $scope.saleGroupsLength = Object.keys($scope.saleGroups).length;
+            });
+            $scope.paymentModes = [];
+            $rootScope.commonService.GetPaymentModes(function (response) {
+                $scope.paymentModes = response;
             });
             $scope.clearReport();
         }
@@ -48,6 +87,17 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                     var branch_wise_deselect_all = branch_wise_button.find(".bs-deselect-all");
                     branch_wise_deselect_all.click();
                 }
+                if (type == 'payment_wise') {
+                    var mode_wise_button = $('button[data-id="payment_mode"]').next();
+                    var mode_wise_deselect_all = mode_wise_button.find(".bs-deselect-all");
+                    mode_wise_deselect_all.click();
+                }
+                if (type == 'group_wise') {
+                    var branch_wise_button = $('button[data-id="patient_group"]').next();
+                    var branch_wise_deselect_all = branch_wise_button.find(".bs-deselect-all");
+                    branch_wise_deselect_all.click();
+                }
+                
                 $('#get_report').attr("disabled", true);
             });
         }
@@ -67,10 +117,14 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
             var data = {};
             if (typeof $scope.data.from !== 'undefined' && $scope.data.from != '')
                 angular.extend(data, {from: moment($scope.data.from).format('YYYY-MM-DD')});
-            if (typeof $scope.data.consultant_id !== 'undefined' && $scope.data.consultant_id != '')
-                angular.extend(data, {consultant_id: $scope.data.consultant_id});
+            if (typeof $scope.data.to !== 'undefined' && $scope.data.to != '')
+                angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
             if (typeof $scope.data.tenant_id !== 'undefined' && $scope.data.tenant_id != '')
                 angular.extend(data, {tenant_id: $scope.data.tenant_id});
+            if (typeof $scope.data.patient_group_name !== 'undefined' && $scope.data.patient_group_name != '')
+                angular.extend(data, {patient_group_name: $scope.data.patient_group_name});
+            if (typeof $scope.data.payment_mode !== 'undefined' && $scope.data.payment_mode != '')
+                angular.extend(data, {payment_mode: $scope.data.payment_mode});
 
             // Get data's from service
             $http.post($rootScope.IRISOrgServiceUrl + '/pharmacysalebilling/getmakepayment?addtfields=make_payment_report', data)
@@ -129,7 +183,7 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
 
             var content = [];
 
-            var date_rage = moment($scope.data.from).format('YYYY-MM-DD');
+            var date_rage = moment($scope.data.from).format('YYYY-MM-DD') + " - " + moment($scope.data.to).format('YYYY-MM-DD');
             var generated_on = $scope.generated_on;
             var generated_by = $scope.app.username;
 
@@ -181,6 +235,7 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                     {text: 'S.No', style: 'header'},
                     {text: 'Patient UHID', style: 'header'},
                     {text: 'Patient Name', style: 'header'},
+                    {text: 'Patient Group', style: 'header'},
                     {text: 'Total Paid Amount', style: 'header'},
                 ]);
                 var serial_no = 1;
@@ -197,6 +252,7 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                         s_no_string,
                         detail[0].sale_details.patient_uhid,
                         patient_name,
+                        detail[0].sale_details.patient_group_name,
                         total
                     ]);
                     serial_no++;
@@ -207,7 +263,7 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                 content_info.push({
                     style: 'demoTable',
                     table: {
-                        widths: ['auto', '*', '*', '*'],
+                        widths: ['auto', '*', '*', '*','*'],
                         headerRows: 1,
                         body: items,
                     },
