@@ -252,6 +252,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             if (formtype == 'add') {
                 $scope.formtype = 'add';
                 $scope.data.payment_type = 'CA';
+                $scope.data.payment_mode = 'CA';
                 $scope.data.sale_date = moment().format('YYYY-MM-DD');
                 $scope.data.formtype = 'add';
 //                $scope.setFutureInternalCode('SA', 'bill_no');
@@ -286,6 +287,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
             $rootScope.commonService.GetHsnCode('1', false, function (response) {
                 $scope.hsncodes = response.hsncodeList;
+            });
+
+            $rootScope.commonService.GetPaymentModes(function (response) {
+                $scope.paymentModes = response;
+            });
+
+            $rootScope.commonService.GetCardTypes(function (response) {
+                $scope.cardTypes = response;
             });
 
             $scope.productloader = '<i class="fa fa-spin fa-spinner"></i>';
@@ -337,7 +346,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             if (patient_id) {
                 $scope.show_encounter_loader = true;
                 $rootScope.commonService.GetEncounterListByTenantSamePatient('', '0,1', false, patient_id, function (response) {
-                //$rootScope.commonService.GetEncounterListByPatient('', '0,1', false, patient_id, function (response) {
+                    //$rootScope.commonService.GetEncounterListByPatient('', '0,1', false, patient_id, function (response) {
                     angular.forEach(response, function (resp) {
                         resp.encounter_id = resp.encounter_id.toString();
                     });
@@ -1007,7 +1016,23 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.data.patient_id = '';
             }
             _that = this;
+            if (_that.data.payment_mode != 'CD') {
+                _that.data.card_type = '';
+                _that.data.card_number = '';
+            }
 
+            if (_that.data.payment_mode != 'CH') {
+                _that.data.cheque_no = '';
+            }
+
+            if (_that.data.payment_mode != 'ON') {
+                _that.data.ref_no = '';
+            }
+
+            if ((_that.data.payment_mode != 'ON') && (_that.data.payment_mode != 'CH')) {
+                _that.data.bank_name = '';
+                _that.data.bank_date = '';
+            }
 
             $scope.errorData = "";
             $scope.msg.successMessage = "";
@@ -2381,19 +2406,19 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                         },
                                     },
                                     {}, {}, {
-                                    colSpan: 3,
-                                    layout: 'noBorders',
-                                    table: {
-                                        body: [
-                                            [
-                                                {
-                                                    text: 'Sale Return Bill',
-                                                    fontSize: 09,
-                                                }
-                                            ],
-                                        ]
-                                    },
-                                }, {}, {},
+                                        colSpan: 3,
+                                        layout: 'noBorders',
+                                        table: {
+                                            body: [
+                                                [
+                                                    {
+                                                        text: 'Sale Return Bill',
+                                                        fontSize: 09,
+                                                    }
+                                                ],
+                                            ]
+                                        },
+                                    }, {}, {},
                                     {
                                         layout: 'noBorders',
                                         table: {
@@ -2888,12 +2913,12 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 )
             }
         }
-        
-        $scope.check_sale_return = function(sale_return_id,sale_id) {
-            if(sale_return_id) {
+
+        $scope.check_sale_return = function (sale_return_id, sale_id) {
+            if (sale_return_id) {
                 alert("Can't Edit this sale bill, Because its depends sales return bill");
             } else {
-                $state.go('pharmacy.saleUpdate', {id:sale_id});
+                $state.go('pharmacy.saleUpdate', {id: sale_id});
             }
         }
 
