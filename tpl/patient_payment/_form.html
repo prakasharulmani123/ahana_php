@@ -124,6 +124,42 @@
                 <div class="line line-dashed b-b line-lg "></div>
 
             </div>
+
+            <!-- Online -->
+            <div ng-show="data.payment_mode == 'ON'">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Bank Name *</label>
+                    <div class="col-sm-9">
+                        <input type="text" ng-model="data.bank_name" maxlength="100" class="form-control" placeholder="Bank Name">
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Ref No *</label>
+                    <div class="col-sm-9">
+                        <input type="text" ng-model="data.ref_no" maxlength="100" class="form-control" placeholder="Ref No">
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Date *</label>
+                    <div class="col-sm-9">
+                        <a class="dropdown-toggle" id="dropdown3" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0)">
+                            <div class="input-group">
+                                <input type="text" class="form-control" data-ng-model="data.bank_date" data-date-time-input="YYYY-MM-DD hh:mm A" />
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <datetimepicker data-ng-model="data.bank_date" data-datetimepicker-config="{ dropdownSelector: '#dropdown3' }" data-on-set-time="onTimeSet(newDate, oldDate)"/>
+                        </ul>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg "></div>
+
+            </div>
         </div>
 
         <div ng-show="payment_type == 'settlement'">

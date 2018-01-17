@@ -86,8 +86,15 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
             }
 
             if (_that.data.payment_mode != 'CH') {
+                _that.data.cheque_no = '';
+            }
+
+            if (_that.data.payment_mode != 'ON') {
+                _that.data.ref_no = '';
+            }
+
+            if ((_that.data.payment_mode != 'ON') && (_that.data.payment_mode != 'CH')) {
                 _that.data.bank_name = '';
-                _that.data.bank_number = '';
                 _that.data.bank_date = '';
             }
 
