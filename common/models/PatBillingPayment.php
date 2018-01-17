@@ -46,7 +46,7 @@ class PatBillingPayment extends RActiveRecord {
         return [
                 [['payment_date', 'payment_amount', 'payment_mode'], 'required'],
                 [['tenant_id', 'encounter_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
-                [['payment_date', 'created_at', 'modified_at', 'deleted_at', 'card_type', 'card_number', 'bank_name', 'bank_number', 'bank_date', 'category'], 'safe'],
+                [['payment_date', 'created_at', 'modified_at', 'deleted_at', 'card_type', 'card_number', 'bank_name', 'bank_number', 'bank_date', 'category', 'ref_no'], 'safe'],
                 [['payment_amount'], 'number'],
                 [['payment_mode', 'status'], 'string'],
                 [['card_type', 'card_number'], 'required', 'when' => function($model) {
@@ -54,6 +54,9 @@ class PatBillingPayment extends RActiveRecord {
                 }],
                 [['bank_name', 'bank_number', 'bank_date'], 'required', 'when' => function($model) {
                     return $model->payment_mode == 'CH';
+                }],
+                [['bank_name', 'ref_no', 'bank_date'], 'required', 'when' => function($model) {
+                    return ($model->payment_mode == 'ON');
                 }],
         ];
     }
@@ -115,7 +118,7 @@ class PatBillingPayment extends RActiveRecord {
             },
             'patient_uhid' => function ($model) {
                 return (isset($model->encounter) ? $model->encounter->patient->patGlobalPatient->patient_global_int_code : '-');
-            },        
+            },
             'payment' => function ($model) {
                 if (isset($model->payment_mode)) {
                     if ($model->payment_mode == 'CA') {
