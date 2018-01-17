@@ -180,7 +180,7 @@
                                         <td>{{nameReplace(patientName)}}</td>
                                         <td>{{details[0].patient_uhid}}</td>
                                         <td>{{details[0].patient_group_name}}</td>
-                                        <td>{{pendingTotal.total_amount}}</td>
+                                        <td data-type="Number">{{pendingTotal.total_amount}}</td>
                                         <td ng-init="pendingTotal = {}">
                                             <div ng-repeat="(key, record) in details">
                                                 <span ng-init="pendingTotal.total_amount = pendingTotal.total_amount + parseFloatIgnoreCommas(record.billings_total_balance_amount);"></span>
