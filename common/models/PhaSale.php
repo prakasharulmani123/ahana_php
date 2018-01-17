@@ -49,6 +49,13 @@ use yii\helpers\ArrayHelper;
 class PhaSale extends RActiveRecord {
 
     public $after_save = true;
+    public $payment_mode;
+    public $card_type;
+    public $card_number;
+    public $bank_name;
+    public $bank_date;
+    public $cheque_no;
+    public $ref_no;
 
     /**
      * @inheritdoc
@@ -64,7 +71,7 @@ class PhaSale extends RActiveRecord {
         return [
                 [['sale_date'], 'required'],
                 [['tenant_id', 'patient_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
-                [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'encounter_id', 'patient_name', 'patient_group_id', 'patient_group_name', 'consultant_name'], 'safe'],
+                [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'encounter_id', 'patient_name', 'patient_group_id', 'patient_group_name', 'consultant_name', 'payment_mode', 'card_type', 'card_number', 'bank_name', 'bank_date', 'cheque_no', 'ref_no'], 'safe'],
                 [['payment_type', 'payment_status', 'status'], 'string'],
                 [['total_item_vat_amount', 'total_item_sale_amount', 'total_item_discount_percent', 'total_item_discount_amount', 'total_item_amount', 'welfare_amount', 'roundoff_amount', 'bill_amount', 'amount_received', 'balance'], 'number'],
                 [['mobile_no'], 'string', 'max' => 50],
@@ -75,6 +82,15 @@ class PhaSale extends RActiveRecord {
                 [['balance'], 'compare', 'compareValue' => 0, 'operator' => '>=', 'type' => 'number', 'when' => function($model) {
                     if ($model->payment_type == 'CA')
                         return true;
+                }],
+                [['card_type', 'card_number'], 'required', 'when' => function($model) {
+                    return ($model->payment_mode == 'CD');
+                }],
+                [['bank_name', 'cheque_no', 'bank_date'], 'required', 'when' => function($model) {
+                    return ($model->payment_mode == 'CH');
+                }],
+                [['bank_name', 'ref_no', 'bank_date'], 'required', 'when' => function($model) {
+                    return ($model->payment_mode == 'ON');
                 }],
         ];
     }
@@ -150,6 +166,13 @@ class PhaSale extends RActiveRecord {
                 $sale_billing_model->sale_id = $this->sale_id;
                 $sale_billing_model->paid_date = $this->sale_date;
                 $sale_billing_model->paid_amount = $this->bill_amount;
+                $sale_billing_model->payment_mode = $this->payment_mode;
+                $sale_billing_model->card_type = $this->card_type;
+                $sale_billing_model->card_number = $this->card_number;
+                $sale_billing_model->bank_name = $this->bank_name;
+                $sale_billing_model->bank_date = $this->bank_date;
+                $sale_billing_model->cheque_no = $this->cheque_no;
+                $sale_billing_model->ref_no = $this->ref_no;
                 $sale_billing_model->save(false);
             }
             if ($insert)
