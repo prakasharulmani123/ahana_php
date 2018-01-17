@@ -599,6 +599,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 //hide by nad
 //                if (qty_count > 0) {
                 $scope.data.prescriptionItems[key].product_id = result[0].product_id;
+                $scope.data.prescriptionItems[key].product_name = result[0].full_name;
                 $scope.data.prescriptionItems[key].description_routes = [];
                 $scope.data.prescriptionItems[key].description_routes = result[0].description_routes;
                 $scope.data.prescriptionItems[key].available_quantity = result[0].availableQuantity;
