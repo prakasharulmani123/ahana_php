@@ -83,6 +83,8 @@ app.controller('IpincomereportController', ['$rootScope', '$scope', '$timeout', 
                                 newunique[item.branch_name] = item;
                             }
                         });
+                        $scope.tableid.push('branchwise_report');
+                        $scope.sheet_name.push('Branchwise Report');
                         $scope.generated_on = moment().format('YYYY-MM-DD hh:mm A');
                     })
                     .error(function () {
