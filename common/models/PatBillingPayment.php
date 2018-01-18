@@ -134,6 +134,9 @@ class PatBillingPayment extends RActiveRecord {
                     return '-';
                 }
             },
+            'created_by_name' => function ($model) {
+                return (isset($model->createdUser) ? $model->createdUser->title_code . ucfirst($model->createdUser->name) : '-');
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
