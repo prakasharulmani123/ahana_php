@@ -2436,7 +2436,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
+                            return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
                                         return $ocLazyLoad.load([
                                             'tpl/patient_billing/patient_billing.js?v=' + APP_VERSION,

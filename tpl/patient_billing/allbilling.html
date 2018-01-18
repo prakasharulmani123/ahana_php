@@ -1,9 +1,6 @@
 <div ng-controller="BillingController">
-
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n h3"> Billing Lists</h1>
-
-
     </div>
     <div class="wrapper-md" ng-init="loadPatientAllBilling('Current');">
         <div ng-include="'tpl/blocks/alert.html'">
@@ -16,12 +13,6 @@
                 </div>
 
                 <div class="col-sm-4 text-right" ng-hide="isLoading">
-                    <!--                            <div class="input-group">
-                                                    <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatientAllBilling('Current', filterdate);"/>
-                                                    <span class="input-group-btn">
-                                                        <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                                    </span>
-                                                </div>-->
                     <select class="form-control search-dropdown" ng-model="day" ng-options="day.value as day.label for day in days">
                         <option value="">DD</option>
                     </select>
@@ -42,9 +33,6 @@
             </div>
 
             <div class="table-responsive in-patient-table">
-                <script type="text/ng-template" id="myModalContent.html">
-                    <div ng-include="'tpl/inpatient.edit.html'"></div>
-                </script>
                 <table st-table="displayedCollection"  st-safe-src="rowCollection"  class="table table-striped b-t b-light">
                     <thead>
                         <tr>
@@ -108,7 +96,6 @@
             </div>
         </div>
     </div>
-
     <div ng-include="'tpl/patient_appointment/_print_op_seen_bill.html'">
         {% include 'tpl/patient_appointment/_print_op_seen_bill.html' %}
     </div>
