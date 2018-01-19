@@ -98,7 +98,29 @@ class MyworkreportsController extends ActiveController {
             $reports[$key]['op_seen_date'] = $encounter['op_doctor_payment_seen_date'];
         }
         $sheetname = array_map("unserialize", array_unique(array_map("serialize", $sheetname)));
-        return ['report' => $reports,'sheetname' => $sheetname];
+        return ['report' => $reports, 'sheetname' => $sheetname];
+    }
+
+    public function actionOpsummaryreport() {
+        $post = Yii::$app->getRequest()->post();
+        $model = PatAppointment::find()
+                ->select(['sum(amount) as amount', 'status_date'])
+                ->joinWith(['consultant', 'tenant'])
+                ->addSelect(["co_tenant.tenant_name as tenant_name"])
+                ->addSelect(["concat(co_user.title_code,co_user.name) as full_consultant_name"])
+                ->andWhere('pat_appointment.deleted_at = "0000-00-00 00:00:00"')
+                ->andWhere("status_date between '{$post['from']}' AND '{$post['to']}'")
+                ->andWhere("appt_status='S'")
+                ->groupBy(['status_date', 'consultant_id'])
+                ->all();
+        $reports = [];
+        foreach ($model as $key => $appoint) {
+            $reports[$key]['amount'] = $appoint['amount'];
+            $reports[$key]['status_date'] = $appoint['status_date'];
+            $reports[$key]['tenant_name'] = $appoint['tenant_name'];
+            $reports[$key]['full_consultant_name'] = $appoint['full_consultant_name'];
+        }
+        return ['report' => $reports];
     }
 
     public function actionIpbillstatus() {
@@ -169,7 +191,7 @@ class MyworkreportsController extends ActiveController {
             $consultants->andWhere("pat_consultant.consultant_id IN ( '$consultant_ids' )");
             $consultants->andWhere("date(pat_encounter.finalize_date) between '{$post['from']}' AND '{$post['to']}'");
         }
-        
+
         $consultants->addSelect(["pat_patient.patient_id as patient_id"]);
         $consultants->addSelect(["co_tenant.tenant_id as tenant_id"]);
         $consultants->addSelect(["co_tenant.tenant_name as branch_name"]);
@@ -188,7 +210,7 @@ class MyworkreportsController extends ActiveController {
 
         $reports = [];
         $sheetname = [];
-        
+
         foreach ($consultants as $key => $encounter) {
             $reports[$key]['branch_name'] = $encounter['branch_name'];
             $reports[$key]['consultant_id'] = $encounter['consultant_id'];
@@ -207,11 +229,11 @@ class MyworkreportsController extends ActiveController {
                             ])
                             ->andWhere("encounter_id IN ({$encounter['grouped_encounter_ids']})")
                             ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount, SUM(extra_amount) as extra_amount')->one();
-            
+
             $reports[$key]['total_charge_amount'] = ($professional->total_charge + $professional->extra_amount) - $professional->concession_amount;
         }
         $sheetname = array_map("unserialize", array_unique(array_map("serialize", $sheetname)));
-        return ['report' => $reports,'sheetname' => $sheetname];
+        return ['report' => $reports, 'sheetname' => $sheetname];
     }
 
 }

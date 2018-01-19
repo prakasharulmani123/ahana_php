@@ -43,6 +43,8 @@ use yii\db\ActiveQuery;
 class PatAppointment extends RActiveRecord {
 
     public $consultant_perday_appt_count;
+    public $tenant_name;
+    public $full_consultant_name;
 
     /**
      * @inheritdoc
