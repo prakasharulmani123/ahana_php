@@ -41,7 +41,7 @@ class PatOtherDocuments extends RActiveRecord {
             [['other_doc_name', 'other_doc_content'], 'required'],
             [['tenant_id', 'patient_id', 'encounter_id', 'created_by', 'modified_by'], 'integer'],
             [['other_doc_content', 'status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+            [['created_at', 'modified_at', 'deleted_at', 'doc_type'], 'safe'],
             [['other_doc_name'], 'string', 'max' => 100]
         ];
     }
@@ -55,6 +55,7 @@ class PatOtherDocuments extends RActiveRecord {
             'tenant_id' => 'Tenant ID',
             'patient_id' => 'Patient ID',
             'encounter_id' => 'Encounter ID',
+            'doc_type' => 'Doc Type',
             'other_doc_name' => 'Document Name',
             'other_doc_content' => 'Description',
             'status' => 'Status',
