@@ -7,6 +7,7 @@ use common\models\PhaSaleItem;
 use common\models\PhaSaleReturn;
 use common\models\PhaSaleReturnItem;
 use common\models\PhaProductBatch;
+use common\models\PhaSaleBilling;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -278,12 +279,18 @@ class PharmacysaleController extends ActiveController {
         $logged_tenant = Yii::$app->user->identity->logged_tenant_id;
         $get = Yii::$app->getRequest()->get();
         $sale = PhaSale::find()
-                ->where(['encounter_id' => $get['encounter_id'],
-                    'payment_type' => 'CR'])
-                ->andWhere(['!=', 'payment_status', 'C'])
+                //->where(['encounter_id' => $get['encounter_id'],'payment_type' => 'CR'])
+                //->andWhere(['!=', 'payment_status', 'C'])
+                ->where(['encounter_id' => $get['encounter_id']])
                 ->orderBy(['sale_id' => SORT_DESC])
                 ->all();
-        return ['sale' => $sale,'logged_tenant' => $logged_tenant ];
+        $billing = PhaSaleBilling::find()
+                ->joinWith('sale')
+                ->andWhere(['pha_sale.encounter_id' => $get['encounter_id']])
+                ->orderBy(['sale_billing_id' => SORT_ASC])
+                ->all();
+
+        return ['sale' => $sale, 'billing' => $billing, 'logged_tenant' => $logged_tenant];
     }
 
 }
