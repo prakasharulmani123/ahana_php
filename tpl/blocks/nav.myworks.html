@@ -15,6 +15,9 @@
             <li ui-sref-active="active">
                 <a check-access ui-sref="myworks.opDoctorPay"> <span>OP Payments</span> </a>
             </li>
+            <li ui-sref-active="active">
+                <a check-access ui-sref="myworks.opSummaryReport"> <span>OP Summary Report</span> </a>
+            </li>
         </ul>
     </li>
     <li class="ng-scope" ng-show="checkAccess('myworks.ipBillStatus') || checkAccess('myworks.dischargedPatientBills') || checkAccess('myworks.ipDoctorsPay')">

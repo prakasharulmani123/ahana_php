@@ -2989,6 +2989,21 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            //Myworks OPSummaryReport
+            .state('myworks.opSummaryReport', {
+                url: '/opSummaryReport',
+                templateUrl: 'tpl/myworks_report/opsummaryreport.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myworks_report/opsummaryreport.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
             //Myworks ipBillStatus
             .state('myworks.ipBillStatus', {
                 url: '/ipBillStatus',
