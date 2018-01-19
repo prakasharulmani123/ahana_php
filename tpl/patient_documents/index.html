@@ -122,7 +122,7 @@
                                     <i class="fa fa-print"></i>
                                 </button>
                             </span>
-                            <span ng-if="doc.doc_type == 'OD'">
+                            <span ng-if="((doc.doc_type == 'OD') || (doc.doc_type == 'PT') || (doc.doc_type == 'PA'))">
                                 <a class="label bg-dark" title="View" check-access  ui-sref="patient.viewOtherDocument({id: '{{$state.params.id}}', other_doc_id: '{{doc.doc_id}}'})">
                                     <i class="fa fa-eye"></i>
                                 </a>

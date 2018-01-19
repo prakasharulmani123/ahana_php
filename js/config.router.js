@@ -2870,7 +2870,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
 
             //Patient Other Document - Create
             .state('patient.addOtherDocument', {
-                url: '/addOtherDocument/{id}/{enc_id}',
+                url: '/addOtherDocument/{id}/{enc_id}/{document}',
                 templateUrl: 'tpl/patient_other_documents/create.html',
                 resolve: {
                     deps: ['uiLoad',

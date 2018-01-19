@@ -39,7 +39,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             if (date)
                 filterDate = moment(date).format('YYYY-MM-DD');
             $scope.documents = [];
-            $scope.documents.push({label: 'Case History', value: 'CH'}, {label: 'Scanned Documents', value: 'SD'}, {label: 'Other Documents', value: 'OD'}, {label: 'Medical Case History', value: 'MCH'});
+            $scope.documents.push({label: 'Case History', value: 'CH'}, {label: 'Scanned Documents', value: 'SD'}, {label: 'Other Documents', value: 'OD'}, 
+                    {label: 'Medical Case History', value: 'MCH'},{label: 'Psychological Assessment', value: 'PA'},{label: 'Psychological Therapy', value: 'PT'});
             //$scope.documents.push({label: 'Case History', value: 'CH'}, {label: 'Scanned Documents', value: 'SD'}, {label: 'Other Documents', value: 'OD'});
             $scope.isLoading = true;
             $scope.rowCollection = [];
@@ -79,8 +80,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     $state.go('patient.addDocument', {id: $state.params.id, enc_id: $scope.add_doc_encounter_id, document: $scope.add_document});
                 } else if ($scope.add_document == 'SD') {
                     $state.go('patient.addScannedDocument', {id: $state.params.id, enc_id: $scope.add_doc_encounter_id});
-                } else if ($scope.add_document == 'OD') {
-                    $state.go('patient.addOtherDocument', {id: $state.params.id, enc_id: $scope.add_doc_encounter_id});
+                } else if (($scope.add_document == 'OD') || ($scope.add_document == 'PA') || ($scope.add_document == 'PT')) {
+                    $state.go('patient.addOtherDocument', {id: $state.params.id, enc_id: $scope.add_doc_encounter_id, document: $scope.add_document});
                 }
             }
         }
