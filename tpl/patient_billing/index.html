@@ -106,13 +106,13 @@
                             <div class="form-group">
                                 <div class="col-sm-5">  <b>Amount Paid : </b>   </div>
                                 <div class="col-sm-7"> 
-                                    <span class="label bg-success" ng-if="billing.total.advance_charge">{{billing.total.advance_charge| number:2}}  </span>	
-                                    <span class="label bg-success" ng-if="!billing.total.advance_charge">0.00  </span>	
+                                    <span ng-hide="true">{{billing_total_paid = billing.total.advance_charge + recurr_billing.total_pharmacy.recurring_total_paid}}</span> 
+                                    <span class="label bg-success">{{billing_total_paid ||'0' | number:2}}</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-5">  <b>Amount Payable : </b>   </div>
-                                <div class="col-sm-7"> <span class="label bg-danger">{{(billing.total_price) - (billing.total.advance_charge + billing.discount) | number:2}}</span> </div>
+                                <div class="col-sm-7"> <span class="label bg-danger">{{(billing.total_price) - (billing_total_paid + billing.discount) | number:2}}</span> </div>
                             </div>
 
                         </div>
@@ -317,7 +317,8 @@
                 <div class="panel-heading no-border bg-primary"> <i class="fa fa-medkit"></i> Pharmacy Charges</div>
                 <div class="panel-body" ng-init="pharmacy = {}">
                     <div class="form-group">
-                        <span class="pull-right"> <b> Total Pending Amount : </b><span class="label bg-success"> {{pharmacy.total| number:2}} </span></span>
+                        <span class="pull-right"> <b> Total Pending Amount : </b><span class="label bg-danger"> {{pharmacy.total| number:2}} </span></span>
+                        <span class="pull-right"> <b> Total Paid Amount : </b><span class="label bg-success"> {{pharmacy.total_paid| number:2}} </span></span>
                     </div>
                     <div class="m-b-sm">
                     </div>
@@ -328,6 +329,7 @@
                             <th>Date</th>
                             <th>Payment Type</th>
                             <th>Amount</th>
+                            <th>Payment Status</th>
                             <th style="text-align:right;" align="right">Pending Amount</th>
                         </tr>
                         <tr ng-repeat="(key, row) in pharmacy_charge | orderBy:'sale_id'">
@@ -336,8 +338,13 @@
                             <td>{{row.sale_date| moment:'DD/MM/YYYY'}}</td>
                             <td>{{row.bill_payment}}</td>
                             <td>{{row.bill_amount}}</td>
-                            <td align="right" ng-init="pharmacy.total = pharmacy.total + parseFloatIgnoreCommas(row.billings_total_balance_amount);
-                                recurr_billing.total_pharmacy.recurring_total = recurr_billing.total_pharmacy.recurring_total + parseFloatIgnoreCommas(row.billings_total_balance_amount);"> {{row.billings_total_balance_amount}} </td>
+                            <td>{{row.billings_total_balance_amount == '0.00' ? 'Paid' : 'Pending'}}</td>
+                            <td align="right" 
+                                ng-init="pharmacy.total = pharmacy.total + parseFloatIgnoreCommas(row.billings_total_balance_amount);
+                                pharmacy.total_paid = pharmacy.total_paid + parseFloatIgnoreCommas(row.billings_total_paid_amount);
+                                recurr_billing.total_pharmacy.recurring_total = recurr_billing.total_pharmacy.recurring_total + parseFloatIgnoreCommas(row.bill_amount);
+                                recurr_billing.total_pharmacy.recurring_total_paid = recurr_billing.total_pharmacy.recurring_total_paid + parseFloatIgnoreCommas(row.billings_total_paid_amount);"> 
+                                {{row.billings_total_balance_amount}} </td>
                         </tr>
                     </table>
                 </div>
@@ -390,10 +397,15 @@
                                     </div>
                                     <div ng-show="row.trans_mode == 'Cheque'">
                                         <p> <b> Bank Name : </b>{{row.bank_name}}</p>
-                                        <p> <b> Acc Number : </b>{{row.bank_number}}</p>
+                                        <p> <b> Cheque Number : </b>{{row.bank_number}}</p>
                                         <p> <b> Date : </b>{{row.bank_date}}</p>
                                     </div>
-                                    <div ng-show="row.trans_mode == 'Cash' || row.trans_mode == 'Online'"> - </div> 
+                                    <div ng-show="row.trans_mode == 'Online'">
+                                        <p> <b> Bank Name : </b>{{row.bank_name}}</p>
+                                        <p> <b> Ref No : </b>{{row.ref_no}}</p>
+                                        <p> <b> Date : </b>{{row.bank_date}}</p>
+                                    </div>
+                                    <div ng-show="row.trans_mode == 'Cash'"> - </div> 
                                 </td>
                                 <td>                             
                                     <button class="btn btn-sm btn-primary" ng-click="setVoucher(row, 'voucherPrint')">

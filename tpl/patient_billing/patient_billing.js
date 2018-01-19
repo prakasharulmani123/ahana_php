@@ -399,10 +399,16 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             }).success(
                     function (response) {
                         $scope.pharmacy_charge = response.sale;
+                        $scope.pharmacy_bill = response.billing;
                         $scope.logged_tenant_id = response.logged_tenant;
                         var grandTotal = 0;
                         angular.forEach($scope.pharmacy_charge, function (obj) {
-                            grandTotal += $scope.parseFloatIgnoreCommas(obj.billings_total_balance_amount);
+                            grandTotal += $scope.parseFloatIgnoreCommas(obj.bill_amount);
+                            obj.net_amount = grandTotal;
+                        });
+                        var grandTotal = 0;
+                        angular.forEach($scope.pharmacy_bill, function (obj) {
+                            grandTotal += $scope.parseFloatIgnoreCommas(obj.paid_amount);
                             obj.net_amount = grandTotal;
                         });
                     }
