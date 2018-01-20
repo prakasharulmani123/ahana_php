@@ -19,7 +19,8 @@ app.controller('IpincomereportController', ['$rootScope', '$scope', '$timeout', 
             $scope.showTable = false;
             $scope.data = {};
             $scope.data.tenant_id = '';
-            $scope.data.from = moment().format('YYYY-MM-DD');
+            $scope.data.to = moment().format('YYYY-MM-DD');
+            $scope.data.from = moment($scope.data.to).add(-15, 'days').format('YYYY-MM-DD');
             $scope.fromMaxDate = new Date();
             $scope.deselectAll('branch_wise');
         }
@@ -49,6 +50,31 @@ app.controller('IpincomereportController', ['$rootScope', '$scope', '$timeout', 
         $scope.parseFloat = function (row) {
             return parseFloat(row);
         }
+        
+        $scope.$watch('data.from', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.toMinDate = new Date($scope.data.from);
+                var from = moment($scope.data.from);
+                var to = moment($scope.data.to);
+                var difference = to.diff(from, 'days') + 1;
+
+                if (difference > 16) {
+                    $scope.data.to = moment($scope.data.from).add(+15, 'days').format('YYYY-MM-DD');
+                }
+            }
+        }, true);
+        $scope.$watch('data.to', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.fromMaxDate = new Date($scope.data.to);
+                var from = moment($scope.data.from);
+                var to = moment($scope.data.to);
+                var difference = to.diff(from, 'days') + 1;
+
+                if (difference > 16) {
+                    $scope.data.from = moment($scope.data.to).add(-15, 'days').format('YYYY-MM-DD');
+                }
+            }
+        }, true);
 
         //Index Page
         $scope.loadReport = function () {
@@ -61,6 +87,8 @@ app.controller('IpincomereportController', ['$rootScope', '$scope', '$timeout', 
             var data = {};
             if (typeof $scope.data.from !== 'undefined' && $scope.data.from != '')
                 angular.extend(data, {from: moment($scope.data.from).format('YYYY-MM-DD')});
+            if (typeof $scope.data.to !== 'undefined' && $scope.data.to != '')
+                angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
             if (typeof $scope.data.consultant_id !== 'undefined' && $scope.data.consultant_id != '')
                 angular.extend(data, {consultant_id: $scope.data.consultant_id});
             if (typeof $scope.data.tenant_id !== 'undefined' && $scope.data.tenant_id != '')
