@@ -396,8 +396,25 @@
                                     </xsl:for-each>
                                 
                                 </tr>
-                           
-                            
+                                
+                                <tr>
+                                    <xsl:for-each select="PANELBODY/FIELD[@id='informant_notes']">
+                                        <xsl:choose>
+                                            <xsl:when test="@type='TextArea'">
+                                                <xsl:if test="VALUE and VALUE!=''">
+                                                    <tr>
+                                                        <xsl:apply-templates select = "@label" />
+                                                            <td colspan='4' width="70%" align="left" valign="middle">
+                                                                <xsl:call-template name="LFsToBRs">
+                                                                    <xsl:with-param name="input" select="VALUE"/>
+                                                                </xsl:call-template>
+                                                            </td>
+                                                    </tr>
+                                                </xsl:if>
+                                            </xsl:when>
+                                        </xsl:choose>
+                                    </xsl:for-each>
+                                </tr>
                             </table>
                         </td>
                     </tr>

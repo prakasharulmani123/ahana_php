@@ -44,7 +44,7 @@ class XmlController extends Controller {
         $all_files = \yii\helpers\ArrayHelper::merge($base_xml, $files);
         return $all_files;
     }
-    
+
     private function getAllMCHFiles($foler_name = 'uploads') {
         $webroot = Yii::getAlias('@webroot');
         $files = FileHelper::findFiles($webroot . '/' . $foler_name, [
@@ -100,23 +100,24 @@ class XmlController extends Controller {
         $insert_dom = $target_dom->ownerDocument->importNode(dom_import_simplexml($insert), true);
         return $target_dom->parentNode->appendChild($insert_dom);
     }
-    
+
     public function actionCheckfile() {
         $all_files = $this->getAllMCHFiles();
-        print_r($all_files); die;
+        print_r($all_files);
+        die;
     }
 
     public function actionInsertnewfield() {
         //$xpath = "/FIELDS/GROUP/PANELBODY/FIELD[@id='name']";
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='ddl_pb_substance']";
-        $insert = '<FIELD id="substance_other" type="TextBox" label="">
-                                    <PROPERTIES>
-                                        <PROPERTY name="id">substance_other</PROPERTY>
-                                        <PROPERTY name="name">substance_other</PROPERTY>
-                                        <PROPERTY name="class">form-control</PROPERTY>
-                                        <PROPERTY name="placeholder">Substance Notes</PROPERTY>
-                                    </PROPERTIES>
-                                </FIELD>';
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='information_adequacy']";
+        $insert = '<FIELD id="informant_notes" header2Class="Informant" type="TextArea" label="Notes">
+                <PROPERTIES>
+                    <PROPERTY name="id">informant_notes</PROPERTY>
+                    <PROPERTY name="name">informant_notes</PROPERTY>
+                    <PROPERTY name="class">form-control</PROPERTY>
+                    <PROPERTY name="placeholder">Notes</PROPERTY>
+                </PROPERTIES>
+            </FIELD>';
 
 
         $all_files = $this->getAllFiles();
@@ -137,10 +138,10 @@ class XmlController extends Controller {
                         //print_r($targets); //echo $insert; die;
                         //$movie = $targets[0]->addChild($insert);
                         //$movie->addChild('title', 'PHP2: More Parser Stories');
-                        $this->simplexml_insert_firstChild(simplexml_load_string($insert), $targets[0]);
+                        //$this->simplexml_insert_firstChild(simplexml_load_string($insert), $targets[0]);
+                        $this->simplexml_append_child(simplexml_load_string($insert), $targets[0]);
                     }
                     $xml->asXML($files);
-                    //die;
                 }
             }
         }
@@ -419,7 +420,7 @@ class XmlController extends Controller {
                             $target['header2Class'] = '';
                         }
                     }
-                    $xml->asXML($files); 
+                    $xml->asXML($files);
                 }
             }
         }
@@ -628,7 +629,11 @@ class XmlController extends Controller {
                     $fileContent = file_get_contents($files);
                     //PatDocumentTypes::updateAllCounters(["document_xml" => $fileContent]);
                     $docModel = PatDocumentTypes::find()->andWhere(['doc_type' => 'CH'])
-                            ->where(['IN', 'tenant_id', [1,2,3,4,6,7,11,13]])->all();
+                                    ->where(['IN', 'tenant_id', [1, 2, 3, 4]]) //1st set
+                                    ->where(['IN', 'tenant_id', [6, 7, 11, 13]]) //2nd set 
+                                    ->where(['IN', 'tenant_id', [12]])    //Medclinic tenant id
+                                    //->where(['IN', 'tenant_id', []])    //Msctrf tenant id
+                                    ->all();
                     foreach ($docModel as $doc) {
                         if (basename($files) == 'case_history.xml') {
                             $doc->document_xml = $fileContent;

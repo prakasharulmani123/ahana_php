@@ -278,7 +278,14 @@
                     <LISTITEM value="Inadequate" id="RBInfo4" Selected="False">Inadequate</LISTITEM>
                 </LISTITEMS>
             </FIELD>
-        </PANELBODY>
+        <FIELD id="informant_notes" header2Class="Informant" type="TextArea" label="Notes">
+                <PROPERTIES>
+                    <PROPERTY name="id">informant_notes</PROPERTY>
+                    <PROPERTY name="name">informant_notes</PROPERTY>
+                    <PROPERTY name="class">form-control</PROPERTY>
+                    <PROPERTY name="placeholder">Notes</PROPERTY>
+                </PROPERTIES>
+            </FIELD></PANELBODY>
     </GROUP>
     
     <GROUP>
