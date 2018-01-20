@@ -120,6 +120,7 @@
                                                 <tr>
                                                     <th>S.No</th>
                                                     <th>Bill No</th>
+                                                    <th>Bill Date</th>
                                                     <th>Payment Type</th>
                                                     <th>Total Amount</th>
                                                     <th>Paid Amount</th>
@@ -130,6 +131,7 @@
                                                 <tr ng-repeat="(Key, report) in record">
                                                     <td>{{Key + 1}}</td>
                                                     <td>{{report.bill_no}}</td>
+                                                    <td>{{report.sale_date}}</td>
                                                     <td>{{report.bill_payment}}</td>
                                                     <td>{{report.bill_amount}}</td>
                                                     <td>{{report.billings_total_paid_amount}}</td>
@@ -137,6 +139,7 @@
                                                         {{report.billings_total_balance_amount}}
                                                     </td>
                                                 </tr>
+                                            </tbody>
                                         </table>
                                     </td>
                                 </tr>
