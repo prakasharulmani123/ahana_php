@@ -79,7 +79,7 @@ class PatPrescription extends RActiveRecord {
      * @return ActiveQuery
      */
     public function getEncounter() {
-        return $this->hasOne(PatEncounter::className(), ['encounter_id' => 'encounter_id']);
+        return $this->hasOne(PatEncounter::className(), ['encounter_id' => 'encounter_id', 'patient_id' => 'patient_id']);
     }
 
     public function getAllergies() {
