@@ -144,6 +144,13 @@ class PatAppointment extends RActiveRecord {
 
         if ($insert) {
             $this->setCurrentData();
+        } else {
+            $old_amount = $this->getOldAttribute('amount');
+            $new_amount = $this->amount;
+            if ($old_amount != $new_amount) {
+                $activity = 'Fees Changed Successfully (#' . $old_amount . ' changed to ' . $new_amount . ') (#' . $this->encounter_id . ' )';
+                CoAuditLog::insertAuditLog(PatAppointment::tableName(), $this->appt_id, $activity);
+            }
         }
 
         return parent::beforeSave($insert);
@@ -163,10 +170,9 @@ class PatAppointment extends RActiveRecord {
                     PatAppointment::updateAll(['status' => '0'], 'encounter_id = ' . $this->encounter->encounter_id . ' AND status = "1"');
                 }
             }
+            $this->_insertTimeline();
+            $this->_insertAuditlog();
         }
-
-        $this->_insertTimeline();
-        $this->_insertAuditlog();
         return parent::afterSave($insert, $changedAttributes);
     }
 
