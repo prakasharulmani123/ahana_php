@@ -629,9 +629,9 @@ class XmlController extends Controller {
                     $fileContent = file_get_contents($files);
                     //PatDocumentTypes::updateAllCounters(["document_xml" => $fileContent]);
                     $docModel = PatDocumentTypes::find()->andWhere(['doc_type' => 'CH'])
-                                    ->where(['IN', 'tenant_id', [1, 2, 3, 4]]) //1st set
-                                    ->where(['IN', 'tenant_id', [6, 7, 11, 13]]) //2nd set 
-                                    ->where(['IN', 'tenant_id', [12]])    //Medclinic tenant id
+                                    //->where(['IN', 'tenant_id', [1, 2, 3, 4]]) //1st set
+                                    //->where(['IN', 'tenant_id', [6, 7, 11, 13]]) //2nd set 
+                                    //->where(['IN', 'tenant_id', [12]])    //Medclinic tenant id
                                     //->where(['IN', 'tenant_id', []])    //Msctrf tenant id
                                     ->all();
                     foreach ($docModel as $doc) {
