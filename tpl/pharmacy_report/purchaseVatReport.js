@@ -78,7 +78,7 @@ app.controller('purchaseVatReportController', ['$rootScope', '$scope', '$timeout
         //For Print
         $scope.printHeader = function () {
             return {
-                text: "Purchase VAT Report",
+                text: "Purchase GST Report",
                 margin: 5,
                 alignment: 'center'
             };
@@ -190,7 +190,7 @@ app.controller('purchaseVatReportController', ['$rootScope', '$scope', '$timeout
                     {
                         text: [
                             {text: 'Report Name: ', bold: true},
-                            'Purchase VAT Report'
+                            'Purchase GST Report'
                         ],
                         margin: [0, 0, 0, 20]
                     },
