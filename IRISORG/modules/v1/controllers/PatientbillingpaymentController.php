@@ -107,11 +107,11 @@ class PatientbillingpaymentController extends ActiveController {
 
     public function actionGetincomereport() {
         $post = Yii::$app->getRequest()->post();
-        
+
         $model = PatBillingPayment::find()->active();
         if (isset($post['from']) && isset($post['tenant_id'])) {
             $tenant_ids = join("','", $post['tenant_id']);
-            $model->andWhere(["DATE(payment_date)" => $post['from']]);
+            $model->andWhere("DATE(payment_date) between '{$post['from']}' AND '{$post['to']}'");
             $model->andWhere("tenant_id IN ( '$tenant_ids' )");
         }
         $reports = $model->all();
