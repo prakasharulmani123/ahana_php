@@ -34,6 +34,8 @@ use yii\helpers\Json;
  */
 class PatProcedure extends RActiveRecord {
 
+    public $charge_sub_category;
+    public $branch_name;
     /**
      * @inheritdoc
      */
@@ -104,6 +106,10 @@ class PatProcedure extends RActiveRecord {
      */
     public function getChargeCat() {
         return $this->hasOne(CoRoomChargeSubcategory::className(), ['charge_subcat_id' => 'charge_subcat_id']);
+    }
+
+    public function getAdmission() {
+        return $this->hasMany(PatAdmission::className(), ['encounter_id' => 'encounter_id']);
     }
 
     /**

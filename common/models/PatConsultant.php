@@ -145,6 +145,10 @@ class PatConsultant extends RActiveRecord {
     public function getConsultant() {
         return $this->hasOne(CoUser::className(), ['user_id' => 'consultant_id']);
     }
+    
+    public function getAdmission() {
+        return $this->hasMany(PatAdmission::className(), ['encounter_id' => 'encounter_id']);
+    }
 
     public static function find() {
         return new PatConsultantQuery(get_called_class());
@@ -183,7 +187,11 @@ class PatConsultant extends RActiveRecord {
                 return (isset($model->consultant->name)) ? $model->consultant->title_code . $model->consultant->name . $specname : '-';
             },
             'encounter_status' => function ($model) {
-                return $model->encounter->isActiveEncounter();
+                if($model->encounter) {
+                    return $model->encounter->isActiveEncounter();
+                } else {
+                    return '';
+                }
             },
             'branch_name' => function ($model) {
                 return (isset($model->tenant) ? $model->tenant->tenant_name : '-');

@@ -4,6 +4,8 @@ namespace IRISORG\modules\v1\controllers;
 
 use common\models\PatBillingOtherCharges;
 use common\models\CoChargePerCategory;
+use common\models\PatConsultant;
+use common\models\PatProcedure;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -140,21 +142,85 @@ class PatientbillingotherchargeController extends ActiveController {
         if (!empty($post)) {
             $tenant_ids = join("','", $post['tenant_id']);
             $billingOthercharges = PatBillingOtherCharges::find()
-                    ->andWhere("tenant_id IN ( '$tenant_ids' )")
-                    ->andWhere("date(created_at) between '{$post['from']}' AND '{$post['to']}'")
+                    ->select(['sum(charge_amount) as charge_amount', 'pat_billing_other_charges.tenant_id'])
+                    ->addSelect(["co_room_charge_category.charge_cat_name as charge_category"])
+                    ->addSelect(["co_room_charge_subcategory.charge_subcat_name as charge_sub_category"])
+                    ->addSelect(["co_tenant.tenant_name as branch_name"])
+                    ->joinWith(['admission', 'chargeCat', 'chargeSubcat', 'tenant'])
+                    ->andWhere("pat_billing_other_charges.tenant_id IN ( '$tenant_ids' )")
+                    ->andWhere("date(pat_billing_other_charges.created_at) between '{$post['from']}' AND '{$post['to']}'")
+                    ->andWhere("pat_admission.admission_status='D'")
+                    ->groupBy(['pat_billing_other_charges.charge_cat_id', 'pat_billing_other_charges.charge_subcat_id'])
                     ->all();
+            $otherCharges = [];
+            foreach ($billingOthercharges as $key => $charges) {
+                $otherCharges[$key]['amount'] = $charges['charge_amount'];
+                $otherCharges[$key]['charge_category'] = $charges['charge_category'];
+                $otherCharges[$key]['charge_sub_category'] = $charges['charge_sub_category'];
+                $otherCharges[$key]['tenant_name'] = $charges['branch_name'];
+                $otherCharges[$key]['tenant_id'] = $charges['tenant_id'];
+            }
 
-            $consultant = \common\models\PatConsultant::find()
-                    ->andWhere("tenant_id IN ( '$tenant_ids' )")
+            $consultant = PatConsultant::find()
+                    ->select(['sum(charge_amount) as charge_amount', 'pat_consultant.tenant_id'])
+                    ->joinWith(['admission', 'tenant', 'consultant'])
+                    ->addSelect(["co_tenant.tenant_name as branch_name"])
+                    ->addSelect(["concat(co_user.title_code,co_user.name) as report_consultant_name"])
+                    ->andWhere("pat_consultant.tenant_id IN ( '$tenant_ids' )")
                     ->andWhere("date(consult_date) between '{$post['from']}' AND '{$post['to']}'")
+                    ->andWhere("pat_admission.admission_status='D'")
+                    ->groupBy(['pat_consultant.consultant_id'])
                     ->all();
+            $consultantCharges = [];
+            foreach ($consultant as $key => $charges) {
+                $consultantCharges[$key]['amount'] = $charges['charge_amount'];
+                $consultantCharges[$key]['charge_category'] = 'Professional charges';
+                $consultantCharges[$key]['charge_sub_category'] = $charges['report_consultant_name'];
+                $consultantCharges[$key]['tenant_name'] = $charges['branch_name'];
+                $consultantCharges[$key]['tenant_id'] = $charges['tenant_id'];
+            }
 
-            $procedure = \common\models\PatProcedure::find()
-                    ->andWhere("tenant_id IN ( '$tenant_ids' )")
+            $procedure = PatProcedure::find()
+                    ->select(['sum(charge_amount) as charge_amount', 'pat_procedure.tenant_id'])
+                    ->joinWith(['admission', 'tenant', 'chargeCat'])
+                    ->addSelect(["co_tenant.tenant_name as branch_name"])
+                    ->addSelect(["co_room_charge_subcategory.charge_subcat_name as charge_sub_category"])
+                    ->andWhere("pat_procedure.tenant_id IN ( '$tenant_ids' )")
                     ->andWhere("date(proc_date) between '{$post['from']}' AND '{$post['to']}'")
+                    ->andWhere("pat_admission.admission_status='D'")
+                    ->groupBy(['pat_procedure.charge_subcat_id'])
                     ->all();
+            $procedureCharges = [];
+            foreach ($procedure as $key => $charges) {
+                $procedureCharges[$key]['amount'] = $charges['charge_amount'];
+                $procedureCharges[$key]['charge_category'] = 'Procedure charges';
+                $procedureCharges[$key]['charge_sub_category'] = $charges['charge_sub_category'];
+                $procedureCharges[$key]['tenant_name'] = $charges['branch_name'];
+                $procedureCharges[$key]['tenant_id'] = $charges['tenant_id'];
+            }
 
-            return ['billingOthercharges' => $billingOthercharges, 'consultant' => $consultant, 'procedure' => $procedure];
+            $non_recurring = array();
+            if (is_array($otherCharges))
+                $non_recurring = array_merge($non_recurring, $otherCharges);
+            if (is_array($consultantCharges))
+                $non_recurring = array_merge($non_recurring, $consultantCharges);
+            if (is_array($procedureCharges))
+                $non_recurring = array_merge($non_recurring, $procedureCharges);
+            return ['non_recurring' => $non_recurring];
+        }
+    }
+
+    public function actionGetrecurringcharges() {
+        $post = Yii::$app->getRequest()->post();
+        if (!empty($post)) {
+            $tenant_ids = join("','", $post['tenant_id']);
+            $report = \common\models\PatBillingRecurring::find()
+                    ->joinWith(['admission'])
+                    ->andWhere("pat_billing_recurring.tenant_id IN ( '$tenant_ids' )")
+                    ->andWhere("recurr_date between '{$post['from']}' AND '{$post['to']}'")
+                    ->andWhere("pat_admission.admission_status='D'")
+                    ->all();
+            return ['report' => $report];
         }
     }
 

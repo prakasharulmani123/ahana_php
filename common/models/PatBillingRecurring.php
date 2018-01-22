@@ -33,36 +33,33 @@ use yii\db\ActiveQuery;
  * @property CoRoomType $roomType
  * @property CoTenant $tenant
  */
-class PatBillingRecurring extends RActiveRecord
-{
+class PatBillingRecurring extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pat_billing_recurring';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['encounter_id', 'patient_id', 'room_type_id', 'room_type', 'charge_item_id', 'charge_item'], 'required'],
-            [['tenant_id', 'encounter_id', 'patient_id', 'room_type_id', 'charge_item_id', 'created_by', 'modified_by'], 'integer'],
-            [['recurr_date', 'recurr_group', 'created_at', 'modified_at', 'deleted_at', 'executed_at', 'created_by'], 'safe'],
-            [['charge_amount'], 'number'],
-            [['status'], 'string'],
-            [['room_type', 'charge_item'], 'string', 'max' => 255]
+                [['encounter_id', 'patient_id', 'room_type_id', 'room_type', 'charge_item_id', 'charge_item'], 'required'],
+                [['tenant_id', 'encounter_id', 'patient_id', 'room_type_id', 'charge_item_id', 'created_by', 'modified_by'], 'integer'],
+                [['recurr_date', 'recurr_group', 'created_at', 'modified_at', 'deleted_at', 'executed_at', 'created_by'], 'safe'],
+                [['charge_amount'], 'number'],
+                [['status'], 'string'],
+                [['room_type', 'charge_item'], 'string', 'max' => 255]
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'recurr_id' => 'Recurr ID',
             'tenant_id' => 'Tenant ID',
@@ -87,44 +84,60 @@ class PatBillingRecurring extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getChargeItem()
-    {
+    public function getChargeItem() {
         return $this->hasOne(CoRoomChargeItem::className(), ['charge_item_id' => 'charge_item_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getEncounter()
-    {
+    public function getEncounter() {
         return $this->hasOne(PatEncounter::className(), ['encounter_id' => 'encounter_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getPatient()
-    {
+    public function getPatient() {
         return $this->hasOne(PatPatient::className(), ['patient_id' => 'patient_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getRoomType()
-    {
+    public function getRoomType() {
         return $this->hasOne(CoRoomType::className(), ['room_type_id' => 'room_type_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
+    public function getAdmission() {
+        return $this->hasMany(PatAdmission::className(), ['encounter_id' => 'encounter_id']);
+    }
+
     public static function find() {
         return new PatBillingRecurringQuery(get_called_class());
     }
+
+    public function fields() {
+        $extend = [
+            'branch_name' => function ($model) {
+                return (isset($model->tenant) ? $model->tenant->tenant_name : '-');
+            },
+            'patient_name' => function ($model) {
+                return (isset($model->patient) ? ucfirst($model->patient->patient_firstname) : '-');
+            },
+            'patient_uhid' => function ($model) {
+                return (isset($model->patient) ? $model->patient->patient_global_int_code : '-');
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+
 }

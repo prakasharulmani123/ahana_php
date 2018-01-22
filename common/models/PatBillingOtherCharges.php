@@ -29,7 +29,10 @@ use yii\db\ActiveQuery;
  * @property CoTenant $tenant
  */
 class PatBillingOtherCharges extends RActiveRecord {
-
+    
+    public $charge_category;
+    public $charge_sub_category;
+    public $branch_name;
     /**
      * @inheritdoc
      */
@@ -91,6 +94,10 @@ class PatBillingOtherCharges extends RActiveRecord {
      */
     public function getEncounter() {
         return $this->hasOne(PatEncounter::className(), ['encounter_id' => 'encounter_id']);
+    }
+    
+    public function getAdmission() {
+        return $this->hasMany(PatAdmission::className(), ['encounter_id' => 'encounter_id']);
     }
 
     /**
