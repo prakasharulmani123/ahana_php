@@ -1331,7 +1331,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 resolve: {
                     deps: ['$ocLazyLoad',
                         function ($ocLazyLoad) {
-                            return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
+                            return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
                                         return $ocLazyLoad.load([
                                             'tpl/patient_appointment/patient_appointment.js?v=' + APP_VERSION,

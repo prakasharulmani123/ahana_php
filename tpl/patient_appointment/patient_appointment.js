@@ -26,8 +26,11 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
 
         $scope.patient_det = {};
         $scope.initCanSaveAppointment = function () {
-            $scope.isPatientHaveActiveEncounter('OP', function (response) {
-                console.log(response);
+            $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
+                $scope.doctors = response.doctorsList;
+            });
+
+            $scope.isPatientHaveActiveEncounter('OP', function (response) {                
                 $scope.activeEncounter = response.encounters;
                 if (response.success == true) {
                     $scope.patient_det = response.model.patient;
@@ -45,6 +48,9 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                         if (actEnc[0].liveAppointmentArrival.hasOwnProperty('appt_id')) {
                             $scope.data = {'PatAppointment': {'appt_status': 'A', 'dummy_status': 'A', 'status_date': moment().format('YYYY-MM-DD HH:mm:ss'), 'payment_mode': 'CA', 'bank_date': moment().format('YYYY-MM-DD HH:mm:ss')}};
                             consultant_id = actEnc[0].liveAppointmentArrival.consultant_id;
+                            $scope.data.PatAppointment.future_consultant_id = consultant_id;
+                            $scope.data.PatAppointment.future_status_date = moment().format('YYYY-MM-DD');
+                            $scope.getTimeSlots($scope.data.PatAppointment.future_consultant_id, $scope.data.PatAppointment.future_status_date);
                         } else if (actEnc[0].liveAppointmentBooking.hasOwnProperty('appt_id')) {
                             $scope.data = {'PatAppointment': {'appt_status': 'B', 'dummy_status': 'B', 'status_date': moment().format('YYYY-MM-DD HH:mm:ss'), 'payment_mode': 'CA', 'bank_date': moment().format('YYYY-MM-DD HH:mm:ss')}};
                             consultant_id = actEnc[0].liveAppointmentArrival.consultant_id;
@@ -200,7 +206,7 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
 //                $scope.data.PatAppointment.payment_mode = 'CA';
 //                $scope.data.PatAppointment.bank_date = moment().format('YYYY-MM-DD HH:mm:ss');
 //                $scope.data.PatAppointment.status_date = moment().format('YYYY-MM-DD HH:mm:ss');
-            }, 1000)
+            }, 1000);
         }
 
         //For Datepicker
@@ -220,6 +226,19 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             $event.stopPropagation();
             $scope.opened = true;
         };
+
+        $scope.futureOpen = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            if (typeof ($scope.future) === 'undefined') {
+                $scope.future = {};
+            }
+            $scope.future.opened = true;
+        };
+        
+        $scope.futureClear = function() {
+            $scope.data.PatAppointment.future_status_time = '';
+        }
 
         $scope.toggleMin = function () {
             if ($scope.checkAccess('patient.backdateappointment')) {
@@ -243,6 +262,14 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             if (typeof (this.data) != "undefined") {
                 if (typeof (this.data.consultant_id) != 'undefined' && typeof (this.data.status_date != 'undefined')) {
                     $scope.getTimeSlots(this.data.consultant_id, this.data.status_date);
+                }
+            }
+        }
+
+        $scope.getTimeOfFutureAppointment = function () {
+            if (typeof (this.data) != "undefined") {
+                if (typeof (this.data.PatAppointment.future_consultant_id) != 'undefined' && typeof (this.data.PatAppointment.future_status_date != 'undefined')) {
+                    $scope.getTimeSlots(this.data.PatAppointment.future_consultant_id, this.data.PatAppointment.future_status_date);
                 }
             }
         }
@@ -360,6 +387,10 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
             if (_that.data.PatAppointment.status_date) {
                 _that.data.PatAppointment.status_date = moment(_that.data.PatAppointment.status_date).format('YYYY-MM-DD HH:mm:ss');
                 _that.data.PatAppointment.status_time = moment(_that.data.PatAppointment.status_date).format('HH:mm:ss');
+            }
+
+            if (_that.data.PatAppointment.future_status_date) {
+                _that.data.PatAppointment.future_status_date = moment(_that.data.PatAppointment.future_status_date).format('YYYY-MM-DD');
             }
 
             if (mode == 'arrived') {
