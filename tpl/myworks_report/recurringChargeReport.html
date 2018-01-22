@@ -1,6 +1,6 @@
 <div ng-controller="nonRecuringreportController" ng-init="initReport();">
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n h3">Non-Recurring Charges Report</h1>
+        <h1 class="m-n h3">Recurring Charges Report</h1>
     </div>
     <div class="wrapper-md">
         <div ng-include="'tpl/blocks/alert.html'">
@@ -12,7 +12,7 @@
                     <div class="panel-body p-b">
                         <div class="form-group report-inst">
                             <ul>
-                                <li>This report will be generated only for a 30 days.</li>
+                                <li>This report will be generated only for a 15 days.</li>
                             </ul>
                         </div>
                     </div>
@@ -69,18 +69,18 @@
                 </div>
             </div>
 
-            <div class="col-sm-12" ng-if='showTable' ng-repeat="(tenant_name, recurring) in non_recurring | groupBy: 'tenant_name'">
-                <div id="table_{{tenant_name}}" >
+            <div class="col-sm-12" ng-if='showTable' ng-repeat="(branch_name, result) in recurring | groupBy: 'branch_name'">
+                <div id="table_{{branch_name}}" >
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="col-sm-4 m-b-xs">
                                 <span>
                                     <b>Report Name : </b> 
-                                    Non-Recurring charges Report<br>
+                                    Recurring charges Report<br>
                                 </span>
                                 <span>
                                     <b>Branch Name : </b> 
-                                    {{tenant_name}}<br>
+                                    {{branch_name}}<br>
                                 </span>
                                 <span ng-show="data.from != ''">
                                     <b>Start Date : </b>
@@ -103,7 +103,7 @@
 
                             <div class="col-sm-4 text-right" ng-if=$first> 
                                 <p>
-                                    <button ng-click="tablesToExcel({{tableid}}, {{sheet_name}}, 'NonRecurringChargeReport.xls', 'Excel');" class="btn btn-sm btn-icon btn-danger"><i class="fa fa-file-excel-o"></i></button>
+                                    <button ng-click="tablesToExcel({{tableid}}, {{sheet_name}}, 'RecurringChargeReport.xls', 'Excel');" class="btn btn-sm btn-icon btn-danger"><i class="fa fa-file-excel-o"></i></button>
                                 </p>
                             </div>
                         </div>
@@ -114,21 +114,30 @@
                                         <th>S.No</th>
                                         <th>Sub Head</th>
                                         <th>Charges Name</th>
-                                        <th>Total Amount</th>
+                                        <th>Date</th>
+                                        <th>Patient UHID</th>
+                                        <th>Patient Name</th>
+                                        <th>Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="(key, report) in recurring" >
+                                    <tr ng-repeat="(key, report) in result | orderBy: 'charge_item'" >
                                         <td>{{key + 1}}</td>
-                                        <td>{{report.charge_category}}</td>
-                                        <td>{{report.charge_sub_category}}</td>
-                                        <td data-type="Number" ng-init="charges.total_amount = charges.total_amount + parseFloat(report.amount);">
-                                            {{report.amount || '0'}}
+                                        <td>Room Charges</td>
+                                        <td>{{report.charge_item}}</td>
+                                        <td>{{report.recurr_date}}</td>
+                                        <td>{{report.patient_uhid}}</td>
+                                        <td>{{report.patient_name}}</td>
+                                        <td data-type="Number" ng-init="charges.total_amount = charges.total_amount + parseFloat(report.charge_amount);">
+                                            {{report.charge_amount || '0'}}
                                         </td>
                                     </tr>
                                 </tbody>
                                 <tfoot>
                                     <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
                                         <th></th>
                                         <th></th>
                                         <th></th>

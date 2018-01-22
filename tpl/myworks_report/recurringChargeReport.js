@@ -32,8 +32,8 @@ app.controller('nonRecuringreportController', ['$rootScope', '$scope', '$timeout
                 var from = moment($scope.data.from);
                 var to = moment($scope.data.to);
                 var difference = to.diff(from, 'days') + 1;
-                if (difference > 31) {
-                    $scope.data.to = moment($scope.data.from).add(+30, 'days').format('YYYY-MM-DD');
+                if (difference > 16) {
+                    $scope.data.to = moment($scope.data.from).add(+15, 'days').format('YYYY-MM-DD');
                 }
             }
         }, true);
@@ -44,8 +44,8 @@ app.controller('nonRecuringreportController', ['$rootScope', '$scope', '$timeout
                 var from = moment($scope.data.from);
                 var to = moment($scope.data.to);
                 var difference = to.diff(from, 'days') + 1;
-                if (difference > 31) {
-                    $scope.data.from = moment($scope.data.to).add(-30, 'days').format('YYYY-MM-DD');
+                if (difference > 16) {
+                    $scope.data.from = moment($scope.data.to).add(-15, 'days').format('YYYY-MM-DD');
                 }
             }
         }, true);
@@ -75,7 +75,7 @@ app.controller('nonRecuringreportController', ['$rootScope', '$scope', '$timeout
         $scope.parseFloat = function (row) {
             if (row)
                 return parseFloat(row);
-            else 
+            else
                 return 0;
         }
 
@@ -96,24 +96,25 @@ app.controller('nonRecuringreportController', ['$rootScope', '$scope', '$timeout
                 angular.extend(data, {tenant_id: $scope.data.tenant_id});
 
             // Get data's from service
-            $http.post($rootScope.IRISOrgServiceUrl + '/patientbillingothercharge/getcharges', data)
+            $http.post($rootScope.IRISOrgServiceUrl + '/patientbillingothercharge/getrecurringcharges', data)
                     .success(function (response) {
                         $scope.loadbar('hide');
                         $scope.loading = false;
                         $scope.showTable = true;
-                        $scope.non_recurring = response.non_recurring;
+                        $scope.recurring = response.report;
                         $scope.tableid = [];
                         $scope.sheet_name = [];
                         var newunique = {};
-                        angular.forEach(response.non_recurring, function (item, key) {
-                            if (!newunique[item.tenant_name]) {
-                                $scope.sheet_name.push(item.tenant_name);
-                                $scope.tableid.push('table_' + item.tenant_name);
-                                newunique[item.tenant_name] = item;
+                        angular.forEach(response.report, function (item, key) {
+                            if (!newunique[item.branch_name]) {
+                                $scope.sheet_name.push(item.branch_name);
+                                $scope.tableid.push('table_' + item.branch_name);
+                                newunique[item.branch_name] = item;
                             }
                         });
+                        console.log($scope.sheet_name);
+                        console.log($scope.tableid);
                         $scope.generated_on = moment().format('YYYY-MM-DD hh:mm A');
-                        console.log($scope.non_recurring);
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured";

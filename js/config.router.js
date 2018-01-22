@@ -3066,7 +3066,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             
-            //Myworks IP Income Report
+            //Myworks Non Recurring Report
             .state('myworks.nonrecurringChargeReport', {
                 url: '/Non-RecurringChargeReport',
                 templateUrl: 'tpl/myworks_report/nonrecurringChargeReport.html',
@@ -3076,6 +3076,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
                                         return $ocLazyLoad.load('tpl/myworks_report/nonrecurringChargeReport.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
+            
+            //Myworks Recurring Report
+            .state('myworks.recurringChargeReport', {
+                url: '/RecurringChargeReport',
+                templateUrl: 'tpl/myworks_report/recurringChargeReport.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myworks_report/recurringChargeReport.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
