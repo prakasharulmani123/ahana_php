@@ -188,6 +188,7 @@ class PhaPurchase extends RActiveRecord {
                 case 'purchasereport':
                     $addt_keys = ['supplier_name'];
                     $parent_fields = [
+                        'gr_num' => 'gr_num',
                         'invoice_no' => 'invoice_no',
                         'net_amount' => 'net_amount',
                         'payment_type' => 'payment_type',
