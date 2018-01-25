@@ -111,10 +111,11 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 6}, "", "", "", "", ""
+                {text: branch_name, style: 'header', colSpan: 7}, "", "", "", "", "",""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
+                {text: 'GR no', style: 'header'},
                 {text: 'Invoice no', style: 'header'},
                 {text: 'Date Of Purchase', style: 'header'},
                 {text: 'Supplier', style: 'header'},
@@ -134,6 +135,7 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
                 }
                 reports.push([
                     s_no_string,
+                    record.gr_num,
                     record.invoice_no,
                     record.invoice_date,
                     record.supplier_name,
@@ -151,8 +153,9 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
                     text: 'Total Purchase Value',
                     style: 'header',
                     alignment: 'right',
-                    colSpan: 5
+                    colSpan: 6
                 },
+                "",
                 "",
                 "",
                 "",
@@ -203,7 +206,7 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
                 style: 'demoTable',
                 table: {
                     headerRows: 2,
-                    widths: ['auto', 'auto', 'auto', '*', 'auto', 'auto'],
+                    widths: ['auto', 'auto', 'auto','auto', '*', 'auto', 'auto'],
                     body: reports,
                     dontBreakRows: true,
                 },

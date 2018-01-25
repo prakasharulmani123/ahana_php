@@ -102,6 +102,7 @@
                                 <thead>
                                     <tr>
                                         <th id="work-base-grid_c0">S.No</th>
+                                        <th id="work-base-grid_c5">GR no.</th>
                                         <th id="work-base-grid_c1">Invoice no.</th>
                                         <th id="work-base-grid_c1">Date Of Purchase</th>
                                         <th id="work-base-grid_c2">Supplier</th>
@@ -112,6 +113,7 @@
                                 <tbody>
                                     <tr ng-repeat="(key, record) in records">
                                         <td>{{key + 1}}</td>
+                                        <td>{{record.gr_num}}</td>
                                         <td>{{record.invoice_no}}</td>
                                         <td>{{record.invoice_date}}</td>
                                         <td>{{nameReplace(record.supplier_name)}}</td>
