@@ -101,6 +101,12 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                     .success(function (response) {
                         $scope.loadbar('hide');
                         $scope.records = response.report;
+                        $scope.tableid = [];
+                        $scope.sheet_name = [];
+                        $scope.tableid.push('sale_report');
+                        $scope.sheet_name.push($scope.app.org_name);
+                        $scope.tableid.push('table_datewise_report');
+                        $scope.sheet_name.push('Date Wise Summary');
                         $scope.generated_on = moment().format('YYYY-MM-DD hh:mm A');
                     })
                     .error(function () {
