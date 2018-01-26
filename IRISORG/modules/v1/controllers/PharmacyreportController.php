@@ -60,10 +60,10 @@ class PharmacyreportController extends ActiveController {
 
         if (isset($post['payment_type'])) {
             $model->andWhere(['pha_sale.payment_type' => $post['payment_type']]);
-            if ($post['payment_type'] == 'CR' && isset($post['patient_group_name'])) {
-                $patient_group_names = join("','", $post['patient_group_name']);
-                $model->andWhere("pha_sale.patient_group_name IN ( '$patient_group_names' )");
-            }
+        }
+        if (isset($post['patient_group_name'])) {
+            $patient_group_names = join("','", $post['patient_group_name']);
+            $model->andWhere("pha_sale.patient_group_name IN ( '$patient_group_names' )");
         }
 
         $reports = $model->all();
