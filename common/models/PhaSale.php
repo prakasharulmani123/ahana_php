@@ -221,6 +221,10 @@ class PhaSale extends RActiveRecord {
         return $this->hasMany(PhaSaleBilling::className(), ['sale_id' => 'sale_id'])->sum('paid_amount');
     }
 
+    public function getPhaSaleBillingsTotalPaidAmountPharmacySettlement() {
+        return $this->hasMany(PhaSaleBilling::className(), ['sale_id' => 'sale_id'])->andWhere("settlement = 'P'")->sum('paid_amount');
+    }
+
     public function getPhaSaleTotalCgstAmount() {
         return $this->hasMany(PhaSaleItem::className(), ['sale_id' => 'sale_id'])->andWhere("pha_sale_item.deleted_at = '0000-00-00 00:00:00'")->sum('cgst_amount');
     }
@@ -285,6 +289,12 @@ class PhaSale extends RActiveRecord {
             'billings_total_paid_amount' => function ($model) {
                 return (isset($model->phaSaleBillingsTotalPaidAmount) ? $model->phaSaleBillingsTotalPaidAmount : '0');
             },
+            'billings_total_paid_amount_using_pharmacy' => function ($model) {
+                return (isset($model->phaSaleBillingsTotalPaidAmountPharmacySettlement) ? $model->phaSaleBillingsTotalPaidAmountPharmacySettlement : '0');
+            },
+            'sale_bill_paid_type' => function ($model) {
+                return $model->billingPaidType;
+            },
             'billing_total_cgst_amount' => function ($model) {
                 return (isset($model->phaSaleTotalCgstAmount) ? $model->phaSaleTotalCgstAmount : '0');
             },
@@ -343,7 +353,7 @@ class PhaSale extends RActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'salereport':
-                    $addt_keys = ['patient_name', 'patient_uhid'];
+                    $addt_keys = ['patient_name', 'patient_uhid', 'sale_bill_paid_type'];
                     $parent_fields = [
                         'sale_date' => 'sale_date',
                         'bill_no' => 'bill_no',
@@ -391,7 +401,7 @@ class PhaSale extends RActiveRecord {
                     ];
                     break;
                 case 'patient_report':
-                    $addt_keys = ['patient_name', 'billings_total_balance_amount', 'billings_total_paid_amount', 'bill_payment', 'patient_uhid', 'branch_name'];
+                    $addt_keys = ['patient_name', 'billings_total_balance_amount', 'billings_total_paid_amount', 'bill_payment', 'patient_uhid', 'branch_name', 'billings_total_paid_amount_using_pharmacy'];
                     $parent_fields = [
                         'sale_id' => 'sale_id',
                         'bill_no' => 'bill_no',
@@ -420,18 +430,27 @@ class PhaSale extends RActiveRecord {
         return array_merge($parent_fields, $extFields);
     }
 
+    public function getBillingPaidType() {
+        $saleBilling = PhaSaleBilling::find()
+                //->select('GROUP_CONCAT(payment_mode) AS billing_payment_types')
+                ->select("GROUP_CONCAT(CASE `payment_mode` WHEN 'CA' THEN 'Cash' WHEN 'CD' THEN 'Card' WHEN 'ON' THEN 'Online' WHEN 'CH' THEN 'Cheque' ELSE NULL END) AS billing_payment_types")
+                ->andWhere(['sale_id' => $this->sale_id])
+                ->one();
+        return $saleBilling->billing_payment_types;
+    }
+
     public function getSaleItemIds() {
         return ArrayHelper::map($this->phaSaleItems, 'sale_item_id', 'sale_item_id');
     }
 
-    public static function billpayment($sale_id, $paid, $date, $data= null) {
+    public static function billpayment($sale_id, $paid, $date, $data = null) {
         $sales = PhaSale::find()->andWhere(['sale_id' => $sale_id])->all();
         $paid_amount = $paid;
 
         foreach ($sales as $key => $sale) {
             if ($paid_amount > 0) {
                 $model = new PhaSaleBilling;
-                if(isset($data) && !empty($data)) {
+                if (isset($data) && !empty($data)) {
                     $model->attributes = $data;
                 }
 

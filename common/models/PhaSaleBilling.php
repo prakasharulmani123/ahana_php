@@ -26,6 +26,8 @@ use yii\db\ActiveQuery;
 class PhaSaleBilling extends RActiveRecord {
 
     public $sale_ids;
+    public $total_amount;
+    public $billing_payment_types;
 
     /**
      * @inheritdoc
