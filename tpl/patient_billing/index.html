@@ -107,7 +107,7 @@
                                 <div class="col-sm-5">  <b>Amount Paid : </b>   </div>
                                 <div class="col-sm-7"> 
                                     <span ng-hide="true">{{billing_total_paid = billing.total.advance_charge + recurr_billing.total_pharmacy.recurring_total_paid}}</span> 
-                                    <span class="label bg-success">{{billing_total_paid ||'0' | number:2}}</span>
+                                    <span class="label bg-success">{{billing_total_paid||'0' | number:2}}</span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -341,9 +341,9 @@
                             <td>{{row.billings_total_balance_amount == '0.00' ? 'Paid' : 'Pending'}}</td>
                             <td align="right" 
                                 ng-init="pharmacy.total = pharmacy.total + parseFloatIgnoreCommas(row.billings_total_balance_amount);
-                                pharmacy.total_paid = pharmacy.total_paid + parseFloatIgnoreCommas(row.billings_total_paid_amount);
-                                recurr_billing.total_pharmacy.recurring_total = recurr_billing.total_pharmacy.recurring_total + parseFloatIgnoreCommas(row.bill_amount);
-                                recurr_billing.total_pharmacy.recurring_total_paid = recurr_billing.total_pharmacy.recurring_total_paid + parseFloatIgnoreCommas(row.billings_total_paid_amount);"> 
+                                    pharmacy.total_paid = pharmacy.total_paid + parseFloatIgnoreCommas(row.billings_total_paid_amount_using_pharmacy);
+                                    recurr_billing.total_pharmacy.recurring_total = recurr_billing.total_pharmacy.recurring_total + parseFloatIgnoreCommas(row.bill_amount);
+                                    recurr_billing.total_pharmacy.recurring_total_paid = recurr_billing.total_pharmacy.recurring_total_paid + parseFloatIgnoreCommas(row.billings_total_paid_amount_using_pharmacy);"> 
                                 {{row.billings_total_balance_amount}} </td>
                         </tr>
                     </table>
@@ -354,10 +354,11 @@
             <div class="panel panel-default m-b">
                 <div class="panel-heading panel-heading bg-dark font-bold"> <i class="fa fa-medkit"></i> Payments</div>
                 <div class="panel-body">
+
+                    <a check-access-button ng-click="$state.go('patient.addPayment', {id: $state.params.id, enc_id: enc.selected.encounter_id})" class="btn btn-default">
+                        <i class="fa fa-plus-square"></i>&nbsp; Add Payment
+                    </a>
                     <div class="form-group" ng-if="enc.selected.finalize == '0'"> 
-                        <a check-access-button ng-click="$state.go('patient.addPayment', {id: $state.params.id, enc_id: enc.selected.encounter_id})" class="btn btn-default">
-                            <i class="fa fa-plus-square"></i>&nbsp; Add Payment
-                        </a>
                         <span ng-if="more_advance_li.length > 0" ng-repeat="(key, li) in more_advance_li">
                             <a check-access-custom2 ng-if="li.mode == 'sref'" ui-sref="{{li.href}}" class="btn btn-default"> <i class="{{li.i_class}}"></i> &nbsp;{{li.name}}</a>    
                             <a check-access-custom3 ng-if="li.mode == 'click'" ng-click="{{li.href}}" class="btn btn-default" data-url='{{li.url}}'> <i class="{{li.i_class}}"></i> &nbsp;{{li.name}}</a>
