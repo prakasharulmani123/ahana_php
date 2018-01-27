@@ -6,6 +6,10 @@ use common\models\PatBillingOtherCharges;
 use common\models\CoChargePerCategory;
 use common\models\PatConsultant;
 use common\models\PatProcedure;
+use common\models\VBillingRecurring;
+use common\models\PatBillingExtraConcession;
+use common\models\PhaSale;
+use common\models\PhaSaleBilling;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -116,6 +120,21 @@ class PatientbillingotherchargeController extends ActiveController {
         }
     }
 
+    public function actionCreatecharges() {
+        $post = Yii::$app->getRequest()->post();
+        if (!empty($post)) {
+            $model = new PatBillingOtherCharges;
+            $model->attributes = $post['data'];
+            $valid = $model->validate();
+            if ($valid) {
+                $model->save();
+                return ['success' => true];
+            } else {
+                return ['success' => false, 'message' => Html::errorSummary($model)];
+            }
+        }
+    }
+
     public function actionUpdatecharges() {
         $post = Yii::$app->getRequest()->post();
         if (!empty($post)) {
@@ -222,6 +241,180 @@ class PatientbillingotherchargeController extends ActiveController {
                     ->all();
             return ['report' => $report];
         }
+    }
+
+    public function actionGetipbilldetails() {
+        $get = Yii::$app->getRequest()->get();
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+
+        //Get recurring bill details
+        $recurring = VBillingRecurring::find()
+                        ->where([
+                            'encounter_id' => $get['encounter_id'],
+                            'tenant_id' => $tenant_id
+                        ])
+                        ->select('SUM(total_charge) as total_charge')->one();
+        $encounter = \common\models\PatEncounter::find()
+                        ->select(['recurring_settlement as total_amount'])
+                        ->where(['encounter_id' => $get['encounter_id']])->one();
+        $recurring = $recurring['total_charge'] - $encounter['total_amount'];
+
+        //Get Professional Charges
+        $consultant = PatConsultant::find()
+                ->select(['sum(charge_amount) as report_total_charge_amount', 'COUNT(pat_consult_id) AS report_total_visit', 'IFNULL(TRUNCATE(AVG(charge_amount),2),0) AS charge_amount', 'consultant_id'])
+                ->joinWith(['consultant'])
+                ->addSelect(["concat(co_user.title_code,co_user.name) as report_consultant_name"])
+                ->andWhere("encounter_id=" . $get['encounter_id'] . "")
+                ->andWhere(['settlement' => null])
+                ->groupBy(['pat_consultant.consultant_id'])
+                ->all();
+        $professional = [];
+        foreach ($consultant as $key => $charges) {
+            $professional[$key]['amount'] = $charges['charge_amount'];
+            $professional[$key]['consultant_name'] = $charges['report_consultant_name'];
+            $professional[$key]['total_visit'] = $charges['report_total_visit'];
+            $professional[$key]['total_charge_amount'] = $charges['report_total_charge_amount'];
+            $professional[$key]['consultant_id'] = $charges['consultant_id'];
+            $professional[$key]['extra_amount'] = '0';
+            $professional[$key]['concession_amount'] = '0';
+            $extraConcession = PatBillingExtraConcession::find()
+                            ->andWhere([
+                                'encounter_id' => $get['encounter_id'],
+                                'ec_type' => 'C',
+                                'link_id' => $charges['consultant_id']
+                            ])->one();
+            if (!empty($extraConcession)) {
+                $professional[$key]['extra_amount'] = $extraConcession['extra_amount'];
+                $professional[$key]['concession_amount'] = $extraConcession['concession_amount'];
+            }
+        }
+
+        //Get Procedure Charges
+        $procedureCharges = PatProcedure::find()
+                ->select(['sum(charge_amount) as total_charge_amount', 'COUNT(proc_id) AS total_visit', 'IFNULL(TRUNCATE(AVG(charge_amount),2),0) AS charge_amount', 'pat_procedure.charge_subcat_id'])
+                ->joinWith(['chargeCat'])
+                ->addSelect(["co_room_charge_subcategory.charge_subcat_name as charge_sub_category"])
+                ->andWhere("encounter_id=" . $get['encounter_id'] . "")
+                ->andWhere(['settlement' => null])
+                ->groupBy(['pat_procedure.charge_subcat_id'])
+                ->all();
+        $procedure = [];
+        foreach ($procedureCharges as $key => $charges) {
+            $procedure[$key]['amount'] = $charges['charge_amount'];
+            $procedure[$key]['charge_sub_category'] = $charges['charge_sub_category'];
+            $procedure[$key]['total_visit'] = $charges['total_visit'];
+            $procedure[$key]['total_charge_amount'] = $charges['total_charge_amount'];
+            $procedure[$key]['charge_subcat_id'] = $charges['charge_subcat_id'];
+            $procedure[$key]['extra_amount'] = '0';
+            $procedure[$key]['concession_amount'] = '0';
+            $extraConcession = PatBillingExtraConcession::find()
+                            ->andWhere([
+                                'encounter_id' => $get['encounter_id'],
+                                'ec_type' => 'P',
+                                'link_id' => $charges['charge_subcat_id']
+                            ])->one();
+            if (!empty($extraConcession)) {
+                $procedure[$key]['extra_amount'] = $extraConcession['extra_amount'];
+                $procedure[$key]['concession_amount'] = $extraConcession['concession_amount'];
+            }
+        }
+
+        //Get Other Charges
+        $billingOthercharges = PatBillingOtherCharges::find()
+                ->select(['sum(charge_amount) as total_charge_amount', 'COUNT(other_charge_id) AS total_visit', 'IFNULL(TRUNCATE(AVG(charge_amount),2),0) AS charge_amount', 'pat_billing_other_charges.charge_subcat_id'])
+                ->addSelect(["co_room_charge_category.charge_cat_name as charge_category"])
+                ->addSelect(["co_room_charge_subcategory.charge_subcat_name as charge_sub_category"])
+                ->andWhere("encounter_id=" . $get['encounter_id'] . "")
+                ->joinWith(['chargeCat', 'chargeSubcat'])
+                ->andWhere(['settlement' => null])
+                ->groupBy(['pat_billing_other_charges.charge_cat_id', 'pat_billing_other_charges.charge_subcat_id'])
+                ->all();
+        $otherCharges = [];
+        foreach ($billingOthercharges as $key => $charges) {
+            $otherCharges[$key]['amount'] = $charges['charge_amount'];
+            $otherCharges[$key]['charge_category'] = $charges['charge_category'];
+            $otherCharges[$key]['charge_sub_category'] = $charges['charge_sub_category'];
+            $otherCharges[$key]['total_visit'] = $charges['total_visit'];
+            $otherCharges[$key]['total_charge_amount'] = $charges['total_charge_amount'];
+            $otherCharges[$key]['charge_subcat_id'] = $charges['charge_subcat_id'];
+        }
+
+        //Get Pharmacy Pending Charges
+        $pharmacyCharges = PhaSale::find()
+                ->andWhere(['!=', 'payment_status', 'C'])
+                ->andWhere(['encounter_id' => $get['encounter_id']])
+                ->all();
+
+        //Get WriteOff amount in Sale
+        $writeoffAmount = $this->_getWriteoffamount($get['encounter_id'], $tenant_id);
+
+        return ['recurring' => $recurring, 'professional' => $professional, 'procedure' => $procedure,
+            'otherCharges' => $otherCharges, 'pharmacyCharges' => $pharmacyCharges, 'writeoffAmount' => $writeoffAmount];
+    }
+
+    private function _getWriteoffamount($encounter_id, $tenant_id) {
+        //Get Encounter Write Off Amount
+        $encounter = \common\models\PatEncounter::find()
+                        ->select(['recurring_settlement as total_amount'])
+                        ->where(['encounter_id' => $encounter_id])->one();
+        $encounter_write_off_amount = $encounter['total_amount'];
+
+        //Get Pharmacy Write Off Amount
+        $pharmacy_write_off_amount = 0;
+        $PharmacyBill = PhaSaleBilling::find()
+                ->select(['sum(paid_amount) as total_amount'])
+                ->joinWith(['sale'])
+                ->andWhere(['pha_sale.encounter_id' => $encounter_id])
+                ->one();
+        if (!empty($PharmacyBill)) {
+            $pharmacy_write_off_amount = $PharmacyBill['total_amount'];
+        }
+
+        //Get Procedure Write Off Amount
+        $procedure_write_off_amount = 0;
+        $procedureCharges = PatProcedure::find()
+                ->select(['sum(charge_amount) as total_charge_amount'])
+                ->andWhere("encounter_id=" . $encounter_id . "")
+                ->andWhere(['settlement' => 'S'])
+                ->groupBy(['pat_procedure.charge_subcat_id'])
+                ->one();
+        if (!empty($procedureCharges)) {
+            $procedure_write_off_amount = $procedureCharges['total_charge_amount'];
+            $extraConcession = PatBillingExtraConcession::find()->andWhere(['encounter_id' => $encounter_id, 'ec_type' => 'P',])->one();
+            if (!empty($extraConcession)) {
+                $procedure_write_off_amount = $procedure_write_off_amount + (int) $extraConcession['extra_amount'] - (int) $extraConcession['concession_amount'];
+            }
+        }
+
+        //Get Consultant Write Off Amount
+        $consultant_write_off_amount = 0;
+        $consultantCharges = PatConsultant::find()
+                ->select(['sum(charge_amount) as report_total_charge_amount'])
+                ->andWhere("encounter_id=" . $encounter_id . "")
+                ->andWhere(['settlement' => 'S'])
+                ->one();
+        if (!empty($consultantCharges)) {
+            $consultant_write_off_amount = $consultantCharges['report_total_charge_amount'];
+            $extraConcession = PatBillingExtraConcession::find()->andWhere(['encounter_id' => $encounter_id, 'ec_type' => 'C'])->one();
+            if (!empty($extraConcession)) {
+                $consultant_write_off_amount = $consultant_write_off_amount + (int) $extraConcession['extra_amount'] - (int) $extraConcession['concession_amount'];
+            }
+        }
+
+        //Get Other Charges write Off amount
+        $billing_write_off_amount = 0;
+        $billingCharges = PatBillingOtherCharges::find()
+                ->select(['sum(charge_amount) as total_charge_amount'])
+                ->andWhere("encounter_id=" . $encounter_id . "")
+                ->andWhere(['settlement' => 'S'])
+                ->groupBy(['pat_billing_other_charges.charge_cat_id', 'pat_billing_other_charges.charge_subcat_id'])
+                ->one();
+        if (!empty($billingCharges)) {
+            $billing_write_off_amount = $billingCharges['total_charge_amount'];
+        }
+
+        $write_off_amount = $encounter_write_off_amount + $pharmacy_write_off_amount + $procedure_write_off_amount + $consultant_write_off_amount + $billing_write_off_amount;
+        return $write_off_amount;
     }
 
 }

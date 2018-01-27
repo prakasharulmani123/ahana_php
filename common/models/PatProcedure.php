@@ -36,6 +36,8 @@ class PatProcedure extends RActiveRecord {
 
     public $charge_sub_category;
     public $branch_name;
+    public $total_charge_amount;
+    public $total_visit;
     /**
      * @inheritdoc
      */

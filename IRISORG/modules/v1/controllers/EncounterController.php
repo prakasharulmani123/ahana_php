@@ -674,7 +674,7 @@ class EncounterController extends ActiveController {
             $patient = PatPatient::find()->where(['patient_guid' => $post['patient_id']])->one();
             $model = PatEncounter::find()
                     ->tenant()
-                    ->unfinalized()
+                    //->unfinalized()
                     ->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $post['encounter_id']])
                     ->one();
 

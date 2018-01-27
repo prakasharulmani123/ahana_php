@@ -6,6 +6,7 @@ use common\models\PatBillingLog;
 use common\models\PatBillingPayment;
 use common\models\PatPatient;
 use common\models\PhaSale;
+use common\models\PhaSaleBilling;
 use common\models\CoAuditLog;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -88,21 +89,70 @@ class PatientbillingpaymentController extends ActiveController {
 
     public function actionSavesettlementbill() {
         $post = Yii::$app->getRequest()->post();
-        if (in_array("purchase", $post['bills']) && $post['pharmacy_paid_amount'] != 0)
-            PhaSale::billpayment($post['pharmacy_sale_id'], $post['pharmacy_paid_amount'], $post['payment_date']);
-        if (in_array("billing", $post['bills']) && $post['billing_paid_amount'] != 0) {
+        
+        $encounter_id = $post['encounter_id'];
+        if (isset($post['procedure_id']) && !empty($post['procedure_id'])) {
+            $subcat_ids = join("','", $post['procedure_id']);
+            $procedure = \common\models\PatProcedure::updateAll(['settlement' => 'S'], "encounter_id = $encounter_id AND `charge_subcat_id` IN ('$subcat_ids')");
+        }
+
+        if (isset($post['professional_id']) && !empty($post['professional_id'])) {
+            $professional_ids = join("','", $post['professional_id']);
+            $procedure = \common\models\PatConsultant::updateAll(['settlement' => 'S'], "encounter_id = $encounter_id AND `consultant_id` IN ('$professional_ids')");
+        }
+
+        if (isset($post['othercharges_id']) && !empty($post['othercharges_id'])) {
+            $subcat_ids = join("','", $post['othercharges_id']);
+            $procedure = \common\models\PatBillingOtherCharges::updateAll(['settlement' => 'S'], "encounter_id = $encounter_id AND `charge_subcat_id` IN ('$subcat_ids')");
+        }
+
+        if (isset($post['recurring']) && $post['recurring'] == '1') {
+            $encounter = \common\models\PatEncounter::find()->andWhere(['encounter_id' => $encounter_id])->one();
+            if (!$encounter->recurring_settlement) {
+                $encounter->recurring_settlement = '0';
+            }
+            $encounter->recurring_settlement = $encounter->recurring_settlement + $post['recurring_amount'];
+            $encounter->save(false);
+        }
+
+        if ($post['paid_amount'] != '0') {
             $model = new PatBillingPayment;
-            $model->attributes = [
-                'encounter_id' => $post['encounter_id'],
-                'patient_id' => $post['patient_id'],
-                'payment_date' => $post['payment_date'],
-                'payment_mode' => $post['payment_mode'],
-                'payment_amount' => $post['billing_paid_amount'],
-                'category' => 'S',
-            ];
+            $model->attributes = $post;
+            $model->payment_amount = $post['paid_amount'];
+            $model->category = 'S';
             $model->save();
         }
-        return ['success' => true];
+
+        if (isset($post['pharmacy_id']) && !empty($post['pharmacy_id'])) {
+            $sale_id = join("','", $post['pharmacy_id']);
+            $sales = PhaSale::find()->andWhere(['sale_id' => $sale_id])->all();
+            foreach ($sales as $key => $sale) {
+                $model = new PhaSaleBilling;
+                $model->sale_id = $sale->sale_id;
+                $model->paid_amount = $sale->bill_amount - $sale->PhaSaleBillingsTotalPaidAmount;
+                $model->paid_date = date("Y-m-d");
+                $model->tenant_id = $sale->tenant_id;
+                $model->settlement = 'S';
+                $model->save(false);
+            }
+        }
+
+//        $post = Yii::$app->getRequest()->post();
+//        if (in_array("purchase", $post['bills']) && $post['pharmacy_paid_amount'] != 0)
+//            PhaSale::billpayment($post['pharmacy_sale_id'], $post['pharmacy_paid_amount'], $post['payment_date']);
+//        if (in_array("billing", $post['bills']) && $post['billing_paid_amount'] != 0) {
+//            $model = new PatBillingPayment;
+//            $model->attributes = [
+//                'encounter_id' => $post['encounter_id'],
+//                'patient_id' => $post['patient_id'],
+//                'payment_date' => $post['payment_date'],
+//                'payment_mode' => $post['payment_mode'],
+//                'payment_amount' => $post['billing_paid_amount'],
+//                'category' => 'S',
+//            ];
+//            $model->save();
+//        }
+//        return ['success' => true];
     }
 
     public function actionGetincomereport() {

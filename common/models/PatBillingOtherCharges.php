@@ -29,10 +29,12 @@ use yii\db\ActiveQuery;
  * @property CoTenant $tenant
  */
 class PatBillingOtherCharges extends RActiveRecord {
-    
+
     public $charge_category;
     public $charge_sub_category;
     public $branch_name;
+    public $total_charge_amount;
+    public $total_visit;
     /**
      * @inheritdoc
      */
@@ -95,7 +97,7 @@ class PatBillingOtherCharges extends RActiveRecord {
     public function getEncounter() {
         return $this->hasOne(PatEncounter::className(), ['encounter_id' => 'encounter_id']);
     }
-    
+
     public function getAdmission() {
         return $this->hasMany(PatAdmission::className(), ['encounter_id' => 'encounter_id']);
     }
@@ -135,7 +137,7 @@ class PatBillingOtherCharges extends RActiveRecord {
             'tenant_name' => function ($model) {
                 return isset($this->tenant) ? $this->tenant->tenant_name : '-';
             },
-            ];
+        ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }

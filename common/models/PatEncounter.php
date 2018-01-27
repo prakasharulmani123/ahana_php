@@ -163,6 +163,7 @@ class PatEncounter extends RActiveRecord {
             'inactive_date' => 'Inactive Date',
             'finalize' => 'Finalize',
             'authorize' => 'Authorize',
+            'recurring_settlement' => 'Recurring Settlement',
             'status' => 'Status',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
@@ -542,7 +543,7 @@ class PatEncounter extends RActiveRecord {
                     $parent_fields = ['encounter_id' => 'encounter_id'];
                     break;
                 case 'sale_encounter_id':
-                    $addt_keys = ['cancel_appoitment', 'cancel_admission','encounter_full_details'];
+                    $addt_keys = ['cancel_appoitment', 'cancel_admission', 'encounter_full_details'];
                     $parent_fields = ['encounter_id' => 'encounter_id', 'encounter_type' => 'encounter_type'];
                     break;
                 case 'encounter_details':
@@ -605,7 +606,7 @@ class PatEncounter extends RActiveRecord {
     }
 
     public function getEncounterFulldetails($model) {
-        return ucwords("{$this->encounter_id} [".date('d/m/Y', strtotime($this->encounter_date))." | {$model->tenant->tenant_name}]");
+        return ucwords("{$this->encounter_id} [" . date('d/m/Y', strtotime($this->encounter_date)) . " | {$model->tenant->tenant_name}]");
     }
 
 //            public function getTotalConcession() {
@@ -679,15 +680,18 @@ class PatEncounter extends RActiveRecord {
                     ->sum('total_charge');
 
             $sale_amount = PhaSale::find()
-                            ->where([
-                                'encounter_id' => $this->encounter_id,
-                                'tenant_id' => $this->tenant_id,
-                                'payment_type' => 'CR'
-                            ])
-                            ->andWhere(['!=', 'payment_status', 'C'])->all();
-            $total_amount = 0;
+                    ->where([
+                        'encounter_id' => $this->encounter_id,
+                        'tenant_id' => $this->tenant_id,
+                            //'payment_type' => 'CR'
+                    ])
+                    //->andWhere(['!=', 'payment_status', 'C'])
+                    ->all();
+            $total_amount = $pending_amount = 0;
             foreach ($sale_amount as $sale) {
-                $total_amount += $sale['bill_amount'] - $sale->phaSaleBillingsTotalPaidAmount;
+                $total_amount += $sale['bill_amount'];
+                //$pending_amount += $sale['bill_amount'] - $sale->phaSaleBillingsTotalPaidAmount;
+                $total_paid += $sale->phaSaleBillingsTotalPaidAmountPharmacySettlement;
             }
 
             $row_total_charge = $recurring->total_charge + $procedure->total_charge + $professional->total_charge + $other_charge->total_charge;
