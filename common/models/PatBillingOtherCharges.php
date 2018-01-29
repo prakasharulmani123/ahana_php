@@ -35,6 +35,10 @@ class PatBillingOtherCharges extends RActiveRecord {
     public $branch_name;
     public $total_charge_amount;
     public $total_visit;
+    public $untill_discharge;
+    public $next;
+    public $no_of_days;
+
     /**
      * @inheritdoc
      */
@@ -51,7 +55,7 @@ class PatBillingOtherCharges extends RActiveRecord {
                 [['tenant_id', 'encounter_id', 'patient_id', 'charge_cat_id', 'charge_subcat_id', 'created_by', 'modified_by'], 'integer'],
                 [['charge_amount'], 'number'],
                 [['status'], 'string'],
-                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['created_at', 'modified_at', 'deleted_at', 'untill_discharge', 'next', 'no_of_days'], 'safe'],
                 //[['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'encounter_id', 'patient_id', 'charge_cat_id', 'charge_subcat_id', 'deleted_at'], 'message' => 'The combination has already been taken.']
         ];
     }
@@ -143,11 +147,26 @@ class PatBillingOtherCharges extends RActiveRecord {
     }
 
     public function afterSave($insert, $changedAttributes) {
-        if ($insert)
+        if ($insert) {
+            if (($this->untill_discharge) || ($this->next)) {
+                $schedule_charge = new PatScheduleCharge();
+                if ($this->untill_discharge) {
+                    $schedule_charge->until_discharge = 1;
+                } else {
+                    $schedule_charge->no_of_days = $this->no_of_days;
+                    $schedule_charge->until_date = date('Y-m-d', strtotime(' + ' . $this->no_of_days . ' days'));
+                }
+                $schedule_charge->cron_status = 1;
+                $schedule_charge->other_charge_id = $this->other_charge_id;
+                $schedule_charge->tenant_id = $this->tenant_id;
+                $schedule_charge->encounter_id = $this->encounter_id;
+                $schedule_charge->patient_id = $this->patient_id;
+                $schedule_charge->save();
+            }
             $activity = 'Other Charges Added Successfully (#' . $this->encounter_id . ' )';
-        else
+        } else
             $activity = 'Other Charges Updated Successfully (#' . $this->encounter_id . ' )';
-        CoAuditLog::insertAuditLog(PatBillingOtherCharges::tableName(), $this->other_charge_id, $activity);
+        CoAuditLog::insertAuditLog(PatBillingOtherCharges::tableName(), $this->other_charge_id, $activity, $this->tenant_id, $this->created_by, 'patient.addOtherCharge');
     }
 
 }

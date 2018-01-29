@@ -18,6 +18,7 @@ use common\models\PatAppointment;
 use common\models\PatDiagnosis;
 use common\models\PatDsmiv;
 use common\models\PatEncounter;
+use common\models\PatScheduleCharge;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
@@ -197,6 +198,12 @@ class DefaultController extends Controller {
                 $model->attributes = $data;
                 $model->save(false);
                 Yii::$app->user->logout();
+            }
+            //Run Active schedule Charge
+            $active_scheduleCharges = PatScheduleCharge::find()->tenant($post['tenant_id'])->andWhere(['cron_status' => '1'])->all();
+            
+            foreach ($active_scheduleCharges as $key => $active_scheduleCharge) {
+                Yii::$app->hepler->updateOthercharges($active_scheduleCharge, $active_scheduleCharge->encounter);
             }
         }
     }

@@ -39,7 +39,7 @@ class CoAuditLog extends RActiveRecord {
                 [['tenant_id', 'user_id', 'action', 'activity', 'ip_address', 'status', 'created_by'], 'required'],
                 [['tenant_id', 'user_id', 'created_by', 'modified_by'], 'integer'],
                 [['status'], 'string'],
-                [['created_at', 'modified_at', 'deleted_at','table_name','table_pk'], 'safe'],
+                [['created_at', 'modified_at', 'deleted_at', 'table_name', 'table_pk'], 'safe'],
                 [['action', 'activity', 'ip_address'], 'string', 'max' => 250],
                 [['tenant_id'], 'exist', 'skipOnError' => true, 'targetClass' => CoTenant::className(), 'targetAttribute' => ['tenant_id' => 'tenant_id']],
                 [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => CoUser::className(), 'targetAttribute' => ['user_id' => 'user_id']],
@@ -67,22 +67,22 @@ class CoAuditLog extends RActiveRecord {
             'deleted_at' => 'Deleted At',
         ];
     }
-    
+
     /**
      * @return ActiveQuery
      */
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public function getUser() {
         return $this->hasOne(CoUser::className(), ['user_id' => 'user_id']);
     }
-    
+
     public static function find() {
         return new CoAuditLogQuery(get_called_class());
     }
-    
+
     public function fields() {
         $extend = [
             'tenant' => function ($model) {
@@ -95,15 +95,15 @@ class CoAuditLog extends RActiveRecord {
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
-    
-    public static function insertAuditLog($table_name, $table_pk, $activity,$tenant= null,$user= null) {
+
+    public static function insertAuditLog($table_name, $table_pk, $activity, $tenant = null, $user = null, $action = null) {
         $model = new CoAuditLog;
         $model->attributes = [
             'tenant_id' => isset(Yii::$app->user->identity->logged_tenant_id) ? Yii::$app->user->identity->logged_tenant_id : $tenant,
             'user_id' => isset(Yii::$app->user->identity->user_id) ? Yii::$app->user->identity->user_id : $user,
             'table_name' => $table_name,
             'table_pk' => $table_pk,
-            'action' => $_SERVER['HTTP_CONFIG_ROUTE'],
+            'action' => isset($_SERVER['HTTP_CONFIG_ROUTE']) ? $_SERVER['HTTP_CONFIG_ROUTE'] : $action,
             'activity' => $activity,
             'ip_address' => Yii::$app->getRequest()->getUserIP(),
         ];

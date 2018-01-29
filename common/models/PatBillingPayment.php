@@ -102,9 +102,9 @@ class PatBillingPayment extends RActiveRecord {
 
     public function afterSave($insert, $changedAttributes) {
         if ($insert)
-            $activity = 'Billing Added Successfully (#' . $this->encounter_id . ' )';
+            $activity = 'Billing Payment Added Successfully (#' . $this->encounter_id . ' )';
         else
-            $activity = 'Billing Updated Successfully (#' . $this->encounter_id . ' )';
+            $activity = 'Billing Payment Updated Successfully (#' . $this->encounter_id . ' )';
         CoAuditLog::insertAuditLog(PatBillingPayment::tableName(), $this->payment_id, $activity);
     }
 

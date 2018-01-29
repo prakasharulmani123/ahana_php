@@ -9,6 +9,7 @@ use common\models\CoRoomCharge;
 use common\models\PatAdmission;
 use common\models\PatBillingRecurring;
 use common\models\PatEncounter;
+use common\models\PatBillingOtherCharges;
 use DateTime;
 use yii\base\Component;
 
@@ -159,6 +160,42 @@ class HelperComponent extends Component {
                 $this->_insertRecurringModel($data);
             }
         }
+    }
+
+    public function updateOthercharges($otherCharges, $encounter) {
+        if (empty($encounter)) {
+            $otherCharges->cron_status = '0';
+            $otherCharges->save(false);
+        } else {
+            if ($otherCharges->until_discharge) {
+                $this->_insertOtherChargesModel($otherCharges->other_charge_id);
+            } else {
+                $date_now = date("Y-m-d"); // this format is string comparable
+                if ($date_now <= $otherCharges->until_date) {
+                    $this->_insertOtherChargesModel($otherCharges->other_charge_id);
+                } else {
+                    $otherCharges->cron_status = '0';
+                    $otherCharges->save(false);
+                }
+            }
+        }
+    }
+
+    private function _insertOtherChargesModel($charge_id) {
+        $Charges = PatBillingOtherCharges::find()->andWhere(['other_charge_id' => $charge_id])->one();
+        $billing_charge = new PatBillingOtherCharges;
+        $data = [
+            'tenant_id' => $Charges->tenant_id,
+            'encounter_id' => $Charges->encounter_id,
+            'patient_id' => $Charges->patient_id,
+            'charge_cat_id' => $Charges->charge_cat_id,
+            'charge_subcat_id' => $Charges->charge_subcat_id,
+            'charge_amount' => $Charges->charge_amount,
+            'status' => 1,
+            'created_by' => $Charges->created_by,
+        ];
+        $billing_charge->attributes = $data;
+        $billing_charge->save(false);
     }
 
     public function addRecurring($admission) {
