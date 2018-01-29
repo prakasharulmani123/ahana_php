@@ -8,6 +8,9 @@ use common\models\PatPatient;
 use common\models\PhaSale;
 use common\models\PhaSaleBilling;
 use common\models\CoAuditLog;
+use common\models\PatProcedure;
+use common\models\PatConsultant;
+use common\models\PatBillingOtherCharges;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -60,7 +63,7 @@ class PatientbillingpaymentController extends ActiveController {
         if ($id) {
             $model = PatBillingPayment::find()->where(['payment_id' => $id])->one();
             $model->remove();
-            $activity = 'Billing Deleted Successfully (#' . $model->encounter_id . ' )';
+            $activity = 'Billing payment Deleted Successfully (#' . $model->encounter_id . ' )';
             CoAuditLog::insertAuditLog(PatBillingPayment::tableName(), $id, $activity);
             return ['success' => true];
         }
@@ -89,21 +92,33 @@ class PatientbillingpaymentController extends ActiveController {
 
     public function actionSavesettlementbill() {
         $post = Yii::$app->getRequest()->post();
-        
+
         $encounter_id = $post['encounter_id'];
         if (isset($post['procedure_id']) && !empty($post['procedure_id'])) {
             $subcat_ids = join("','", $post['procedure_id']);
-            $procedure = \common\models\PatProcedure::updateAll(['settlement' => 'S'], "encounter_id = $encounter_id AND `charge_subcat_id` IN ('$subcat_ids')");
+            $procedure = PatProcedure::updateAll(['settlement' => 'S'], "encounter_id = $encounter_id AND `charge_subcat_id` IN ('$subcat_ids')");
+            foreach ($post['procedure_id'] as $key => $value) {
+                $activity = 'Procedure Charge Write Off Added Successfully (#' . $encounter_id . ' )';
+                CoAuditLog::insertAuditLog(PatProcedure::tableName(), $value, $activity);
+            }
         }
 
         if (isset($post['professional_id']) && !empty($post['professional_id'])) {
             $professional_ids = join("','", $post['professional_id']);
-            $procedure = \common\models\PatConsultant::updateAll(['settlement' => 'S'], "encounter_id = $encounter_id AND `consultant_id` IN ('$professional_ids')");
+            $procedure = PatConsultant::updateAll(['settlement' => 'S'], "encounter_id = $encounter_id AND `consultant_id` IN ('$professional_ids')");
+            foreach ($post['professional_id'] as $key => $value) {
+                $activity = 'Professional Charge Write Off Added Successfully (#' . $encounter_id . ' )';
+                CoAuditLog::insertAuditLog(PatConsultant::tableName(), $value, $activity);
+            }
         }
 
         if (isset($post['othercharges_id']) && !empty($post['othercharges_id'])) {
             $subcat_ids = join("','", $post['othercharges_id']);
-            $procedure = \common\models\PatBillingOtherCharges::updateAll(['settlement' => 'S'], "encounter_id = $encounter_id AND `charge_subcat_id` IN ('$subcat_ids')");
+            $procedure = PatBillingOtherCharges::updateAll(['settlement' => 'S'], "encounter_id = $encounter_id AND `charge_subcat_id` IN ('$subcat_ids')");
+            foreach ($post['othercharges_id'] as $key => $value) {
+                $activity = 'Other Charge Write Off Added Successfully (#' . $encounter_id . ' )';
+                CoAuditLog::insertAuditLog(PatBillingOtherCharges::tableName(), $value, $activity);
+            }
         }
 
         if (isset($post['recurring']) && $post['recurring'] == '1') {

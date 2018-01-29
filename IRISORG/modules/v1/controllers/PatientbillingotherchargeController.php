@@ -120,21 +120,6 @@ class PatientbillingotherchargeController extends ActiveController {
         }
     }
 
-    public function actionCreatecharges() {
-        $post = Yii::$app->getRequest()->post();
-        if (!empty($post)) {
-            $model = new PatBillingOtherCharges;
-            $model->attributes = $post['data'];
-            $valid = $model->validate();
-            if ($valid) {
-                $model->save();
-                return ['success' => true];
-            } else {
-                return ['success' => false, 'message' => Html::errorSummary($model)];
-            }
-        }
-    }
-
     public function actionUpdatecharges() {
         $post = Yii::$app->getRequest()->post();
         if (!empty($post)) {

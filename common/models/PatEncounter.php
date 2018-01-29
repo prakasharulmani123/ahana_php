@@ -771,6 +771,12 @@ class PatEncounter extends RActiveRecord {
                 $this->casesheet_no = $model->casesheet_no;
             }
         } else {
+            $old_amount = $this->getOldAttribute('recurring_settlement');
+            $new_amount = $this->recurring_settlement;
+            if ($old_amount != $new_amount) {
+                $activity = 'Recurring Settlement Added Successfully (#' . $old_amount . ' changed to ' . $new_amount . ') (#' . $this->encounter_id . ' )';
+                CoAuditLog::insertAuditLog(PatEncounter::tableName(), $this->encounter_id, $activity);
+            }
             if ($this->encounter_type == 'IP' && $this->finalize != 0 && $this->bill_no == NULL)
                 $this->bill_no = CoInternalCode::generateInternalCode('B', 'common\models\PatEncounter', 'bill_no');
         }
