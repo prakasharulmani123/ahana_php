@@ -24,6 +24,7 @@ app.controller('BillingOtherChargeController', ['$rootScope', '$scope', '$timeou
                     $scope.encounter = response.model;
                     $scope.data = {};
                     $scope.data.formtype = 'add';
+                    $scope.data.no_of_days = '01';
                     //$scope.data.charge_cat_id = '2'; // Allied charges primary id - co_room_charge_category
                 }
             });
@@ -54,6 +55,9 @@ app.controller('BillingOtherChargeController', ['$rootScope', '$scope', '$timeou
         $scope.initForm = function () {
             $scope.category();
             $scope.subCategorylist();
+            $rootScope.commonService.GetDay(function (response) {
+                $scope.days = response;
+            });
         }
 
         //Save Both Add & Update Data
@@ -200,5 +204,9 @@ app.controller('BillingOtherChargeController', ['$rootScope', '$scope', '$timeou
                         $scope.data.charge_amount = response.data;
                     }
             )
+        }
+
+        $scope.updateEmptyrepeat = function () {
+            $('input[name=repeat]').attr('checked', false);
         }
     }]);

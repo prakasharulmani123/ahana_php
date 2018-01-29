@@ -76,6 +76,10 @@ app.controller('OtherchargeController', ['$rootScope', '$scope', '$timeout', '$h
         $scope.initForm = function () {
             $scope.category();
             $scope.subCategorylist();
+            $scope.data.no_of_days = '01';
+            $rootScope.commonService.GetDay(function (response) {
+                $scope.days = response;
+            });
         }
 
         $scope.updateSubcategory = function () {
@@ -106,7 +110,6 @@ app.controller('OtherchargeController', ['$rootScope', '$scope', '$timeout', '$h
             post_url = $rootScope.IRISOrgServiceUrl + '/patientbillingothercharge/bulkinsert';
             method = 'POST';
             succ_msg = 'Billing other charge saved successfully';
-
             $scope.loadbar('show');
             $http({
                 method: method,
@@ -135,5 +138,9 @@ app.controller('OtherchargeController', ['$rootScope', '$scope', '$timeout', '$h
                     $scope.errorData = data.message;
             });
         };
+
+        $scope.updateEmptyrepeat = function () {
+            $('input[name=repeat]').attr('checked', false);
+        }
 
     }]);
