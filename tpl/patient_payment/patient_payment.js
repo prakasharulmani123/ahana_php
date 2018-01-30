@@ -403,7 +403,7 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
                     angular.forEach($scope.professional, function (row, ip_key) {
                         $scope.addChargesAmount(ip_key, 'professional', row.total_charge_amount, row.concession_amount, row.extra_amount, row.consultant_id)
                     });
-                }, 800);
+                });
             } else if (mode == 'procedure') {
                 if ($("#procedure_selectall").is(':checked')) {
                     $scope.procedure_selectall = true;
@@ -419,7 +419,7 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
                     angular.forEach($scope.procedure, function (row, ip_key) {
                         $scope.addChargesAmount(ip_key, 'procedure', row.total_charge_amount, row.concession_amount, row.extra_amount, row.charge_subcat_id)
                     });
-                }, 800);
+                });
             } else if (mode == 'othercharges') {
                 if ($("#othercharges_selectall").is(':checked')) {
                     $scope.othercharges_selectall = true;
@@ -435,7 +435,7 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
                     angular.forEach($scope.otherCharges, function (row, ip_key) {
                         $scope.addChargesAmount(ip_key, 'othercharges', row.total_charge_amount, row.concession_amount, row.extra_amount, row.charge_subcat_id)
                     });
-                }, 800);
+                });
             } else {
                 if ($("#pharmacy_selectall").is(':checked')) {
                     $scope.pharmacy_selectall = true;
@@ -451,7 +451,7 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
                     angular.forEach($scope.pharmacyCharges, function (row, ip_key) {
                         $scope.addChargesAmount(ip_key, 'pharmacy', row.billings_total_balance_amount, '0', '0', row.sale_id)
                     });
-                }, 800);
+                });
             }
         };
     }]);

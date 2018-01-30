@@ -2395,7 +2395,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //PHARMACY MAKE PAYMENT REPORT
             .state('pharmacy.makepaymentReport', {
                 url: '/makepaymentReport',
@@ -2473,9 +2473,9 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 url: '/addPayment/{id}/{enc_id}',
                 templateUrl: 'tpl/patient_payment/create.html',
                 resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load(['tpl/patient_payment/patient_payment.js?v=' + APP_VERSION]);
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load('tpl/patient_payment/patient_payment.js?v=' + APP_VERSION);
                         }]
                 }
             })
@@ -3049,7 +3049,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Myworks IP Income Report
             .state('myworks.ipincomereport', {
                 url: '/ipIncomeReport',
@@ -3065,7 +3065,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Myworks Non Recurring Report
             .state('myworks.nonrecurringChargeReport', {
                 url: '/Non-RecurringChargeReport',
@@ -3081,7 +3081,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Myworks Recurring Report
             .state('myworks.recurringChargeReport', {
                 url: '/RecurringChargeReport',
