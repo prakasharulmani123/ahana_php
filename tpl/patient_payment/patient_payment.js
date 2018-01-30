@@ -250,6 +250,7 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
                             $scope.otherCharges = response.otherCharges;
                             $scope.pharmacyCharges = response.pharmacyCharges;
                             $scope.writeoffAmount = response.writeoffAmount;
+                            $scope.data.already_writeoffAmount = response.writeoffAmount;
                             $timeout(function () {
                                 $scope.spinnerbar('hide');
                             }, 2000)
@@ -282,6 +283,10 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
             _that = this;
             if (parseFloat(_that.data.net_amount) <= parseFloat(_that.data.writeoff_amount)) {
                 $scope.totalErrormessage = "Write off amount Must be less than to net amount";
+                return false;
+            }
+            if ((parseFloat(_that.data.net_amount) - parseFloat(_that.data.already_writeoffAmount)) < parseFloat(_that.data.writeoff_amount)) {
+                $scope.totalErrormessage = "Write off amount Must be less than to net amountssss";
                 return false;
             }
             post_url = $rootScope.IRISOrgServiceUrl + '/patientbillingpayment/savesettlementbill';
