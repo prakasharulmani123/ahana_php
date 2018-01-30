@@ -6,7 +6,7 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
         $scope.app.settings.patientFooterClass = 'app-footer';
         $scope.payment_type = '';
         $scope.isPatientHaveActiveEncounter = function (callback) {
-            $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveunfinalizedencounter', {patient_id: $state.params.id, encounter_id: $state.params.enc_id})
+            $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveunfinalizedencounter?addtfields=encounter_details', {patient_id: $state.params.id, encounter_id: $state.params.enc_id})
                     .success(function (response) {
                         callback(response);
                     }, function (x) {
