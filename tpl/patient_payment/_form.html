@@ -249,12 +249,19 @@
                                                 </label>
                                             </td>
                                             <td><span class="badge bg-success ng-binding">Category : Recurring Charges</span></td>
-                                            <td>{{recurring}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td align="right" style="text-align:right;">{{recurring}}</td>
                                         </tr>
                                     </table>
                                     <table  class="table table-striped b-t b-light">
                                         <thead>
                                             <tr>
+                                                <th></th>
                                                 <th></th>
                                                 <th></th>
                                                 <th>Category</th>
@@ -270,6 +277,12 @@
                                             <!-- Professional -->
                                             <tr ng-init="expanded_1 = true;" ng-show="professional.length > 0">
                                                 <td align="center" valign="middle"></td>
+                                                <td>
+                                                    <label class="i-checks">
+                                                        <input id="professional_selectall" ng-model="professional_selectall" ng-true-value="'1'" ng-false-value="'0'" ng-click="updateCheckbox('professional')" type="checkbox" name="professional_selectall" class="">
+                                                        <i></i>
+                                                    </label>&nbsp; &nbsp;
+                                                </td>
                                                 <td> 
                                                     <button ng-click="expanded_1 = !expanded_1" target="#moreless" ui-toggle-class="show" class="btn btn-sm btn-default hms-plus">
                                                         <i ng-if="!expanded_1" class="fa fa-plus text"></i>
@@ -285,10 +298,11 @@
                                             <tr ng-show="expanded_1" ng-repeat="(key, row) in professional">
                                                 <td align="center" valign="middle"></td>
                                                 <td>
-                                                    <label class="i-checks m-b-none">
-                                                        <input id="professional_{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="addChargesAmount(key, 'professional', row.total_charge_amount, row.concession_amount, row.extra_amount, row.consultant_id)"><i></i>
+                                                    <label class="i-checks">
+                                                        <input ng-model="row.selected" ng-checked="row.selected == '1'" id="professional_{{key}}" class="professional_{{key}}" name="status" type="checkbox"  ng-click="addChargesAmount(key, 'professional', row.total_charge_amount, row.concession_amount, row.extra_amount, row.consultant_id)"><i></i>
                                                     </label>
                                                 </td>
+                                                <td></td>
                                                 <td>Professional Charges</td>
                                                 <td>{{row.consultant_name}}</td>
                                                 <td>{{row.amount}}</td>
@@ -301,6 +315,12 @@
                                             <!-- Procedures -->
                                             <tr ng-init="expanded_2 = true;" ng-show="procedure.length > 0">
                                                 <td align="center" valign="middle"></td>
+                                                <td>
+                                                    <label class="i-checks">
+                                                        <input id="procedure_selectall" ng-model="procedure_selectall" ng-true-value="'1'" ng-false-value="'0'" ng-click="updateCheckbox('procedure')" type="checkbox" name="procedure_selectall" class="">
+                                                        <i></i>
+                                                    </label>&nbsp; &nbsp;
+                                                </td>
                                                 <td> 
                                                     <button ng-click="expanded_2 = !expanded_2" target="#moreless" ui-toggle-class="show" class="btn btn-sm btn-default hms-plus">
                                                         <i ng-if="!expanded_2" class="fa fa-plus text"></i>
@@ -317,9 +337,10 @@
                                                 <td align="center" valign="middle"></td>
                                                 <td>
                                                     <label class="i-checks m-b-none">
-                                                        <input id="procedure_{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="addChargesAmount(key, 'procedure', row.total_charge_amount, row.concession_amount, row.extra_amount, row.charge_subcat_id)"><i></i>
+                                                        <input ng-model="row.selected" ng-checked="row.selected == '1'" id="procedure_{{key}}" class="procedure_{{key}}" name="status" type="checkbox"  ng-click="addChargesAmount(key, 'procedure', row.total_charge_amount, row.concession_amount, row.extra_amount, row.charge_subcat_id)"><i></i>
                                                     </label>
                                                 </td>
+                                                <td></td>
                                                 <td>Procedure Charges</td>
                                                 <td>{{row.charge_sub_category}}</td>
                                                 <td>{{row.amount}}</td>
@@ -332,6 +353,12 @@
                                             <!-- Other Charges -->
                                             <tr ng-init="expanded_3 = true;" ng-show="otherCharges.length > 0">
                                                 <td align="center" valign="middle"></td>
+                                                <td>
+                                                    <label class="i-checks">
+                                                        <input id="othercharges_selectall" ng-model="othercharges_selectall" ng-true-value="'1'" ng-false-value="'0'" ng-click="updateCheckbox('othercharges')" type="checkbox" name="othercharges_selectall" class="">
+                                                        <i></i>
+                                                    </label>&nbsp; &nbsp;
+                                                </td>
                                                 <td> 
                                                     <button ng-click="expanded_3 = !expanded_3" target="#moreless" ui-toggle-class="show" class="btn btn-sm btn-default hms-plus">
                                                         <i ng-if="!expanded_3" class="fa fa-plus text"></i>
@@ -348,9 +375,10 @@
                                                 <td align="center" valign="middle"></td>
                                                 <td>
                                                     <label class="i-checks m-b-none">
-                                                        <input id="othercharges_{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="addChargesAmount(key, 'othercharges', row.total_charge_amount, row.concession_amount, row.extra_amount, row.charge_subcat_id)"><i></i>
+                                                        <input ng-model="row.selected" ng-checked="row.selected == '1'" id="othercharges_{{key}}" type="checkbox" name="status" ng-click="addChargesAmount(key, 'othercharges', row.total_charge_amount, row.concession_amount, row.extra_amount, row.charge_subcat_id)"><i></i>
                                                     </label>
                                                 </td>
+                                                <td></td>
                                                 <td>{{row.charge_category}}</td>
                                                 <td>{{row.charge_sub_category}}</td>
                                                 <td>{{row.amount}}</td>
@@ -368,10 +396,13 @@
                                             <tr ng-show="pharmacyCharges.length > 0">
                                                 <th></th>
                                                 <th></th>
+                                                <th></th>
                                                 <th>Category</th>
                                                 <th>Bill No</th>
                                                 <th>Payment Type</th>
                                                 <th>Bill Amount</th>
+                                                <th></th>
+                                                <th></th>
                                                 <th align="right" style="text-align:right;">Pending Amount</th>
                                             </tr>
                                         </thead>
@@ -380,13 +411,19 @@
                                             <!-- Pharmacy Charges -->
                                             <tr ng-init="expanded_4 = true;" ng-show="pharmacyCharges.length > 0">
                                                 <td align="center" valign="middle"></td>
+                                                <td>
+                                                    <label class="i-checks">
+                                                        <input id="pharmacy_selectall" ng-model="pharmacy_selectall" ng-true-value="'1'" ng-false-value="'0'" ng-click="updateCheckbox('pharmacy')" type="checkbox" name="pharmacy_selectall" class="">
+                                                        <i></i>
+                                                    </label>&nbsp; &nbsp;
+                                                </td>
                                                 <td> 
                                                     <button ng-click="expanded_4 = !expanded_4" target="#moreless" ui-toggle-class="show" class="btn btn-sm btn-default hms-plus">
                                                         <i ng-if="!expanded_4" class="fa fa-plus text"></i>
                                                         <i ng-if="expanded_4" class="fa fa-minus text"></i>
                                                     </button>
                                                 </td>
-                                                <td colspan="5">
+                                                <td colspan="9">
                                                     <b> 
                                                         <span class="badge bg-primary ng-binding">Category : Pharmacy Charges</span> 
                                                     </b>
@@ -396,13 +433,16 @@
                                                 <td align="center" valign="middle"></td>
                                                 <td>
                                                     <label class="i-checks m-b-none">
-                                                        <input id="pharmacy_{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="addChargesAmount(key, 'pharmacy', row.billings_total_balance_amount, '0', '0', row.sale_id)"><i></i>
+                                                        <input ng-model="row.selected" ng-checked="row.selected == '1'" id="pharmacy_{{key}}" type="checkbox" name="status" ng-click="addChargesAmount(key, 'pharmacy', row.billings_total_balance_amount, '0', '0', row.sale_id)"><i></i>
                                                     </label>
                                                 </td>
+                                                <td></td>
                                                 <td>Pharmacy Charges</td>
                                                 <td>{{row.bill_no}}</td>
                                                 <td>{{row.bill_payment}}</td>
                                                 <td>{{row.bill_amount}}</td>
+                                                <td></td>
+                                                <td></td>
                                                 <td align="right" style="text-align:right;"> {{row.billings_total_balance_amount}} </td>
                                             </tr>
                                         </tbody>
