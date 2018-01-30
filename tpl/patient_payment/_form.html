@@ -241,39 +241,32 @@
                                         </div>
                                     </div>
                                     <table  class="table table-striped b-t b-light">
-                                        <tr ng-show="recurring != 0">
-                                            <td align="center" valign="middle"></td>
-                                            <td>
-                                                <label class="i-checks m-b-none">
-                                                    <input id="recurring_0" class="enc_chk" type="checkbox" name="b[]" ng-click="addChargesAmount('0', 'recurring', recurring)"><i></i>
-                                                </label>
-                                            </td>
-                                            <td><span class="badge bg-success ng-binding">Category : Recurring Charges</span></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td align="right" style="text-align:right;">{{recurring}}</td>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>Category</th>
+                                            <th>Headers</th>
+                                            <th>Charge</th>
+                                            <th>Count</th>
+                                            <th>Concession</th>
+                                            <th>Extra</th>
+                                            <th align="right" style="text-align:right;">Total Price</th>
                                         </tr>
-                                    </table>
-                                    <table  class="table table-striped b-t b-light">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th></th>
-                                                <th></th>
-                                                <th>Category</th>
-                                                <th>Headers</th>
-                                                <th>Charge</th>
-                                                <th>Count</th>
-                                                <th>Concession</th>
-                                                <th>Extra</th>
-                                                <th align="right" style="text-align:right;">Total Price</th>
-                                            </tr>
-                                        </thead>
                                         <tbody>
+                                            <!-- Recurring -->
+                                            <tr ng-show="recurring != 0">
+                                                <td align="center" valign="middle"></td>
+                                                <td>
+                                                    <label class="i-checks m-b-none">
+                                                        <input id="recurring_0" class="enc_chk" type="checkbox" name="b[]" ng-click="addChargesAmount('0', 'recurring', recurring)"><i></i>
+                                                    </label>
+                                                </td>
+                                                <td></td>
+                                                <td colspan="6"><span class="badge bg-info ng-binding">Category : Recurring Charges</span></td>
+                                                <td align="right" style="text-align:right;">{{recurring}}</td>
+                                            </tr>
+                                            
                                             <!-- Professional -->
                                             <tr ng-init="expanded_1 = true;" ng-show="professional.length > 0">
                                                 <td align="center" valign="middle"></td>
@@ -289,7 +282,7 @@
                                                         <i ng-if="expanded_1" class="fa fa-minus text"></i>
                                                     </button>
                                                 </td>
-                                                <td colspan="9">
+                                                <td colspan="7">
                                                     <b> 
                                                         <span class="badge bg-success ng-binding">Category : Professional Charges</span> 
                                                     </b>
@@ -327,7 +320,7 @@
                                                         <i ng-if="expanded_2" class="fa fa-minus text"></i>
                                                     </button>
                                                 </td>
-                                                <td colspan="9">
+                                                <td colspan="7">
                                                     <b> 
                                                         <span class="badge bg-success ng-binding">Category : Procedure Charges</span> 
                                                     </b>
@@ -365,7 +358,7 @@
                                                         <i ng-if="expanded_3" class="fa fa-minus text"></i>
                                                     </button>
                                                 </td>
-                                                <td colspan="9">
+                                                <td colspan="7">
                                                     <b> 
                                                         <span class="badge bg-success ng-binding">Category : Other Charges</span> 
                                                     </b>
@@ -388,27 +381,19 @@
                                                 <td align="right" style="text-align:right;"> {{row.total_charge_amount}} </td>
                                             </tr>
 
-                                        </tbody>
-                                    </table>
-
-                                    <table class="table table-striped b-t b-light">
-                                        <thead>
+                                            <!-- pharmacyCharges START-->
                                             <tr ng-show="pharmacyCharges.length > 0">
                                                 <th></th>
                                                 <th></th>
                                                 <th></th>
                                                 <th>Category</th>
                                                 <th>Bill No</th>
+                                                <th>Sale Date</th>
                                                 <th>Payment Type</th>
                                                 <th>Bill Amount</th>
                                                 <th></th>
-                                                <th></th>
                                                 <th align="right" style="text-align:right;">Pending Amount</th>
                                             </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            <!-- Pharmacy Charges -->
                                             <tr ng-init="expanded_4 = true;" ng-show="pharmacyCharges.length > 0">
                                                 <td align="center" valign="middle"></td>
                                                 <td>
@@ -423,7 +408,7 @@
                                                         <i ng-if="expanded_4" class="fa fa-minus text"></i>
                                                     </button>
                                                 </td>
-                                                <td colspan="9">
+                                                <td colspan="7">
                                                     <b> 
                                                         <span class="badge bg-primary ng-binding">Category : Pharmacy Charges</span> 
                                                     </b>
@@ -439,12 +424,13 @@
                                                 <td></td>
                                                 <td>Pharmacy Charges</td>
                                                 <td>{{row.bill_no}}</td>
+                                                <td>{{row.sale_date}}</td>
                                                 <td>{{row.bill_payment}}</td>
                                                 <td>{{row.bill_amount}}</td>
                                                 <td></td>
-                                                <td></td>
                                                 <td align="right" style="text-align:right;"> {{row.billings_total_balance_amount}} </td>
                                             </tr>
+                                            <!-- pharmacyCharges END-->
                                         </tbody>
                                     </table>
                                 </div>
