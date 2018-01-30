@@ -241,8 +241,10 @@ class PatientbillingotherchargeController extends ActiveController {
                         ->select('SUM(total_charge) as total_charge')->one();
         $encounter = \common\models\PatEncounter::find()
                         ->select(['recurring_settlement as total_amount'])
+                        ->addSelect(['concession_amount as concession_amount'])
                         ->where(['encounter_id' => $get['encounter_id']])->one();
-        $recurring = $recurring['total_charge'] - $encounter['total_amount'];
+        $total_charage = $recurring['total_charge'] - (int) $encounter['concession_amount'];
+        $recurring = $total_charage - $encounter['total_amount'];
 
         //Get Professional Charges
         $consultant = PatConsultant::find()
@@ -392,7 +394,6 @@ class PatientbillingotherchargeController extends ActiveController {
                 ->select(['sum(charge_amount) as total_charge_amount'])
                 ->andWhere("encounter_id=" . $encounter_id . "")
                 ->andWhere(['settlement' => 'S'])
-                ->groupBy(['pat_billing_other_charges.charge_cat_id', 'pat_billing_other_charges.charge_subcat_id'])
                 ->one();
         if (!empty($billingCharges)) {
             $billing_write_off_amount = $billingCharges['total_charge_amount'];
