@@ -282,11 +282,11 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
         $scope.saveSettleForm = function () {
             _that = this;
             if (parseFloat(_that.data.net_amount) <= parseFloat(_that.data.writeoff_amount)) {
-                $scope.totalErrormessage = "Write off amount Must be less than to net amount";
+                $scope.totalErrormessage = "Write off amount Must be less than the net amount";
                 return false;
             }
             if ((parseFloat(_that.data.net_amount) - parseFloat(_that.data.already_writeoffAmount)) < parseFloat(_that.data.writeoff_amount)) {
-                $scope.totalErrormessage = "Write off amount Must be less than to net amountssss";
+                $scope.totalErrormessage = "Write off amount calculation mismatch";
                 return false;
             }
             post_url = $rootScope.IRISOrgServiceUrl + '/patientbillingpayment/savesettlementbill';
