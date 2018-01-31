@@ -4,7 +4,7 @@
 
             <div class="col-sm-6">
                 <div class="panel panel-default">
-                    <div class="panel-heading font-bold">Add Payment</div>
+                    <div class="panel-heading font-bold">Payment Details</div>
                     <div class="panel-body">
 
                         <div class="form-group">
@@ -92,7 +92,7 @@
                             <div class="form-group" ng-show="billing_data.balance">
                                 <label class="col-sm-3 control-label">Amount Paid Now * </label>
                                 <div class="col-sm-9">
-                                    <input type="text" ng-model="data.paid_amount" maxlength="50" class="form-control" placeholder="Amount" ng-blur="calculateNetamount()">
+                                    <input type="text" ng-model="data.paid_amount" maxlength="50" class="form-control" placeholder="Amount" ng-keyup="calculateNetamount()" ng-blur="calculateNetamount()">
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg " ng-show="billing_data.balance"></div>

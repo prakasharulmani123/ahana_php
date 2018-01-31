@@ -354,12 +354,11 @@
             <div class="panel panel-default m-b">
                 <div class="panel-heading panel-heading bg-dark font-bold"> <i class="fa fa-medkit"></i> Payments</div>
                 <div class="panel-body">
-
-                    <a check-access-button ng-click="$state.go('patient.addPayment', {id: $state.params.id, enc_id: enc.selected.encounter_id})" class="btn btn-default">
-                        <i class="fa fa-plus-square"></i>&nbsp; Add Payment
-                    </a>
-                    <div class="form-group" ng-if="enc.selected.finalize == '0'"> 
-                        <span ng-if="more_advance_li.length > 0" ng-repeat="(key, li) in more_advance_li">
+                    <div class="form-group" ng-if="add_payment">
+                        <a check-access-button ng-click="$state.go('patient.addPayment', {id: $state.params.id, enc_id: enc.selected.encounter_id})" class="btn btn-default">
+                            <i class="fa fa-plus-square"></i>&nbsp; Add Payment
+                        </a>
+                        <span ng-show="enc.selected.finalize == '0'" ng-if="more_advance_li.length > 0" ng-repeat="(key, li) in more_advance_li">
                             <a check-access-custom2 ng-if="li.mode == 'sref'" ui-sref="{{li.href}}" class="btn btn-default"> <i class="{{li.i_class}}"></i> &nbsp;{{li.name}}</a>    
                             <a check-access-custom3 ng-if="li.mode == 'click'" ng-click="{{li.href}}" class="btn btn-default" data-url='{{li.url}}'> <i class="{{li.i_class}}"></i> &nbsp;{{li.name}}</a>
                         </span>

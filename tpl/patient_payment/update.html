@@ -7,7 +7,7 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-8" ng-init="data.formtype = 'update'; loadForm();" novalidate="">
+            <div class="col-sm-12" ng-init="data.formtype = 'update'; loadForm();" novalidate="">
                 <form name="paymentForm" class="form-horizontal form-validation">
                      <input type="hidden" ng-model="data.payment_id">
                     <div ng-include="'tpl/patient_payment/_form.html'">

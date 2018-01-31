@@ -209,6 +209,11 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                             sel_enc = sel_enc[0];
                         }
                         $scope.enc.selected = sel_enc;
+                        if(($scope.enc.selected.encounter_status == '0') && ($scope.enc.selected.viewChargeCalculation.balance == '0')) {
+                            $scope.add_payment = false;
+                        } else {
+                            $scope.add_payment = true;
+                        }
                     }
                 });
             }

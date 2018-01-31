@@ -281,7 +281,7 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
 
         $scope.saveSettleForm = function () {
             _that = this;
-            if (parseFloat(_that.data.net_amount) <= parseFloat(_that.data.writeoff_amount)) {
+            if (parseFloat(_that.data.net_amount) < parseFloat(_that.data.writeoff_amount)) {
                 $scope.totalErrormessage = "Write off amount Must be less than the net amount";
                 return false;
             }
