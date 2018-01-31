@@ -201,7 +201,18 @@ class DefaultController extends Controller {
             }
             //Run Active schedule Charge
             $active_scheduleCharges = PatScheduleCharge::find()->tenant($post['tenant_id'])->andWhere(['cron_status' => '1'])->all();
-            
+
+            foreach ($active_scheduleCharges as $key => $active_scheduleCharge) {
+                Yii::$app->hepler->updateOthercharges($active_scheduleCharge, $active_scheduleCharge->encounter);
+            }
+        }
+    }
+
+    public function actionUpdateschedulemanually() {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
+            $active_scheduleCharges = PatScheduleCharge::find()->tenant($post['tenant_id'])->andWhere(['cron_status' => '1'])->all();
+
             foreach ($active_scheduleCharges as $key => $active_scheduleCharge) {
                 Yii::$app->hepler->updateOthercharges($active_scheduleCharge, $active_scheduleCharge->encounter);
             }
