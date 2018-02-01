@@ -1128,7 +1128,7 @@
                                                             <div class="panel panel-default">
                                                                 <div class="panel-heading font-bold">Temperature</div>
                                                                 <div class="panel-body">
-                                                                    <div ui-jq="plot" ui-refresh="tem_graph_data" ui-options="
+                                                                    <div ng-if="tem_graph_data" ui-jq="plot" ui-refresh="tem_graph_data" ui-options="
                                                                          [
                                                                          { data: {{tem_graph_data}}, points: { show: true }, lines: { show: true, fillColor: { colors: [{ opacity: 0.1 }, { opacity: 0.1}] } } }
                                                                          ], 
@@ -1161,7 +1161,7 @@
                                                             <div class="panel panel-default">
                                                                 <div class="panel-heading font-bold">Blood Pressure</div>
                                                                 <div class="panel-body">
-                                                                    <div ui-jq="plot" ui-refresh="bps_graph_data" ui-options="
+                                                                    <div ng-if="bps_graph_data" ui-jq="plot" ui-refresh="bps_graph_data" ui-options="
                                                                          [
                                                                          { data: {{bps_graph_data}}, label: 'systolic', points: { show: true }, lines: { show: true,  fillColor: { colors: [{ opacity: 0.1 }, { opacity: 0.1}] } } }, 
                                                                          { data: {{bpd_graph_data}}, label: 'diastolic', points: { show: true }, lines: { show: true, fillColor: { colors: [{ opacity: 0.1 }, { opacity: 0.1}] } } }
@@ -1196,7 +1196,7 @@
                                                             <div class="panel panel-default">
                                                                 <div class="panel-heading font-bold">Pulse Rate</div>
                                                                 <div class="panel-body">
-                                                                    <div ui-jq="plot" ui-refresh="pulse_graph_data" ui-options="
+                                                                    <div ng-if="pulse_graph_data" ui-jq="plot" ui-refresh="pulse_graph_data" ui-options="
                                                                          [
                                                                          { data: {{pulse_graph_data}}, points: { show: true }, lines: { show: true, fillColor: { colors: [{ opacity: 0.1 }, { opacity: 0.1}] } } }
                                                                          ], 
@@ -1228,7 +1228,7 @@
                                                             <div class="panel panel-default">
                                                                 <div class="panel-heading font-bold">Weight</div>
                                                                 <div class="panel-body">
-                                                                    <div ui-jq="plot" ui-refresh="weight_graph_data" ui-options="
+                                                                    <div ng-if="weight_graph_data" ui-jq="plot" ui-refresh="weight_graph_data" ui-options="
                                                                          [
                                                                          { data: {{weight_graph_data}},points: { show: true }, lines: { show: true, fillColor: { colors: [{ opacity: 0.1 }, { opacity: 0.1}] } } }
                                                                          ], 
@@ -1260,7 +1260,7 @@
                                                             <div class="panel panel-default">
                                                                 <div class="panel-heading font-bold">Height</div>
                                                                 <div class="panel-body">
-                                                                    <div ui-jq="plot" ui-refresh="height_graph_data" ui-options="
+                                                                    <div ng-if="height_graph_data" ui-jq="plot" ui-refresh="height_graph_data" ui-options="
                                                                          [
                                                                          { data: {{height_graph_data}}, points: { show: true }, lines: { show: true, fillColor: { colors: [{ opacity: 0.1 }, { opacity: 0.1}] } } }
                                                                          ],
@@ -1292,7 +1292,7 @@
                                                             <div class="panel panel-default">
                                                                 <div class="panel-heading font-bold">SP02</div>
                                                                 <div class="panel-body">
-                                                                    <div ui-jq="plot" ui-refresh="sp02_graph_data" ui-options="
+                                                                    <div ng-if="sp02_graph_data" ui-jq="plot" ui-refresh="sp02_graph_data" ui-options="
                                                                          [
                                                                          { data: {{sp02_graph_data}}, points: { show: true }, lines: { show: true, fillColor: { colors: [{ opacity: 0.1 }, { opacity: 0.1}] } } }
                                                                          ],
@@ -1324,7 +1324,7 @@
                                                             <div class="panel panel-default">
                                                                 <div class="panel-heading font-bold">Pain Score</div>
                                                                 <div class="panel-body">
-                                                                    <div ui-jq="plot" ui-refresh="pain_graph_data" ui-options="
+                                                                    <div ng-if="pain_graph_data" ui-jq="plot" ui-refresh="pain_graph_data" ui-options="
                                                                          [
                                                                          { data: {{pain_graph_data}}, points: { show: true }, lines: { show: true, fillColor: { colors: [{ opacity: 0.1 }, { opacity: 0.1}] } } }
                                                                          ],
@@ -1353,7 +1353,6 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
                                                 </accordion-group>
                                                 <accordion-group is-open="status.open"  class="">
                                                     <accordion-heading> <i class="fa fa-plus" ng-class="{'fa-minus': status.open, 'fa-plus': !status.open}"></i> &nbsp;&nbsp;Add Vitals </accordion-heading>
