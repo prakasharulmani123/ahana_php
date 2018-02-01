@@ -32,6 +32,7 @@ angular.module('app')
                     version: '',
                     username: '',
                     logged_tenant_id: '',
+                    org_logo:'',
                     // for chart colors
                     color: {
                         primary: '#7266ba',
@@ -849,6 +850,7 @@ angular.module('app')
                                     if (response.data.success) {
                                         $scope.switched_branches_list = response.data.branches;
                                         $scope.branch_switch.branch_id = response.data.default_branch;
+                                        $scope.app.org_logo = response.data.org_logo;
                                     }
                                 }
                         );
