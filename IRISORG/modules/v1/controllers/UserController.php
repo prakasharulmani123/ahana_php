@@ -585,7 +585,7 @@ class UserController extends ActiveController {
             $branches = ArrayHelper::map($branches, $map[0], $map[1]);
         }
 
-        return ['success' => true, 'branches' => $branches, 'default_branch' => strval(Yii::$app->user->identity->logged_tenant_id)];
+        return ['success' => true, 'branches' => $branches, 'default_branch' => strval(Yii::$app->user->identity->logged_tenant_id), 'org_logo'=> \yii\helpers\Url::to("@web/images/organization_logo/".Yii::$app->user->identity->user->organization->org_logo."", true)];
     }
 
     public function actionGetdoctorslist() {
