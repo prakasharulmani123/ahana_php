@@ -3141,6 +3141,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     data: {doc_id: doc_id}
                 }).then(
                         function (response) {
+                            $scope.loadbar('hide');
                             if (response.data.success === true) {
                                 $scope.successMessage = 'Document Deleted Successfully';
                                 $scope.loadmedicalcasehistory();
