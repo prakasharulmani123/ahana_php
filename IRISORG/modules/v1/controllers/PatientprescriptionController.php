@@ -143,14 +143,14 @@ class PatientprescriptionController extends ActiveController {
                 $encounter_id = $get['encounter_id'];
                 $data = PatPrescription::find()->tenant()
                         ->active()
-                        ->where("patient_id IN ($all_patient_id->allpatient)")
+                        ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                         ->andWhere(['encounter_id' => $encounter_id])
                         ->orderBy(['created_at' => SORT_DESC])->limit($get['pageSize'])
                         ->offset($offset)
                         ->all();
                 $totalCount = PatPrescription::find()->tenant()
                         ->active()
-                        ->where("patient_id IN ($all_patient_id->allpatient)")
+                        ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                         ->andWhere(['encounter_id' => $encounter_id])
                         ->orderBy(['created_at' => SORT_DESC])
                         ->limit($get['pageSize'])
@@ -161,7 +161,7 @@ class PatientprescriptionController extends ActiveController {
                     $pres_date = $get['date'];
                     $data = PatPrescription::find()->tenant()
                             ->active()
-                            ->where("patient_id IN ($all_patient_id->allpatient)")
+                            ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                             ->andWhere(['DATE(pres_date)' => $pres_date])
                             ->orderBy(['created_at' => SORT_DESC])
                             ->limit($get['pageSize'])
@@ -169,7 +169,7 @@ class PatientprescriptionController extends ActiveController {
                             ->all();
                     $totalCount = PatPrescription::find()->tenant()
                             ->active()
-                            ->where("patient_id IN ($all_patient_id->allpatient)")
+                            ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                             ->andWhere(['DATE(pres_date)' => $pres_date])
                             ->orderBy(['created_at' => SORT_DESC])
                             ->limit($get['pageSize'])
@@ -178,14 +178,14 @@ class PatientprescriptionController extends ActiveController {
                 } else {
                     $data = PatPrescription::find()->tenant()
                             ->active()
-                            ->where("patient_id IN ($all_patient_id->allpatient)")
+                            ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                             ->orderBy(['created_at' => SORT_DESC])
                             ->limit($get['pageSize'])
                             ->offset($offset)
                             ->all();
                     $totalCount = PatPrescription::find()->tenant()
                             ->active()
-                            ->where("patient_id IN ($all_patient_id->allpatient)")
+                            ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                             ->orderBy(['created_at' => SORT_DESC])
                             ->limit($get['pageSize'])
                             ->offset($offset)
