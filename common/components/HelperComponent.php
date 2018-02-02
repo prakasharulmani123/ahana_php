@@ -191,7 +191,7 @@ class HelperComponent extends Component {
             'charge_cat_id' => $Charges->charge_cat_id,
             'charge_subcat_id' => $Charges->charge_subcat_id,
             'charge_amount' => $Charges->charge_amount,
-            'status' => 1,
+            'status' => 0,
             'created_by' => $Charges->created_by,
         ];
         $billing_charge->attributes = $data;
