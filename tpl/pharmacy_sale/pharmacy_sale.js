@@ -1336,10 +1336,26 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         $scope.printFooter = function () {
             return {
-                text: [{text: 'PHARMACY SERVICE - 24 HOURS'}],
-                fontSize: 8,
-                margin: 0,
-                alignment: 'center'
+                layout: 'noBorders',
+                table: {
+                    widths: ['auto', '*'],
+                    body: [
+                        [
+                            {
+                                text: 'PHARMACY SERVICE - 24 HOURS',
+                                fontSize: 07,
+                                margin: [15, 0, 0, 0]
+                            },
+                            {
+                                text: 'DEVELOPED BY : SUMANAS TECHNOLOGIES',
+                                //bold: true,
+                                fontSize: 07,
+                                alignment: 'right',
+                                margin: [0, 0, 15, 0]
+                            }
+                        ],
+                    ]
+                },
             };
         }
 

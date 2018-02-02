@@ -624,7 +624,28 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
         }
 
         $scope.printFooter = function () {
-//            return true;
+            return {
+                layout: 'noBorders',
+                table: {
+                    widths: ['auto', '*'],
+                    body: [
+                        [
+                            {
+                                text: 'PHARMACY SERVICE - 24 HOURS',
+                                fontSize: 07,
+                                margin: [15, 0, 0, 0]
+                            },
+                            {
+                                text: 'DEVELOPED BY : SUMANAS TECHNOLOGIES',
+                                //bold: true,
+                                fontSize: 07,
+                                alignment: 'right',
+                                margin: [0, 0, 15, 0]
+                            }
+                        ],
+                    ]
+                },
+            };
         }
 
         $scope.printStyle = function () {
@@ -1846,7 +1867,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
             }).then(
                     function (response) {
                         if (response.data.success === true) {
-                            $state.go('pharmacy.saleReturnUpdate', {id:sale_id});
+                            $state.go('pharmacy.saleReturnUpdate', {id: sale_id});
                         } else {
                             alert("Can't Edit this sale return bill, Because its depends sales bill");
                         }
