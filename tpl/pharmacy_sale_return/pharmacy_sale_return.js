@@ -625,26 +625,10 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
 
         $scope.printFooter = function () {
             return {
-                layout: 'noBorders',
-                table: {
-                    widths: ['auto', '*'],
-                    body: [
-                        [
-                            {
-                                text: 'PHARMACY SERVICE - 24 HOURS',
-                                fontSize: 07,
-                                margin: [15, 0, 0, 0]
-                            },
-                            {
-                                text: 'DEVELOPED BY : SUMANAS TECHNOLOGIES',
-                                //bold: true,
-                                fontSize: 07,
-                                alignment: 'right',
-                                margin: [0, 0, 15, 0]
-                            }
-                        ],
-                    ]
-                },
+                text: [{text: 'PHARMACY SERVICE - 24 HOURS \n DEVELOPED BY : SUMANAS TECHNOLOGIES'}],
+                fontSize: 7,
+                margin: 0,
+                alignment: 'center'
             };
         }
 
