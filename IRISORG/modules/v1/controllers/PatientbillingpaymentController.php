@@ -137,10 +137,10 @@ class PatientbillingpaymentController extends ActiveController {
             $model->category = 'S';
             $model->save();
         }
-
+        
         if (isset($post['pharmacy_id']) && !empty($post['pharmacy_id'])) {
-            $sale_id = join("','", $post['pharmacy_id']);
-            $sales = PhaSale::find()->andWhere(['sale_id' => $sale_id])->all();
+            $sale_id = join(",", $post['pharmacy_id']);
+            $sales = PhaSale::find()->where("sale_id IN ($sale_id)")->all();
             foreach ($sales as $key => $sale) {
                 $model = new PhaSaleBilling;
                 $model->sale_id = $sale->sale_id;
