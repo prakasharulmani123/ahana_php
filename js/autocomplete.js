@@ -366,7 +366,9 @@
 
         this.isInline = function () {
             // if a dropdown jquery parent is provided it is assumed inline
-            return angular.isElement(that.options.dropdownParent);
+            if(typeof that.options != 'undefined')
+                return angular.isElement(that.options.dropdownParent);
+            return false;
         };
 
         this.init = function (options) {
