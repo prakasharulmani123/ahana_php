@@ -2461,6 +2461,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                                             'tpl/patient_billing/patient_billing.js?v=' + APP_VERSION,
                                             'tpl/modal_form/modal.password_auth.js?v=' + APP_VERSION,
                                             'tpl/modal_form/modal.print_bill.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.refund_amount.js?v=' + APP_VERSION,
                                         ]);
                                     }
                             );

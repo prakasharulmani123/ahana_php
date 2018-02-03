@@ -209,7 +209,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                             sel_enc = sel_enc[0];
                         }
                         $scope.enc.selected = sel_enc;
-                        if(($scope.enc.selected.encounter_status == '0') && ($scope.enc.selected.viewChargeCalculation.balance == '0')) {
+                        if (($scope.enc.selected.encounter_status == '0') && ($scope.enc.selected.viewChargeCalculation.balance < 0)) {
                             $scope.add_payment = false;
                         } else {
                             $scope.add_payment = true;
@@ -284,7 +284,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             _that = this;
 
             angular.extend(_that.data, {total_amount: total});
-            if((parseFloat(_that.data.concession_amount)=='0') || (!_that.data.concession_amount))
+            if ((parseFloat(_that.data.concession_amount) == '0') || (!_that.data.concession_amount))
             {
                 $scope.errorData = 'Concession Amount is invalid. Kindly check the amount';
                 return false;
@@ -322,6 +322,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
         $scope.loadBillingCharges = function (enc_id) {
             $scope.billing = {};
             $scope.recurr_billing = {};
+            $scope.loadRefundCharge(enc_id);
             $scope.loadRecurringBilling(enc_id);
             $scope.loadNonRecurringBilling(enc_id);
             $scope.loadRoomChargeHistory(enc_id);
@@ -426,6 +427,28 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             });
         }
 
+        $scope.loadRefundCharge = function (enc_id) {
+            $http({
+                method: 'GET',
+                url: $rootScope.IRISOrgServiceUrl + '/patientrefundpayment/getrefundcharge?encounter_id=' + enc_id,
+            }).success(
+                    function (response) {
+                        $scope.refund = response.model;
+                        if ($scope.refund) {
+                            $scope.refund_amount = $scope.refund.refund_amount;
+                        } else {
+                            $scope.refund_amount = 0;
+                        }
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
         $scope.moreOptions = function (key, type, pk_id, link_id, concession_amount, extra_amount, mode_id) {
             var row_id = '#enc_' + type + '_' + key;
             $scope.more_li = [];
@@ -516,6 +539,30 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             var modalInstance = $modal.open({
                 templateUrl: 'tpl/modal_form/modal.password_auth.html',
                 controller: "PasswordAuthController",
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    },
+                }
+            });
+            modalInstance.data = {
+                encounter_id: encounter_id,
+                column: column,
+                value: value,
+                title: title,
+            };
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+        }
+
+        $scope.refundAmount = function (encounter_id, column, value, title) {
+            var modalInstance = $modal.open({
+                templateUrl: 'tpl/modal_form/modal.refund_amount.html',
+                controller: "RefundAmountController",
                 resolve: {
                     scope: function () {
                         return $scope;
@@ -655,4 +702,20 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             return parseFloat(numberNoCommas);
         }
 
+        $scope.increasePrintCount = function () {
+            $http({
+                method: 'GET',
+                url: $rootScope.IRISOrgServiceUrl + '/patientrefundpayment/increaseprintcount?encounter_id=' + $scope.enc.selected.encounter_id,
+            }).success(
+                    function (response) {
+                        return true;
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
     }]);

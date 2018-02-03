@@ -9,6 +9,7 @@
             <a data-button="patient.authorize" check-access-custom class="btn btn-default btn-success" ng-show="enc.selected.finalize != '0' && enc.selected.authorize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '1', 'Authorize')"> <i class="fa fa-eye"></i> Authorize</a>
             <a data-button="patient.unathorize" check-access-custom class="btn btn-default btn-dark" ng-show="enc.selected.authorize != '0' && enc.selected.discharge == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '0', 'Unauthorize')"> <i class="fa fa-eye-slash"></i> Unauthorize</a>
             <a data-button="patient.admindischarge" check-access-custom class="btn btn-default btn-success" ng-show="enc.selected.authorize != '0' && enc.selected.discharge == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'discharge', '1', 'Administrative Discharge')"> <i class="fa fa-home"></i> Administrative Discharge</a>
+            <a data-button="patient.refundamount" class="btn btn-default btn-success" ng-show="enc.selected.encounter_status == '0' && billing_total_balance < 0" ng-click="refundAmount(enc.selected.encounter_id, 'discharge', '1', 'Administrative Discharge')"> <i class="fa fa-plus"></i> Add Refund Amount</a>
             <button check-access-button ng-click="$state.go('patient.viewBillingHistory', {id: $state.params.id, enc_id: enc.selected.encounter_id})" class="btn btn-sm btn-info">
                 <i class="fa fa-file-text"></i> &nbsp; View Billing History
             </button>
@@ -112,7 +113,8 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-5">  <b>Amount Payable : </b>   </div>
-                                <div class="col-sm-7"> <span class="label bg-danger">{{(billing.total_price) - (billing_total_paid + billing.discount) | number:2}}</span> </div>
+                                <span ng-hide="true">{{billing_total_balance = (billing.total_price) - (billing_total_paid + billing.discount - parseFloat(refund_amount))}}</span>
+                                <div class="col-sm-7"> <span class="label bg-danger">{{billing_total_balance| number:2}}</span> </div>
                             </div>
 
                         </div>
@@ -428,6 +430,66 @@
             </div>
         </div>
 
+        <!-- Refund Charges -->
+        <div ng-show="refund" class="wrapper-md p-b">
+            <div class="panel panel-default m-b">
+                <div class="panel-heading panel-heading bg-dark font-bold"> <i class="fa fa-medkit"></i> Refund Payments</div>
+                <div class="panel-body">
+                    <table  class="table table-striped b-t b-light">
+                        <thead>
+                            <tr>
+                                <th colspan="2">&nbsp;</th>
+                                <th>Category</th>
+                                <th>Date</th>
+                                <th>Mode</th>
+                                <th>Details</th>
+                                <th>Print Bill</th>
+                                <th align="right" style="text-align:right;">Refund Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-hide="isLoading">
+                            <!-- Refund Charges -->
+                            <tr>
+                                <td align="center" valign="middle"></td>
+                                <td></td>
+                                <td>Refund Charge</td>
+                                <td>{{refund.refund_date| moment:'DD/MM/YYYY HH:mm:ss'}} </td>
+                                <td> 
+                                    <p ng-show="refund.payment_mode == 'CA'">Cash</p>
+                                    <p ng-show="refund.payment_mode == 'CD'">Card</p>
+                                    <p ng-show="refund.payment_mode == 'ON'">Online</p>
+                                    <p ng-show="refund.payment_mode == 'CH'">Cheque</p>
+                                </td>
+                                <td>
+                                    <div ng-show="refund.payment_mode == 'CD'">
+                                        <p> <b> Card Type : </b>{{refund.card_type}}</p>
+                                        <p> <b> Card Number : </b>{{refund.card_number}}</p>
+                                    </div>
+                                    <div ng-show="refund.payment_mode == 'CH'">
+                                        <p> <b> Bank Name : </b>{{refund.bank_name}}</p>
+                                        <p> <b> Cheque Number : </b>{{refund.cheque_number}}</p>
+                                        <p> <b> Date : </b>{{refund.bank_date}}</p>
+                                    </div>
+                                    <div ng-show="refund.payment_mode == 'ON'">
+                                        <p> <b> Bank Name : </b>{{refund.bank_name}}</p>
+                                        <p> <b> Ref No : </b>{{refund.ref_no}}</p>
+                                        <p> <b> Date : </b>{{refund.bank_date}}</p>
+                                    </div>
+                                    <div ng-show="refund.trans_mode == 'CA'"> - </div> 
+                                </td>
+                                <td>                             
+                                    <button class="btn btn-sm btn-primary" ng-click="setVoucher(refund, 'refundvoucherPrint'); increasePrintCount();">
+                                        <i class="fa fa-print"></i>
+                                    </button>
+                                </td>
+                                <td align="right"> {{refund.refund_amount| number:2}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <div class="wrapper-md p-b">
             <div class="panel panel-default m-b">
                 <div class="panel-heading panel-heading bg-dark font-bold"> 
@@ -447,6 +509,12 @@
     <div id='voucherPrint' class="hide">
         <div ng-include="'tpl/patient_billing/_voucher_print.html'">
             {% include 'tpl/patient_billing/_voucher_print.html' %}
+        </div>
+    </div>
+
+    <div id='refundvoucherPrint' class="hide">
+        <div ng-include="'tpl/patient_billing/_refund_voucher_print.html'">
+            {% include 'tpl/patient_billing/_refund_voucher_print.html' %}
         </div>
     </div>
 
