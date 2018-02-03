@@ -1427,7 +1427,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                                 angular.extend(items, {is_favourite: 1});
                                                             }
 
-                                                            PrescriptionService.addPrescriptionItem(items);
+                                                            //Multiple entries created, Check duplicate once again 
+                                                            var chkDuplicate = $filter('filter')(PrescriptionService.getPrescriptionItems(), {product_id: items.product_id}, true);
+                                                            if (chkDuplicate.length == 0) {
+                                                                PrescriptionService.addPrescriptionItem(items);
+                                                            }
                                                             loop_start = parseFloat(loop_start) + parseFloat(1);
                                                             if (loop_total == loop_start) {
                                                                 $timeout(function () {
