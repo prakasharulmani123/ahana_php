@@ -80,7 +80,7 @@ class PatScheduleCharge extends RActiveRecord {
             $activity = 'Schedule Charge Added Successfully (#' . $this->encounter_id . ' )';
         else
             $activity = 'Schedule Charge Stoped Successfully (#' . $this->encounter_id . ' )';
-        CoAuditLog::insertAuditLog(PatScheduleCharge::tableName(), $this->schedule_charge_id, $activity);
+        CoAuditLog::insertAuditLog(PatScheduleCharge::tableName(), $this->schedule_charge_id, $activity, $this->tenant_id, $this->created_by, 'patient.scheduleCharge');
         return parent::afterSave($insert, $changedAttributes);
     }
 
