@@ -76,14 +76,15 @@ class PatientscanneddocumentsController extends ActiveController {
                     ->andWhere(['scanned_doc_name' => $get['doc_name'],
                         'encounter_id' => $get['encounter_id'],
                         'scanned_doc_creation_date' => $get['date_time']
-                            ])
+                    ])
                     //->groupBy('encounter_id','scanned_doc_name','patient_id')
                     ->all();
             if (!empty($scanned_document)) {
                 $all_file = [];
                 foreach ($scanned_document as $key => $value) {
                     $file = file_get_contents(\Yii::$app->basePath . '/web/uploads/' . $value->file_name);
-                    $result[$key] = ['data' => $value, 'file' => base64_encode($file)];
+                    $file_url = \yii\helpers\Url::to("@web/uploads/" . $value->file_name . "", true);
+                    $result[$key] = ['data' => $value, 'file' => base64_encode($file), 'file_url' => $file_url];
                 }
                 //$file = file_get_contents(\Yii::$app->basePath . '/web/uploads/' . $scanned_document->file_name);
                 //return ['success' => true, 'result' => $scanned_document, 'file' => base64_encode($file)];
@@ -127,8 +128,8 @@ class PatientscanneddocumentsController extends ActiveController {
     //Save Create / Update
     public function actionSavedocument() {
         $post = Yii::$app->getRequest()->post();
-        $post['scanned_doc_creation_date'] = $post['year'].'-'.$post['month'].'-'.$post['day']. date('H:i:s');
-        
+        $post['scanned_doc_creation_date'] = $post['year'] . '-' . $post['month'] . '-' . $post['day'] . date('H:i:s');
+
         $patient = PatPatient::getPatientByGuid($post['patient_id']);
         $patient_id = $patient->patient_id;
         $encounter_id = $post['encounter_id'];
