@@ -170,13 +170,25 @@ class HelperComponent extends Component {
             if ($otherCharges->until_discharge) {
                 $this->_insertOtherChargesModel($otherCharges->other_charge_id);
             } else {
-                $date_now = date("Y-m-d"); // this format is string comparable
-                if ($date_now <= $otherCharges->until_date) {
+                $fromdate = date('Y-m-d');
+                $todate = date($otherCharges->until_date);
+                $datetime1 = new DateTime($fromdate);
+                $datetime2 = new DateTime($todate);
+                $interval = $datetime1->diff($datetime2);
+                $date_diff = $interval->format('%R%a');
+                if ($date_diff >= 0) {
                     $this->_insertOtherChargesModel($otherCharges->other_charge_id);
                 } else {
                     $otherCharges->cron_status = '0';
                     $otherCharges->save(false);
                 }
+//                $date_now = date("Y-m-d"); // this format is string comparable
+//                if ($date_now <= $otherCharges->until_date) {
+//                    $this->_insertOtherChargesModel($otherCharges->other_charge_id);
+//                } else {
+//                    $otherCharges->cron_status = '0';
+//                    $otherCharges->save(false);
+//                }
             }
         }
     }
