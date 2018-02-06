@@ -1666,13 +1666,16 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.lastSelected = {};
-        $("body").on('keydown', '#prescription_global_search', function (e) {
+        //.off() - This will remove all event handlers:
+        $("body").off().on('keydown', '#prescription_global_search', function (e) {
             var selected = $("#prescriptioncont-header .selected");
             var li_count = $("#prescriptioncont-header li").length;
             if (e.keyCode == 40 || e.keyCode == 38) {
                 $("#prescriptioncont-header li").removeClass("selected");
-                if (selected.length == 0) {
+                if (selected.length == 0 && e.keyCode == 40) {
                     var selected = $("#prescriptioncont-header li:last");
+                } else if (selected.length == 0 && e.keyCode == 38) {
+                    var selected = $("#prescriptioncont-header li:first");
                 }
 
                 if (li_count == 1) {
