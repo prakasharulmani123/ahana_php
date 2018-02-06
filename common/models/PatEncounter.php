@@ -682,7 +682,7 @@ class PatEncounter extends RActiveRecord {
             $sale_amount = PhaSale::find()
                     ->where([
                         'encounter_id' => $this->encounter_id,
-                        'tenant_id' => $this->tenant_id,
+//                        'tenant_id' => $this->tenant_id, //Hide by Nad, Because Sale may depends other tenant.
                             //'payment_type' => 'CR'
                     ])
                     //->andWhere(['!=', 'payment_status', 'C'])
