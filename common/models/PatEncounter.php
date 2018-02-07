@@ -719,12 +719,14 @@ class PatEncounter extends RActiveRecord {
         return $amount;
     }
 
-    public static function getEncounterListByPatient($tenant = null, $status = '1', $deleted = false, $patient_id = null, $encounter_type = 'IP,OP', $oldencounter) {
-        //echo $oldencounter; die;
+    public static function getEncounterListByPatient($tenant = null, $status = '1', $deleted = false, $patient_id = null, $encounter_type = 'IP,OP', $oldencounter, $limit) {
         if (!$deleted) {
             $list = self::find()->tenant($tenant)->status($status)->active()->encounterType($encounter_type)->andWhere(['patient_id' => $patient_id]);
             if ($oldencounter != 'undefined') {
                 $list->andWhere(['<=', 'DATE(encounter_date)', date('Y-m-d')]);
+            }
+            if ($limit != 'undefined') {
+                $list->limit($limit);    //Prescription screen speedup, get only last encounter id.
             }
             $list = $list->orderBy(['encounter_id' => SORT_DESC])->all();
         } else

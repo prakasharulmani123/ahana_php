@@ -84,7 +84,7 @@ class EncounterController extends ActiveController {
             $model = new PatEncounter();
             $appt_model = new PatAppointment();
             $case_model = new PatPatientCasesheet();
-            $encounter_date = $post['status_date'].' '.$post['status_time'];
+            $encounter_date = $post['status_date'] . ' ' . $post['status_time'];
 
             $model_attr = [
                 'patient_id' => (isset($post['patient_id']) ? $post['patient_id'] : ''),
@@ -369,7 +369,7 @@ class EncounterController extends ActiveController {
                 $filterdate = date('m Y');
                 $filterQuery = "AND DATE_FORMAT(d.encounter_date,'%m %Y') = '$filterdate'";
                 $filterQuery1 = "AND DATE_FORMAT(b.encounter_date,'%m %Y') = '$filterdate'";
-            } else if(@$params['type'] == 'previous') {
+            } else if (@$params['type'] == 'previous') {
                 $start_date = @$params['range_filter_start'];
                 $end_date = @$params['range_filter_end'];
                 $filterQuery = "AND DATE(d.encounter_date) BETWEEN '$start_date' and '$end_date'";
@@ -614,11 +614,15 @@ class EncounterController extends ActiveController {
         if (isset($GET['old_encounter']))
             $oldencounter = $GET['old_encounter'];
 
-        $model = PatEncounter::getEncounterListByPatient($tenant, $status, $deleted, $patient_id, $encounter_type, $oldencounter);
+        $limit = '';
+        if (isset($GET['limit']))
+            $limit = $GET['limit'];
+
+        $model = PatEncounter::getEncounterListByPatient($tenant, $status, $deleted, $patient_id, $encounter_type, $oldencounter, $limit);
 
         return $model;
     }
-    
+
     public function actionGetencounterlistbytenantsamepatient() {
         $GET = Yii::$app->getRequest()->get();
 
