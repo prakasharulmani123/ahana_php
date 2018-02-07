@@ -503,10 +503,10 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                 });
     }
 
-    function GetEncounterListByPatient(tenant, sts, del_sts, pat_id, callback, addtfields, only, old_encounter) {
+    function GetEncounterListByPatient(tenant, sts, del_sts, pat_id, callback, addtfields, only, old_encounter, limit) {
         var response;
 
-        $http.get($rootScope.IRISOrgServiceUrl + '/encounter/getencounterlistbypatient?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&patient_id=' + pat_id + '&addtfields=' + addtfields + '&only=' + only + '&old_encounter=' + old_encounter)
+        $http.get($rootScope.IRISOrgServiceUrl + '/encounter/getencounterlistbypatient?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&patient_id=' + pat_id + '&addtfields=' + addtfields + '&only=' + only + '&old_encounter=' + old_encounter +'&limit=' +limit)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {

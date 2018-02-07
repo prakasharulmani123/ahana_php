@@ -6,8 +6,14 @@
                 <div class="col-sm-3 m-b-xs">
                     <h1 class="m-n h3">Prescription</h1>
                 </div>
-                <div class="col-sm-3 m-b-xs pull-right right">
+                <div class="col-sm-3 m-b-xs pull-right right" ng-if="all_encounters.length == 1">
                     <b> Encounter ID : </b> {{enc.selected.encounter_id}}
+                    <b> Date : </b> {{enc.selected.encounter_date}}
+                </div>
+                <div class="col-sm-4 m-b-xs pull-right right" ng-if="all_encounters.length > 1">
+                    <b style="float: left;"> Encounter ID : </b>
+                    <select style="width: 20%; float: left; margin-right: 10px" class="form-control" ng-model="data.encounter_id" ng-options="all_encounter.encounter_id as all_encounter.encounter_id for all_encounter in all_encounters| orderBy: encounter_id">
+                    </select>
                     <b> Date : </b> {{enc.selected.encounter_date}}
                 </div>
             </div>
@@ -187,7 +193,7 @@
                                                                                                     <div class="col-sm-3">
                                                                                                         <label> Product</label>
                                                                                                         <select class="form-control" name="Product" ng-model="addData.product" ng-options="product as product.full_name for product in products| filter:$viewValue" data-ng-change="setGeneric();
-                                                                                                            getRoutes(false, null, null)">
+                                                                                                                            getRoutes(false, null, null)">
                                                                                                             <option value="">Select Product</option>
                                                                                                         </select>                                                                    
                                                                                                     </div>
@@ -533,10 +539,10 @@
                                                                                 </td>
                                                                                 <td> 
                                                                                     <div id="freq_{{item.item_key}}_3" class="freq_div_{{item.item_key}} freq_3_times" style="width: 75%; float:left">
-<!--                                                                                        e-typeahead-editable="true"
-                                                                                              e-typeahead="consFreq.freq_name_0 for consFreq in currPresMask3 | filter:$viewValue | unique: 'freq_name_0'"
-                                                                                              e-typeahead-on-select="freqChange($item.freq_name_0, '3', item, item.item_key, tableform, '0')"
-                                                                                        e-typeahead-focus=""-->
+                                                                                        <!--                                                                                        e-typeahead-editable="true"
+                                                                                                                                                                                      e-typeahead="consFreq.freq_name_0 for consFreq in currPresMask3 | filter:$viewValue | unique: 'freq_name_0'"
+                                                                                                                                                                                      e-typeahead-on-select="freqChange($item.freq_name_0, '3', item, item.item_key, tableform, '0')"
+                                                                                                                                                                                e-typeahead-focus=""-->
                                                                                         <span editable-text="item.frequency_3_0"                                                                                              
                                                                                               e-auto-complete
                                                                                               e-ac-options="autoCompleteOptions_3_0"
@@ -769,10 +775,10 @@
                                                                                 </td>
                                                                                 <td>{{(item.description_name| uppercase) == 'SYRUP' ? "ml" : "" }}</td>
                                                                                 <td align="center">
-<!--                                                                                    e-typeahead-editable="true"
-                                                                                          e-typeahead="consNoofdays.number_of_days for consNoofdays in consultantNoofdays | unique: 'number_of_days' | limitTo:10 | filter:$viewValue:stateComparator"
-                                                                                          e-typeahead-on-select="numberDaysChange($item.number_of_days, item, item.item_key, tableform)"
-                                                                                    e-typeahead-focus=""-->
+                                                                                    <!--                                                                                    e-typeahead-editable="true"
+                                                                                                                                                                              e-typeahead="consNoofdays.number_of_days for consNoofdays in consultantNoofdays | unique: 'number_of_days' | limitTo:10 | filter:$viewValue:stateComparator"
+                                                                                                                                                                              e-typeahead-on-select="numberDaysChange($item.number_of_days, item, item.item_key, tableform)"
+                                                                                                                                                                        e-typeahead-focus=""-->
                                                                                     <span editable-text="item.number_of_days"
                                                                                           e-auto-complete
                                                                                           e-ac-options="autoCompleteOptionsNoofdays"                                                                                          
@@ -864,7 +870,7 @@
                                                                                         <div class="form-group">
                                                                                             <label for="exampleInputEmail2"><i class="fa fa-calendar"></i> <b> Next Vist </b></label> &nbsp; &nbsp;
                                                                                             <input type="text" id="next_visit_date_picker" class="form-control multimonthdatepicker" ng-model="data.next_visit" ng-click="open($event)" drop-disable prevent-enter="true" ng-change="setDayEmpty();
-                                                                                                getDays();"/>
+                                                                                                    getDays();"/>
                                                                                         </div>
                                                                                         <div class="form-group">
                                                                                             <label for="exampleInputEmail2">
@@ -1116,8 +1122,9 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata        =          {};
-                                        loadVitals();         vitaldata.formtype     =     'add'">
+                                    <div class="row" ng-init="vitaldata = {};
+                                            loadVitals();
+                                            vitaldata.formtype = 'add'">
                                         <div class="col-lg-12"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
@@ -1804,34 +1811,34 @@
 
 <script>
     $(document).ready(function () {
-    //var site_url = $('[ng-controller="PrescriptionController"]').scope().IRISOrgUrl;
-    $('#search-form').on('click', function (e) {
-    e.stopPropagation();
-    });
-    $.getScript("js/slidebars.js", function (data, textStatus, jqxhr) {
-    slidebar();
-    });
+        //var site_url = $('[ng-controller="PrescriptionController"]').scope().IRISOrgUrl;
+        $('#search-form').on('click', function (e) {
+            e.stopPropagation();
+        });
+        $.getScript("js/slidebars.js", function (data, textStatus, jqxhr) {
+            slidebar();
+        });
 //        prescription right navigation
-    $('.expand-notes').click(function (e) {
-    $('#makeit-full').toggleClass('fullscreen');
-    $('.note-full').toggleClass('fullscreen');
-    var div_width = '-' + $('#makeit-full').css('width');
-    $('#sb-site').css('transform', 'translate(' + div_width + ')');
-    $('#sb-site').css('transition', 'none');
-    });
-    $(".multimonthdatepicker").datepicker({
+        $('.expand-notes').click(function (e) {
+            $('#makeit-full').toggleClass('fullscreen');
+            $('.note-full').toggleClass('fullscreen');
+            var div_width = '-' + $('#makeit-full').css('width');
+            $('#sb-site').css('transform', 'translate(' + div_width + ')');
+            $('#sb-site').css('transition', 'none');
+        });
+        $(".multimonthdatepicker").datepicker({
 //            showOn: "button",
 //            buttonImage: site_url + "/img/calendar.gif",
 //            buttonText: "Select date",
-    numberOfMonths: 2,
+            numberOfMonths: 2,
             showButtonPanel: true,
             dateFormat: 'yy-mm-dd',
             minDate: 0
-    });
+        });
     });
     function slidebar() {
-    $.slidebars({
-    scrollLock: true
-    });
+        $.slidebars({
+            scrollLock: true
+        });
     }
 </script>

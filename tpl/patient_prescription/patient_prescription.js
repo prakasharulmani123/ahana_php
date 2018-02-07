@@ -61,7 +61,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         Array.prototype.max = function () {
             return Math.max.apply(null, this);
         };
-
         Array.prototype.min = function () {
             return Math.min.apply(null, this);
         };
@@ -103,10 +102,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             $scope.data.consultant_id = $scope.encounters[0].liveAppointmentBooking.consultant_id;
                             $scope.getConsultantFreq();
                         }
-                        var actEnc = $filter('filter')($scope.encounters, {status: '1'});
-                        $scope.all_encounters = actEnc;
+                        //Get all active encounter
                         $scope.data.encounter_id = $scope.enc.selected.encounter_id;
                         $scope.default_encounter_id = $scope.data.encounter_id;
+                        $rootScope.commonService.GetEncounterListByPatient('', '1', false, $scope.patientObj.patient_id, function (response) {
+                            $scope.all_encounters = response;
+                        }, 'encounter_details');
+                        //var actEnc = $filter('filter')($scope.encounters, {status: '1'});
+                        //$scope.all_encounters = actEnc;
                         $scope.checkVitalaccess();
                         $scope.spinnerbar('hide')
                     } else {
@@ -115,7 +118,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.loadPrevPrescriptionsList();
                         $scope.checkVitalaccess();
                     }
-                }, 'prescription');
+
+                }, 'prescription', '', '', '1');
             }
         }, true);
         $scope.$watch('enc.selected.encounter_id', function (newValue, oldValue) {
@@ -474,7 +478,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             var check_available = localStorage.getItem("Show_available_medicine");
             if (check_available == '1') {
                 angular.forEach($scope.data.prescriptionItems, function (item, key) {
-                    if(!$scope.data.prescriptionItems[key].all_available_medicine) {
+                    if (!$scope.data.prescriptionItems[key].all_available_medicine) {
                         $scope.data.prescriptionItems[key].all_available_medicine = $scope.data.prescriptionItems[key].all_products;
                     }
                     $scope.data.prescriptionItems[key].all_products = $filter('filter')($scope.data.prescriptionItems[key].all_products, {availableQuantity: '!0'});
@@ -1068,7 +1072,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             } else {
                 $scope.duplicateErrormessage = '';
             }
-            
+
 
             /* For print bill */
             $scope.data2 = _that.data;
@@ -1482,7 +1486,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $timeout(function () {
                             $scope.spinnerbar('hide');
                         }, 3000);
-
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading brand!";
@@ -1704,7 +1707,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     var selected_li = $('ul.search-patientcont-header li.selected');
                     $('ul.search-patientcont-header')[0].scrollTop = selected_li.index() * selected_li.outerHeight();
                 });
-
                 var a = $("#prescriptioncont-header .selected a");
                 if (a.length > 0) {
                     $scope.$apply(function () {
@@ -2122,7 +2124,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $log.info('Modal dismissed at: ' + new Date());
             });
         };
-
         $scope.trimSpace = function (string) {
             if (!angular.isString(string)) {
                 return string;
@@ -2188,7 +2189,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 var no_of_days = $scope.globalData.no_of_days;
                                 var g_no_of_days = $scope.trimSpace($scope.globalData.no_of_days);
                                 var f_no_of_days = $scope.trimSpace($scope.data.number_of_days);
-
                                 if (!$scope.globalData.no_of_days || g_no_of_days.length < 1) {
                                     if (!$scope.data.number_of_days || f_no_of_days.length < 1) {
                                         var no_of_days = 0;
@@ -2388,7 +2388,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         });
                         $scope.min_weight = weight_max_min.min() - 5;
                         $scope.max_weight = weight_max_min.max() + 5;
-
                         //Height chart data
                         $scope.height_graph_data = [];
                         $scope.height_graph_tick = [];
@@ -2926,7 +2925,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     name: 'doc_id',
                     value: doc_id,
                 });
-
                 $http({
                     url: $rootScope.IRISOrgServiceUrl + "/patientprescription/savemedicaldocument",
                     method: "POST",
@@ -2945,7 +2943,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             // Make sure that the interval is destroyed too
             $scope.medicalAutoSaveStop();
         });
-
         $scope.getDocumentType = function (callback) {
             $http.get($rootScope.IRISOrgServiceUrl + '/patientdocuments/getdocumenttype?doc_type=MCH')
                     .success(function (response) {
@@ -3089,7 +3086,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     name: 'doc_id',
                     value: $scope.doc_id,
                 });
-
                 $http({
                     url: $rootScope.IRISOrgServiceUrl + "/patientprescription/savemedicaldocument",
                     method: "POST",
@@ -3135,7 +3131,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
 
         });
-
         //Delete
         $scope.deleteDocument = function (doc_id) {
             URL = $rootScope.IRISOrgServiceUrl + "/patientdocuments/remove";
@@ -3159,12 +3154,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 )
             }
         };
-
         $scope.ckeditorupdate = function () {
             for (instance in CKEDITOR.instances)
                 CKEDITOR.instances[instance].updateElement();
         };
-
         $scope.printMedicaldocument = function (doc_id) {
             $scope.printxslt = '';
             $scope.getDocumentType(function (doc_type_response) {
@@ -3206,9 +3199,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     CKEDITOR.config.scayt_autoStartup = true
             CKEDITOR.config.toolbar = [
                 ['Styles', 'Format', 'Font', 'FontSize', 'spellchecker'],
-
                 ['Bold', 'Italic', 'Underline', 'StrikeThrough', '-', 'Undo', 'Redo', '-', 'Cut', 'Copy', 'Paste', 'Find', 'Replace', '-', 'Outdent', 'Indent', '-', 'Print'],
-
                 ['NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
                 ['-', 'Link', 'Flash', 'Smiley', 'TextColor', 'BGColor', 'Source', '-', 'SpellChecker', 'Scayt']
             ];
@@ -3217,7 +3208,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 {name: 'editing', groups: ['find', 'selection', 'spellchecker']},
             ];
         };
-
         $scope.Calculatebmi = function () {
             if ($scope.vitaldata.height && $scope.vitaldata.weight) {
                 $scope.vitaldata.bmi = (($scope.vitaldata.weight / $scope.vitaldata.height / $scope.vitaldata.height) * 10000).toFixed(2);
@@ -3270,21 +3260,18 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             var output = (('' + day).length < 2 ? '0' : '') + day + '/' +
                     (('' + month).length < 2 ? '0' : '') + month + '/' +
                     date.getFullYear();
-
             var create_date = new Date($scope.created_at);
             var create_month = create_date.getMonth() + 1;
             var create_day = create_date.getDate();
             var create_output = (('' + create_day).length < 2 ? '0' : '') + create_day + '/' +
                     (('' + create_month).length < 2 ? '0' : '') + create_month + '/' +
                     create_date.getFullYear();
-
             var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
             var am_pm = date.getHours() >= 12 ? "PM" : "AM";
             hours = hours < 10 ? "0" + hours : hours;
             var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
             //var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
             time = hours + ":" + minutes + am_pm;
-
             $timeout(function () {
                 $('#created_name').html(created_by);
                 $('#created_date').html(create_output);
@@ -3295,56 +3282,46 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         // Prescription - Frequency Tab Navigation.
         var acDefaultOptions = {minimumChars: 0, activateOnFocus: true, positionUsingJQuery: false};
-
         $scope.autoCompleteOptions_3_0 = angular.extend({}, acDefaultOptions, {
             data: function (searchText) {
                 return $scope.fillFrequency3[0];
             }
         });
-
         $scope.autoCompleteOptions_3_1 = angular.extend({}, acDefaultOptions, {
             data: function (searchText) {
                 return $scope.fillFrequency3[1];
             }
         });
-
         $scope.autoCompleteOptions_3_2 = angular.extend({}, acDefaultOptions, {
             data: function (searchText) {
                 return $scope.fillFrequency3[2];
             }
         });
-
         $scope.autoCompleteOptions_4_0 = angular.extend({}, acDefaultOptions, {
             data: function (searchText) {
                 return $scope.fillFrequency4[0];
             }
         });
-
         $scope.autoCompleteOptions_4_1 = angular.extend({}, acDefaultOptions, {
             data: function (searchText) {
                 return $scope.fillFrequency4[1];
             }
         });
-
         $scope.autoCompleteOptions_4_2 = angular.extend({}, acDefaultOptions, {
             data: function (searchText) {
                 return $scope.fillFrequency4[2];
             }
         });
-
         $scope.autoCompleteOptions_4_3 = angular.extend({}, acDefaultOptions, {
             data: function (searchText) {
                 return $scope.fillFrequency4[3];
             }
         });
-
         $scope.autoCompleteOptionsNoofdays = angular.extend({}, acDefaultOptions, {
             data: function (searchText) {
                 return $scope.fillNoofdays;
             }
         });
-        
-
 //        var ps_typeahead_content = ''; //ps - current prescription search
 //        $scope.psTypeaheadKeyup = function (event, ng_model_name) {
 //            ps_typeahead_content = $scope['globalData'][ng_model_name];

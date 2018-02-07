@@ -2,7 +2,7 @@
 <a href class="btn no-shadow navbar-btn" ng-click="app.settings.asideFolded = !app.settings.asideFolded">
     <i class="fa {{app.settings.asideFolded ? 'fa-indent' : 'fa-dedent'}} fa-fw"></i>
 </a> 
-<ul class="nav pat_nav" ng-controller="PatientLeftSideNotificationCtrl">
+<ul class="nav pat_nav">
     <li ui-sref-active="active"> <a check-access ui-sref="patient.timeLine({id: $state.params.id})">  <img src="img/icon2.png"  alt="" /> <br/> Timeline </a>  </li>
     <li ui-sref-active="active"> 
         <a check-access ui-sref="patient.vitals({id: $state.params.id})" ng-class="{'linkDisabled': !patientObj.have_atleast_encounter}" ng-click="seen_vitals_left_notification()">  
