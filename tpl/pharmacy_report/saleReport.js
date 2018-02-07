@@ -166,7 +166,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 8}, "", "", "", "", "", "", ""
+                {text: branch_name, style: 'header', colSpan: 9}, "", "", "", "", "", "", "", ""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
@@ -176,6 +176,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                 {text: 'Group', style: 'header'},
                 {text: 'Sale Date', style: 'header'},
                 {text: 'Payment Type', style: 'header'},
+                {text: 'Payment Mode', style: 'header'},
                 {text: 'Sale Value', style: 'header'},
             ]);
 
@@ -194,6 +195,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                     patient_group_name,
                     record.sale_date,
                     sale_payment_type,
+                    record.sale_bill_paid_type,
                     record.bill_amount,
                 ]);
                 total += parseFloat(record.bill_amount);
@@ -207,8 +209,9 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                     text: 'Total Sale Value',
                     style: 'header',
                     alignment: 'right',
-                    colSpan: 6
+                    colSpan: 7
                 },
+                "",
                 "",
                 "",
                 "",
@@ -261,7 +264,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                 style: 'demoTable',
                 table: {
                     headerRows: 2,
-                    widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', '*'],
+                    widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', '*'],
                     body: reports,
                     dontBreakRows: true,
                 },
@@ -271,6 +274,50 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                     }
                 }
             });
+
+            var sale_date_wise = $filter('groupBy')($scope.records, 'sale_date');
+            var date_info = [];
+            date_info.push({
+                columns: [
+                    {
+                        text: [
+                            {text: 'Date Wise Summary: ', bold: true},
+                        ],
+                    }, ]
+            });
+
+            var branch_item = [];
+
+            branch_item.push([
+                {text: 'Date', style: 'header'},
+                {text: 'Amount', alignment: 'right'}
+            ]);
+
+            angular.forEach(sale_date_wise, function (branch, sale_date) {
+                var date_wise_total = 0;
+                angular.forEach(branch, function (record, key) {
+                    date_wise_total += parseFloat(record.bill_amount);
+                });
+                var date_total = date_wise_total.toString();
+                branch_item.push([
+                    {text: sale_date},
+                    {text: date_total, alignment: 'right'}
+                ]);
+            });
+
+            date_info.push({
+                style: 'demoTable1',
+                table: {
+                    widths: ['*', 'auto'],
+                    body: branch_item,
+                },
+                layout: {
+                    hLineWidth: function (i, node) {
+                        return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
+                    }
+                },
+            });
+            content.push(date_info);
 
             return content;
         }

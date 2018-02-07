@@ -87,7 +87,7 @@
                         </div>
                         <div class="col-sm-4 text-right"> 
                             <p>
-<!--                                <button ng-click="printReport();" class="btn btn-sm btn-icon btn-info"><i class="fa fa-print"></i></button>-->
+                                <button ng-click="printReport();" class="btn btn-sm btn-icon btn-info"><i class="fa fa-print"></i></button>
                                 <button ng-click="tablesToExcel({{tableid}}, {{sheet_name}}, 'SaleReport.xls', 'Excel');" class="btn btn-sm btn-icon btn-danger"><i class="fa fa-file-excel-o"></i></button>
                             </p>
                         </div>
@@ -141,7 +141,7 @@
                                         <td>{{record.patient_group_name|| '-'}}</td>
                                         <td>{{record.sale_date| date:'dd-MM-yyyy'}}</td>
                                         <td>{{salePaymentType(record.payment_type)}}</td>
-                                        <td>{{record.sale_bill_paid_type || '-'}}</td>
+                                        <td>{{record.sale_bill_paid_type|| '-'}}</td>
                                         <td data-type="Number" ng-init="sale.total_amount = sale.total_amount + parseFloat(record.bill_amount);">
                                             {{record.bill_amount}}
                                         </td>
