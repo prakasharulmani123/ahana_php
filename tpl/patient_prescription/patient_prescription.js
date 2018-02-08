@@ -365,7 +365,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 //                        $scope.print_diagnosis = response.value;
 //                    })
 
-            $http.get($rootScope.IRISOrgServiceUrl + '/genericname?page_action=branch_pharmacy')
+            $http.get($rootScope.IRISOrgServiceUrl + '/genericname?addtfields=prescription_generic&page_action=branch_pharmacy')
                     .success(function (response) {
                         $scope.allgenerics = response;
                     })
