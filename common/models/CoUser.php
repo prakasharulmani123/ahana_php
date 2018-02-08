@@ -39,7 +39,7 @@ use yii\helpers\ArrayHelper;
  */
 class CoUser extends RActiveRecord {
 
-    public $update_log = true;//This should be false when you create user from CRM 
+    public $update_log = true; //This should be false when you create user from CRM 
 
 //    public $logged_tenant_id = null;
 
@@ -219,12 +219,28 @@ class CoUser extends RActiveRecord {
                 return $model->title_code . ucfirst($model->name) . $speciality_name;
             },
         ];
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
+
+        $parent_fields = parent::fields();
+        $addt_keys = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'prescription_doctor':
+                    $addt_keys = ['fullname', 'consult_speciality_name'];
+                    $parent_fields = [
+                        'user_id' => 'user_id',
+                        'name' => 'name'
+                    ];
+                    break;
+            endswitch;
+        }
+
+        $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+        return array_merge($parent_fields, $extFields);
     }
 
     public function getFullname() {
-        return $this->title_code . ' '.ucfirst($this->name);
+        return $this->title_code . ' ' . ucfirst($this->name);
     }
 
     public static function getMyUserlist() {

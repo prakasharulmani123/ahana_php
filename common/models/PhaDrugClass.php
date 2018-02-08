@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PhaDrugClassQuery;
+use Yii;
 use cornernote\linkall\LinkAllBehavior;
 use yii\db\ActiveQuery;
 
@@ -35,12 +36,12 @@ class PhaDrugClass extends RActiveRecord {
      */
     public function rules() {
         return [
-            [['drug_name'], 'required'],
-            [['tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['status'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['drug_name'], 'string', 'max' => 255],
-            [['drug_name'], 'unique', 'targetAttribute' => ['tenant_id', 'drug_name', 'deleted_at'], 'message' => 'The combination of Tenant ID, Drug Name and Deleted At has already been taken.']
+                [['drug_name'], 'required'],
+                [['tenant_id', 'created_by', 'modified_by'], 'integer'],
+                [['status'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['drug_name'], 'string', 'max' => 255],
+                [['drug_name'], 'unique', 'targetAttribute' => ['tenant_id', 'drug_name', 'deleted_at'], 'message' => 'The combination of Tenant ID, Drug Name and Deleted At has already been taken.']
         ];
     }
 
@@ -72,9 +73,30 @@ class PhaDrugClass extends RActiveRecord {
         return new PhaDrugClassQuery(get_called_class());
     }
 
+    public function fields() {
+        $extend = [];
+
+        $parent_fields = parent::fields();
+        $addt_keys = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'prescription_drug':
+                    $parent_fields = [
+                        'drug_class_id' => 'drug_class_id',
+                        'drug_name' => 'drug_name',
+                    ];
+                    break;
+            endswitch;
+        }
+
+        $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+        return array_merge($parent_fields, $extFields);
+    }
+
     public static function getDruglist($tenant = null, $status = '1', $deleted = false, $notUsed = false) {
         if (!$deleted) {
-            if($notUsed)
+            if ($notUsed)
                 $list = self::find()->tenant($tenant)->status($status)->active()->notUsed()->all();
             else
                 $list = self::find()->tenant($tenant)->status($status)->active()->all();
@@ -101,7 +123,7 @@ class PhaDrugClass extends RActiveRecord {
     public function getGenerics() {
         return $this->hasMany(PhaGeneric::className(), ['generic_id' => 'generic_id'])->via('drugsGenerics');
     }
-    
+
     public function afterSave($insert, $changedAttributes) {
         if ($insert)
             $activity = 'Drug Class Added Successfully (#' . $this->drug_name . ' )';
