@@ -64,11 +64,15 @@ class AuditlogController extends ActiveController {
         if ($_REQUEST['date'] != 'Invalid date') {
             $records->andwhere(["Date(created_at)" => $_REQUEST['date']]);
         }
-        if (isset($_REQUEST['user_id']) && !empty($_REQUEST['user_id']) && $_REQUEST['user_id']!='null') {
+        if (isset($_REQUEST['user_id']) && !empty($_REQUEST['user_id']) && $_REQUEST['user_id'] != 'null') {
             $records->andFilterWhere(["=", "user_id", $_REQUEST['user_id']]);
         }
         if (isset($_REQUEST['form_filter']) && !empty($_REQUEST['form_filter'])) {
-            $records->andFilterWhere(["like", "action", $_REQUEST['form_filter']]);
+            $records->andWhere(['or',
+                    ['like', 'action', $_REQUEST['form_filter']],
+                    ['like', 'activity', $_REQUEST['form_filter']],
+            ]);
+            //$records->andFilterWhere(["like", "action", $_REQUEST['form_filter']]);
         }
         if ($_REQUEST['date'] == 'Invalid date') {
             $records->limit(1000);
