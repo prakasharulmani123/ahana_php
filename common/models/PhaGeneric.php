@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PhaGenericQuery;
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -69,6 +70,27 @@ class PhaGeneric extends RActiveRecord {
 
     public static function find() {
         return new PhaGenericQuery(get_called_class());
+    }
+    
+    public function fields() {
+        $extend = [];
+
+        $parent_fields = parent::fields();
+        $addt_keys = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'prescription_generic':
+                    $parent_fields = [
+                        'generic_id' => 'generic_id',
+                        'generic_name' => 'generic_name',
+                    ];
+                    break;
+            endswitch;
+        }
+
+        $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+        return array_merge($parent_fields, $extFields);
     }
 
     public static function getGenericlist($tenant = null, $status = '1', $deleted = false, $notUsed = false) {
