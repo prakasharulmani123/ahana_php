@@ -254,7 +254,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
             {value: '11', label: '11'}, {value: '12', label: '12'}];
         callback(response);
     }
-    
+
     function GetYear(callback) {
         var year = new Date().getFullYear();
         var new_year = year + 3;
@@ -436,10 +436,10 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                 });
     }
 
-    function GetDoctorList(tenant, sts, del_sts, care_provider, callback) {
+    function GetDoctorList(tenant, sts, del_sts, care_provider, callback, addtfields) {
         var response;
 
-        $http.get($rootScope.IRISOrgServiceUrl + '/user/getdoctorslist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&care_provider=' + care_provider)
+        $http.get($rootScope.IRISOrgServiceUrl + '/user/getdoctorslist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&care_provider=' + care_provider + '&addtfields=' + addtfields)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {
@@ -506,7 +506,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     function GetEncounterListByPatient(tenant, sts, del_sts, pat_id, callback, addtfields, only, old_encounter, limit) {
         var response;
 
-        $http.get($rootScope.IRISOrgServiceUrl + '/encounter/getencounterlistbypatient?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&patient_id=' + pat_id + '&addtfields=' + addtfields + '&only=' + only + '&old_encounter=' + old_encounter +'&limit=' +limit)
+        $http.get($rootScope.IRISOrgServiceUrl + '/encounter/getencounterlistbypatient?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts + '&patient_id=' + pat_id + '&addtfields=' + addtfields + '&only=' + only + '&old_encounter=' + old_encounter + '&limit=' + limit)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {
@@ -514,7 +514,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                     callback(response);
                 });
     }
-    
+
     function GetEncounterListByTenantSamePatient(tenant, sts, del_sts, pat_id, callback, addtfields, only, old_encounter) {
         var response;
 

@@ -322,7 +322,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 else
                     $scope.available_medicine = '0';
             }
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacydrugclass?page_action=branch_pharmacy')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacydrugclass?addtfields=prescription_drug&page_action=branch_pharmacy')
                     .success(function (response) {
                         $scope.drugs = response;
                     })
@@ -374,7 +374,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     });
             $rootScope.commonService.GetDoctorList('', '1', false, '1', function (response) {
                 $scope.doctors = response.doctorsList;
-            });
+            }, 'prescription_doctor');
 //            $rootScope.commonService.GetDiagnosisList(function (response) {
 //                  $scope.diagnosis =response.diagnosisList
 //            });
