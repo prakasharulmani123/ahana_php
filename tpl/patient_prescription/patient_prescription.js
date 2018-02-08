@@ -1941,7 +1941,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.consultantFreq = [];
         $scope.getConsultantFreq = function () {
             $scope.consultantFreq = [];
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getconsultantfreq?consultant_id=' + $scope.data.consultant_id)
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getconsultantfreq?addtfields=pres_frequency&consultant_id=' + $scope.data.consultant_id)
                     .success(function (response) {
                         if (response.freq.length > 0)
                             $scope.consultantFreq = response.freq;
@@ -1963,14 +1963,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.fillNoofdays = [];
         $scope.getConsultantNoofdays = function () {
             $scope.consultantNoofdays = [];
+            $scope.fillNoofdays = [];
             $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getconsultantnoofdays?consultant_id=' + $scope.data.consultant_id)
                     .success(function (response) {
                         if (response.noofdays.length > 0)
                             $scope.consultantNoofdays = response.noofdays;
+                        $scope.consultantNoofdays = $filter('orderBy')($scope.consultantNoofdays, '-created_at');
                         angular.forEach($scope.consultantNoofdays, function (item, item_key) {
-                            if ($scope.fillNoofdays.indexOf(item.number_of_days) === -1) {
-                                $scope.fillNoofdays.push(item.number_of_days);
-                            }
+                            $scope.fillNoofdays.push(item.number_of_days);
                         });
                     }, function (x) {
                         response = {success: false, message: 'Server Error'};
