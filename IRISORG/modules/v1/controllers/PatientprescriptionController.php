@@ -265,7 +265,7 @@ class PatientprescriptionController extends ActiveController {
         if (!empty($get)) {
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
             $connection = Yii::$app->client;
-            $command = $connection->createCommand("SELECT pat_prescription_items.number_of_days FROM pat_prescription LEFT JOIN pat_prescription_items ON pat_prescription_items.pres_id = pat_prescription.pres_id WHERE (pat_prescription.tenant_id=:tenant_id) AND (pat_prescription.deleted_at=:deleted_at) AND (pat_prescription.status=:status) AND (pat_prescription.consultant_id=:consultant_id) ORDER BY pat_prescription.created_at DESC ", [':tenant_id' => $tenant_id, ':deleted_at' => '0000-00-00 00:00:00', ':status' => '1', ':consultant_id' => $get['consultant_id']]);
+            $command = $connection->createCommand("SELECT pat_prescription_items.number_of_days, MAX(pat_prescription_items.created_at) AS 'created_at' FROM pat_prescription LEFT JOIN pat_prescription_items ON pat_prescription_items.pres_id = pat_prescription.pres_id WHERE (pat_prescription.tenant_id=:tenant_id) AND (pat_prescription.deleted_at=:deleted_at) AND (pat_prescription.status=:status) AND (pat_prescription.consultant_id=:consultant_id) GROUP BY pat_prescription_items.number_of_days ORDER BY pat_prescription.created_at DESC ", [':tenant_id' => $tenant_id, ':deleted_at' => '0000-00-00 00:00:00', ':status' => '1', ':consultant_id' => $get['consultant_id']]);
             $result = $command->queryAll();
             $connection->close();
             return ['success' => true, 'noofdays' => $result];

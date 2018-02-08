@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PatPrescriptionFrequencyQuery;
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -23,35 +24,32 @@ use yii\db\ActiveQuery;
  * @property CoTenant $tenant
  * @property PatPrescriptionItems[] $patPrescriptionItems
  */
-class PatPrescriptionFrequency extends RActiveRecord
-{
+class PatPrescriptionFrequency extends RActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pat_prescription_frequency';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['freq_name'], 'required'],
-            [['tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['status', 'product_type'], 'string'],
-            [['created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['freq_name'], 'string', 'max' => 20]
+                [['freq_name'], 'required'],
+                [['tenant_id', 'created_by', 'modified_by'], 'integer'],
+                [['status', 'product_type'], 'string'],
+                [['created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['freq_name'], 'string', 'max' => 20]
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'freq_id' => 'Freq ID',
             'tenant_id' => 'Tenant ID',
@@ -69,23 +67,44 @@ class PatPrescriptionFrequency extends RActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getTenant()
-    {
+    public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getPatPrescriptionItems()
-    {
+    public function getPatPrescriptionItems() {
         return $this->hasMany(PatPrescriptionItems::className(), ['freq_id' => 'freq_id']);
     }
-    
+
     public static function find() {
         return new PatPrescriptionFrequencyQuery(get_called_class());
     }
-    
+
+    public function fields() {
+        $extend = [];
+
+        $parent_fields = parent::fields();
+        $addt_keys = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'pres_frequency':
+                    $parent_fields = [
+                        'freq_id' => 'freq_id',
+                        'freq_name' => 'freq_name',
+                        'product_type' => 'product_type',
+                        'freq_type' => 'freq_type',
+                    ];
+                    break;
+            endswitch;
+        }
+
+        $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+        return array_merge($parent_fields, $extFields);
+    }
+
     public static function getFrequencylist($tenant = null, $status = '1', $deleted = false) {
         if (!$deleted)
             $list = self::find()->tenant($tenant)->status($status)->active()->all();
@@ -94,4 +113,5 @@ class PatPrescriptionFrequency extends RActiveRecord
 
         return $list;
     }
+
 }
