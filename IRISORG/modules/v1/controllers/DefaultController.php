@@ -200,10 +200,34 @@ class DefaultController extends Controller {
                 Yii::$app->user->logout();
             }
             //Run Active schedule Charge
-            $active_scheduleCharges = PatScheduleCharge::find()->tenant($post['tenant_id'])->andWhere(['cron_status' => '1'])->all();
+//            $active_scheduleCharges = PatScheduleCharge::find()->tenant($post['tenant_id'])->andWhere(['cron_status' => '1'])->all();
+//
+//            foreach ($active_scheduleCharges as $key => $active_scheduleCharge) {
+//                Yii::$app->hepler->updateOthercharges($active_scheduleCharge, $active_scheduleCharge->encounter);
+//            }
+        }
+    }
 
-            foreach ($active_scheduleCharges as $key => $active_scheduleCharge) {
-                Yii::$app->hepler->updateOthercharges($active_scheduleCharge, $active_scheduleCharge->encounter);
+    public function actionDailycronupdateschedule() {
+        $organizations = CoOrganization::find()->andWhere(['status' => '1'])->all();
+
+        foreach ($organizations as $key => $organization) {
+            foreach ($organization->coTenants as $key => $tenant) {
+
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, "{$organization->org_domain}/api/IRISORG/web/v1/default/updateschedulemanually");
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, ['tenant_id' => $tenant->tenant_id]);  //Post Fields
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+                $headers = array();
+                $headers[] = "x-domain-path: {$organization->org_domain}";
+
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                $server_output = curl_exec($ch);
+                curl_close($ch);
+
+//                print $server_output;
             }
         }
     }
