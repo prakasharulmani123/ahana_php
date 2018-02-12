@@ -1451,6 +1451,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                             }
                                         }
                                     } else {
+                                        $scope.isLoading = false;
                                         if (typeof date == 'undefined') {
                                             var typed_prescription = PrescriptionService.getPrescriptionItems();
                                             if (typed_prescription.length > 0) {
@@ -1484,8 +1485,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 });
                         $timeout(function () {
                             $scope.isLoading = false;
-                            
-                        }, 3000);
+                        }, 2500);
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading brand!";
