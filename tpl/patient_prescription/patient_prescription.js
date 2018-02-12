@@ -97,10 +97,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.enc.selected = $scope.encounters[0];
                         if ($scope.encounters[0].encounter_type == 'IP') {
                             $scope.data.consultant_id = $scope.encounters[0].liveAdmission.consultant_id;
-                            $scope.getConsultantFreq();
                         } else if ($scope.encounters[0].encounter_type == 'OP') {
                             $scope.data.consultant_id = $scope.encounters[0].liveAppointmentBooking.consultant_id;
-                            $scope.getConsultantFreq();
                         }
                         //Get all active encounter
                         $scope.data.encounter_id = $scope.enc.selected.encounter_id;
@@ -110,7 +108,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         }, 'encounter_details');
                         //var actEnc = $filter('filter')($scope.encounters, {status: '1'});
                         //$scope.all_encounters = actEnc;
-                        $scope.checkVitalaccess();
                         $scope.spinnerbar('hide')
                     } else {
                         //$scope.spinnerbar('hide');
@@ -128,6 +125,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 //$scope.spinnerbar('hide');
                 PrescriptionService.setPatientId($scope.patientObj.patient_id);
                 $scope.loadPrevPrescriptionsList();
+                $scope.getConsultantFreq();
+                $scope.checkVitalaccess();
                 $scope.loadSideMenu();
                 $scope.$emit('encounter_id', newValue);
             }
@@ -1367,7 +1366,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         // Get data's from service
                         $http.get(url)
                                 .success(function (prescriptionList) {
-                                    $scope.isLoading = false;
+                                    $scope.spinnerbar('hide');
                                     $scope.rowCollection = prescriptionList.prescriptions;
                                     $scope.totalCount = prescriptionList.totalCount;
                                     if ($scope.rowCollection.length > 0) {
@@ -1484,7 +1483,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                     $scope.errorData = "An Error has occured while loading list!";
                                 });
                         $timeout(function () {
-                            $scope.spinnerbar('hide');
+                            $scope.isLoading = false;
+                            
                         }, 3000);
                     })
                     .error(function () {
