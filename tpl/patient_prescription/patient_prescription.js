@@ -1093,10 +1093,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             $scope.data.consultant_id = response.model.consultant_id;
                             $scope.consultant_name = response.model.consultant_name;
                             $('#diagnosis').val("");
-                            $scope.getConsultantFreq();
+                            $timeout(function () {
+                                save_success(true, response);
+                            });
                             $timeout(function () {
                                 $scope.getFav();
-                                save_success(true, response);
+                                $scope.getConsultantFreq();
 //                                $state.go('patient.prescription', {id: $state.params.id});
                             }, 1000)
                         } else {
