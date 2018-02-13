@@ -46,12 +46,12 @@ class PatVitals extends RActiveRecord {
         return [
 //            [['temperature'], 'required'],
                 [['tenant_id', 'encounter_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
-                [['vital_time', 'created_at', 'modified_at', 'deleted_at','bmi'], 'safe'],
+                [['vital_time', 'created_at', 'modified_at', 'deleted_at', 'bmi'], 'safe'],
                 [['status'], 'string'],
             //[['temperature', 'blood_pressure_systolic', 'blood_pressure_diastolic', 'pulse_rate'], 'string', 'max' => 20],
             //[['weight', 'height', 'sp02'], 'string', 'max' => 10],
             //[['pain_score'], 'number', 'min' => 0, 'max' => 10,'numberPattern' => '/(^\d+\.\d+$)|(^\d+$)/', 'message' => 'Invalid Pain Score'],
-                [['pain_score'], 'number', 'min' => 0, 'max' => 10],
+            [['pain_score'], 'number', 'min' => 0, 'max' => 10],
                 [['sp02'], 'number', 'min' => 0, 'max' => 100],
                 [['height'], 'number', 'min' => 30, 'max' => 200],
                 [['weight'], 'number', 'min' => 0, 'max' => 150],
@@ -142,7 +142,7 @@ class PatVitals extends RActiveRecord {
         ];
 
         $parent_fields = parent::fields();
-        $addt_keys = [];
+        $addt_keys = $extFields = [];
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'eprvitals':
@@ -164,7 +164,21 @@ class PatVitals extends RActiveRecord {
                         'status' => 'status',
                         'created_at' => 'created_at',
                     ];
-                    $addt_keys = ['encounter_status', 'created_date','branch_name'];
+                    $addt_keys = ['encounter_status', 'created_date', 'branch_name'];
+                    break;
+                case 'presc_print':
+                    $addt_keys = false;
+                    $parent_fields = [
+                        'temperature' => 'temperature',
+                        'blood_pressure_systolic' => 'blood_pressure_systolic',
+                        'blood_pressure_diastolic' => 'blood_pressure_diastolic',
+                        'pulse_rate' => 'pulse_rate',
+                        'weight' => 'weight',
+                        'height' => 'height',
+                        'sp02' => 'sp02',
+                        'pain_score' => 'pain_score',
+                        'bmi' => 'bmi',
+                    ];
                     break;
             endswitch;
         }

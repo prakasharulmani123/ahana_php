@@ -448,6 +448,12 @@ class PhaProduct extends RActiveRecord {
                         'product_description_id' => 'product_description_id',
                     ];
                     break;
+                case 'presc_print':
+                    $addt_keys = ['description_name'];
+                    $parent_fields = [
+                        'product_description_id' => 'product_description_id',
+                    ];
+                    break;
                 case 'stock_details':
                     $addt_keys = ['full_name', 'salesPackageName', 'purchasePackageName', 'saleVatPercent', 'description_name'];
                     $parent_fields = [

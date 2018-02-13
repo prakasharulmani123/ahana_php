@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PatPrescriptionItemsQuery;
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -226,8 +227,28 @@ class PatPrescriptionItems extends RActiveRecord {
                 return (isset($model->product) ? $model->product : '-');
             },
         ];
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
+        $parent_fields = parent::fields();
+        $addt_keys = $extFields = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'presc_print':
+                    $addt_keys = ['frequency_name', 'freqType', 'product'];
+                    $parent_fields = [
+                        'product_name' => 'product_name',
+                        'generic_name' => 'generic_name',
+                        'number_of_days' => 'number_of_days',
+                        'food_type' => 'food_type',
+                        'remarks' => 'remarks',
+                        'quantity' => 'quantity'
+                    ];
+                    break;
+            endswitch;
+        }
+
+        if ($addt_keys !== false)
+            $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+        return array_merge($parent_fields, $extFields);
     }
 
 }

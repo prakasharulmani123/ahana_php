@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PatPrescriptionQuery;
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -169,8 +170,26 @@ class PatPrescription extends RActiveRecord {
                 return (isset($model->tenant) ? $model->tenant->tenant_name : '-');
             },
         ];
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
+//        $fields = array_merge(parent::fields(), $extend);
+//        return $fields;
+        $parent_fields = parent::fields();
+        $addt_keys = $extFields = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'presc_print':
+                    $addt_keys = ['items', 'consultant_name', 'encounter', 'diag_name', 'allergies', 'branch_name'];
+                    $parent_fields = [
+                        'pres_id' => 'pres_id',
+                        'next_visit' => 'next_visit',
+                    ];
+                    break;
+            endswitch;
+        }
+
+        if ($addt_keys !== false)
+            $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+        return array_merge($parent_fields, $extFields);
     }
 
     public function afterSave($insert, $changedAttributes) {
