@@ -1817,7 +1817,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             var total_qty = [];
             var deferred = $q.defer();
             deferred.notify();
-            $http.get($rootScope.IRISOrgServiceUrl + "/patientprescriptions/" + pres_id + "?addtfields=presc_search")
+            $http.get($rootScope.IRISOrgServiceUrl + "/patientprescriptions/" + pres_id + "?addtfields=presc_print")
                     .success(function (response) {
                         $scope.loadbar('hide');
                         $scope.data2 = response;
@@ -1861,7 +1861,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         prepend: '',
                         title: $scope.app.org_name,
                     });
-                }, 1000);
+                }, 500);
 //                $('#print_previous_pres').printThis({
 //                    pageTitle: $scope.app.org_name,
 //                    debug: false,
