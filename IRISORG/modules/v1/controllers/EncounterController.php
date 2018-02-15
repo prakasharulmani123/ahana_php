@@ -290,8 +290,12 @@ class EncounterController extends ActiveController {
         $limit = isset($GET['l']) ? $GET['l'] : 5;
         $page = isset($GET['p']) ? $GET['p'] : 1;
         $offset = abs($page - 1) * $limit;
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
         $model = PatEncounter::find()
-                ->tenant()
+                //->tenant()
+                ->andWhere([
+                    'current_tenant_id' => $tenant_id,
+                ])
                 ->status()
                 ->encounterType("IP")
                 ->orderBy([
@@ -657,7 +661,7 @@ class EncounterController extends ActiveController {
             $patient = PatPatient::find()->where(['patient_guid' => $post['patient_id']])->one();
             $enc_type = isset($post['encounter_type']) ? $post['encounter_type'] : ['IP', 'OP'];
             $encounter = PatEncounter::find()
-                    ->tenant()
+                    //->tenant()
                     ->andWhere(['encounter_type' => $enc_type])
                     ->andWhere(['patient_id' => $patient->patient_id])
                     ->orderBy(['status' => SORT_DESC]);
@@ -677,7 +681,7 @@ class EncounterController extends ActiveController {
         if (!empty($post)) {
             $patient = PatPatient::find()->where(['patient_guid' => $post['patient_id']])->one();
             $model = PatEncounter::find()
-                    ->tenant()
+                    //->tenant()
                     //->unfinalized()
                     ->andWhere(['patient_id' => $patient->patient_id, 'encounter_id' => $post['encounter_id']])
                     ->one();
@@ -717,10 +721,10 @@ class EncounterController extends ActiveController {
             $encounter_id = $get['encounter_id'];
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
-            $procedure = VBillingProcedures::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
-            $consults = VBillingProfessionals::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
-            $otherCharge = VBillingOtherCharges::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
-            $advance = VBillingAdvanceCharges::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->all();
+            $procedure = VBillingProcedures::find()->where(['encounter_id' => $encounter_id])->all();
+            $consults = VBillingProfessionals::find()->where(['encounter_id' => $encounter_id])->all();
+            $otherCharge = VBillingOtherCharges::find()->where(['encounter_id' => $encounter_id])->all();
+            $advance = VBillingAdvanceCharges::find()->where(['encounter_id' => $encounter_id])->all();
 
             $data = array_merge($data, $this->_addNonrecurrNetAmount($procedure, 'Procedure', 'total_charge'), $this->_addNonrecurrNetAmount($consults, 'Consults', 'total_charge'), $this->_addNonrecurrNetAmount($otherCharge, 'OtherCharge', 'total_charge'), $this->_addNonrecurrNetAmount($advance, 'Advance', 'total_charge')
             );
@@ -832,7 +836,7 @@ class EncounterController extends ActiveController {
     }
 
     private function _getBillingRecurring($encounter_id, $tenant_id) {
-        return VBillingRecurring::find()->where(['encounter_id' => $encounter_id, 'tenant_id' => $tenant_id])->orderBy(['from_date' => SORT_ASC, 'charge_item' => SORT_ASC])->all();
+        return VBillingRecurring::find()->where(['encounter_id' => $encounter_id])->orderBy(['from_date' => SORT_ASC, 'charge_item' => SORT_ASC])->all();
     }
 
     public function actionGetnonrecurringprocedures() {
@@ -894,8 +898,12 @@ class EncounterController extends ActiveController {
 
     public function actionPatientlist() {
         $GET = Yii::$app->getRequest()->get();
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
         $model = PatEncounter::find()
-                ->tenant()
+                //->tenant()
+                ->andWhere([
+                    'current_tenant_id' => $tenant_id,
+                ])
                 ->status()
                 ->encounterType($GET['type']);
         if ($GET['type'] == 'OP') {

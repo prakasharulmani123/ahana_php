@@ -157,6 +157,9 @@ class AdmissionController extends ActiveController {
                 case 'CD':
                     $model = $this->canCancelClinicalDischarge($post['admn_id']);
                     break;
+                case 'TB':
+                    $model = $this->canCancelTransferRoom($post['admn_id']);
+                    break;
             }
 
             if ($model == false)
@@ -169,7 +172,7 @@ class AdmissionController extends ActiveController {
                 $model->save(false);
                 $model->remove();
 
-                if ($post['row_sts'] == 'TR') {
+                if (($post['row_sts'] == 'TR') || ($post['row_sts'] == 'TB')) {
                     //Get Last Row
                     $new_model = PatAdmission::find()->where(['admn_id' => $post['admn_id']])->one();
                     $last_admission = $new_model->encounter->patLastRoomAdmission[0];
@@ -179,6 +182,12 @@ class AdmissionController extends ActiveController {
 
                     //Occupy the Old Status Room
                     $this->saveRoom($last_admission->room_id, 1);
+                    if ($post['row_sts'] == 'TB') {
+                        $encounter = PatEncounter::find()->where(['encounter_id' => $last_admission->encounter_id])->one();
+                        $encounter->current_tenant_id = $last_admission->tenant_id;
+                        $encounter->patient_id = $last_admission->patient_id;
+                        $encounter->save(false);
+                    }
                 } else if ($post['row_sts'] == 'SW') {
                     $patient_admission_model->status_date = date('Y-m-d H:i:s');
                     $patient_admission_model->status = '0';
@@ -203,6 +212,30 @@ class AdmissionController extends ActiveController {
         if (empty($model))
             return false;
 
+        return $this->checkRoomVacant($model->encounter->patLastRoomAdmission[1]->room_id) ? $model : false;
+    }
+
+    private function canCancelTransferRoom($admn_id) {
+        $model = PatAdmission::find()->where(['admn_id' => $admn_id])->one();
+
+        if (empty($model))
+            return false;
+        //Checking patient Billing payment model
+        $billPayment = \common\models\PatBillingPayment::find()->tenant()->active()->andWhere(['encounter_id' => $model->encounter_id])->one();
+        if (!empty($billPayment))
+            return false;
+        //Checking patient Billing Other charge model
+        $billOtherCharges = \common\models\PatBillingOtherCharges::find()->tenant()->active()->andWhere(['encounter_id' => $model->encounter_id])->one();
+        if (!empty($billOtherCharges))
+            return false;
+        //Checking patient Consultant model
+        $consultant = \common\models\PatConsultant::find()->tenant()->active()->andWhere(['encounter_id' => $model->encounter_id])->one();
+        if (!empty($consultant))
+            return false;
+        //Checking patient Procedure model
+        $procedure = \common\models\PatProcedure::find()->tenant()->active()->andWhere(['encounter_id' => $model->encounter_id])->one();
+        if (!empty($procedure))
+            return false;
         return $this->checkRoomVacant($model->encounter->patLastRoomAdmission[1]->room_id) ? $model : false;
     }
 
@@ -250,7 +283,7 @@ class AdmissionController extends ActiveController {
         $room->occupied_status = $occ_sts;
         $room->save(false);
     }
-    
+
     private function canCancelClinicalDischarge($admn_id) {
         $model = PatAdmission::find()->where(['admn_id' => $admn_id])->one();
 

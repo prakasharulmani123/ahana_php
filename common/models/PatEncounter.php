@@ -71,7 +71,7 @@ class PatEncounter extends RActiveRecord {
         return [
                 [['encounter_date'], 'required'],
                 [['tenant_id', 'patient_id', 'finalize', 'authorize', 'created_by', 'modified_by', 'discharge'], 'integer'],
-                [['encounter_date', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no', 'discharge', 'total_amount', 'bill_no', 'bill_notes', 'consultant_id', 'total_booking', 'seen_count', 'arrived_count', 'booked_count', 'branch_name', 'finalize_date'], 'safe'],
+                [['encounter_date', 'current_tenant_id', 'inactive_date', 'created_at', 'modified_at', 'deleted_at', 'casesheet_no', 'discharge', 'total_amount', 'bill_no', 'bill_notes', 'consultant_id', 'total_booking', 'seen_count', 'arrived_count', 'booked_count', 'branch_name', 'finalize_date'], 'safe'],
                 [['status', 'casesheet_no', 'add_casesheet_no'], 'string'],
                 [['concession_amount'], 'number'],
                 [['encounter_type'], 'string', 'max' => 5],
@@ -161,6 +161,7 @@ class PatEncounter extends RActiveRecord {
             'encounter_type' => 'Encounter Type',
             'encounter_date' => 'Encounter Date',
             'inactive_date' => 'Inactive Date',
+            'current_tenant_id' => 'current_tenant_id',
             'finalize' => 'Finalize',
             'authorize' => 'Authorize',
             'recurring_settlement' => 'Recurring Settlement',
@@ -647,35 +648,35 @@ class PatEncounter extends RActiveRecord {
             $recurring = VBillingRecurring::find()
                             ->where([
                                 'encounter_id' => $this->encounter_id,
-                                'tenant_id' => $this->tenant_id
+                                //'tenant_id' => $this->tenant_id
                             ])
                             ->select('SUM(total_charge) as total_charge')->one();
 
             $procedure = VBillingProcedures::find()
                             ->where([
                                 'encounter_id' => $this->encounter_id,
-                                'tenant_id' => $this->tenant_id
+                                //'tenant_id' => $this->tenant_id
                             ])
                             ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount, SUM(extra_amount) as extra_amount')->one();
 
             $professional = VBillingProfessionals::find()
                             ->where([
                                 'encounter_id' => $this->encounter_id,
-                                'tenant_id' => $this->tenant_id
+                                //'tenant_id' => $this->tenant_id
                             ])
                             ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount, SUM(extra_amount) as extra_amount')->one();
 
             $other_charge = VBillingOtherCharges::find()
                             ->where([
                                 'encounter_id' => $this->encounter_id,
-                                'tenant_id' => $this->tenant_id
+                                //'tenant_id' => $this->tenant_id
                             ])
                             ->select('SUM(total_charge) as total_charge, SUM(concession_amount) as concession_amount, SUM(extra_amount) as extra_amount')->one();
 
             $total_paid = VBillingAdvanceCharges::find()
                     ->where([
                         'encounter_id' => $this->encounter_id,
-                        'tenant_id' => $this->tenant_id
+                        //'tenant_id' => $this->tenant_id
                     ])
                     ->sum('total_charge');
 
@@ -712,7 +713,7 @@ class PatEncounter extends RActiveRecord {
         $amount = VBillingAdvanceCharges::find()
                 ->where([
                     'encounter_id' => $this->encounter_id,
-                    'tenant_id' => $this->tenant_id
+                    //'tenant_id' => $this->tenant_id
                 ])
                 ->sum('total_charge');
 
@@ -721,7 +722,12 @@ class PatEncounter extends RActiveRecord {
 
     public static function getEncounterListByPatient($tenant = null, $status = '1', $deleted = false, $patient_id = null, $encounter_type = 'IP,OP', $oldencounter, $limit) {
         if (!$deleted) {
-            $list = self::find()->tenant($tenant)->status($status)->active()->encounterType($encounter_type)->andWhere(['patient_id' => $patient_id]);
+            $list = self::find()->status($status)->active()->encounterType($encounter_type)->andWhere(['patient_id' => $patient_id]);
+            if ($tenant) {
+                $list->andWhere(['=', 'current_tenant_id', $tenant]);
+            } else {
+                $list->tenant($tenant);
+            }
             if ($oldencounter != 'undefined') {
                 $list->andWhere(['<=', 'DATE(encounter_date)', date('Y-m-d')]);
             }
@@ -759,6 +765,7 @@ class PatEncounter extends RActiveRecord {
 
     public function beforeSave($insert) {
         if ($insert) {
+            $this->current_tenant_id = $this->tenant_id;
             if (isset($this->patient->patActiveCasesheetno) && !empty($this->patient->patActiveCasesheetno)) {
                 $this->casesheet_no = $this->patient->patActiveCasesheetno->casesheet_no;
             } else if (isset($this->add_casesheet_no) && !empty($this->add_casesheet_no)) {

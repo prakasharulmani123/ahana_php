@@ -236,7 +236,7 @@ class PatientbillingotherchargeController extends ActiveController {
         $recurring = VBillingRecurring::find()
                         ->where([
                             'encounter_id' => $get['encounter_id'],
-                            'tenant_id' => $tenant_id
+                            //'tenant_id' => $tenant_id
                         ])
                         ->select('SUM(total_charge) as total_charge')->one();
         $encounter = \common\models\PatEncounter::find()
@@ -253,6 +253,7 @@ class PatientbillingotherchargeController extends ActiveController {
                 ->addSelect(["concat(co_user.title_code,co_user.name) as report_consultant_name"])
                 ->andWhere("encounter_id=" . $get['encounter_id'] . "")
                 ->andWhere(['settlement' => null])
+                ->andWhere(['pat_consultant.deleted_at' => '0000-00-00 00:00:00'])
                 ->groupBy(['pat_consultant.consultant_id'])
                 ->all();
         $professional = [];
@@ -283,6 +284,7 @@ class PatientbillingotherchargeController extends ActiveController {
                 ->addSelect(["co_room_charge_subcategory.charge_subcat_name as charge_sub_category"])
                 ->andWhere("encounter_id=" . $get['encounter_id'] . "")
                 ->andWhere(['settlement' => null])
+                ->andWhere(['pat_procedure.deleted_at' => '0000-00-00 00:00:00'])
                 ->groupBy(['pat_procedure.charge_subcat_id'])
                 ->all();
         $procedure = [];
@@ -314,6 +316,7 @@ class PatientbillingotherchargeController extends ActiveController {
                 ->andWhere("encounter_id=" . $get['encounter_id'] . "")
                 ->joinWith(['chargeCat', 'chargeSubcat'])
                 ->andWhere(['settlement' => null])
+                ->andWhere(['pat_billing_other_charges.deleted_at' => '0000-00-00 00:00:00'])
                 ->groupBy(['pat_billing_other_charges.charge_cat_id', 'pat_billing_other_charges.charge_subcat_id'])
                 ->all();
         $otherCharges = [];

@@ -12,6 +12,7 @@ use common\models\PatEncounter;
 use common\models\PatBillingOtherCharges;
 use DateTime;
 use yii\base\Component;
+use Yii;
 
 class HelperComponent extends Component {
 
@@ -241,6 +242,7 @@ class HelperComponent extends Component {
                         'recurr_date' => $recurr_date,
                         'charge_amount' => $this->_getChargeAmount($admission, $charge),
                         'recurr_group' => $admission->admn_id,
+                        'tenant_id' => $admission->tenant_id,
                     ];
                     $this->_insertRecurringModel($data);
                 }
@@ -250,17 +252,18 @@ class HelperComponent extends Component {
 
     public function transferRecurring($admission) {
         $today = date("Y-m-d");
-        if ($admission->status_date == $today) {
-            // Normal Transfering
-            $recurr_date = date('Y-m-d', strtotime($admission->status_date));
+        $recurr_date = date('Y-m-d', strtotime($admission->status_date));
+        if ($recurr_date == $today) {          // Normal Transfering
             //Check Recurring Exists on that date
             $current_recurring = PatBillingRecurring::find()->select(['SUM(charge_amount) as charge_amount', 'room_type_id'])->tenant()->andWhere(['encounter_id' => $admission->encounter_id, 'recurr_date' => $recurr_date])->groupBy(['recurr_date', 'room_type_id'])->one();
 
             if (empty($current_recurring)) {
                 $this->addRecurring($admission);
             } else {
-                //If Room Type changed (Ex: AC != Non-AC)
-                if ($admission->room_type_id != $current_recurring->room_type_id) {
+                if ($admission->admission_status == 'TB') {
+                    //Add New Recurring Billings.
+                    $this->addRecurring($admission);
+                } else if ($admission->room_type_id != $current_recurring->room_type_id) { //If Room Type changed (Ex: AC != Non-AC)
                     $room_charge = CoRoomCharge::find()->select(['SUM(charge) as charge'])->tenant()->status()->active()->andWhere(['room_type_id' => $admission->room_type_id])->groupBy(['room_type_id'])->one();
 
                     //Current Charge (Room Rent: 500, DMO: 400) is lesser than Calculated Charge (Room Rent: 400, DMO: 100)
@@ -287,8 +290,7 @@ class HelperComponent extends Component {
             for ($i = 0; $i <= $diff_days; $i++) {
                 $recurr_date = date('Y-m-d', strtotime($admission->status_date . "+$i days"));
                 //Delete Current Recurring Billings
-                PatBillingRecurring::deleteAll("tenant_id = :tenant_id AND encounter_id = :encounter_id AND recurr_date = :recurr_date", [
-                    ':tenant_id' => $admission->tenant_id,
+                PatBillingRecurring::deleteAll("encounter_id = :encounter_id AND recurr_date = :recurr_date", [
                     ':encounter_id' => $admission->encounter_id,
 //                    ':room_type_id' => $current_recurring->room_type_id,
                     ':recurr_date' => $recurr_date,
@@ -316,6 +318,7 @@ class HelperComponent extends Component {
                                 'recurr_date' => $recurr_date,
                                 'charge_amount' => $charge->charge,
                                 'recurr_group' => $admission->admn_id,
+                                'tenant_id' => $admission->tenant_id,
                             ];
                             $this->_insertRecurringModel($data);
                         }
@@ -334,7 +337,8 @@ class HelperComponent extends Component {
         ]);
 
         //Get Last Admission
-        $current_encounter = PatEncounter::find()->tenant()->andWhere(['encounter_id' => $admission->encounter_id])->one();
+        $current_encounter = PatEncounter::find()->andWhere(['encounter_id' => $admission->encounter_id,
+                    'current_tenant_id' => $admission->tenant_id])->one();
         $current_admission = $current_encounter->patCurrentAdmission;
 
         $from_date = date('Y-m-d', strtotime($current_admission->status_date));

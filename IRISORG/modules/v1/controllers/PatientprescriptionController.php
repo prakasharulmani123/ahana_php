@@ -857,7 +857,8 @@ class PatientprescriptionController extends ActiveController {
             foreach ($data as $key => $value) {
                 $details = VDocuments::find()
                         ->where(['encounter_id' => $value['encounter_id'],
-                            'tenant_id' => $value['tenant_id']])
+                            //'tenant_id' => $value['tenant_id']
+                        ])
                         ->andWhere($condition)
                         ->orderBy(['date_time' => SORT_DESC])
                         ->asArray()

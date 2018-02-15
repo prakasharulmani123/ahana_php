@@ -79,7 +79,7 @@ class PatientdocumentsController extends ActiveController {
             $model = PatDocuments::find()->where(['doc_id' => $id])->one();
             $model->delete();
             $document = $model->docType->doc_type_name;
-            $activity = ''.$document.' Deleted Successfully (#' . $model->encounter_id . ' )';
+            $activity = '' . $document . ' Deleted Successfully (#' . $model->encounter_id . ' )';
             CoAuditLog::insertAuditLog(PatDocuments::tableName(), $id, $activity);
             return ['success' => true];
         }
@@ -95,7 +95,7 @@ class PatientdocumentsController extends ActiveController {
                     ->select('GROUP_CONCAT(patient_id) AS allpatient')
                     ->where(['patient_global_guid' => $patient->patient_global_guid])
                     ->one();
-            
+
             if (!empty($get['date'])) {
                 $condition = [
                     'deleted_at' => '0000-00-00 00:00:00',
@@ -118,7 +118,8 @@ class PatientdocumentsController extends ActiveController {
             foreach ($data as $key => $value) {
                 $details = VDocuments::find()
                         ->where(['encounter_id' => $value['encounter_id'],
-                            'tenant_id' => $value['tenant_id'],])
+                                //'tenant_id' => $value['tenant_id'],
+                        ])
                         ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                         ->andWhere($condition)
                         ->orderBy(['date_time' => SORT_DESC])

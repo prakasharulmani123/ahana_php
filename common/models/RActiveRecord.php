@@ -52,8 +52,10 @@ class RActiveRecord extends ActiveRecord {
 
     public function setTenant() {
         if (isset(Yii::$app->user->identity) && Yii::$app->user->identity->user_id > 0) {
-            if ($this->hasAttribute('tenant_id'))
-                $this->tenant_id = Yii::$app->user->identity->logged_tenant_id;
+            if ($this->hasAttribute('tenant_id')) {
+                if (empty($this->tenant_id))
+                    $this->tenant_id = Yii::$app->user->identity->logged_tenant_id;
+            }
 
             if ($this->hasAttribute('org_id'))
                 $this->org_id = Yii::$app->user->identity->user->org_id;

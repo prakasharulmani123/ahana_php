@@ -603,14 +603,17 @@ class PatientController extends ActiveController {
     public function actionImportpatient() {
         $cond = Yii::$app->getRequest()->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        return self::Addnewpatient($cond['patient_global_guid'],$tenant_id);
+    }
 
+    public static function Addnewpatient($patient_global_guid, $tenant) {
         $Parent_patient = PatPatient::find()->where([
-                    'patient_global_guid' => $cond['patient_global_guid'],
-                    'tenant_id' => $tenant_id,
+                    'patient_global_guid' => $patient_global_guid,
+                    'tenant_id' => $tenant,
                 ])->one();
         if (empty($Parent_patient)) {
             $Patient = PatPatient::find()->where([
-                        'patient_global_guid' => $cond['patient_global_guid'],
+                        'patient_global_guid' => $patient_global_guid,
                     ])
                     ->one();
 
@@ -636,7 +639,7 @@ class PatientController extends ActiveController {
                 $unset_attr = array_combine($unset_attr, $unset_attr);
 
                 $model->attributes = array_diff_key($PatientData, $unset_attr);
-
+                $model->tenant_id = $tenant;
                 if ($model->save(false)) {
                     return ['success' => true, 'patient' => $model];
                 } else {
@@ -645,7 +648,7 @@ class PatientController extends ActiveController {
             } else {
                 //Check global patient exists.
                 $Patient = GlPatient::find()->where([
-                            'patient_global_guid' => $cond['patient_global_guid'],
+                            'patient_global_guid' => $patient_global_guid,
                         ])
                         ->one();
                 if (!empty($Patient)) {
@@ -670,6 +673,7 @@ class PatientController extends ActiveController {
                     $unset_attr = array_combine($unset_attr, $unset_attr);
 
                     $model->attributes = array_diff_key($PatientData, $unset_attr);
+                    $model->tenant_id = $tenant;
                     if ($model->save(false)) {
                         //patGlobalPatient not set because of new patpatient records, that'y new find condition used.
                         $patient = PatPatient::find()->where(['patient_id' => $model->patient_id])->one();

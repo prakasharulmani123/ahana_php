@@ -80,6 +80,7 @@ class PatAdmission extends RActiveRecord {
     }
 
     public function validateAdmissionStatus($attribute, $params) {
+        //$this->addError($attribute, $this->encounter->current_tenant_id . "Branch can't be same. Change the Consultant" . $this->tenant_id);
         if ($this->admission_status == 'A') {
             return true;
         }
@@ -93,6 +94,11 @@ class PatAdmission extends RActiveRecord {
         } else if ($this->admission_status == 'TD') {
             if ($current_admission->consultant_id == $this->consultant_id) {
                 $this->addError($attribute, "Consultant can't be same. Change the Consultant");
+            }
+        } else if ($this->admission_status == 'TB') {
+            $current_tenant = $this->encounter->current_tenant_id;
+            if ($current_tenant == $this->tenant_id) {
+                $this->addError($attribute, "Branch can't be same. Change the Branch");
             }
         }
     }
@@ -124,7 +130,7 @@ class PatAdmission extends RActiveRecord {
                             if (!empty($procedure))
                                 $statusdateError = "Discharge Date must be greater than the Procedure date( {$procedure->proc_date} )";
                         }
-                        
+
                         if (!empty($statusdateError))
                             $this->addError($attribute, $statusdateError);
                     }
@@ -220,8 +226,23 @@ class PatAdmission extends RActiveRecord {
         if ($insert) {
             $this->setCurrentData();
 
+            //Encounter transfer to anthor branch check patient_id in particular branch and insert
+            if ($this->admission_status == 'TB') {
+                $patient_details = PatPatient::find()->where(['patient_global_guid' => $this->patient->patient_global_guid, 'tenant_id' => $this->tenant_id])->one();
+                if (!empty($patient_details)) {
+                    //$this->encounter->patient_id = $patient_details->patient_id;
+                    $this->patient_id = $patient_details->patient_id;
+                } else {
+                    $newpatient = \IRISORG\modules\v1\controllers\PatientController::Addnewpatient($this->patient->patient_global_guid, $this->tenant_id);
+                    //$this->encounter->patient_id = $newpatient['patient']->patient_id;
+                    $this->patient_id = $newpatient['patient']->patient_id;
+                }
+                //$this->encounter->current_tenant_id = $this->tenant_id;
+                //$this->encounter->save(false);
+            }
+
             //Set Old room status to vacant
-            if (($this->admission_status == 'TR' || $this->admission_status == 'D' || $this->admission_status == 'AC') && !$this->isSwapping && (!isset($this->type_of_transfer) || $this->type_of_transfer != 'TRT')) {
+            if (($this->admission_status == 'TR' || $this->admission_status == 'D' || $this->admission_status == 'AC' || $this->admission_status == 'TB') && !$this->isSwapping && (!isset($this->type_of_transfer) || $this->type_of_transfer != 'TRT')) {
                 $this->vacantOldRoomId = $this->encounter->patCurrentAdmission->room_id;
             }
         } else {
@@ -249,6 +270,11 @@ class PatAdmission extends RActiveRecord {
                 $this->encounter->status = '0';
                 $this->encounter->save(false);
             }
+            if ($this->admission_status == 'TB') {
+                $this->encounter->current_tenant_id = $this->tenant_id;
+                $this->encounter->patient_id = $this->patient_id;
+                $this->encounter->save(false);
+            }
         }
 
         //Change Old room status to vacant if Room Transfer
@@ -274,6 +300,9 @@ class PatAdmission extends RActiveRecord {
                 else
                     Yii::$app->hepler->cancelRecurring($this);
                 break;
+            case 'TB':
+                Yii::$app->hepler->transferRecurring($this);
+                break;
             case 'TR':
                 Yii::$app->hepler->transferRecurring($this);
                 break;
@@ -281,19 +310,21 @@ class PatAdmission extends RActiveRecord {
                 Yii::$app->hepler->cancelRecurring($this);
                 break;
         }
-        if($this->admission_status=='A')
+        if ($this->admission_status == 'A')
             $activity = 'Patient Admission Successfully (#' . $this->encounter_id . ' )';
-        else if($this->admission_status=='D')
+        else if ($this->admission_status == 'D')
             $activity = 'Patient Discharge Successfully (#' . $this->encounter_id . ' )';
-        else if($this->admission_status=='TD')
+        else if ($this->admission_status == 'TD')
             $activity = 'Patient Transfer Doctor Successfully (#' . $this->encounter_id . ' )';
-        else if($this->admission_status=='TR')
+        else if ($this->admission_status == 'TR')
             $activity = 'Patient Transfer Room Successfully (#' . $this->encounter_id . ' )';
-        else if($this->admission_status=='C')
+        else if ($this->admission_status == 'C')
             $activity = 'Patient Room Swapping  Cancelled Successfully (#' . $this->encounter_id . ' )';
-        else if($this->admission_status=='CD')
+        else if ($this->admission_status == 'CD')
             $activity = 'Patient Clinical Discharge Successfully (#' . $this->encounter_id . ' )';
-        else 
+        else if ($this->admission_status == 'TB')
+            $activity = 'Patient Transfer Branch Successfully (#' . $this->encounter_id . ' )';
+        else
             $activity = 'Patient Admission Cancelled Successfully (#' . $this->encounter_id . ' )';
         CoAuditLog::insertAuditLog(PatConsultant::tableName(), $this->admn_id, $activity);
 
@@ -316,6 +347,10 @@ class PatAdmission extends RActiveRecord {
             case 'TD':
                 $header = "Doctor Transfer";
                 $message = "Patient's Doctor Transfered. <br />Consultant Incharge: {$this->consultant->title_code} {$this->consultant->name}";
+                break;
+            case 'TB':
+                $header = "Branch Transfer";
+                $message = "Patient's Branch Transfered. <br />Branch Name: {$this->tenant->tenant_name}: Patient Admission Modified. $bed_details";
                 break;
             case 'CD':
                 $header = "Clinical Discharge";
@@ -347,7 +382,7 @@ class PatAdmission extends RActiveRecord {
             if ($this->admission_status == 'D' || $this->admission_status == 'CD' || $this->admission_status == 'AC') {
                 $this->consultant_id = $this->encounter->patCurrentAdmission->consultant_id;
             }
-        } else if ($this->admission_status == 'TR') {
+        } else if ($this->admission_status == 'TR' || $this->admission_status == 'TB') {
             $this->consultant_id = $this->encounter->patCurrentAdmission->consultant_id;
         }
     }
