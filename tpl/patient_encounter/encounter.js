@@ -318,6 +318,11 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                             headerText = 'Cancel Clinical Discharge?';
                             bodyText = 'Are you sure you want to cancel this Clinical Discharge?';
                             succ_msg = 'Clinical Discharge cancelled successfully';
+                        } else if (row_sts == 'TB') {
+                            notes = 'Transfer (Branch) Cancelled';
+                            headerText = 'Cancel Branch Transfer?';
+                            bodyText = 'Are you sure you want to cancel this Branch Transfer?';
+                            succ_msg = 'Branch Transfer cancelled successfully';
                         }
 
                         var modalOptions = {

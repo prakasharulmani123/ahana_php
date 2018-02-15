@@ -7,12 +7,12 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-            <div class="col-sm-12" ng-init="data = {}; data.formtype = 'add';
+                            <div class ="col-sm-12" ng-init="data = {};
+                            data.formtype = 'add';
                             initForm();
                             initTransferForm();
                             data.PatAdmission.status = '1';
-                            data.PatAdmission.type_of_transfer = 'TD';
-                 ">
+                        data.PatAdmission.type_of_transfer = 'TD';">
                 <form name="patientAppointmentForm" class="form-horizontal form-validation" novalidate="">
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -28,7 +28,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Date of Transfer * </label>
                                 <div class="col-sm-9">
-                                    
+
                                     <div class="input-group w-md">
                                         <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0)">
                                             <div class="input-group">
@@ -59,20 +59,36 @@
                             <div class="form-group" ng-show="data.PatAdmission.type_of_transfer == 'TD'">
                                 <label class="col-sm-3 control-label">Consultant * </label>
                                 <div class="col-sm-9">
-                                    <select ng-model="data.PatAdmission.consultant_id" class="form-control" ng-options="user.user_id as user.name for user in doctors | orderBy: name">
+                                    <select ng-model="data.PatAdmission.consultant_id" class="form-control" ng-options="user.user_id as user.name for user in doctors| orderBy: name">
                                         <option value="">Select Consultant</option>
                                     </select>
                                 </div>
                             </div>
 
-                            <div ng-show="data.PatAdmission.type_of_transfer == 'TR'">
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">Floors * </label>
-                                    <div class="col-sm-9">
-                                        <select class="form-control"ng-model="data.PatAdmission.floor_id" ng-options="floor.floor_id as floor.floor_name for floor in floors | orderBy: floor_name" ng-change="updateWard();
+                            <div class="form-group" ng-show="data.PatAdmission.type_of_transfer == 'TB'">
+                                <label class="col-sm-3 control-label">Branch * </label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" 
+                                            ng-model="data.PatAdmission.tenant_id" ng-options="branch_id as branch_name for (branch_id,branch_name) in alltenantlist"
+                                            ng-change="updateBranch();
                                                         data.PatAdmission.ward_id = '';
                                                         data.PatAdmission.room_id = '';
                                                         data.PatAdmission.room_type_id = '';">
+                                        <option value="">Select Branch</option>
+                                    </select>
+                                </div>
+                                <br />
+                                <div class="line line-dashed b-b line-lg "></div>
+                            </div>
+
+                            <div ng-show="((data.PatAdmission.type_of_transfer == 'TR') || (data.PatAdmission.type_of_transfer == 'TB'))">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Floors * </label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control"ng-model="data.PatAdmission.floor_id" ng-options="floor.floor_id as floor.floor_name for floor in floors| orderBy: floor_name" ng-change="updateWard();
+                                                            data.PatAdmission.ward_id = '';
+                                                            data.PatAdmission.room_id = '';
+                                                            data.PatAdmission.room_type_id = '';">
                                             <option value="">Select Floor</option>
                                         </select>
                                     </div>
@@ -83,9 +99,9 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Wards * </label>
                                     <div class="col-sm-9">
-                                        <select class="form-control" ng-model="data.PatAdmission.ward_id" ng-options="ward.ward_id as ward.ward_name for ward in availableWards | orderBy: ward_name" ng-change="updateRoom();
-                                                        data.PatAdmission.room_id = '';
-                                                        data.PatAdmission.room_type_id = '';">
+                                        <select class="form-control" ng-model="data.PatAdmission.ward_id" ng-options="ward.ward_id as ward.ward_name for ward in availableWards| orderBy: ward_name" ng-change="updateRoom();
+                                                            data.PatAdmission.room_id = '';
+                                                            data.PatAdmission.room_type_id = '';">
                                             <option value="">Select Ward</option>
                                         </select>
                                     </div>
@@ -96,8 +112,8 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Bed No * </label>
                                     <div class="col-sm-9">
-                                        <select class="form-control" ng-model="data.PatAdmission.room_id" ng-options="room.room_id as room.bed_name for room in availableRooms | orderBy: bed_name" ng-change="updateRoomType();
-                                                        data.PatAdmission.room_type_id = '';">
+                                        <select class="form-control" ng-model="data.PatAdmission.room_id" ng-options="room.room_id as room.bed_name for room in availableRooms| orderBy: bed_name" ng-change="updateRoomType();
+                                                            data.PatAdmission.room_type_id = '';">
                                             <option value="">Select Bed No</option>
                                         </select>
                                     </div>
@@ -107,13 +123,13 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Bed Type * </label>
                                     <div class="col-sm-9">
-                                        <select class="form-control" ng-model="data.PatAdmission.room_type_id" ng-options="roomType.room_type_id as roomType.room_type_name for roomType in availableRoomtypes | orderBy: room_type_name">
+                                        <select class="form-control" ng-model="data.PatAdmission.room_type_id" ng-options="roomType.room_type_id as roomType.room_type_name for roomType in availableRoomtypes| orderBy: room_type_name">
                                             <option value="">Select Bed Type</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div ng-show="data.PatAdmission.type_of_transfer == 'TRT'">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Room Details</label>
@@ -127,7 +143,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Bed Type * </label>
                                     <div class="col-sm-9">
-                                        <select class="form-control" ng-model="data.PatAdmission.room_type_id" ng-options="roomType.room_type_id as roomType.room_type_name for roomType in availableTypes | orderBy: room_type_name">
+                                        <select class="form-control" ng-model="data.PatAdmission.room_type_id" ng-options="roomType.room_type_id as roomType.room_type_name for roomType in availableTypes| orderBy: room_type_name">
                                             <option value="">Select Bed Type</option>
                                         </select>
                                     </div>

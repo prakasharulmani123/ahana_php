@@ -39,8 +39,8 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
             if (date)
                 filterDate = moment(date).format('YYYY-MM-DD');
             $scope.documents = [];
-            $scope.documents.push({label: 'Case History', value: 'CH'}, {label: 'Scanned Documents', value: 'SD'}, {label: 'Other Documents', value: 'OD'}, 
-                    {label: 'Medical Case History', value: 'MCH'},{label: 'Psychological Assessment', value: 'PA'},{label: 'Psychological Therapy', value: 'PT'});
+            $scope.documents.push({label: 'Case History', value: 'CH'}, {label: 'Scanned Documents', value: 'SD'}, {label: 'Other Documents', value: 'OD'},
+                    {label: 'Medical Case History', value: 'MCH'}, {label: 'Psychological Assessment', value: 'PA'}, {label: 'Psychological Therapy', value: 'PT'});
             //$scope.documents.push({label: 'Case History', value: 'CH'}, {label: 'Scanned Documents', value: 'SD'}, {label: 'Other Documents', value: 'OD'});
             $scope.isLoading = true;
             $scope.rowCollection = [];
@@ -48,7 +48,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
             $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
                 if (newValue != '') {
-                    $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
+                    $rootScope.commonService.GetEncounterListByPatient($scope.app.logged_tenant_id, '0,1', false, $scope.patientObj.patient_id, function (response) {
                         angular.forEach(response, function (resp) {
                             if (((resp.encounter_type == 'IP') && (!resp.cancel_admission)) || ((resp.encounter_type == 'OP') && (!resp.cancel_appoitment))) {
                                 $scope.encounters_list.push(resp);

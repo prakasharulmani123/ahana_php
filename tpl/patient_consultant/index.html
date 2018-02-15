@@ -53,6 +53,7 @@
                             </button>
                         </th>
                         <th width="169">Date Of Visit</th>
+                        <th width="169">Branch Name</th>
                         <th width="300">Consultant</th>
                         <th width="300">Notes</th>
                         <th width="150">Action</th>
@@ -67,7 +68,7 @@
                             </button>
                         </td>
                         <td colspan="4"> 
-                            <span class="badge bg-success">Branch: {{value.data.branch_name}}</span>&nbsp; &nbsp; 
+<!--                            <span class="badge bg-success">Branch: {{value.data.branch_name}}</span>&nbsp; &nbsp; -->
                             <span class="badge bg-primary">Encounter: {{value.data.encounter_id}}</span>&nbsp; &nbsp; 
                         </td>
                     </tr>
@@ -76,6 +77,7 @@
                         <td> {{patConsultant.consult_date| moment:'DD/MM/YYYY'}} &nbsp;
                             <span class="label bg-light dk">{{patConsultant.consult_date| moment:'hh:mm A'}}</span> 
                         </td>
+                        <td>{{patConsultant.branch_name}}</td>
                         <td> {{patConsultant.consultant_name}} </td>
                         <td valign="middle"> 
 <!--                            <div tooltip-placement="left" data-tooltip-html-unsafe="{{patConsultant.concatenate_notes ? patConsultant.full_notes : ''}}"> <span ng-bind-html="patConsultant.short_notes"></span> </div>-->

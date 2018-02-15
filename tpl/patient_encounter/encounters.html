@@ -85,6 +85,7 @@
                                 </button>
                             </th>
                             <th>Encounter ID </th>
+                            <th>Branch Name</th>
                             <th>Date</th>
                             <th>Type</th>
                             <th>Details</th>
@@ -100,9 +101,9 @@
                                     <i ng-if="expanded" class="fa fa-minus text"></i>
                                 </button>
                             </td>
-                            <td colspan="6">
+                            <td colspan="7">
                                 <b>
-                                    <span class="badge bg-success">Branch: {{encounter.tenant}}</span>
+                                    <!--<span class="badge bg-success">Branch: {{encounter.tenant}}</span>-->
                                     <span class="badge bg-primary">Encounter: {{encounter.encounter_id}}</span>&nbsp; &nbsp;
                                     <span class="badge bg-black">Date: {{encounter.date| moment:'DD/MM/YYYY'}}</span>&nbsp; &nbsp;
                                     <span class="badge bg-success">{{encounter.encounter_type}}</span>&nbsp; &nbsp;
@@ -115,6 +116,7 @@
                                 <label ng-if="item.tenant_id == app.logged_tenant_id" ng-show="(item.status == 1 || item.type == 'Seen') && encounter.last_row_sts != 'CD'" class="i-checks m-b-none"><input id="enc_{{item.encounter_id}}{{key}}" class="enc_chk enc_chk_{{item.encounter_id}}" type="checkbox" name="b[]" ng-click="moreOptions(key, item.encounter_id, item.encounter_type, item.row_sts, item.id, item.status, item.is_swap)"><i></i></label>
                             </td>
                             <td> {{encounter.encounter_id}} </td>
+                            <td> {{item.tenant_name}} </td>
                             <td>
                                 <!--Datetime picker-->
                                 <!-- Hide by Nadesh -- >

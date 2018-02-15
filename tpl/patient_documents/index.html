@@ -65,6 +65,7 @@
                             </button>
                         </th>
                         <th>Document Date</th>
+                        <th>Branch Name</th>
                         <th>Document Type</th>
                         <th>Document Name</th>
                         <th>Created By</th>
@@ -88,7 +89,7 @@
                         </td>
                         <td colspan="6">
                             <b>
-                                <span class="badge bg-primary">Branch: {{value.tenant_name}}</span>&nbsp; &nbsp;
+<!--                                <span class="badge bg-primary">Branch: {{value.tenant_name}}</span>&nbsp; &nbsp;-->
                                 <span class="badge bg-black">Encounter: {{value.encounter_id}}</span>&nbsp; &nbsp; 
                             </b>
                         </td>
@@ -96,6 +97,7 @@
                     <tr ng-repeat-end ng-show="expanded" ng-repeat="(doc_key, doc) in value.all">
                         <td align="center" valign="middle"></td>
                         <td valign="middle"> {{doc.date_time| moment:'DD/MM/YYYY - hh:mm A'}}</td>
+                        <td>{{doc.tenant_name}}</td>
                         <td valign="middle"> 
                             <span ng-if="doc.doc_type == 'CH' && doc.status == '0'">
                                 <img ng-src="img/incomplete.gif" title="InComplete"  alt="InComplete" width="" height="" />

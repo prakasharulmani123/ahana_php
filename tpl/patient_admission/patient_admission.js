@@ -139,10 +139,15 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
         }, true);
 
         $scope.initTransferForm = function () {
+            $rootScope.commonService.GetTenantList(function (response) {
+                $scope.alltenantlist = response.tenantList;
+            });
+
             $scope.transferTypes = [
                 {'value': 'TD', 'label': 'Consultant'},
                 {'value': 'TR', 'label': 'Room'},
                 {'value': 'TRT', 'label': 'Room Type'},
+                {'value': 'TB', 'label': 'Branch'},
             ];
 
             // Room Type Transfer
@@ -220,7 +225,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             $event.stopPropagation();
             $scope.opened = true;
         };
-        
+
         $scope.beforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
             var d = new Date();
             var n = d.getDate();
@@ -235,7 +240,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                     var calender_m = calender.getMonth();
                     var calender_y = calender.getFullYear();
                     var calender_date = (new Date(calender_y, calender_m, calender_n)).valueOf();
-                    
+
                     //Hide - Future Dates only
                     if (today_date < calender_date) {
                         $dates[key].selectable = false;
@@ -274,6 +279,26 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             });
         }
 
+        $scope.updateBranch = function () {
+            $rootScope.commonService.GetFloorList($scope.data.PatAdmission.tenant_id, '1', false, function (response) {
+                $scope.floors = response.floorList;
+            });
+
+            $rootScope.commonService.GetWardList($scope.data.PatAdmission.tenant_id, '1', false, function (response) {
+                $scope.wards = response.wardList;
+            });
+
+            $rootScope.commonService.GetRoomList($scope.data.PatAdmission.tenant_id, '1', false, '0', function (response) {
+                $scope.rooms = response.roomList;
+            });
+
+            $rootScope.commonService.GetRoomTypeList($scope.data.PatAdmission.tenant_id, '1', false, function (response) {
+                $scope.roomTypes = response.roomtypeList;
+            });
+            $rootScope.commonService.GetRoomTypesRoomsList($scope.data.PatAdmission.tenant_id, function (response) {
+                $scope.roomTypesRoomsList = response.roomtypesroomsList;
+            });
+        }
         $scope.no_vacant_beds = false;
         $scope.updateRoom = function () {
             $scope.availableRooms = [];
@@ -392,7 +417,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
 
         $scope.saveAdmissionForm = function (mode) {
             _that = this;
-
+            //console.log(_that.data.PatAdmission); return false;
             $scope.errorData = "";
             $scope.msg.successMessage = "";
 
@@ -425,9 +450,12 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                         _that.data.PatAdmission.room_id = $scope.roomDetails.model.currentAdmission.room_id;
                     }
                     succ_msg = "Room Transfered successfully";
+                } else if (_that.data.PatAdmission.type_of_transfer == 'TB') {
+                    _that.data.PatAdmission.admission_status = 'TB';
+                    succ_msg = "Branch Transfered successfully";
                 }
             }
-            _that.data.PatAdmission.status_date = moment(_that.data.PatAdmission.status_date).format('YYYY-MM-DD HH:mm:ss');
+                        _that.data.PatAdmission.status_date = moment(_that.data.PatAdmission.status_date).format('YYYY-MM-DD HH:mm:ss');
 
 
             $scope.loadbar('show');

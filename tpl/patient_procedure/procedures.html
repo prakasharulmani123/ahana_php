@@ -56,7 +56,8 @@
                                     <i ng-if="allExpanded" class="fa fa-minus text"></i>
                                 </button>
                             </th>
-                            <th> Date of Procedure </th>
+                            <th>Date of Procedure </th>
+                            <th>Branch Name</th>
                             <th>Procedure Name</th>
                             <th>Notes</th>
                             <th>Doctors Name</th>
@@ -71,8 +72,8 @@
                                     <i ng-if="expanded" class="fa fa-minus text"></i>
                                 </button>
                             </td>
-                            <td colspan="5">
-                                <span class="badge bg-success">Branch: {{value.data.branch_name}}</span>&nbsp; &nbsp; 
+                            <td colspan="6">
+                                <!--                                <span class="badge bg-success">Branch: {{value.data.branch_name}}</span>&nbsp; &nbsp; -->
                                 <span class="badge bg-primary">Encounter: {{value.data.encounter_id}}</span>&nbsp; &nbsp; 
                             </td>
                         </tr>
@@ -82,6 +83,7 @@
                                 {{patProcedure.proc_date| moment:'DD/MM/YYYY'}} &nbsp;
                                 <span class="label bg-light dk">{{patProcedure.proc_date| moment:'hh:mm A'}}</span> 
                             </td>
+                            <td>{{patProcedure.branch_name}}</td>
                             <td> {{patProcedure.procedure_name}} </td>
                             <td valign="middle">
 <!--                                <div tooltip-placement="left" data-tooltip-html-unsafe="{{patProcedure.concatenate_description ? patProcedure.full_description : ''}}"> <span ng-bind-html="patProcedure.short_description"></span> </div>-->
@@ -107,13 +109,13 @@
 
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="6" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                            <td colspan="7" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                         </tr>
                     </tbody>
 
                     <tfoot>
                         <tr>
-                            <td colspan="6" class="text-center">
+                            <td colspan="7" class="text-center">
                                 <!--<div st-items-by-page="itemsByPage" st-pagination="" st-template="tpl/patient/pagination.custom.html"></div>-->
                                 <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
                             </td>

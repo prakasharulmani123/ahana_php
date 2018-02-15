@@ -23,7 +23,7 @@ app.controller('BillingPaymentController', ['$rootScope', '$scope', '$timeout', 
         $scope.enc = {};
         $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             if (newValue != '') {
-                $rootScope.commonService.GetEncounterListByPatientAndType('', '0,1', false, $scope.patientObj.patient_id, 'IP', function (response) {
+                $rootScope.commonService.GetEncounterListByPatientAndType($scope.app.logged_tenant_id, '0,1', false, $scope.patientObj.patient_id, 'IP', function (response) {
                     //Most probably because splice() mutates the array, and angular.forEach() uses invalid indexes
                     //That's y used while instead of foreach
                     var i = response.length;

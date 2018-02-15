@@ -48,6 +48,7 @@
                             </button>
                         </th>
                         <th>Created By</th>
+                        <th>Branch Name</th>
                         <th>Date</th>
                         <th>Nurse's Notes</th>
                         <th>Actions</th>
@@ -61,9 +62,9 @@
                                 <i ng-if="expanded" class="fa fa-minus text"></i>
                             </button>
                         </td>
-                        <td colspan="4">
+                        <td colspan="5">
                             <b> 
-                                <span class="badge bg-success">Branch: {{value.data.branch_name}}</span>&nbsp; &nbsp;
+<!--                                <span class="badge bg-success">Branch: {{value.data.branch_name}}</span>&nbsp; &nbsp;-->
                                 <span class="badge bg-primary">Encounter: {{value.data.encounter_id}}</span>&nbsp; &nbsp; 
                             </b>
                         </td>
@@ -73,6 +74,9 @@
                         <td align="center" valign="middle"></td>
                         <td valign="middle">
                             <span class="label bg-info">  {{note.created_by_name}} </span>
+                        </td>
+                        <td valign="middle">
+                            {{note.branch_name}}
                         </td>
                         <td valign="middle"> {{note.created_at| moment:'DD/MM/YYYY'}} </td>
                         <td valign="middle"> 
@@ -97,13 +101,13 @@
 
                 <tbody ng-show="isLoading">
                     <tr>
-                        <td colspan="5" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                        <td colspan="6" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                     </tr>
                 </tbody>
 
                 <tfoot>
                     <tr>
-                        <td colspan="5" class="text-center">
+                        <td colspan="6" class="text-center">
                             <!--<div st-items-by-page="itemsByPage" st-pagination="" st-template="tpl/patient/pagination.custom.html"></div>-->
                             <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
                         </td>

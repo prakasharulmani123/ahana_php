@@ -392,7 +392,7 @@
                                     <span id="ReportViewer_ReportViewer3">{{row.to_date| moment:'DD-MMM-YYYY'}}</span>
                                 </td>
                                 <td>
-                                    {{row.charge_item}} ({{row.charge_amount}} * {{row.duration}}) ({{row.room_type}}) 
+                                    {{row.charge_item}} ({{row.charge_amount}} * {{row.duration}}) ({{row.room_type}}) ({{row.tenant_name}})
                                 </td>
                                 <td align="center" ng-init="
                                             row_recurring_total = getTotalRecurringPrice(row);
@@ -422,7 +422,7 @@
                             </tr>
                             <tr ng-init="detailed_billing.total.net_step_1_total = detailed_recurr_billing.total.recurring_total" ng-repeat="(key, row) in procedures">
                                 <td>{{row.date| moment:'DD-MMM-YYYY'}}</td>
-                                <td>{{row.headers}}</td>
+                                <td>{{row.headers}} ({{row.tenant_name}})</td>
                                 <td align="center" ng-init="
                                             row_total = getTotalExtra(row);
                                             detailed_non_billing.total.charge = detailed_non_billing.total.charge + row_total;
@@ -453,7 +453,7 @@
                             </tr>
                             <tr ng-init="detailed_billing.total.net_step_2_total = detailed_billing.total.procedure_net_total;" ng-repeat="(key, row) in consultants">
                                 <td>{{row.date| moment:'DD-MMM-YYYY'}}</td>
-                                <td>{{row.headers}}</td>
+                                <td>{{row.headers}} ({{row.tenant_name}})</td>
                                 <td align="center" ng-init="
                                             row_total = getTotalExtra(row);
                                             detailed_non_billing.total.charge = detailed_non_billing.total.charge + row_total;
@@ -482,7 +482,7 @@
                             </tr>
                             <tr ng-init="detailed_billing.total.net_step_3_total = detailed_billing.total.consultant_net_total" ng-repeat="(key, row) in other_charges">
                                 <td>{{row.date| moment:'DD-MMM-YYYY'}}</td>
-                                <td>{{row.category}}({{row.headers}})</td>
+                                <td>{{row.category}}({{row.headers}}) ({{row.tenant_name}})</td>
                                 <td align="center" ng-init="
                                             row_total = getTotalPrice(row);
                                             detailed_non_billing.total.charge = detailed_non_billing.total.charge + row_total;
@@ -576,7 +576,7 @@
                             </tr>
                             <tr ng-init="detailed_billing.total.net_step_4_total = detailed_billing.total.pharmacy_bill_net_total" ng-repeat="(key, row) in advances">
                                 <td>{{row.payment_date| moment:'DD-MMM-YYYY'}}</td>
-                                <td>{{row.headers}}</td>
+                                <td>{{row.headers}} ({{row.tenant_name}})</td>
                                 <td>&nbsp;</td>
                                 <td align="center" ng-init="
                                             detailed_non_billing.total.adv_charge = detailed_non_billing.total.adv_charge + parseFloat(row.total_charge);

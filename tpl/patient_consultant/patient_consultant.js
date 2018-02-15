@@ -99,7 +99,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
         $scope.enc = {};
         $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             if (newValue != '') {
-                $rootScope.commonService.GetEncounterListByPatient('', '0,1', false, $scope.patientObj.patient_id, function (response) {
+                $rootScope.commonService.GetEncounterListByPatient($scope.app.logged_tenant_id, '0,1', false, $scope.patientObj.patient_id, function (response) {
                     angular.forEach(response, function (resp) {
                         resp.encounter_id = resp.encounter_id.toString();
                     });
@@ -108,7 +108,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                         $scope.enc.selected = $scope.encounters[0];
                         var actEnc = $filter('filter')($scope.encounters, {status: '1'});
                     }
-                },'encounter_details');
+                }, 'encounter_details');
             }
         }, true);
 
@@ -124,7 +124,7 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
 
         $scope.enabled_dates = [];
         $scope.loadPatConsultantsList = function (date) {
-            
+
             $rootScope.commonService.GetDay(function (response) {
                 $scope.days = response;
             });

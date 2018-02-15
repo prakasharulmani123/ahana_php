@@ -135,6 +135,7 @@
                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table" ng-init="recurr_billing.total = {}">
                         <tr>
                             <th>Item</th>
+                            <th>Branch</th>
                             <th>Charge</th>
                             <th>Bed Type</th>
                             <th>From Date</th>
@@ -144,6 +145,7 @@
                         </tr>
                         <tr ng-repeat="(key, row) in recurring_charges | orderBy:'from_date'">
                             <td>{{row.charge_item}} </td>
+                            <td>{{row.tenant_name}}</td>
                             <td> {{row.charge_amount}} </td>
                             <td> {{row.room_type}} </td>
                             <td> {{row.from_date}} </td>
@@ -154,7 +156,7 @@
                                 "> {{row_recurring_total| number:2}} </td>
                         </tr>
                         <tr>
-                            <td colspan="6">&nbsp;</td>   
+                            <td colspan="7">&nbsp;</td>   
                             <td align="right">	<strong>{{recurr_billing.total.recurring_total| number:2}}</strong></td>
                         </tr>
                     </table>
@@ -181,6 +183,7 @@
                                 <th></th>
                                 <th></th>
                                 <th>Category</th>
+                                <th>Branch</th>
                                 <th>Headers</th>
                                 <th>Charge</th>
                                 <th>Count</th>
@@ -201,7 +204,7 @@
                                         <i ng-if="expanded_1" class="fa fa-minus text"></i>
                                     </button>
                                 </td>
-                                <td colspan="9">
+                                <td colspan="10">
                                     <b> 
                                         <span class="badge bg-success ng-binding">Category : Procedure Charges</span> 
                                     </b>
@@ -215,6 +218,7 @@
                                     </label>
                                 </td>
                                 <td>{{row.category}} </td>
+                                <td>{{row.tenant_name}}</td>
                                 <td> {{row.headers}} </td>
                                 <td> {{row.charge}} </td>
                                 <td> {{row.visit_count}} </td>
@@ -238,7 +242,7 @@
                                         <i ng-if="expanded_2" class="fa fa-minus text"></i>
                                     </button>
                                 </td>
-                                <td colspan="9">
+                                <td colspan="10">
                                     <b> 
                                         <span class="badge bg-success ng-binding">Category : Professional Charges</span> 
                                     </b>
@@ -252,6 +256,7 @@
                                     </label>
                                 </td>
                                 <td>{{row.category}} </td>
+                                <td>{{row.tenant_name}}</td>
                                 <td> {{row.headers}} </td>
                                 <td> {{row.charge}} </td>
                                 <td> {{row.visit_count}} </td>
@@ -275,7 +280,7 @@
                                         <i ng-if="expanded_3" class="fa fa-minus text"></i>
                                     </button>
                                 </td>
-                                <td colspan="9">
+                                <td colspan="10">
                                     <b> 
                                         <span class="badge bg-success ng-binding">Category : Other Charges</span> 
                                     </b>
@@ -289,6 +294,7 @@
                                     </label>
                                 </td>
                                 <td>{{row.category}} </td>
+                                <td>{{row.tenant_name}}</td>
                                 <td> {{row.headers}} </td>
                                 <td> {{row.charge}} </td>
                                 <td> {{row.visit_count}} </td>
@@ -303,7 +309,7 @@
                             </tr>
                             <tr>
                                 <td align="center" valign="middle"></td>
-                                <td colspan="6" class="text-right"></td>
+                                <td colspan="7" class="text-right"></td>
                                 <td><strong>{{billing.total.charge| number:2}}</strong></td>
                                 <td><strong>{{billing.total.concession| number:2}}</strong></td>
                                 <td><strong>{{billing.total.extra| number:2}}</strong></td>
@@ -371,6 +377,7 @@
                             <tr>
                                 <th colspan="2">&nbsp;</th>
                                 <th>Category</th>
+                                <th>Branch</th>
                                 <th>Date</th>
                                 <th>Headers</th>
                                 <th>Mode</th>
@@ -389,6 +396,7 @@
                                     </label>
                                 </td>
                                 <td>{{row.category}} </td>
+                                <td>{{row.tenant_name}} </td>
                                 <td>{{row.payment_date| moment:'DD/MM/YYYY HH:mm:ss'}} </td>
                                 <td> {{row.headers}} </td>
                                 <td> {{row.trans_mode}} </td>
@@ -421,7 +429,7 @@
                             </tr>
                             <tr>
                                 <td align="center" valign="middle"></td>
-                                <td colspan="7">&nbsp;</td>
+                                <td colspan="8">&nbsp;</td>
                                 <td align="right"><strong>{{billing.total.advance_charge| number:2}}</strong></td>
                             </tr>
                         </tbody>

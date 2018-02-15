@@ -422,7 +422,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 var recu_to = moment(row.to_date).format('DD/MM/YYYY');
                 bill.push([
                     {text: recu_to, style: 'rows'},
-                    {text: row.charge_item + '(' + row.charge_amount + '*' + row.duration + ')' + '(' + row.room_type + ')', style: 'rows', colSpan: 2},
+                    {text: row.charge_item + '(' + row.charge_amount + '*' + row.duration + ')' + '(' + row.room_type + ')' + '(' + row.tenant_name + ')', style: 'rows', colSpan: 2},
                     '',
                     {text: recu_price.toString(), style: 'rows', alignment: 'right'},
                     '',
@@ -462,7 +462,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     var net_total = parseFloat(detailed_billing.total.net_step_1_total) + parseFloat(row.net_amount)
                     bill.push([
                         {text: proce_date, style: 'rows'},
-                        {text: row.headers, colSpan: 2, style: 'rows'},
+                        {text: row.headers + '(' + row.tenant_name + ')', colSpan: 2, style: 'rows'},
                         '',
                         {text: row_total.toString(), style: 'rows', alignment: 'right'},
                         '',
@@ -504,7 +504,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     var net_total = parseFloat(detailed_billing.total.net_step_2_total) + parseFloat(row.net_amount)
                     bill.push([
                         {text: profe_date, style: 'rows'},
-                        {text: row.headers, style: 'rows', colSpan: 2},
+                        {text: row.headers + '(' + row.tenant_name + ')', style: 'rows', colSpan: 2},
                         '',
                         {text: row_total.toString(), style: 'rows', alignment: 'right'},
                         '',
@@ -546,7 +546,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     var net_total = parseFloat(detailed_billing.total.net_step_3_total) + parseFloat(row.net_amount)
                     bill.push([
                         {text: other_date, style: 'rows'},
-                        {text: row.category + '(' + row.headers + ')', colSpan: 2, style: 'rows'},
+                        {text: row.category + '(' + row.headers + ')' + '(' + row.tenant_name + ')', colSpan: 2, style: 'rows'},
                         '',
                         {text: row_total.toString(), style: 'rows', alignment: 'right'},
                         '',
@@ -628,7 +628,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     {text: 'Net', bold: true, alignment: 'right', fillColor: '#eeeeee'},
                 ]);
             }
-            
+
             //Pharmacy Bill START
             if ($scope.pharmacy_bill.length > 0) {
                 bill.push([
@@ -688,7 +688,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     var payment_date = moment(row.payment_date).format('DD/MM/YYYY');
                     bill.push([
                         {text: payment_date, style: 'rows'},
-                        {text: row.headers, colSpan: 2, style: 'rows'},
+                        {text: row.headers + '(' + row.tenant_name + ')', colSpan: 2, style: 'rows'},
                         '',
                         '',
                         {text: parseInt(row.total_charge).toString(), style: 'rows', alignment: 'right'},
@@ -792,7 +792,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
 
             pharmacy = (typeof detailed_billing.total.pharmacy_total == 'undefined') ? '0.00' : detailed_billing.total.pharmacy_total;
             pharmacy_paid = (typeof detailed_billing.total.pharmacy_bill_total == 'undefined') ? '0.00' : detailed_billing.total.pharmacy_bill_total;
-            
+
             bill.push([
                 {
                     text: 'Grand Total : ' + (parseFloat(charge) + parseFloat(extra) + parseFloat($scope.recurr_billing.total.recurring_total) + parseFloat(pharmacy)).toString(),
