@@ -42,7 +42,7 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
             });
             $scope.clearReport();
         }
-        
+
         $scope.deselectAll = function () {
             $timeout(function () {
                 // anything you want can go here and will safely be run on the next digest.
@@ -81,12 +81,18 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 angular.extend(data, {payment_type: $scope.data.payment_type});
             if (typeof $scope.data.patient_group_name !== 'undefined' && $scope.data.patient_group_name != '')
                 angular.extend(data, {patient_group_name: $scope.data.patient_group_name});
-            
+
             // Get data's from service
             $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyreport/salereturnreport?addtfields=salereturnreport', data)
                     .success(function (response) {
                         $scope.loadbar('hide');
                         $scope.records = response.report;
+                        $scope.tableid = [];
+                        $scope.sheet_name = [];
+                        $scope.tableid.push('sale_return_report');
+                        $scope.sheet_name.push($scope.app.org_name);
+                        $scope.tableid.push('table_datewise_report');
+                        $scope.sheet_name.push('Date Wise Summary');
                         $scope.generated_on = moment().format('YYYY-MM-DD hh:mm A');
                     })
                     .error(function () {
@@ -134,7 +140,7 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 8}, "", "", "", "", "","",""
+                {text: branch_name, style: 'header', colSpan: 8}, "", "", "", "", "", "", ""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
@@ -238,6 +244,50 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 }
             });
 
+            var sale_date_wise = $filter('groupBy')($scope.records, 'sale_return_date');
+            var date_info = [];
+            date_info.push({
+                columns: [
+                    {
+                        text: [
+                            {text: 'Date Wise Summary: ', bold: true},
+                        ],
+                    }, ]
+            });
+
+            var branch_item = [];
+
+            branch_item.push([
+                {text: 'Date', style: 'header'},
+                {text: 'Amount', alignment: 'right'}
+            ]);
+
+            angular.forEach(sale_date_wise, function (branch, sale_date) {
+                var date_wise_total = 0;
+                angular.forEach(branch, function (record, key) {
+                    date_wise_total += parseFloat(record.bill_amount);
+                });
+                var date_total = date_wise_total.toString();
+                branch_item.push([
+                    {text: sale_date},
+                    {text: date_total, alignment: 'right'}
+                ]);
+            });
+
+            date_info.push({
+                style: 'demoTable1',
+                table: {
+                    widths: ['*', 'auto'],
+                    body: branch_item,
+                },
+                layout: {
+                    hLineWidth: function (i, node) {
+                        return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
+                    }
+                },
+            });
+            content.push(date_info);
+
             return content;
         }
 
@@ -254,7 +304,7 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                         pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 75 : 50),
                         pageSize: 'A4',
                     };
-                    
+
                     var pdf_document = pdfMake.createPdf(docDefinition);
                     var doc_content_length = Object.keys(pdf_document).length;
                     if (doc_content_length > 0) {
