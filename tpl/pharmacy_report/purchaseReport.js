@@ -46,6 +46,7 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
         //Index Page
         $scope.loadReport = function () {
             $scope.records = [];
+            $scope.purchase = {};
             $scope.loadbar('show');
             $scope.showTable = true;
             $scope.errorData = "";
