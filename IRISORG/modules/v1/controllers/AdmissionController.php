@@ -286,10 +286,12 @@ class AdmissionController extends ActiveController {
 
     private function canCancelClinicalDischarge($admn_id) {
         $model = PatAdmission::find()->where(['admn_id' => $admn_id])->one();
-
         if (empty($model))
             return false;
 
+        $encounter = PatEncounter::find()->where(['encounter_id' => $model['encounter_id']])->one();
+        if ($encounter->finalize != '0')
+            return false;
         return $model;
     }
 
