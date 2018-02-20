@@ -61,7 +61,16 @@ class DefaultController extends Controller {
 
     public function actionGetStateList() {
         $list = array();
-        $datas = CoMasterState::find()->all();
+        $get = Yii::$app->request->get();
+        if(isset($get['country']))
+            $country_id=$get['country'];
+        else 
+            $country_id='';
+        if($country_id!='')
+            $datas = CoMasterState::find()->where(['country_id' => $country_id])->all();
+        else
+            $datas = CoMasterState::find()->all();
+        
         foreach ($datas as $data) {
             $list[] = array('value' => $data->state_id, 'label' => $data->state_name, 'countryId' => $data->country_id);
         }
@@ -70,7 +79,15 @@ class DefaultController extends Controller {
 
     public function actionGetCityList() {
         $list = array();
-        $datas = CoMasterCity::find()->all();
+         $get = Yii::$app->request->get();
+        if(isset($get['state']))
+            $state_id=$get['state'];
+        else 
+            $state_id='';
+       if($state_id!='')
+            $datas = CoMasterCity::find()->Where(['state_id' => $state_id])->all();
+        else
+            $datas = CoMasterCity::find()->all();
         foreach ($datas as $data) {
             $list[] = array('value' => $data->city_id, 'label' => $data->city_name, 'stateId' => $data->state_id);
         }
