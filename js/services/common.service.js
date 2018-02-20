@@ -197,10 +197,10 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                 });
     }
 
-    function GetStateList(callback) {
+    function GetStateList(callback,country) {
         var response;
-
-        $http.get($rootScope.IRISOrgServiceUrl + '/default/get-state-list')
+        if(country==null){country=''}
+        $http.get($rootScope.IRISOrgServiceUrl + '/default/get-state-list?country='+country)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {
@@ -209,10 +209,10 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
                 });
     }
 
-    function GetCityList(callback) {
+    function GetCityList(callback,state) {
         var response;
-
-        $http.get($rootScope.IRISOrgServiceUrl + '/default/get-city-list')
+        if(state==null){state=''}
+        $http.get($rootScope.IRISOrgServiceUrl + '/default/get-city-list?state='+state)
                 .success(function (response) {
                     callback(response);
                 }, function (x) {

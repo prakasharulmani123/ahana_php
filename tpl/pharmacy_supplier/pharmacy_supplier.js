@@ -85,51 +85,50 @@ app.controller('SuppliersController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.initForm = function () {
             $rootScope.commonService.GetCountryList(function (response) {
                 $scope.countries = response.countryList;
-
-                $rootScope.commonService.GetStateList(function (response) {
-                    $scope.states = response.stateList;
-
-                    $rootScope.commonService.GetCityList(function (response) {
-                        $scope.cities = response.cityList;
-
-                        $scope.loadbar('hide');
-                        if ($scope.data.formtype == 'update') {
-                            $scope.loadForm();
-                        }
-                    });
-                });
+                $scope.loadbar('hide');
+                if ($scope.data.formtype == 'update') {
+                    $scope.loadForm();
+                }
             });
         }
 
         $scope.updateState2 = function () {
             $scope.availableStates2 = [];
             $scope.availableCities2 = [];
-
+            
             _that = this;
-            angular.forEach($scope.states, function (value) {
-                if (value.countryId == _that.data.country_id) {
+            if(_that.data.country_id!='' && _that.data.country_id!=null)
+            {
+                $rootScope.commonService.GetStateList(function (response) {
+                    angular.forEach(response.stateList, function (value) {
                     var obj = {
                         value: value.value,
                         label: value.label
                     };
                     $scope.availableStates2.push(obj);
-                }
-            });
+                    
+                    });
+                },_that.data.country_id);
+
+            }
         }
 
         $scope.updateCity2 = function () {
             $scope.availableCities2 = [];
 
             _that = this;
-            angular.forEach($scope.cities, function (value) {
-                if (value.stateId == _that.data.state_id) {
+            if(_that.data.state_id!='' && _that.data.state_id!=null)
+            {
+                $rootScope.commonService.GetCityList(function (response) {
+                    angular.forEach(response.cityList, function (value) {
                     var obj = {
                         value: value.value,
                         label: value.label
                     };
                     $scope.availableCities2.push(obj);
-                }
-            });
+                    });
+                },$scope.data.state_id);
+            }
         }
 
         //Save Both Add & Update Data
