@@ -383,6 +383,27 @@
 
                 </div>
             </div>
+            <div class="col-sm-6" ng-init="initSessionInterval()">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <b>User Interval</b> 
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Session Timeout Interval</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control search-dropdown" ng-model="session_timeout" ng-options="time.value as time.label for time in timeout" ng-change="updateTimeout()">
+                                            <option value="">MM</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>

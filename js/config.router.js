@@ -3210,7 +3210,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
             var currentUser = AuthenticationService.getCurrentUser();
             var loggedIn = Boolean(currentUser);
             var stay_date = AuthenticationService.getCurrent();
-            var today_date = moment().format("YYYY-MM-DD");
+            var today_date = moment().format("YYYY-MM-DD hh:mm:ss");
             if (restrictedPage && !loggedIn) {
                 $location.path('/access/signin');
             } else if (!restrictedPage && loggedIn) {

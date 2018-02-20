@@ -46,11 +46,11 @@
 
         function ClearCredentials(state_name, state_params) {
             $localStorage.$reset({
-                system_tenant : $localStorage.system_tenant,
-                system_username : $localStorage.system_username,
-                system_stay_logged_in : $localStorage.system_stay_logged_in,
-                system_state_name : state_name,
-                system_state_params : state_params
+                system_tenant: $localStorage.system_tenant,
+                system_username: $localStorage.system_username,
+                system_stay_logged_in: $localStorage.system_stay_logged_in,
+                system_state_name: state_name,
+                system_state_params: state_params
             });
             return true;
 
@@ -61,14 +61,19 @@
 
         function setCurrentUser(user, stay_logged_in) {
             currentUser = user;
-            if(stay_logged_in){
+            if (stay_logged_in) {
                 var stay_date = moment().add('days', 365);
             } else {
-                var stay_date = moment().add('days', 1);
+                if (currentUser.credentials.user_timeout) {
+                    var stay_date = moment().add(currentUser.credentials.user_timeout, 'minutes');
+                } else {
+                    var stay_date = moment().add('days', 1);
+                }
             }
-            $localStorage.$default({'user':user, 'stay': stay_date.format("YYYY-MM-DD")});
+            $localStorage.$default({'user': user, 'stay': stay_date.format("YYYY-MM-DD hh:mm:ss")});
             return currentUser;
-        };
+        }
+        ;
 
         function getCurrentUser() {
             if (!currentUser) {
@@ -79,14 +84,16 @@
                 currentUser = $localStorage.user;
             }
             return currentUser;
-        };
-        
+        }
+        ;
+
         function getCurrent() {
             if (!current) {
                 current = $localStorage.stay;
             }
             return current;
-        };
+        }
+        ;
     }
 
 })();

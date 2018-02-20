@@ -1,4 +1,4 @@
-app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', 'transformRequestAsFormPost', 'fileUpload', 'AuthenticationService', '$modal', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, transformRequestAsFormPost, fileUpload, AuthenticationService, $modal) {
+app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', 'transformRequestAsFormPost', 'fileUpload', 'AuthenticationService', '$modal', '$localStorage', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, transformRequestAsFormPost, fileUpload, AuthenticationService, $modal, $localStorage) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -156,8 +156,8 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         }
 
         $scope.updateEmptypharmacy = function ($data) {
-            if($data == '0') {
-                $('input[name=pharmacy_branch]').attr('checked',false);
+            if ($data == '0') {
+                $('input[name=pharmacy_branch]').attr('checked', false);
             }
             $scope.errorData = "";
             $scope.msg.successMessage = "";
@@ -673,6 +673,44 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                         response = {success: false, message: 'Server Error'};
                     });
         }
+
+        $scope.initSessionInterval = function () {
+            $scope.timeout = [{value: '10', label: '10'}, {value: '20', label: '20'}, {value: '30', label: '30'}, {value: '40', label: '40'}, {value: '50', label: '50'},
+                {value: '60', label: '60'}]
+            var time_sess = $localStorage.user.credentials.user_timeout;
+            $scope.session_timeout = time_sess.toString();
+        }
+
+        $scope.updateTimeout = function () {
+            var data = {};
+            //$localStorage.user.credentials.user_timeout = $scope.session_timeout;
+            $scope.errorData = "";
+            $scope.msg.successMessage = "";
+
+            $scope.loadbar('show');
+            data.user_session_timeout = $scope.session_timeout;
+
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/user/changeusertimeout',
+                data: data,
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.msg.successMessage = 'Updated successfully';
+                        $localStorage.user.credentials.user_timeout = $scope.session_timeout;
+                        var stay_date = moment().add($scope.session_timeout, 'minutes');
+                        $localStorage.stay = moment(stay_date).format("YYYY-MM-DD hh:mm:ss");
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
     }]);
 
 // I provide a request-transformation method that is used to prepare the outgoing
