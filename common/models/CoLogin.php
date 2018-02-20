@@ -34,11 +34,12 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
     public $old_password;
     public $new_password;
     public $confirm_password;
-    public $update_log = true;//This should be false when you create login from CRM 
+    public $update_log = true; //This should be false when you create login from CRM 
 
     /**
      * @inheritdoc
      */
+
     public static function tableName() {
         return 'co_login';
     }
@@ -257,14 +258,16 @@ class CoLogin extends ActiveRecord implements IdentityInterface {
 
     public function afterSave($insert, $changedAttributes) {
         if ($this->update_log) {
-            $tenant = CoTenant::find()->where(['tenant_id' => $this->logged_tenant_id])->one();
-            if (empty(Yii::$app->user->identity)) {
-                $activity = $this->username . ' logged successfully(#' . $tenant->tenant_name . ')';
-                CoAuditLog::insertAuditLog('', '', $activity, $this->logged_tenant_id, $this->user_id);
-            }
-            //        else{
+            if ($this->logged_tenant_id) {
+                $tenant = CoTenant::find()->where(['tenant_id' => $this->logged_tenant_id])->one();
+                if (empty(Yii::$app->user->identity)) {
+                    $activity = $this->username . ' logged successfully(#' . $tenant->tenant_name . ')';
+                    CoAuditLog::insertAuditLog('', '', $activity, $this->logged_tenant_id, $this->user_id);
+                }
+                //        else{
 //            $activity = $this->username . ' log out successfully(#' . $tenant->tenant_name . ')';
 //        }
+            }
         }
     }
 

@@ -43,7 +43,7 @@ class UserController extends ActiveController {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::className(),
-            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'assignbranches', 'getmybranches', 'getswitchedbrancheslist', 'getdoctorslist', 'getdoctorslistforpatient', 'checkstateaccess', 'getusercredentialsbytoken', 'passwordauth', 'changepassword'],
+            'only' => ['dashboard', 'createuser', 'updateuser', 'getuser', 'getlogin', 'updatelogin', 'getuserdata', 'getuserslistbyuser', 'assignroles', 'assignbranches', 'getmybranches', 'getswitchedbrancheslist', 'getdoctorslist', 'getdoctorslistforpatient', 'checkstateaccess', 'getusercredentialsbytoken', 'passwordauth', 'changepassword', 'changeusertimeout'],
         ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::className(),
@@ -250,6 +250,7 @@ class UserController extends ActiveController {
             'username' => Yii::$app->user->identity->user->name,
             'user_id' => Yii::$app->user->identity->user->user_id,
             'tenant_id' => Yii::$app->user->identity->user->tenant_id,
+            'user_timeout' => Yii::$app->user->identity->user_timeout,
         ];
         return $credentials;
     }
@@ -845,6 +846,18 @@ class UserController extends ActiveController {
 //            }
         }
         return ['doctors' => $doctors];
+    }
+
+    public function actionChangeusertimeout() {
+        $post = Yii::$app->request->post();
+        if (!empty($post)) {
+            $model = CoLogin::find()->where(['login_id' => Yii::$app->user->identity->login_id])->one();
+            $model->user_timeout = $post['user_session_timeout'];
+            $model->save(false);
+            return ['success' => true];
+        } else {
+            return ['success' => false, 'message' => 'Please Fill the Form'];
+        }
     }
 
 }
