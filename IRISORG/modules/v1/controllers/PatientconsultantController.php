@@ -5,6 +5,7 @@ namespace IRISORG\modules\v1\controllers;
 use common\models\PatConsultant;
 use common\models\PatPatient;
 use common\models\CoAuditLog;
+use common\models\PatProcedure;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -149,6 +150,58 @@ class PatientconsultantController extends ActiveController {
                 $pat_consultant->save(false);
             }
             return ['success' => true];
+        }
+    }
+
+    public function actionGetcharges() {
+        $post = Yii::$app->getRequest()->post();
+        if (!empty($post)) {
+            $tenant_ids = join("','", $post['tenant_id']);
+
+            $consultant = PatConsultant::find()
+                    ->select(['sum(charge_amount) as charge_amount', 'pat_consultant.tenant_id'])
+                    ->joinWith(['encounter', 'tenant', 'consultant'])
+                    ->addSelect(["co_tenant.tenant_name as branch_name"])
+                    ->addSelect(["concat(co_user.title_code,co_user.name) as report_consultant_name"])
+                    ->andWhere("pat_consultant.tenant_id IN ( '$tenant_ids' )")
+                    ->andWhere("date(consult_date) between '{$post['from']}' AND '{$post['to']}'")
+                    ->andWhere("pat_encounter.encounter_type='OP'")
+                    ->groupBy(['pat_consultant.consultant_id'])
+                    ->all();
+            $consultantCharges = [];
+            foreach ($consultant as $key => $charges) {
+                $consultantCharges[$key]['amount'] = $charges['charge_amount'];
+                $consultantCharges[$key]['charge_category'] = 'Professional charges';
+                $consultantCharges[$key]['charge_sub_category'] = $charges['report_consultant_name'];
+                $consultantCharges[$key]['tenant_name'] = $charges['branch_name'];
+                $consultantCharges[$key]['tenant_id'] = $charges['tenant_id'];
+            }
+
+            $procedure = PatProcedure::find()
+                    ->select(['sum(charge_amount) as charge_amount', 'pat_procedure.tenant_id'])
+                    ->joinWith(['encounter', 'tenant', 'chargeCat'])
+                    ->addSelect(["co_tenant.tenant_name as branch_name"])
+                    ->addSelect(["co_room_charge_subcategory.charge_subcat_name as charge_sub_category"])
+                    ->andWhere("pat_procedure.tenant_id IN ( '$tenant_ids' )")
+                    ->andWhere("date(proc_date) between '{$post['from']}' AND '{$post['to']}'")
+                    ->andWhere("pat_encounter.encounter_type='OP'")
+                    ->groupBy(['pat_procedure.charge_subcat_id'])
+                    ->all();
+            $procedureCharges = [];
+            foreach ($procedure as $key => $charges) {
+                $procedureCharges[$key]['amount'] = $charges['charge_amount'];
+                $procedureCharges[$key]['charge_category'] = 'Procedure charges';
+                $procedureCharges[$key]['charge_sub_category'] = $charges['charge_sub_category'];
+                $procedureCharges[$key]['tenant_name'] = $charges['branch_name'];
+                $procedureCharges[$key]['tenant_id'] = $charges['tenant_id'];
+            }
+
+            $non_recurring = array();
+            if (is_array($consultantCharges))
+                $non_recurring = array_merge($non_recurring, $consultantCharges);
+            if (is_array($procedureCharges))
+                $non_recurring = array_merge($non_recurring, $procedureCharges);
+            return ['non_recurring' => $non_recurring];
         }
     }
 
