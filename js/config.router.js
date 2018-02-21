@@ -3005,6 +3005,23 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+
+            //Myworks OPSummaryReport
+            .state('myworks.opNonRecurringChargeReport', {
+                url: '/opNonRecurringChargeReport',
+                templateUrl: 'tpl/myworks_report/opnonrecurringReport.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myworks_report/opnonrecurringReport.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
+
             //Myworks ipBillStatus
             .state('myworks.ipBillStatus', {
                 url: '/ipBillStatus',
