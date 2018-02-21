@@ -86,7 +86,7 @@
                             <td>{{patProcedure.branch_name}}</td>
                             <td> {{patProcedure.procedure_name}} </td>
                             <td valign="middle">
-<!--                                <div tooltip-placement="left" data-tooltip-html-unsafe="{{patProcedure.concatenate_description ? patProcedure.full_description : ''}}"> <span ng-bind-html="patProcedure.short_description"></span> </div>-->
+                                <!--                                <div tooltip-placement="left" data-tooltip-html-unsafe="{{patProcedure.concatenate_description ? patProcedure.full_description : ''}}"> <span ng-bind-html="patProcedure.short_description"></span> </div>-->
                                 <span ng-bind-html="patProcedure.full_description"></span>
                                 <!--                                <div style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden; width: 160px;">
                                                                     {{patProcedure.proc_description}}
@@ -95,12 +95,17 @@
                             <td valign="middle"> {{patProcedure.doctors}} </td>
                             <td>
                                 <!--ng-show="enc.selected.status == '1' && enc.selected.encounter_id == value.data.encounter_id"-->
-                                <div ng-if="patProcedure.tenant_id != null && patProcedure.encounter_status">
-                                    <a ng-show="patProcedure.tenant_id == app.logged_tenant_id" title="Edit" check-access  ui-sref="patient.edit_procedure({id: $state.params.id, proc_id : patProcedure.proc_id})" class="label bg-info dk">
-                                        <i class="fa fa-pencil"></i>
-                                    </a>&nbsp;&nbsp;&nbsp;
-                                    <a ng-show="patProcedure.tenant_id == app.logged_tenant_id" data-button="patient.delete_procedure" check-access-custom title="Delete" ng-click="removeRow(patProcedure.proc_id)" class="label bg-dark dk">
-                                        <i class="fa fa-trash"></i>
+                                <div>
+                                    <span ng-if="patProcedure.tenant_id != null && patProcedure.encounter_status">
+                                        <a ng-show="patProcedure.tenant_id == app.logged_tenant_id" title="Edit" check-access  ui-sref="patient.edit_procedure({id: $state.params.id, proc_id : patProcedure.proc_id})" class="label bg-info dk">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>&nbsp;
+                                        <a ng-show="patProcedure.tenant_id == app.logged_tenant_id" data-button="patient.delete_procedure" check-access-custom title="Delete" ng-click="removeRow(patProcedure.proc_id)" class="label bg-dark dk">
+                                            <i class="fa fa-trash"></i>
+                                        </a>&nbsp;
+                                    </span>
+                                    <a tooltip="Print Procedure Bill"  class="label bg-primary dk" ng-click="printProcedureBill(patProcedure.proc_id)">
+                                        <i class="fa fa-print"></i>
                                     </a>
                                 </div>
                             </td>

@@ -1748,6 +1748,8 @@ angular.module('app').filter('moment', function () {
 angular.module('app').filter('words', ['$rootScope', function ($rootScope) {
         return function (value) {
             var value1 = parseInt(value);
+            if(value1 == '0')
+                return 'Zero ';
             if (value1 && isInteger(value1))
                 return  $rootScope.commonService.GettoWords(value1);
 

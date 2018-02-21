@@ -336,5 +336,403 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                 }
             }, true);
         }
+        $scope.printProcedureBill = function (proc_id) {
+            $scope.loadbar('show');
+            _that = this;
+            $scope.errorData = "";
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/procedures/" + proc_id,
+                method: "GET"
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.opBillPrint(response);
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
+        $scope.opBillPrint = function (printData) {
+            $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
+            var print_content = $scope.printContent(printData);
+            if (print_content.length > 0) {
+                var docDefinition = {
+                    header: $scope.printHeader(),
+                    footer: $scope.printFooter(),
+                    styles: $scope.printStyle(),
+                    content: print_content,
+                    defaultStyle: {
+                        fontSize: 10
+                    },
+                    //pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 50 : 50),
+                    pageMargins: [20, 20, 20, 48],
+                    pageSize: 'A5',
+                    pageOrientation: 'landscape',
+                };
+                var pdf_document = pdfMake.createPdf(docDefinition);
+                var doc_content_length = Object.keys(pdf_document).length;
+                if (doc_content_length > 0) {
+                    pdf_document.print();
+                }
+            }
+        }
+
+        $scope.printContent = function (printData) {
+            var content = [];
+            var perPageInfo = [];
+            var perPageItems = [];
+            var index = 1;
+
+            var perPageItems = [];
+            perPageItems.push([
+                {
+                    text: 'S.No',
+                    style: 'th'
+                },
+                {
+                    text: 'Service',
+                    style: 'th'
+                },
+                {
+                    text: 'Description',
+                    style: 'th'
+                },
+                {
+                    text: 'Doctor',
+                    style: 'th'
+                },
+                {
+                    text: 'Amount',
+                    style: 'th'
+                },
+            ]);
+            perPageItems.push([
+                {
+                    text: index,
+                    alignment: 'left',
+                },
+                {
+                    text: 'Procedure Charges',
+                    alignment: 'left',
+                },
+                {
+                    text: printData.procedure_name,
+                    alignment: 'left',
+                },
+                {
+                    text: printData.doctors,
+                    alignment: 'left',
+                },
+                {
+                    text: printData.charge_amount,
+                    alignment: 'left',
+                },
+            ]);
+            perPageItems.push([{
+                    colSpan: 5,
+                    text: 'Bill Total : ' + printData.charge_amount,
+                    alignment: 'right'
+                }, {}, {}, {}, {}], [{
+                    colSpan: 5,
+                    text: 'Amount Paid : ' + printData.charge_amount,
+                    alignment: 'right'
+                }, {}, {}, {}, {}]);
+            //});
+            perPageInfo.push(
+                    {
+                        layout: 'noBorders',
+                        table: {
+                            widths: ['*', 'auto', 'auto', '*', 'auto', 'auto', 'auto'],
+                            body: [
+                                [
+                                    {
+                                        colSpan: 3,
+                                        layout: 'noBorders',
+                                        table: {
+                                            body: [
+                                                [
+                                                    {
+                                                        image: $scope.imgExport('ahana_print_logo'),
+                                                        height: 20, width: 100,
+                                                    },
+                                                ],
+                                            ]
+                                        },
+                                    }, {}, {},
+                                    {
+                                        colSpan: 3,
+                                        layout: 'noBorders',
+                                        table: {
+                                            body: [
+                                                [
+                                                    {
+                                                        text: 'Procedure Bill',
+                                                        style: 'h2'
+                                                    },
+                                                ],
+                                            ]
+                                        },
+                                    },
+                                    {}, {},
+                                    {
+                                        layout: 'noBorders',
+                                        table: {
+                                            body: [
+                                                [
+                                                    {
+                                                        margin: [0, 0, 0, 0],
+                                                        text: $scope.patientObj.org_name,
+                                                        fontSize: 8,
+                                                        alignment: 'right'
+                                                    },
+                                                ],
+                                            ]
+                                        },
+                                    }
+                                ],
+                            ]
+                        },
+                    });
+
+            perPageInfo.push({
+                layout: 'Borders',
+                table: {
+                    widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                    body: [
+                        [
+                            {
+                                border: [false, true, false, false],
+                                colSpan: 6,
+                                layout: {
+                                    paddingLeft: function (i, node) {
+                                        return 0;
+                                    },
+                                    paddingRight: function (i, node) {
+                                        return 2;
+                                    },
+                                    paddingTop: function (i, node) {
+                                        return 0;
+                                    },
+                                    paddingBottom: function (i, node) {
+                                        return 0;
+                                    },
+                                },
+                                table: {
+                                    body: [
+                                        [
+                                            {
+                                                border: [false, false, false, false],
+                                                text: 'Patient Name',
+                                                style: 'h2',
+                                                margin: [-5, 0, 0, 0],
+                                            },
+                                            {
+                                                text: ':',
+                                                border: [false, false, false, false],
+                                                style: 'h2'
+                                            },
+                                            {
+                                                border: [false, false, false, false],
+                                                text: $scope.patientObj.fullname,
+                                                style: 'normaltxt'
+                                            }
+                                        ],
+                                        [
+                                            {
+                                                border: [false, false, false, false],
+                                                text: 'UHID',
+                                                style: 'h2',
+                                                margin: [-5, 0, 0, 0],
+                                            },
+                                            {
+                                                text: ':',
+                                                border: [false, false, false, false],
+                                                style: 'h2'
+                                            },
+                                            {
+                                                border: [false, false, false, false],
+                                                text: $scope.patientObj.patient_global_int_code,
+                                                style: 'normaltxt'
+                                            }
+                                        ],
+                                        [
+                                            {
+                                                border: [false, false, false, false],
+                                                text: 'Age / Sex',
+                                                style: 'h2',
+                                                margin: [-5, 0, 0, 0],
+                                            },
+                                            {
+                                                text: ':',
+                                                border: [false, false, false, false],
+                                                style: 'h2'
+                                            },
+                                            {
+                                                border: [false, false, false, false],
+                                                text: $scope.patientObj.patient_age_ym + '/' + $scope.app.patientDetail.patientSex,
+                                                style: 'normaltxt'
+                                            }
+                                        ],
+                                    ]
+                                },
+                            },
+                            {}, {}, {}, {}, {},
+                            {
+                                border: [false, true, false, false],
+                                layout: 'noBorders',
+                                table: {
+                                    body: [
+                                        [
+                                            {
+                                                text: 'Procedure Date',
+                                                style: 'h2',
+                                                margin: [-7, 0, 0, 0],
+                                            },
+                                            {
+                                                text: ':',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: moment(printData.proc_date).format('DD-MM-YYYY hh:mm A'),
+                                                style: 'normaltxt'
+                                            }
+                                        ],
+                                    ]
+                                },
+                            }
+                        ],
+                    ]
+                },
+            }, {
+                table: {
+                    widths: ['auto', 'auto', '*', 'auto', 'auto'],
+                    body: perPageItems,
+                },
+                layout: {
+                    hLineColor: function (i, node) {
+                        return (i === 0 || i === node.table.body.length) ? 'gray' : 'gray';
+                    },
+                    vLineColor: function (i, node) {
+                        return (i === 0 || i === node.table.widths.length) ? 'gray' : 'gray';
+                    },
+                }
+            });
+            perPageInfo.push({
+                style: 'tableExample',
+                layout: 'noBorders',
+                table: {
+                    widths: ['*', 'auto', 'auto', '*', 'auto', 'auto', 'auto'],
+                    body: [
+                        [
+                            {
+                                colSpan: 6,
+                                layout: 'noBorders',
+                                table: {
+                                    body: [
+                                        [
+                                            {
+                                                colSpan: 3,
+                                                text: [
+                                                    $filter('words')(parseFloat(printData.charge_amount)),
+                                                    {text: 'Rupees Only'},
+                                                ]
+                                            },
+                                            {}, {},
+                                        ],
+                                    ]
+                                },
+                            }, {}, {}, {}, {}, {},
+                            {
+                                layout: 'noBorders',
+                                table: {
+                                    body: [
+                                        [
+                                            {
+                                                text: 'For ' + $scope.patientObj.org_name,
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: '',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                text: '',
+                                                style: 'normaltxt'
+                                            },
+                                        ],
+                                        [
+                                            {
+                                                colSpan: 3,
+                                                text: 'Authorized Signatory',
+                                                style: 'h2',
+                                                margin: [0, 15, 0, 0],
+                                            },
+                                            {}, {},
+                                        ],
+                                    ]
+                                },
+                            }
+                        ],
+                    ]
+                },
+            });
+            content.push(perPageInfo);
+            return content;
+        }
+
+        /*PRINT BILL*/
+        $scope.printHeader = function () {
+            return {
+                text: '',
+                margin: 0,
+                alignment: 'center'
+            };
+        }
+
+        $scope.printFooter = function () {
+            return {
+                //text: [{text: 'PHARMACY SERVICE - 24 HOURS'}],
+                //fontSize: 8,
+                //margin: 0,
+                //alignment: 'center'
+            };
+        }
+        $scope.printStyle = function () {
+            return {
+                h1: {
+                    fontSize: 11,
+                    bold: true,
+                },
+                h2: {
+                    fontSize: 9,
+                    bold: true,
+                },
+                th: {
+                    fontSize: 9,
+                    bold: true,
+                    margin: [0, 3, 0, 3]
+                },
+                td: {
+                    fontSize: 8,
+                    margin: [0, 3, 0, 3]
+                },
+                normaltxt: {
+                    fontSize: 9,
+                },
+                grandtotal: {
+                    fontSize: 15,
+                    bold: true,
+                    margin: [5, 3, 5, 3]
+                },
+                tableExample: {
+                    margin: [0, 5, 0, 15]
+                },
+            };
+        }
 
     }]);
