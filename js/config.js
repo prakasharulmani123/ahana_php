@@ -6,6 +6,7 @@ var app =
 
 config.$inject = ['$controllerProvider', '$compileProvider', '$filterProvider', '$provide'];
 function config($controllerProvider, $compileProvider, $filterProvider, $provide) {
+    $compileProvider.debugInfoEnabled(false);
     // lazy controller, directive and service
     app.controller = $controllerProvider.register;
     app.directive = $compileProvider.directive;
