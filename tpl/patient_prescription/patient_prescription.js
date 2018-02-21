@@ -1704,7 +1704,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     }
                 }
 
-//Scroll dropdown when key up / down
+                //Scroll dropdown when key up / down
                 $timeout(function () {
                     var selected_li = $('ul.search-patientcont-header li.selected');
                     $('ul.search-patientcont-header')[0].scrollTop = selected_li.index() * selected_li.outerHeight();
@@ -2132,7 +2132,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
             return string.replace(/[\s]/g, '');
         }
-//New prescription top add Form
+        //New prescription top add Form
         $scope.addGlobalForm = function () {
             globalPrescription = $scope.globalData.globalprescription;
             if (!globalPrescription) {
@@ -3023,62 +3023,20 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     $scope.medical_history = 'form';
                     $scope.xslt = doc_type_response.result.document_xslt;
                     $scope.getDocument(doc_id, function (pat_doc_response) {
+                        $scope.xml = pat_doc_response.result.document_xml;
                         $scope.encounter = {encounter_id: pat_doc_response.result.encounter_id};
-                        $scope.test_xml = pat_doc_response.result.document_xml;
-                        $scope.loadResultFromDatabase($scope.test_xml, function (resultxml) {
-                            $scope.loadVitalsFromDatabase(resultxml, true, function (newxml) {
-                                $scope.xml = newxml;
-                                $scope.doc_id = doc_id; // Set Document id
-                                $timeout(function () {
-                                    $scope.medicalcasecommonservice();
-                                    $scope.ckeditorReplace();
-                                }, 2000);
-                                $timeout(function () {
-                                    $("#patient-details").parent().hide();
-                                }, 200);
-                                $scope.medicalAutoSaveStart(doc_id);
-                            });
-                        });
+                        $scope.doc_id = doc_id; // Set Document id
+                        $timeout(function () {
+                            $scope.medicalcasecommonservice();
+                            $scope.ckeditorReplace();
+                        }, 2000);
+                        $timeout(function () {
+                            $("#patient-details").parent().hide();
+                        }, 200);
+                        $scope.medicalAutoSaveStart(doc_id);
                     });
                 }
             });
-        }
-
-        $scope.loadResultFromDatabase = function (xml, callback) {
-            var _data = {};
-            angular.extend(_data, {
-                xml: xml,
-                encounter: $scope.encounter.encounter_id,
-                table_id: 'RGprevprescription'
-            });
-            $http({
-                url: $rootScope.IRISOrgServiceUrl + "/patientprescription/loadprescriptionvaluefromdatabase",
-                method: "POST",
-                data: _data,
-            }).then(
-                    function (response) {
-                        callback(response.data);
-                    }
-            );
-        }
-
-        $scope.loadVitalsFromDatabase = function (xml, vital_action, callback) {
-            var _data = {};
-            angular.extend(_data, {
-                xml: xml,
-                encounter: $scope.encounter.encounter_id,
-                table_id: 'RGvital',
-                add_vital: vital_action,
-            });
-            $http({
-                url: $rootScope.IRISOrgServiceUrl + "/patientprescription/loadvitalvaluefromdatabase",
-                method: "POST",
-                data: _data,
-            }).then(
-                    function (response) {
-                        callback(response.data);
-                    }
-            );
         }
 
         $scope.getDocument = function (doc_id, callback) {
@@ -3214,13 +3172,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.created_by = pat_doc_response.result.created_user;
                         $scope.created_at = pat_doc_response.result.created_at;
                         $scope.modified_at = pat_doc_response.result.modified_at;
-                        $scope.encounter = {encounter_id: pat_doc_response.result.encounter_id};
-                        $scope.test_xml = pat_doc_response.result.document_xml;
-                        $scope.loadResultFromDatabase($scope.test_xml, function (resultxml) {
-                            $scope.loadVitalsFromDatabase(resultxml, false, function (newxml) {
-                                $scope.xml = newxml;
-                            });
-                        });
+                        $scope.xml = pat_doc_response.result.document_xml;
                         $timeout(function () {
                             $scope.setRefferedBy();
                         }, 100);
@@ -3278,13 +3230,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.created_by = pat_doc_response.result.created_user;
                         $scope.created_at = pat_doc_response.result.created_at;
                         $scope.modified_at = pat_doc_response.result.modified_at;
-                        $scope.encounter = {encounter_id: pat_doc_response.result.encounter_id};
-                        $scope.test_view_xml = pat_doc_response.result.document_xml;
-                        $scope.loadResultFromDatabase($scope.test_view_xml, function (resultxml) {
-                            $scope.loadVitalsFromDatabase(resultxml, false, function (newxml) {
-                                $scope.view_xml = resultxml;
-                            });
-                        });
+                        $scope.view_xml = pat_doc_response.result.document_xml;
+                        $timeout(function () {
+                            $scope.setRefferedBy();
+                        }, 100);
                     });
                 }
             });
@@ -3333,7 +3282,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }, 100);
         }
 
-// Prescription - Frequency Tab Navigation.
+        // Prescription - Frequency Tab Navigation.
         var acDefaultOptions = {minimumChars: 0, activateOnFocus: true, positionUsingJQuery: false};
         $scope.autoCompleteOptions_3_0 = angular.extend({}, acDefaultOptions, {
             data: function (searchText) {
