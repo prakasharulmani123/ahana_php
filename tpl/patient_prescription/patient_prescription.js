@@ -2191,6 +2191,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 var no_of_days = $scope.globalData.no_of_days;
                                 var g_no_of_days = $scope.trimSpace($scope.globalData.no_of_days);
                                 var f_no_of_days = $scope.trimSpace($scope.data.number_of_days);
+                                var manual = true;
                                 if (!$scope.globalData.no_of_days || g_no_of_days.length < 1) {
                                     if (!$scope.data.number_of_days || f_no_of_days.length < 1) {
                                         var no_of_days = 0;
@@ -2199,6 +2200,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         var no_of_days = $scope.data.number_of_days;
                                         $scope.globalData.no_of_days = $scope.data.number_of_days;
                                     }
+                                    var manual = false;
                                 }
                                 if ($scope.globalData.freq_type == 'txt')
                                     globalPrescription.frequency = $scope.globalData.frequency_txt;
@@ -2221,7 +2223,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         'generic_name': globalPrescription.generic_name,
                                         'drug_class_id': globalPrescription.drug_class_id,
                                         'drug_name': globalPrescription.drug_name,
-                                        'manual_textbox': false,
+                                        'manual_textbox': manual,
                                         'route': route,
                                         'frequency': globalPrescription.frequency,
                                         'number_of_days': no_of_days,
