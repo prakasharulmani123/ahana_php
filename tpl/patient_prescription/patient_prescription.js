@@ -2891,6 +2891,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     $scope.$watch('patientObj', function (newValue, oldValue) {
                         if (Object.keys(newValue).length > 0) {
                             $scope.initMedicalSaveDocument($scope.enc.selected.encounter_id, function (auto_save_document) {
+                                $scope.encounter = {encounter_id: $scope.enc.selected.encounter_id};
                                 $scope.xml = auto_save_document.data.xml;
                                 $scope.doc_id = auto_save_document.data.doc_id; // Set Document id
                                 $timeout(function () {
@@ -2918,7 +2919,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 _data = $('#xmlform').serializeArray();
                 _data.push({
                     name: 'encounter_id',
-                    value: $scope.enc.selected.encounter_id,
+                    value: $scope.encounter.encounter_id,
                 }, {
                     name: 'patient_id',
                     value: $state.params.id,
@@ -2962,7 +2963,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             _data = $('#xmlform').serializeArray();
             _data.push({
                 name: 'encounter_id',
-                value: $scope.enc.selected.encounter_id,
+                value: $scope.encounter.encounter_id,
             }, {
                 name: 'patient_id',
                 value: $state.params.id,
