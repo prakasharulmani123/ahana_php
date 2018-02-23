@@ -1524,11 +1524,11 @@ angular.module('app')
                             personalTr.remove();
                         }
                         //Removed Physical examination empty heading
-                        var physicalText = $(this).find('tr.physical_examination');
-                        if (physicalText.text().trim().length === 0) {
-                            var physicalTr = physicalText.closest('tr').prev('tr');
-                            physicalTr.remove();
-                        }
+//                        var physicalText = $(this).find('tr.physical_examination');
+//                        if (physicalText.text().trim().length === 0) {
+//                            var physicalTr = physicalText.closest('tr').prev('tr');
+//                            physicalTr.remove();
+//                        }
                         //Removed Informant empty heading
                         var informantText = $(this).find('tr.informant_body');
                         if (informantText.text().trim().length === 0) {
@@ -1555,6 +1555,11 @@ angular.module('app')
                         var prescription = $('#RGprevprescription tbody').children().length;
                         if (prescription == 0) {
                             $('#RGprevprescription').remove();
+                        }
+                        //Removed empty prescription row
+                        var prescription = $('#RGvital tbody').children().length;
+                        if (prescription == 0) {
+                            $('#RGvital').remove();
                         }
                         //Removed empty referral row
                         var referral_code = $('#referral tbody').children().length;
