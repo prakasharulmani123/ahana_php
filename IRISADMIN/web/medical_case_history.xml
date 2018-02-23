@@ -479,10 +479,8 @@
                     <PROPERTY name="class">table table-bordered</PROPERTY>
                 </PROPERTIES>
                 <HEADER>
+                    <TH>Pres Date</TH>
                     <TH>Product Name</TH>
-                    <TH>Generic Name</TH>
-                    <TH>Drug Name</TH>
-                    <TH>Route</TH>
                     <TH>Frequency</TH>
                     <TH>No Of Days</TH>
                     <TH>AF/BF</TH>
@@ -547,61 +545,22 @@
             
             <FIELD type="Header2" label="Physical Examination" class="Informant"/>
             
-            <FIELD id="bpsystolic" header2Class="physical_examination" type="TextBox" label="Blood Pressure Systolic">
+            <FIELD type="RadGrid" ADDButton="False" ADDButtonID="RGvitaladd" AddButtonTableId="RGvital">
                 <PROPERTIES>
-                    <PROPERTY name="id">bpsystolic</PROPERTY>
-                    <PROPERTY name="name">bpsystolic</PROPERTY>
-                    <PROPERTY name="class">form-control</PROPERTY>
+                    <PROPERTY name="id">RGvital</PROPERTY>
+                    <PROPERTY name="class">table table-bordered</PROPERTY>
                 </PROPERTIES>
-            </FIELD>
-            <FIELD id="bpdiastolic" header2Class="physical_examination" type="TextBox" label="Blood Pressure Diastolic">
-                <PROPERTIES>
-                    <PROPERTY name="id">bpdiastolic</PROPERTY>
-                    <PROPERTY name="name">bpdiastolic</PROPERTY>
-                    <PROPERTY name="class">form-control</PROPERTY>
-                </PROPERTIES>
-            </FIELD>
-            <FIELD id="pulse" header2Class="physical_examination" type="TextBox" label="Pulse">
-                <PROPERTIES>
-                    <PROPERTY name="id">pulse</PROPERTY>
-                    <PROPERTY name="name">pulse</PROPERTY>
-                    <PROPERTY name="class">form-control</PROPERTY>
-                </PROPERTIES>
-            </FIELD>
-            <FIELD id="temperature" header2Class="physical_examination" type="TextBox" label="Temperature">
-                <PROPERTIES>
-                    <PROPERTY name="id">temperature</PROPERTY>
-                    <PROPERTY name="name">temperature</PROPERTY>
-                    <PROPERTY name="class">form-control</PROPERTY>
-                </PROPERTIES>
-            </FIELD>
-            <FIELD id="sp02" header2Class="physical_examination" type="TextBox" label="SP02">
-                <PROPERTIES>
-                    <PROPERTY name="id">sp02</PROPERTY>
-                    <PROPERTY name="name">sp02</PROPERTY>
-                    <PROPERTY name="class">form-control</PROPERTY>
-                </PROPERTIES>
-            </FIELD>
-            <FIELD id="height" header2Class="physical_examination" type="TextBox" label="Height">
-                <PROPERTIES>
-                    <PROPERTY name="id">height</PROPERTY>
-                    <PROPERTY name="name">height</PROPERTY>
-                    <PROPERTY name="class">form-control</PROPERTY>
-                </PROPERTIES>
-            </FIELD>
-            <FIELD id="weight" header2Class="physical_examination" type="TextBox" label="Weight">
-                <PROPERTIES>
-                    <PROPERTY name="id">weight</PROPERTY>
-                    <PROPERTY name="name">weight</PROPERTY>
-                    <PROPERTY name="class">form-control</PROPERTY>
-                </PROPERTIES>
-            </FIELD>
-            <FIELD id="pain_score" header2Class="physical_examination" type="TextBox" label="Pain Score">
-                <PROPERTIES>
-                    <PROPERTY name="id">pain_score</PROPERTY>
-                    <PROPERTY name="name">pain_score</PROPERTY>
-                    <PROPERTY name="class">form-control</PROPERTY>
-                </PROPERTIES>
+                <HEADER>
+                    <TH>Vital Time</TH>
+                    <TH>Temperature</TH>
+                    <TH>BP Systolic</TH>
+                    <TH>BP Diastolic</TH>
+                    <TH>Pulse</TH>
+                    <TH>Weight</TH>
+                    <TH>Height</TH>
+                    <TH>SP02</TH>
+                    <TH>Pain Score</TH>
+                </HEADER>
             </FIELD>
             
             <FIELD id="investigations" type="TextArea" label="Investigations">

@@ -629,11 +629,11 @@ class XmlController extends Controller {
                     $fileContent = file_get_contents($files);
                     //PatDocumentTypes::updateAllCounters(["document_xml" => $fileContent]);
                     $docModel = PatDocumentTypes::find()->andWhere(['doc_type' => 'CH'])
-                                    //->where(['IN', 'tenant_id', [1, 2, 3, 4]]) //1st set
-                                    //->where(['IN', 'tenant_id', [6, 7, 11, 13]]) //2nd set 
-                                    //->where(['IN', 'tenant_id', [12]])    //Medclinic tenant id
-                                    //->where(['IN', 'tenant_id', []])    //Msctrf tenant id
-                                    ->all();
+                            //->where(['IN', 'tenant_id', [1, 2, 3, 4]]) //1st set
+                            //->where(['IN', 'tenant_id', [6, 7, 11, 13]]) //2nd set 
+                            //->where(['IN', 'tenant_id', [12]])    //Medclinic tenant id
+                            //->where(['IN', 'tenant_id', []])    //Msctrf tenant id
+                            ->all();
                     foreach ($docModel as $doc) {
                         if (basename($files) == 'case_history.xml') {
                             $doc->document_xml = $fileContent;
@@ -772,10 +772,10 @@ class XmlController extends Controller {
     }
 
     public function actionChangethvalue() {
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadGrid' and @ADDButtonID='RGaltadd']/HEADER";
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadGrid' and @ADDButtonID='RGprevprescriptionadd']/HEADER";
         $insert = 'Response';
 
-        $all_files = $this->getAllFiles();
+        $all_files = $this->getAllMCHFiles();
         $error_files = [];
         if (!empty($all_files)) {
             foreach ($all_files as $key => $files) {
@@ -790,11 +790,29 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            //print_r($target);
-                            if ((isset($target->TH[1])) && (isset($target->TH[2]))) {
-                                $target->TH[1] = $target->TH[2];
-                                $target->TH[2] = $insert;
+                            print_r($files);
+                            if ((isset($target->TH[0])) && (isset($target->TH[1]))) {
+                                if ($target->TH[0] != 'Pres Date') {
+                                    $target->TH[0] = 'Pres Date';
+                                    $target->TH[1] = 'Product Name';
+                                }
                             }
+                            if ((isset($target->TH[2])) && (isset($target->TH[3])) && (isset($target->TH[4]))) {
+                                if ($target->TH[2] == 'Generic Name') {
+                                    unset($target->TH[2]);
+                                }
+                                if ($target->TH[3] == 'Drug Name') {
+                                    unset($target->TH[3]);
+                                }
+                                if ($target->TH[4] == 'Route') {
+                                    unset($target->TH[4]);
+                                }
+                            }
+                            print_r($target); //die;
+//                            if ((isset($target->TH[1])) && (isset($target->TH[2]))) {
+//                                $target->TH[1] = $target->TH[2];
+//                                $target->TH[2] = $insert;
+//                            }
                         }
                     } //print_r($target); die;
                     $xml->asXML($files);
@@ -1038,3 +1056,4 @@ class XmlController extends Controller {
     }
 
 }
+

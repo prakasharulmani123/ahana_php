@@ -471,6 +471,17 @@
                                                                                         </xsl:for-each>
                                                                                     </input>
                                                                                 </xsl:when>
+                                                                                
+                                                                                <xsl:when test="@type='label'">
+                                                                                    <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
+                                                                                        <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                                                            <xsl:if test="@name='value'">
+                                                                                                <xsl:value-of select="current()"/>
+                                                                                            </xsl:if>
+                                                                                        </xsl:for-each>
+                                                                                    </xsl:if>
+                                                                                    
+                                                                                </xsl:when>
                                                                             
                                                                                 <!-- Grid Main Text Box With DropDownList-->
                                                                                 <xsl:when test="@type='TextBoxDDL'">

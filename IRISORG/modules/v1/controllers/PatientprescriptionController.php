@@ -13,6 +13,7 @@ use common\models\PatDiagnosis;
 use common\models\VDocuments;
 use common\models\PatDocumentTypes;
 use common\models\PatDocuments;
+use common\models\PatVitals;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -315,6 +316,16 @@ class PatientprescriptionController extends ActiveController {
         return ['success' => true];
     }
 
+    public function actionLoadprescriptionvaluefromdatabase() {
+        $data = Yii::$app->getRequest()->post();
+        return $this->preparePreviousPrescriptionXml($data['xml'], $data['table_id'], $data['encounter']);
+    }
+
+    public function actionLoadvitalvaluefromdatabase() {
+        $data = Yii::$app->getRequest()->post();
+        return $this->preparePreviousVitalXml($data['xml'], $data['table_id'], $data['encounter'], $data['add_vital']);
+    }
+
     public function actionSavemedicaldocument() {
         $form = Yii::$app->getRequest()->post();
         $post = [];
@@ -347,6 +358,28 @@ class PatientprescriptionController extends ActiveController {
                         'doc_id' => $post['doc_id'],
                     ])->one();
         }
+        //Check Non empty all vital fileds and insert the new patvitals
+        if (!$post['novalidate']) {
+            if ((!empty($post['txttemperature'])) || (!empty($post['txtbp_systolic'])) || (!empty($post['txtbp_diastolic'])) || (!empty($post['txtpulse_rate'])) || (!empty($post['txtweight'])) || (!empty($post['txtheight'])) || (!empty($post['txtsp02'])) || (!empty($post['txtpain_score']))) {
+                $vitals = new PatVitals();
+                $vitals->patient_id = $patient->patient_id;
+                $vitals->encounter_id = $post['encounter_id'];
+                $vitals->vital_time = date("Y-m-d H:i:s");
+                $vitals->temperature = $post['txttemperature'];
+                $vitals->blood_pressure_systolic = $post['txtbp_systolic'];
+                $vitals->blood_pressure_diastolic = $post['txtbp_diastolic'];
+                $vitals->pulse_rate = $post['txtpulse_rate'];
+                $vitals->height = $post['txtheight'];
+                $vitals->weight = $post['txtweight'];
+                $vitals->sp02 = $post['txtsp02'];
+                $vitals->pain_score = $post['txtpain_score'];
+                if ($vitals->validate()) {
+                    $vitals->save(false);
+                } else {
+                    return ['success' => false, 'message' => Html::errorSummary([$vitals])];
+                }
+            }
+        }
 
         if (!empty($doc_exists)) {
             $patient_document = $doc_exists;
@@ -374,9 +407,10 @@ class PatientprescriptionController extends ActiveController {
 
         if ($patient_document->validate() || $post['novalidate'] == 'true' || $post['novalidate'] == '1') {
             $result = $this->prepareXml($xml, $post);
-            if (empty($doc_exists)) {
-                $result = $this->preparePreviousPrescriptionXml($result, 'RGprevprescription', $post['encounter_id']);
-            }
+            //if (empty($doc_exists)) {
+            $result = $this->preparePreviousPrescriptionXml($result, 'RGprevprescription', $post['encounter_id']);
+            $result = $this->preparePreviousVitalXml($result, 'RGvital', $post['encounter_id'], true);
+            //}
             if (isset($post['button_id'])) {
                 if ($post['table_id'] == 'TBicdcode') {
                     $result = $this->prepareIcdCodeXml($result, $post['table_id'], $post['rowCount']);
@@ -395,160 +429,579 @@ class PatientprescriptionController extends ActiveController {
         foreach ($xmlLoad->children() as $group) {
             foreach ($group->PANELBODY->FIELD as $x) {
                 if ($x->attributes()->type == 'RadGrid' && $x->attributes()->AddButtonTableId == $table_id) {
+                    unset($x->COLUMNS);
                     if (!empty($encounterid)) {
                         $prescriptions = PatPrescription::find()->joinWith(['patPrescriptionItems', 'patPrescriptionItems.freq', 'patPrescriptionItems.presRoute'])->tenant()->active()
                                 ->andWhere(['encounter_id' => $encounterid])
                                 ->orderBy(['created_at' => SORT_DESC])
-                                ->one();
+                                ->limit(100)
+                                ->all();
                         if (!empty($prescriptions)) {
-                            foreach ($prescriptions->patPrescriptionItems as $key => $value) {
+                            foreach ($prescriptions as $pres) {
+                                foreach ($pres->patPrescriptionItems as $key => $value) {
 
-                                $product_box = 'txtproductname' . $key;
-                                $generic_box = 'txtgenericname' . $key;
-                                $drug_box = 'txtdrugname' . $key;
-                                $route_box = 'txtroute' . $key;
-                                $frequency_box = 'txtfrequency' . $key;
-                                $noofdays_box = 'txtnoofdays' . $key;
-                                $txtaf_bf_box = 'txtaf/bf' . $key;
+                                    $pres_text_box = 'txtprescriptiondate' . $key;
+                                    $product_box = 'txtproductname' . $key;
+                                    $generic_box = 'txtgenericname' . $key;
+                                    $drug_box = 'txtdrugname' . $key;
+                                    $route_box = 'txtroute' . $key;
+                                    $frequency_box = 'txtfrequency' . $key;
+                                    $noofdays_box = 'txtnoofdays' . $key;
+                                    $txtaf_bf_box = 'txtaf/bf' . $key;
+                                    $pres_date = date("d-m-Y g:i A", strtotime($value['created_at']));
 
-                                $value['product_name'] = str_replace(["&nbsp;", "&"], ["&#160;", "&amp;"], $value['product_name']);
-                                $value['generic_name'] = str_replace(["&nbsp;", "&"], ["&#160;", "&amp;"], $value['generic_name']);
-                                $value['drug_name'] = str_replace(["&nbsp;", "&"], ["&#160;", "&amp;"], $value['drug_name']);
+                                    $value['product_name'] = str_replace(["&nbsp;", "&"], ["&#160;", "&amp;"], $value['product_name']);
+                                    $value['generic_name'] = str_replace(["&nbsp;", "&"], ["&#160;", "&amp;"], $value['generic_name']);
+                                    $value['drug_name'] = str_replace(["&nbsp;", "&"], ["&#160;", "&amp;"], $value['drug_name']);
+
+                                    $columns = $x->addChild('COLUMNS');
+
+                                    $field20 = $columns->addChild('FIELD');
+                                    $field20->addAttribute('id', $pres_text_box);
+                                    $field20->addAttribute('type', 'label');
+
+                                    $properties_date1 = $field20->addChild('PROPERTIES');
+
+                                    $property_date1 = $properties_date1->addChild('PROPERTY', $pres_text_box);
+                                    $property_date1->addAttribute('name', 'id');
+
+                                    $property_date2 = $properties_date1->addChild('PROPERTY', $pres_text_box);
+                                    $property_date2->addAttribute('name', 'name');
+
+                                    $property_date3 = $properties_date1->addChild('PROPERTY', 'form-control');
+                                    $property_date3->addAttribute('name', 'class');
+
+                                    $property_date4 = $properties_date1->addChild('PROPERTY', $pres_date);
+                                    $property_date4->addAttribute('name', 'value');
+
+                                    //Product box added
+                                    $medicine_name = $value['product_name']."(".$value['generic_name'].")";
+                                    $field1 = $columns->addChild('FIELD');
+                                    $field1->addAttribute('id', $product_box);
+                                    $field1->addAttribute('type', 'label');
+
+                                    $properties1 = $field1->addChild('PROPERTIES');
+
+                                    $property1 = $properties1->addChild('PROPERTY', $product_box);
+                                    $property1->addAttribute('name', 'id');
+
+                                    $property2 = $properties1->addChild('PROPERTY', $product_box);
+                                    $property2->addAttribute('name', 'name');
+
+                                    $property3 = $properties1->addChild('PROPERTY', 'form-control');
+                                    $property3->addAttribute('name', 'class');
+
+                                    $property4 = $properties1->addChild('PROPERTY', $medicine_name);
+                                    $property4->addAttribute('name', 'value');
+
+                                    //Generic Text Box
+//                                    $field12 = $columns->addChild('FIELD');
+//                                    $field12->addAttribute('id', $generic_box);
+//                                    $field12->addAttribute('type', 'label');
+//
+//                                    $properties12 = $field12->addChild('PROPERTIES');
+//
+//                                    $property12 = $properties12->addChild('PROPERTY', $generic_box);
+//                                    $property12->addAttribute('name', 'id');
+//
+//                                    $property22 = $properties12->addChild('PROPERTY', $generic_box);
+//                                    $property22->addAttribute('name', 'name');
+//
+//                                    $property32 = $properties12->addChild('PROPERTY', 'form-control');
+//                                    $property32->addAttribute('name', 'class');
+//
+//                                    $property42 = $properties12->addChild('PROPERTY', $value['generic_name']);
+//                                    $property42->addAttribute('name', 'value');
+
+                                    //Drug Text Box
+//                                    $field13 = $columns->addChild('FIELD');
+//                                    $field13->addAttribute('id', $drug_box);
+//                                    $field13->addAttribute('type', 'label');
+//
+//                                    $properties13 = $field13->addChild('PROPERTIES');
+//
+//                                    $property13 = $properties13->addChild('PROPERTY', $drug_box);
+//                                    $property13->addAttribute('name', 'id');
+//
+//                                    $property23 = $properties13->addChild('PROPERTY', $drug_box);
+//                                    $property23->addAttribute('name', 'name');
+//
+//                                    $property33 = $properties13->addChild('PROPERTY', 'form-control');
+//                                    $property33->addAttribute('name', 'class');
+//
+//                                    $property43 = $properties13->addChild('PROPERTY', $value['drug_name']);
+//                                    $property43->addAttribute('name', 'value');
+
+                                    //Route Text Box
+//                                    $field14 = $columns->addChild('FIELD');
+//                                    $field14->addAttribute('id', $route_box);
+//                                    $field14->addAttribute('type', 'label');
+//
+//                                    $properties14 = $field14->addChild('PROPERTIES');
+//
+//                                    $property14 = $properties14->addChild('PROPERTY', $route_box);
+//                                    $property14->addAttribute('name', 'id');
+//
+//                                    $property24 = $properties14->addChild('PROPERTY', $route_box);
+//                                    $property24->addAttribute('name', 'name');
+//
+//                                    $property34 = $properties14->addChild('PROPERTY', 'form-control');
+//                                    $property34->addAttribute('name', 'class');
+//
+//                                    $property44 = $properties14->addChild('PROPERTY', $value->presRoute->route_name);
+//                                    $property44->addAttribute('name', 'value');
+
+                                    //Frequency Text Box
+                                    $field15 = $columns->addChild('FIELD');
+                                    $field15->addAttribute('id', $frequency_box);
+                                    $field15->addAttribute('type', 'label');
+
+                                    $properties15 = $field15->addChild('PROPERTIES');
+
+                                    $property15 = $properties15->addChild('PROPERTY', $frequency_box);
+                                    $property15->addAttribute('name', 'id');
+
+                                    $property25 = $properties15->addChild('PROPERTY', $frequency_box);
+                                    $property25->addAttribute('name', 'name');
+
+                                    $property35 = $properties15->addChild('PROPERTY', 'form-control');
+                                    $property35->addAttribute('name', 'class');
+
+                                    $property45 = $properties15->addChild('PROPERTY', $value->freq->freq_name);
+                                    $property45->addAttribute('name', 'value');
+
+                                    //Drug Text Box
+                                    $field16 = $columns->addChild('FIELD');
+                                    $field16->addAttribute('id', $noofdays_box);
+                                    $field16->addAttribute('type', 'label');
+
+                                    $properties16 = $field16->addChild('PROPERTIES');
+
+                                    $property16 = $properties16->addChild('PROPERTY', $noofdays_box);
+                                    $property16->addAttribute('name', 'id');
+
+                                    $property26 = $properties16->addChild('PROPERTY', $noofdays_box);
+                                    $property26->addAttribute('name', 'name');
+
+                                    $property36 = $properties16->addChild('PROPERTY', 'form-control');
+                                    $property36->addAttribute('name', 'class');
+
+                                    $property46 = $properties16->addChild('PROPERTY', $value['number_of_days']);
+                                    $property46->addAttribute('name', 'value');
+
+                                    //Drug Text Box
+                                    $field17 = $columns->addChild('FIELD');
+                                    $field17->addAttribute('id', $txtaf_bf_box);
+                                    $field17->addAttribute('type', 'label');
+
+                                    $properties17 = $field17->addChild('PROPERTIES');
+
+                                    $property17 = $properties17->addChild('PROPERTY', $txtaf_bf_box);
+                                    $property17->addAttribute('name', 'id');
+
+                                    $property27 = $properties17->addChild('PROPERTY', $txtaf_bf_box);
+                                    $property27->addAttribute('name', 'name');
+
+                                    $property37 = $properties17->addChild('PROPERTY', 'form-control');
+                                    $property37->addAttribute('name', 'class');
+
+                                    $property47 = $properties17->addChild('PROPERTY', $value['food_type']);
+                                    $property47->addAttribute('name', 'value');
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $xml = $xmlLoad->asXML();
+        return $xml;
+    }
+
+    protected function preparePreviousVitalXml($xml, $table_id, $encounterid, $vitalaction) {
+        $xmlLoad = simplexml_load_string($xml);
+        foreach ($xmlLoad->children() as $group) {
+            foreach ($group->PANELBODY->FIELD as $x) {
+                if ($x->attributes()->type == 'RadGrid' && $x->attributes()->AddButtonTableId == $table_id) {
+                    unset($x->COLUMNS);
+                    if (!empty($encounterid)) {
+                        $vitals = PatVitals::find()->tenant()->active()
+                                        ->andWhere(['encounter_id' => $encounterid])->orderBy(['created_at' => SORT_DESC])->all();
+                        if (!empty($vitals)) {
+                            foreach ($vitals as $key => $value) {
+                                $vital_date = date("d-m-Y g:i A", strtotime($value['vital_time']));
+                                $vital_date_box = 'txtvitaltime' . $key;
+                                $temperature_box = 'txttemperature' . $key;
+                                $bp_systolic_box = 'txtbp_systolic' . $key;
+                                $bp_diastolic_box = 'txtbp_diastolic' . $key;
+                                $pulse_rate_box = 'txtpulse_rate' . $key;
+                                $weight_box = 'txtweight' . $key;
+                                $height_box = 'txtheight' . $key;
+                                $sp02_box = 'txtsp02' . $key;
+                                $pain_score_box = 'txtpain_score' . $key;
+                                //$bmi_box = 'txtbmi' . $key;
 
                                 $columns = $x->addChild('COLUMNS');
 
+                                //Vital date time
                                 $field1 = $columns->addChild('FIELD');
-                                $field1->addAttribute('id', $product_box);
-                                $field1->addAttribute('type', 'TextBox');
+                                $field1->addAttribute('id', $vital_date_box);
+                                $field1->addAttribute('type', 'label');
 
                                 $properties1 = $field1->addChild('PROPERTIES');
 
-                                $property1 = $properties1->addChild('PROPERTY', $product_box);
+                                $property1 = $properties1->addChild('PROPERTY', $vital_date_box);
                                 $property1->addAttribute('name', 'id');
 
-                                $property2 = $properties1->addChild('PROPERTY', $product_box);
-                                $property2->addAttribute('name', 'name');
+                                $property12 = $properties1->addChild('PROPERTY', $vital_date_box);
+                                $property12->addAttribute('name', 'name');
 
-                                $property3 = $properties1->addChild('PROPERTY', 'form-control');
-                                $property3->addAttribute('name', 'class');
+                                $property13 = $properties1->addChild('PROPERTY', 'form-control');
+                                $property13->addAttribute('name', 'class');
 
-                                $property4 = $properties1->addChild('PROPERTY', $value['product_name']);
-                                $property4->addAttribute('name', 'value');
+                                $property14 = $properties1->addChild('PROPERTY', $value['vital_time']);
+                                $property14->addAttribute('name', 'value');
 
-                                //Generic Text Box
-                                $field12 = $columns->addChild('FIELD');
-                                $field12->addAttribute('id', $generic_box);
-                                $field12->addAttribute('type', 'TextBox');
+                                //Temperature box added
+                                $field2 = $columns->addChild('FIELD');
+                                $field2->addAttribute('id', $temperature_box);
+                                $field2->addAttribute('type', 'label');
 
-                                $properties12 = $field12->addChild('PROPERTIES');
+                                $properties2 = $field2->addChild('PROPERTIES');
 
-                                $property12 = $properties12->addChild('PROPERTY', $generic_box);
-                                $property12->addAttribute('name', 'id');
+                                $property2 = $properties2->addChild('PROPERTY', $temperature_box);
+                                $property2->addAttribute('name', 'id');
 
-                                $property22 = $properties12->addChild('PROPERTY', $generic_box);
-                                $property22->addAttribute('name', 'name');
+                                $property21 = $properties2->addChild('PROPERTY', $temperature_box);
+                                $property21->addAttribute('name', 'name');
 
-                                $property32 = $properties12->addChild('PROPERTY', 'form-control');
+                                $property22 = $properties2->addChild('PROPERTY', 'form-control');
+                                $property22->addAttribute('name', 'class');
+
+                                $property23 = $properties2->addChild('PROPERTY', $value['temperature']);
+                                $property23->addAttribute('name', 'value');
+
+                                //Blood Pressure Systolic box added
+                                $field3 = $columns->addChild('FIELD');
+                                $field3->addAttribute('id', $bp_systolic_box);
+                                $field3->addAttribute('type', 'label');
+
+                                $properties3 = $field3->addChild('PROPERTIES');
+
+                                $property3 = $properties3->addChild('PROPERTY', $bp_systolic_box);
+                                $property3->addAttribute('name', 'id');
+
+                                $property31 = $properties3->addChild('PROPERTY', $bp_systolic_box);
+                                $property31->addAttribute('name', 'name');
+
+                                $property32 = $properties3->addChild('PROPERTY', 'form-control');
                                 $property32->addAttribute('name', 'class');
 
-                                $property42 = $properties12->addChild('PROPERTY', $value['generic_name']);
-                                $property42->addAttribute('name', 'value');
+                                $property33 = $properties3->addChild('PROPERTY', $value['blood_pressure_systolic']);
+                                $property33->addAttribute('name', 'value');
 
-                                //Drug Text Box
-                                $field13 = $columns->addChild('FIELD');
-                                $field13->addAttribute('id', $drug_box);
-                                $field13->addAttribute('type', 'TextBox');
+                                //Blood Pressure Diastolic box added
+                                $field4 = $columns->addChild('FIELD');
+                                $field4->addAttribute('id', $bp_diastolic_box);
+                                $field4->addAttribute('type', 'label');
 
-                                $properties13 = $field13->addChild('PROPERTIES');
+                                $properties4 = $field4->addChild('PROPERTIES');
 
-                                $property13 = $properties13->addChild('PROPERTY', $drug_box);
-                                $property13->addAttribute('name', 'id');
+                                $property4 = $properties4->addChild('PROPERTY', $bp_diastolic_box);
+                                $property4->addAttribute('name', 'id');
 
-                                $property23 = $properties13->addChild('PROPERTY', $drug_box);
-                                $property23->addAttribute('name', 'name');
+                                $property41 = $properties4->addChild('PROPERTY', $bp_diastolic_box);
+                                $property41->addAttribute('name', 'name');
 
-                                $property33 = $properties13->addChild('PROPERTY', 'form-control');
-                                $property33->addAttribute('name', 'class');
+                                $property42 = $properties4->addChild('PROPERTY', 'form-control');
+                                $property42->addAttribute('name', 'class');
 
-                                $property43 = $properties13->addChild('PROPERTY', $value['drug_name']);
+                                $property43 = $properties4->addChild('PROPERTY', $value['blood_pressure_diastolic']);
                                 $property43->addAttribute('name', 'value');
 
-                                //Route Text Box
-                                $field14 = $columns->addChild('FIELD');
-                                $field14->addAttribute('id', $route_box);
-                                $field14->addAttribute('type', 'TextBox');
+                                //Pulse box added
+                                $field5 = $columns->addChild('FIELD');
+                                $field5->addAttribute('id', $pulse_rate_box);
+                                $field5->addAttribute('type', 'label');
 
-                                $properties14 = $field14->addChild('PROPERTIES');
+                                $properties5 = $field5->addChild('PROPERTIES');
 
-                                $property14 = $properties14->addChild('PROPERTY', $route_box);
-                                $property14->addAttribute('name', 'id');
+                                $property5 = $properties5->addChild('PROPERTY', $pulse_rate_box);
+                                $property5->addAttribute('name', 'id');
 
-                                $property24 = $properties14->addChild('PROPERTY', $route_box);
-                                $property24->addAttribute('name', 'name');
+                                $property51 = $properties5->addChild('PROPERTY', $pulse_rate_box);
+                                $property51->addAttribute('name', 'name');
 
-                                $property34 = $properties14->addChild('PROPERTY', 'form-control');
-                                $property34->addAttribute('name', 'class');
+                                $property52 = $properties5->addChild('PROPERTY', 'form-control');
+                                $property52->addAttribute('name', 'class');
 
-                                $property44 = $properties14->addChild('PROPERTY', $value->presRoute->route_name);
-                                $property44->addAttribute('name', 'value');
+                                $property53 = $properties5->addChild('PROPERTY', $value['pulse_rate']);
+                                $property53->addAttribute('name', 'value');
 
-                                //Frequency Text Box
-                                $field15 = $columns->addChild('FIELD');
-                                $field15->addAttribute('id', $frequency_box);
-                                $field15->addAttribute('type', 'TextBox');
+                                //Weight box added
+                                $field6 = $columns->addChild('FIELD');
+                                $field6->addAttribute('id', $weight_box);
+                                $field6->addAttribute('type', 'label');
 
-                                $properties15 = $field15->addChild('PROPERTIES');
+                                $properties6 = $field6->addChild('PROPERTIES');
 
-                                $property15 = $properties15->addChild('PROPERTY', $frequency_box);
-                                $property15->addAttribute('name', 'id');
+                                $property6 = $properties6->addChild('PROPERTY', $weight_box);
+                                $property6->addAttribute('name', 'id');
 
-                                $property25 = $properties15->addChild('PROPERTY', $frequency_box);
-                                $property25->addAttribute('name', 'name');
+                                $property61 = $properties6->addChild('PROPERTY', $weight_box);
+                                $property61->addAttribute('name', 'name');
 
-                                $property35 = $properties15->addChild('PROPERTY', 'form-control');
-                                $property35->addAttribute('name', 'class');
+                                $property62 = $properties6->addChild('PROPERTY', 'form-control');
+                                $property62->addAttribute('name', 'class');
 
-                                $property45 = $properties15->addChild('PROPERTY', $value->freq->freq_name);
-                                $property45->addAttribute('name', 'value');
+                                $property63 = $properties6->addChild('PROPERTY', $value['weight']);
+                                $property63->addAttribute('name', 'value');
 
-                                //Drug Text Box
-                                $field16 = $columns->addChild('FIELD');
-                                $field16->addAttribute('id', $noofdays_box);
-                                $field16->addAttribute('type', 'TextBox');
+                                //Height box added
+                                $field7 = $columns->addChild('FIELD');
+                                $field7->addAttribute('id', $height_box);
+                                $field7->addAttribute('type', 'label');
 
-                                $properties16 = $field16->addChild('PROPERTIES');
+                                $properties7 = $field7->addChild('PROPERTIES');
 
-                                $property16 = $properties16->addChild('PROPERTY', $noofdays_box);
-                                $property16->addAttribute('name', 'id');
+                                $property7 = $properties7->addChild('PROPERTY', $height_box);
+                                $property7->addAttribute('name', 'id');
 
-                                $property26 = $properties16->addChild('PROPERTY', $noofdays_box);
-                                $property26->addAttribute('name', 'name');
+                                $property71 = $properties7->addChild('PROPERTY', $height_box);
+                                $property71->addAttribute('name', 'name');
 
-                                $property36 = $properties16->addChild('PROPERTY', 'form-control');
-                                $property36->addAttribute('name', 'class');
+                                $property72 = $properties7->addChild('PROPERTY', 'form-control');
+                                $property72->addAttribute('name', 'class');
 
-                                $property46 = $properties16->addChild('PROPERTY', $value['number_of_days']);
-                                $property46->addAttribute('name', 'value');
+                                $property73 = $properties7->addChild('PROPERTY', $value['height']);
+                                $property73->addAttribute('name', 'value');
 
-                                //Drug Text Box
-                                $field17 = $columns->addChild('FIELD');
-                                $field17->addAttribute('id', $txtaf_bf_box);
-                                $field17->addAttribute('type', 'TextBox');
+                                //sp02 box added
+                                $field8 = $columns->addChild('FIELD');
+                                $field8->addAttribute('id', $sp02_box);
+                                $field8->addAttribute('type', 'label');
 
-                                $properties17 = $field17->addChild('PROPERTIES');
+                                $properties8 = $field8->addChild('PROPERTIES');
 
-                                $property17 = $properties17->addChild('PROPERTY', $txtaf_bf_box);
-                                $property17->addAttribute('name', 'id');
+                                $property8 = $properties8->addChild('PROPERTY', $sp02_box);
+                                $property8->addAttribute('name', 'id');
 
-                                $property27 = $properties17->addChild('PROPERTY', $txtaf_bf_box);
-                                $property27->addAttribute('name', 'name');
+                                $property81 = $properties8->addChild('PROPERTY', $sp02_box);
+                                $property81->addAttribute('name', 'name');
 
-                                $property37 = $properties17->addChild('PROPERTY', 'form-control');
-                                $property37->addAttribute('name', 'class');
+                                $property82 = $properties8->addChild('PROPERTY', 'form-control');
+                                $property82->addAttribute('name', 'class');
 
-                                $property47 = $properties17->addChild('PROPERTY', $value['food_type']);
-                                $property47->addAttribute('name', 'value');
+                                $property83 = $properties8->addChild('PROPERTY', $value['sp02']);
+                                $property83->addAttribute('name', 'value');
+
+                                //Painscore box added
+                                $field9 = $columns->addChild('FIELD');
+                                $field9->addAttribute('id', $pain_score_box);
+                                $field9->addAttribute('type', 'label');
+
+                                $properties9 = $field9->addChild('PROPERTIES');
+
+                                $property9 = $properties9->addChild('PROPERTY', $pain_score_box);
+                                $property9->addAttribute('name', 'id');
+
+                                $property91 = $properties9->addChild('PROPERTY', $pain_score_box);
+                                $property91->addAttribute('name', 'name');
+
+                                $property92 = $properties9->addChild('PROPERTY', 'form-control');
+                                $property92->addAttribute('name', 'class');
+
+                                $property93 = $properties9->addChild('PROPERTY', $value['pain_score']);
+                                $property93->addAttribute('name', 'value');
+
+                                //BMI box added
+//                                $field10 = $columns->addChild('FIELD');
+//                                $field10->addAttribute('id', $bmi_box);
+//                                $field10->addAttribute('type', 'label');
+//
+//                                $properties10 = $field10->addChild('PROPERTIES');
+//
+//                                $property10 = $properties10->addChild('PROPERTY', $bmi_box);
+//                                $property10->addAttribute('name', 'id');
+//
+//                                $property101 = $properties10->addChild('PROPERTY', $bmi_box);
+//                                $property101->addAttribute('name', 'name');
+//
+//                                $property102 = $properties10->addChild('PROPERTY', 'form-control');
+//                                $property102->addAttribute('name', 'class');
+//
+//                                $property103 = $properties10->addChild('PROPERTY', $value['bmi']);
+//                                $property103->addAttribute('name', 'value');
                             }
+                        }
+
+                        if ($vitalaction) {
+                            $columns = $x->addChild('COLUMNS');
+
+                            $vital_time = date("Y-m-d H:i:s");
+
+                            //Vital date time
+                            $field1 = $columns->addChild('FIELD');
+                            $field1->addAttribute('id', 'txtvitaltime');
+                            $field1->addAttribute('type', 'label');
+
+                            $properties1 = $field1->addChild('PROPERTIES');
+
+                            $property1 = $properties1->addChild('PROPERTY', 'txtvitaltime');
+                            $property1->addAttribute('name', 'id');
+
+                            $property12 = $properties1->addChild('PROPERTY', 'txtvitaltime');
+                            $property12->addAttribute('name', 'name');
+
+                            $property13 = $properties1->addChild('PROPERTY', 'form-control');
+                            $property13->addAttribute('name', 'class');
+
+                            $property14 = $properties1->addChild('PROPERTY', $vital_time);
+                            $property14->addAttribute('name', 'value');
+
+                            //Temperature box added
+                            $field2 = $columns->addChild('FIELD');
+                            $field2->addAttribute('id', 'txttemperature');
+                            $field2->addAttribute('type', 'TextBox');
+
+                            $properties2 = $field2->addChild('PROPERTIES');
+
+                            $property2 = $properties2->addChild('PROPERTY', 'txttemperature');
+                            $property2->addAttribute('name', 'id');
+
+                            $property21 = $properties2->addChild('PROPERTY', 'txttemperature');
+                            $property21->addAttribute('name', 'name');
+
+                            $property22 = $properties2->addChild('PROPERTY', 'form-control');
+                            $property22->addAttribute('name', 'class');
+
+                            //Blood Pressure Systolic box added
+                            $field3 = $columns->addChild('FIELD');
+                            $field3->addAttribute('id', 'txtbp_systolic');
+                            $field3->addAttribute('type', 'TextBox');
+
+                            $properties3 = $field3->addChild('PROPERTIES');
+
+                            $property3 = $properties3->addChild('PROPERTY', 'txtbp_systolic');
+                            $property3->addAttribute('name', 'id');
+
+                            $property31 = $properties3->addChild('PROPERTY', 'txtbp_systolic');
+                            $property31->addAttribute('name', 'name');
+
+                            $property32 = $properties3->addChild('PROPERTY', 'form-control');
+                            $property32->addAttribute('name', 'class');
+
+                            //Blood Pressure Diastolic box added
+                            $field4 = $columns->addChild('FIELD');
+                            $field4->addAttribute('id', 'txtbp_diastolic');
+                            $field4->addAttribute('type', 'TextBox');
+
+                            $properties4 = $field4->addChild('PROPERTIES');
+
+                            $property4 = $properties4->addChild('PROPERTY', 'txtbp_diastolic');
+                            $property4->addAttribute('name', 'id');
+
+                            $property41 = $properties4->addChild('PROPERTY', 'txtbp_diastolic');
+                            $property41->addAttribute('name', 'name');
+
+                            $property42 = $properties4->addChild('PROPERTY', 'form-control');
+                            $property42->addAttribute('name', 'class');
+
+                            //Pulse box added
+                            $field5 = $columns->addChild('FIELD');
+                            $field5->addAttribute('id', 'txtpulse_rate');
+                            $field5->addAttribute('type', 'TextBox');
+
+                            $properties5 = $field5->addChild('PROPERTIES');
+
+                            $property5 = $properties5->addChild('PROPERTY', 'txtpulse_rate');
+                            $property5->addAttribute('name', 'id');
+
+                            $property51 = $properties5->addChild('PROPERTY', 'txtpulse_rate');
+                            $property51->addAttribute('name', 'name');
+
+                            $property52 = $properties5->addChild('PROPERTY', 'form-control');
+                            $property52->addAttribute('name', 'class');
+
+                            //Weight box added
+                            $field6 = $columns->addChild('FIELD');
+                            $field6->addAttribute('id', 'txtweight');
+                            $field6->addAttribute('type', 'TextBox');
+
+                            $properties6 = $field6->addChild('PROPERTIES');
+
+                            $property6 = $properties6->addChild('PROPERTY', 'txtweight');
+                            $property6->addAttribute('name', 'id');
+
+                            $property61 = $properties6->addChild('PROPERTY', 'txtweight');
+                            $property61->addAttribute('name', 'name');
+
+                            $property62 = $properties6->addChild('PROPERTY', 'form-control');
+                            $property62->addAttribute('name', 'class');
+
+                            //Height box added
+                            $field7 = $columns->addChild('FIELD');
+                            $field7->addAttribute('id', 'txtheight');
+                            $field7->addAttribute('type', 'TextBox');
+
+                            $properties7 = $field7->addChild('PROPERTIES');
+
+                            $property7 = $properties7->addChild('PROPERTY', 'txtheight');
+                            $property7->addAttribute('name', 'id');
+
+                            $property71 = $properties7->addChild('PROPERTY', 'txtheight');
+                            $property71->addAttribute('name', 'name');
+
+                            $property72 = $properties7->addChild('PROPERTY', 'form-control');
+                            $property72->addAttribute('name', 'class');
+
+                            //sp02 box added
+                            $field8 = $columns->addChild('FIELD');
+                            $field8->addAttribute('id', 'txtsp02');
+                            $field8->addAttribute('type', 'TextBox');
+
+                            $properties8 = $field8->addChild('PROPERTIES');
+
+                            $property8 = $properties8->addChild('PROPERTY', 'txtsp02');
+                            $property8->addAttribute('name', 'id');
+
+                            $property81 = $properties8->addChild('PROPERTY', 'txtsp02');
+                            $property81->addAttribute('name', 'name');
+
+                            $property82 = $properties8->addChild('PROPERTY', 'form-control');
+                            $property82->addAttribute('name', 'class');
+
+                            //Painscore box added
+                            $field9 = $columns->addChild('FIELD');
+                            $field9->addAttribute('id', 'txtpain_score');
+                            $field9->addAttribute('type', 'TextBox');
+
+                            $properties9 = $field9->addChild('PROPERTIES');
+
+                            $property9 = $properties9->addChild('PROPERTY', 'txtpain_score');
+                            $property9->addAttribute('name', 'id');
+
+                            $property91 = $properties9->addChild('PROPERTY', 'txtpain_score');
+                            $property91->addAttribute('name', 'name');
+
+                            $property92 = $properties9->addChild('PROPERTY', 'form-control');
+                            $property92->addAttribute('name', 'class');
+
+                            //BMI box added
+//                            $field10 = $columns->addChild('FIELD');
+//                            $field10->addAttribute('id', 'txtbmi');
+//                            $field10->addAttribute('type', 'label');
+//
+//                            $properties10 = $field10->addChild('PROPERTIES');
+//
+//                            $property10 = $properties10->addChild('PROPERTY', 'txtbmi');
+//                            $property10->addAttribute('name', 'id');
+//
+//                            $property101 = $properties10->addChild('PROPERTY', 'txtbmi');
+//                            $property101->addAttribute('name', 'name');
+//
+//                            $property102 = $properties10->addChild('PROPERTY', 'form-control');
+//                            $property102->addAttribute('name', 'class');
                         }
                     }
                 }
@@ -857,7 +1310,7 @@ class PatientprescriptionController extends ActiveController {
             foreach ($data as $key => $value) {
                 $details = VDocuments::find()
                         ->where(['encounter_id' => $value['encounter_id'],
-                            //'tenant_id' => $value['tenant_id']
+                                //'tenant_id' => $value['tenant_id']
                         ])
                         ->andWhere($condition)
                         ->orderBy(['date_time' => SORT_DESC])

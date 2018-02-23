@@ -318,6 +318,17 @@
                                                                             </xsl:if>
                                                                         </xsl:when>
                                                                         
+                                                                        <xsl:when test="@type='label'">
+                                                                            <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
+                                                                                <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                                                    <xsl:if test="@name='value'">
+                                                                                        <xsl:value-of select="current()"/>
+                                                                                    </xsl:if>
+                                                                                </xsl:for-each>
+                                                                            </xsl:if>
+                                                                                    
+                                                                        </xsl:when>
+                                                                        
                                                                         <!-- Main Text Box With DropDownList-->
                                                                         <xsl:when test="@type='TextBoxDDL'">
                                                                             <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
@@ -455,6 +466,17 @@
                                                                                                         </xsl:if>
                                                                                                     </xsl:for-each>
                                                                                                 </xsl:if>
+                                                                                            </xsl:when>
+                                                                                            
+                                                                                            <xsl:when test="@type='label'">
+                                                                                                <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
+                                                                                                    <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                                                                        <xsl:if test="@name='value'">
+                                                                                                            <xsl:value-of select="current()"/>
+                                                                                                        </xsl:if>
+                                                                                                    </xsl:for-each>
+                                                                                                </xsl:if>
+                                                                                    
                                                                                             </xsl:when>
                                                                                             
                                                                                             <!-- Main Text Box With DropDownList-->
@@ -853,6 +875,17 @@
                                                                                                         </xsl:if>
                                                                                                     </xsl:for-each>
                                                                                                 </xsl:if>
+                                                                                            </xsl:when>
+                                                                                            
+                                                                                            <xsl:when test="@type='label'">
+                                                                                                <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
+                                                                                                    <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                                                                        <xsl:if test="@name='value'">
+                                                                                                            <xsl:value-of select="current()"/>
+                                                                                                        </xsl:if>
+                                                                                                    </xsl:for-each>
+                                                                                                </xsl:if>
+                                                                                    
                                                                                             </xsl:when>
                                                                                             
                                                                                             <!-- Main Text Box With DropDownList-->

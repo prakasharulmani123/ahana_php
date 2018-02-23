@@ -559,6 +559,17 @@ or (@id='past_medical_TB') or (@id='past_medical_cancer') or (@id='past_medical_
                                                                     </xsl:for-each>
                                                                 </xsl:if>
                                                             </xsl:when>
+                                                            
+                                                            <xsl:when test="@type='label'">
+                                                                <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
+                                                                    <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                                        <xsl:if test="@name='value'">
+                                                                            <xsl:value-of select="current()"/>
+                                                                        </xsl:if>
+                                                                    </xsl:for-each>
+                                                                </xsl:if>
+                                                                                    
+                                                            </xsl:when>
                                                         </xsl:choose>
                                                     </td>
                                                 </xsl:for-each>
@@ -686,6 +697,66 @@ or (@id='past_medical_TB') or (@id='past_medical_cancer') or (@id='past_medical_
                     </xsl:for-each>
                     
                     
+                    <tr>
+                        <td align="left" valign="top" class="table2 table4">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="print-friendly">
+                                <xsl:for-each select="PANELBODY/FIELD[@type='RadGrid' and @ADDButtonID='RGvitaladd']">
+                                    <xsl:for-each select="PROPERTIES/PROPERTY">
+                                        <xsl:attribute name="{@name}">
+                                            <xsl:value-of select="current()"></xsl:value-of>
+                                        </xsl:attribute>
+                                    </xsl:for-each>
+                                    <thead>
+                                        <tr>
+                                            <xsl:for-each select="HEADER/TH">
+                                                <td width="14%" class="inner-table-heading">
+                                                    <strong>
+                                                        <xsl:value-of select="current()" />
+                                                    </strong>
+                                                </td>
+                                            </xsl:for-each>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <xsl:for-each select="COLUMNS">
+                                            <tr>
+                                                <xsl:for-each select="FIELD">
+                                                    <td class="">
+                                                        <xsl:choose>
+                                                            <xsl:when test="@type='TextBox'">
+                                                                <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
+                                                                    <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                                        <xsl:if test="@name='value'">
+                                                                            <span class='Text_box'>
+                                                                                <xsl:value-of select="current()"></xsl:value-of>
+                                                                            </span>
+                                                                            
+                                                                        </xsl:if>
+                                                                    </xsl:for-each>
+                                                                </xsl:if>
+                                                            </xsl:when>
+                                                            
+                                                            <xsl:when test="@type='label'">
+                                                                <xsl:if test="PROPERTIES/PROPERTY[@name = 'value' and string(.)]">
+                                                                    <xsl:for-each select="PROPERTIES/PROPERTY">
+                                                                        <xsl:if test="@name='value'">
+                                                                            <xsl:value-of select="current()"/>
+                                                                        </xsl:if>
+                                                                    </xsl:for-each>
+                                                                </xsl:if>
+                                                                                    
+                                                            </xsl:when>
+                                                        </xsl:choose>
+                                                    </td>
+                                                </xsl:for-each>
+                                            </tr>
+                                    
+                                        </xsl:for-each>
+                                    </tbody>
+                                </xsl:for-each>
+                            </table>
+                        </td>
+                    </tr>
                     <tr class="physical_examination">
                         <td colspan="2" align="left" valign="top">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
