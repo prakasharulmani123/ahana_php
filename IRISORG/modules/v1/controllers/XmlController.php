@@ -791,21 +791,21 @@ class XmlController extends Controller {
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
                             print_r($files);
-                            if ((isset($target->TH[0])) && (isset($target->TH[1]))) {
-                                if ($target->TH[0] != 'Pres Date') {
-                                    $target->TH[0] = 'Pres Date';
-                                    $target->TH[1] = 'Product Name';
-                                }
-                            }
+//                            if ((isset($target->TH[0])) && (isset($target->TH[1]))) {
+//                                if ($target->TH[0] != 'Pres Date') {
+//                                    $target->TH[0] = 'Pres Date';
+//                                    $target->TH[1] = 'Product Name';
+//                                }
+//                            }
                             if ((isset($target->TH[2])) && (isset($target->TH[3])) && (isset($target->TH[4]))) {
                                 if ($target->TH[2] == 'Generic Name') {
                                     unset($target->TH[2]);
                                 }
-                                if ($target->TH[3] == 'Drug Name') {
-                                    unset($target->TH[3]);
+                                if ($target->TH[2] == 'Drug Name') {
+                                    unset($target->TH[2]);
                                 }
-                                if ($target->TH[4] == 'Route') {
-                                    unset($target->TH[4]);
+                                if ($target->TH[2] == 'Route') {
+                                    unset($target->TH[2]);
                                 }
                             }
                             print_r($target); //die;

@@ -373,11 +373,6 @@ class PatientprescriptionController extends ActiveController {
                 $vitals->weight = $post['txtweight'];
                 $vitals->sp02 = $post['txtsp02'];
                 $vitals->pain_score = $post['txtpain_score'];
-                if ($vitals->validate()) {
-                    $vitals->save(false);
-                } else {
-                    return ['success' => false, 'message' => Html::errorSummary([$vitals])];
-                }
             }
         }
 
@@ -418,6 +413,13 @@ class PatientprescriptionController extends ActiveController {
             }
             $patient_document->document_xml = $result;
             $patient_document->save(false);
+            if (!$post['novalidate']) {
+                if ($vitals->validate()) {
+                    $vitals->save(false);
+                } else {
+                    return ['success' => false, 'message' => Html::errorSummary([$vitals])];
+                }
+            }
             return ['success' => true, 'xml' => $result, 'doc_id' => $patient_document->doc_id];
         } else {
             return ['success' => false, 'message' => Html::errorSummary([$patient_document])];
@@ -475,7 +477,7 @@ class PatientprescriptionController extends ActiveController {
                                     $property_date4->addAttribute('name', 'value');
 
                                     //Product box added
-                                    $medicine_name = $value['product_name']."(".$value['generic_name'].")";
+                                    $medicine_name = $value['product_name'] . "(" . $value['generic_name'] . ")";
                                     $field1 = $columns->addChild('FIELD');
                                     $field1->addAttribute('id', $product_box);
                                     $field1->addAttribute('type', 'label');
@@ -512,7 +514,6 @@ class PatientprescriptionController extends ActiveController {
 //
 //                                    $property42 = $properties12->addChild('PROPERTY', $value['generic_name']);
 //                                    $property42->addAttribute('name', 'value');
-
                                     //Drug Text Box
 //                                    $field13 = $columns->addChild('FIELD');
 //                                    $field13->addAttribute('id', $drug_box);
@@ -531,7 +532,6 @@ class PatientprescriptionController extends ActiveController {
 //
 //                                    $property43 = $properties13->addChild('PROPERTY', $value['drug_name']);
 //                                    $property43->addAttribute('name', 'value');
-
                                     //Route Text Box
 //                                    $field14 = $columns->addChild('FIELD');
 //                                    $field14->addAttribute('id', $route_box);
@@ -550,7 +550,6 @@ class PatientprescriptionController extends ActiveController {
 //
 //                                    $property44 = $properties14->addChild('PROPERTY', $value->presRoute->route_name);
 //                                    $property44->addAttribute('name', 'value');
-
                                     //Frequency Text Box
                                     $field15 = $columns->addChild('FIELD');
                                     $field15->addAttribute('id', $frequency_box);
