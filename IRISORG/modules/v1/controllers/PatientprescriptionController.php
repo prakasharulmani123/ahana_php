@@ -358,23 +358,6 @@ class PatientprescriptionController extends ActiveController {
                         'doc_id' => $post['doc_id'],
                     ])->one();
         }
-        //Check Non empty all vital fileds and insert the new patvitals
-        if (!$post['novalidate']) {
-            if ((!empty($post['txttemperature'])) || (!empty($post['txtbp_systolic'])) || (!empty($post['txtbp_diastolic'])) || (!empty($post['txtpulse_rate'])) || (!empty($post['txtweight'])) || (!empty($post['txtheight'])) || (!empty($post['txtsp02'])) || (!empty($post['txtpain_score']))) {
-                $vitals = new PatVitals();
-                $vitals->patient_id = $patient->patient_id;
-                $vitals->encounter_id = $post['encounter_id'];
-                $vitals->vital_time = date("Y-m-d H:i:s");
-                $vitals->temperature = $post['txttemperature'];
-                $vitals->blood_pressure_systolic = $post['txtbp_systolic'];
-                $vitals->blood_pressure_diastolic = $post['txtbp_diastolic'];
-                $vitals->pulse_rate = $post['txtpulse_rate'];
-                $vitals->height = $post['txtheight'];
-                $vitals->weight = $post['txtweight'];
-                $vitals->sp02 = $post['txtsp02'];
-                $vitals->pain_score = $post['txtpain_score'];
-            }
-        }
 
         if (!empty($doc_exists)) {
             $patient_document = $doc_exists;
@@ -413,11 +396,26 @@ class PatientprescriptionController extends ActiveController {
             }
             $patient_document->document_xml = $result;
             $patient_document->save(false);
+            //Check Non empty all vital fileds and insert the new patvitals
             if (!$post['novalidate']) {
-                if ($vitals->validate()) {
-                    $vitals->save(false);
-                } else {
-                    return ['success' => false, 'message' => Html::errorSummary([$vitals])];
+                if ((!empty($post['txttemperature'])) || (!empty($post['txtbp_systolic'])) || (!empty($post['txtbp_diastolic'])) || (!empty($post['txtpulse_rate'])) || (!empty($post['txtweight'])) || (!empty($post['txtheight'])) || (!empty($post['txtsp02'])) || (!empty($post['txtpain_score']))) {
+                    $vitals = new PatVitals();
+                    $vitals->patient_id = $patient->patient_id;
+                    $vitals->encounter_id = $post['encounter_id'];
+                    $vitals->vital_time = date("Y-m-d H:i:s");
+                    $vitals->temperature = $post['txttemperature'];
+                    $vitals->blood_pressure_systolic = $post['txtbp_systolic'];
+                    $vitals->blood_pressure_diastolic = $post['txtbp_diastolic'];
+                    $vitals->pulse_rate = $post['txtpulse_rate'];
+                    $vitals->height = $post['txtheight'];
+                    $vitals->weight = $post['txtweight'];
+                    $vitals->sp02 = $post['txtsp02'];
+                    $vitals->pain_score = $post['txtpain_score'];
+                    if ($vitals->validate()) {
+                        $vitals->save(false);
+                    } else {
+                        return ['success' => false, 'message' => Html::errorSummary([$vitals])];
+                    }
                 }
             }
             return ['success' => true, 'xml' => $result, 'doc_id' => $patient_document->doc_id];
