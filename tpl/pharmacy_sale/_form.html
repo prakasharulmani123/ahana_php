@@ -105,12 +105,27 @@
 
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">Payment Type *</label>
-                                    <div class="col-lg-8 col-sm-9">
+                                    <div class="col-lg-8 col-sm-9" ng-show="(formtype == 'add')">
                                         <div class="input-group w-md">
                                             <label class="i-checks" ng-repeat="paymentType in paymentTypes">
                                                 <input type="radio" checked="" value="{{paymentType.value}}" name="paymentType" ng-model="data.payment_type"  ng-change="changeGetPayType()">
                                                 <i></i>
                                                 {{paymentType.label}}&nbsp; &nbsp;
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8 col-sm-9" ng-show="(formtype == 'update')">
+                                        <div class="input-group w-md">
+                                            <label>
+                                                <span ng-if="data.payment_type == 'CA'">
+                                                    Cash
+                                                </span>
+                                                <span ng-if="data.payment_type == 'CR'">
+                                                    Credit
+                                                </span>
+                                                <span ng-if="data.payment_type == 'COD'">
+                                                    Cash On Delivery
+                                                </span>
                                             </label>
                                         </div>
                                     </div>

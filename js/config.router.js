@@ -10,7 +10,7 @@ config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider', 'ivhT
 function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOptionsProvider, JQ_CONFIG, hotkeysProvider, $compileProvider) {
 
 //    hotkeysProvider.template = '<div class="my-own-cheatsheet">Hai</div>';
-
+    $compileProvider.debugInfoEnabled(false);
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
     ivhTreeviewOptionsProvider.set({
         twistieExpandedTpl: '<i class="fa fa-caret-right"></i>',
