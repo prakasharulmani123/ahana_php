@@ -3005,6 +3005,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.loadmedicalcasehistory = function () {
+            $('html, body').animate({
+                scrollTop: 0
+            }, 'fast');
             $scope.MCHCollection = [];
             $scope.medical_history = 'index';
             $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getpatientdocuments?patient_id=' + $state.params.id)
