@@ -77,6 +77,13 @@ class XmlController extends Controller {
         $item->addAttribute('id', $id);
         $item->addAttribute('Selected', 'False');
     }
+    
+    private function createCheckBox($field, $item, $value, $id) {
+        $item = $field->addChild('LISTITEM', $item);
+        $item->addAttribute('value', $value);
+        $item->addAttribute('id', $id);
+        $item->addAttribute('Selected', 'False');
+    }
 
     private function simplexml_insert_after($insert, $target) {
         $target_dom = dom_import_simplexml($target);
@@ -196,7 +203,7 @@ class XmlController extends Controller {
 
     //2. Section of past medical history Can we add RTA & Surgery (earlier suggested by Gopi Sir)  - COMPLETED
     public function actionInsertnewnode() {
-        $field_type = 'RadioButtonList';
+        $field_type = 'CheckBoxList';
         if ($field_type == 'DropDownList') {
             $find_val = 'Ayurveda';
             $item = 'Yoga/Naturopathy';
@@ -208,9 +215,15 @@ class XmlController extends Controller {
             $value = 'Others';
             $id = 'CBstreamform12';
             $xpath = "/FIELDS/GROUP/PANELBODY//LISTITEM[@id='{$find_val}']/parent::LISTITEMS";
+        } else if ($field_type == 'CheckBoxList') {
+            $find_val = 'family_histroy8';
+            $item = 'Others';
+            $value = 'Others';
+            $id = 'family_histroy9';
+            $xpath = "/FIELDS/GROUP/PANELBODY//LISTITEM[@id='{$find_val}']/parent::LISTITEMS";
         }
 
-        $all_files = $this->getAllFiles();
+        $all_files = $this->getAllMCHFiles();
         $error_files = [];
         if (!empty($all_files)) {
             foreach ($all_files as $key => $files) {
@@ -231,11 +244,15 @@ class XmlController extends Controller {
                                     $this->createDDLItem($target, $item, $value);
                                 } else if ($field_type == 'RadioButtonList') {
                                     $this->createRadioButton($target, $item, $value, $id);
+                                } else if ($field_type == 'CheckBoxList') {
+                                    $this->createCheckBox($target, $item, $value, $id);
                                 }
                             }
                         }
                     }
+                    
                     $xml->asXML($files);
+                    //print_r($targets); die;
                 }
             }
         }
@@ -1056,4 +1073,3 @@ class XmlController extends Controller {
     }
 
 }
-

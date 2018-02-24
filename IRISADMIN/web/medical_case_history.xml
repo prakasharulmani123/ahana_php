@@ -500,7 +500,7 @@
                     <LISTITEM value="Seizure" id="family_histroy6" Selected="false">Seizure</LISTITEM>
                     <LISTITEM value="CAD" id="family_histroy7" Selected="false">CAD</LISTITEM>
                     <LISTITEM value="Mental Illness" id="family_histroy8" Selected="false">Mental Illness</LISTITEM>
-                </LISTITEMS>
+                <LISTITEM value="Others" id="family_histroy9" Selected="False">Others</LISTITEM></LISTITEMS>
             </FIELD>
             
             <FIELD type="Header2" label="Personal History" class="Informant"/>
