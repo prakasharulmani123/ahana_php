@@ -193,7 +193,7 @@
                                                                                                     <div class="col-sm-3">
                                                                                                         <label> Product</label>
                                                                                                         <select class="form-control" name="Product" ng-model="addData.product" ng-options="product as product.full_name for product in products| filter:$viewValue" data-ng-change="setGeneric();
-                                                                                                                            getRoutes(false, null, null)">
+                                                                                                            getRoutes(false, null, null)">
                                                                                                             <option value="">Select Product</option>
                                                                                                         </select>                                                                    
                                                                                                     </div>
@@ -875,7 +875,7 @@
                                                                                         <div class="form-group">
                                                                                             <label for="exampleInputEmail2"><i class="fa fa-calendar"></i> <b> Next Vist </b></label> &nbsp; &nbsp;
                                                                                             <input type="text" id="next_visit_date_picker" class="form-control multimonthdatepicker" ng-model="data.next_visit" ng-click="open($event)" drop-disable prevent-enter="true" ng-change="setDayEmpty();
-                                                                                                    getDays();"/>
+                                                                                                getDays();"/>
                                                                                         </div>
                                                                                         <div class="form-group">
                                                                                             <label for="exampleInputEmail2">
@@ -1008,37 +1008,44 @@
                                                                                         </div>-->
 
                                             <!-- Medical Case history Starting-->
-                                            <div ng-if="medical_history == 'form'" class="col-sm-12">
-                                                <div ng-include="'tpl/blocks/alert.html'">
-                                                    {% include 'tpl/blocks/alert.html' %}
+                                            <div ng-if="medical_history == 'form'">
+                                                <button class="pull-right btn m-b-xs btn-dark" style='margin-right: 16px;' ng-click="loadmedicalcasehistory()"> <i class="fa fa-arrow-left"></i> Back</button>
+                                                <div class="col-sm-12">
+                                                    <div ng-include="'tpl/blocks/alert.html'">
+                                                        {% include 'tpl/blocks/alert.html' %}
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div ng-bind-html="xml | xslt:xslt | sanitize"></div>
+                                                    </div>
+                                                    <footer class="panel-footer text-right bg-light lter">
+                                                        <button class="btn m-b-xs  btn-success" ng-click="savemedicalForm()">Save</button>
+                                                        &nbsp;
+                                                        <button class="btn m-b-xs  btn-dark" ng-click="clearmedicalForm()"> <i class="fa fa-times"></i> Cancel</button>
+                                                    </footer> 
                                                 </div>
-                                                <div class="panel-body">
-                                                    <div ng-bind-html="xml | xslt:xslt | sanitize"></div>
-                                                </div>
-                                                <footer class="panel-footer text-right bg-light lter">
-                                                    <button class="btn m-b-xs  btn-success" ng-click="savemedicalForm()">Save</button>
-                                                    &nbsp;
-                                                    <button class="btn m-b-xs  btn-dark" ng-click="clearmedicalForm()"> <i class="fa fa-times"></i> Cancel</button>
-                                                </footer>
                                             </div>
 
-                                            <div ng-if="medical_history == 'view'" class="col-sm-12">
-                                                <div ng-bind-html="view_xml | xslt:viewxslt | sanitize"></div>
-                                                <footer class="panel-footer text-right bg-light lter">
-                                                    <button class="btn m-b-xs  btn-success" ng-click="printMedicalcasedocument()">Print</button>
-                                                    &nbsp;
-                                                    <button class="btn m-b-xs  btn-dark" ng-click="loadmedicalcasehistory()"> <i class="fa fa-times"></i> Cancel</button>
-                                                </footer>
-                                                <div ng-hide='true' id='printCasedocument'>
-                                                    <table id="medical_case_history" style="width:100%">
-                                                        <tbody>
-                                                            <tr>
-                                                                <td colspan="3" ng-bind-html="view_xml | xslt:printxslt | sanitize">
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                            <div ng-if="medical_history == 'view'">
+                                                <button class="pull-right btn m-b-xs  btn-dark" style='margin-right: 16px;' ng-click="loadmedicalcasehistory()"> <i class="fa fa-arrow-left"></i> Back</button>
+                                                <div class="col-sm-12">
+                                                    <div ng-bind-html="view_xml | xslt:viewxslt | sanitize"></div>
+                                                    <footer class="panel-footer text-right bg-light lter">
+                                                        <button class="btn m-b-xs  btn-success" ng-click="printMedicalcasedocument()">Print</button>
+                                                        &nbsp;
+                                                        <button class="btn m-b-xs  btn-dark" ng-click="loadmedicalcasehistory()"> <i class="fa fa-times"></i> Cancel</button>
+                                                    </footer>
+                                                    <div ng-hide='true' id='printCasedocument'>
+                                                        <table id="medical_case_history" style="width:100%">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td colspan="3" ng-bind-html="view_xml | xslt:printxslt | sanitize">
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
+
                                             </div>
 
                                             <div ng-if="medical_history == 'index'" class="col-sm-12">
@@ -1129,7 +1136,7 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata = {};
+                                    <div class="row" ng-init="vitaldata = {} ; 
                                             loadVitals();
                                             vitaldata.formtype = 'add'">
                                         <div class="col-lg-12"> 
@@ -1747,7 +1754,7 @@
                                                                     </button>
                                                                 </td>
                                                                 <td colspan="4">
-<!--                                                                    <span class="badge bg-success">Branch: {{value.data.branch_name}}</span>&nbsp; &nbsp;-->
+                                                                    <!--                                                                    <span class="badge bg-success">Branch: {{value.data.branch_name}}</span>&nbsp; &nbsp;-->
                                                                     <span class="badge bg-primary">Encounter: {{value.data.encounter_id}}</span>&nbsp; &nbsp; 
                                                                 </td>
                                                             </tr>
@@ -1824,34 +1831,34 @@
 
 <script>
     $(document).ready(function () {
-        //var site_url = $('[ng-controller="PrescriptionController"]').scope().IRISOrgUrl;
-        $('#search-form').on('click', function (e) {
-            e.stopPropagation();
-        });
-        $.getScript("js/slidebars.js", function (data, textStatus, jqxhr) {
-            slidebar();
-        });
+    //var site_url = $('[ng-controller="PrescriptionController"]').scope().IRISOrgUrl;
+    $('#search-form').on('click', function (e) {
+    e.stopPropagation();
+    });
+    $.getScript("js/slidebars.js", function (data, textStatus, jqxhr) {
+    slidebar();
+    });
 //        prescription right navigation
-        $('.expand-notes').click(function (e) {
-            $('#makeit-full').toggleClass('fullscreen');
-            $('.note-full').toggleClass('fullscreen');
-            var div_width = '-' + $('#makeit-full').css('width');
-            $('#sb-site').css('transform', 'translate(' + div_width + ')');
-            $('#sb-site').css('transition', 'none');
-        });
-        $(".multimonthdatepicker").datepicker({
+    $('.expand-notes').click(function (e) {
+    $('#makeit-full').toggleClass('fullscreen');
+    $('.note-full').toggleClass('fullscreen');
+    var div_width = '-' + $('#makeit-full').css('width');
+    $('#sb-site').css('transform', 'translate(' + div_width + ')');
+    $('#sb-site').css('transition', 'none');
+    });
+    $(".multimonthdatepicker").datepicker({
 //            showOn: "button",
 //            buttonImage: site_url + "/img/calendar.gif",
 //            buttonText: "Select date",
-            numberOfMonths: 2,
+    numberOfMonths: 2,
             showButtonPanel: true,
             dateFormat: 'yy-mm-dd',
             minDate: 0
-        });
+    });
     });
     function slidebar() {
-        $.slidebars({
-            scrollLock: true
-        });
+    $.slidebars({
+    scrollLock: true
+    });
     }
 </script>
