@@ -166,6 +166,7 @@ class PatientconsultantController extends ActiveController {
                     ->andWhere("pat_consultant.tenant_id IN ( '$tenant_ids' )")
                     ->andWhere("date(consult_date) between '{$post['from']}' AND '{$post['to']}'")
                     ->andWhere("pat_encounter.encounter_type='OP'")
+                    ->andWhere("pat_consultant.deleted_at='0000-00-00 00:00:00'")        
                     ->groupBy(['pat_consultant.consultant_id'])
                     ->all();
             $consultantCharges = [];
@@ -185,6 +186,7 @@ class PatientconsultantController extends ActiveController {
                     ->andWhere("pat_procedure.tenant_id IN ( '$tenant_ids' )")
                     ->andWhere("date(proc_date) between '{$post['from']}' AND '{$post['to']}'")
                     ->andWhere("pat_encounter.encounter_type='OP'")
+                    ->andWhere("pat_procedure.deleted_at='0000-00-00 00:00:00'")
                     ->groupBy(['pat_procedure.charge_subcat_id'])
                     ->all();
             $procedureCharges = [];
