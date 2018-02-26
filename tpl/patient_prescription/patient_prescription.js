@@ -3005,6 +3005,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.loadmedicalcasehistory = function () {
+            $scope.medicalAutoSaveStop();
             $('html, body').animate({
                 scrollTop: 0
             }, 'fast');
