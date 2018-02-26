@@ -250,6 +250,15 @@ class PatAppointment extends RActiveRecord {
                 else
                     return '-';
             },
+            'patient_uhid' => function ($model) {
+                if (isset($model->patient))
+                    return $model->patient_uhid;
+                else
+                    return '-';
+            },
+            'branch_name' => function ($model) {
+                return isset($model->tenant) ? $model->tenant->tenant_name : '-';
+            }
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
@@ -265,6 +274,13 @@ class PatAppointment extends RActiveRecord {
     public function getPatient_mobile() {
         if (isset($this->patient))
             return $this->patient->patient_mobile;
+        else
+            return '-';
+    }
+
+    public function getPatient_uhid() {
+        if (isset($this->patient))
+            return $this->patient->patient_global_int_code;
         else
             return '-';
     }

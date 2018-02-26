@@ -106,25 +106,25 @@ class MyworkreportsController extends ActiveController {
         if (isset($post['consultant_id']) && isset($post['tenant_id'])) {
             $consultant_ids = join("','", $post['consultant_id']);
             $tenant_ids = join("','", $post['tenant_id']);
-            $model = PatAppointment::find()
-                    ->select(['sum(amount) as amount', 'status_date'])
+            $reports = PatAppointment::find()
+                    //->select(['sum(amount) as amount', 'status_date'])
                     ->joinWith(['consultant', 'tenant'])
-                    ->addSelect(["co_tenant.tenant_name as tenant_name"])
-                    ->addSelect(["concat(co_user.title_code,co_user.name) as full_consultant_name"])
+                    //->addSelect(["co_tenant.tenant_name as tenant_name"])
+                    //->addSelect(["concat(co_user.title_code,co_user.name) as full_consultant_name"])
                     ->andWhere('pat_appointment.deleted_at = "0000-00-00 00:00:00"')
                     ->andWhere("status_date between '{$post['from']}' AND '{$post['to']}'")
                     ->andWhere("pat_appointment.consultant_id IN ( '$consultant_ids' )")
                     ->andWhere("pat_appointment.tenant_id IN ( '$tenant_ids' )")
                     ->andWhere("appt_status='S'")
-                    ->groupBy(['status_date', 'consultant_id'])
+                    //->groupBy(['status_date', 'consultant_id'])
                     ->all();
-            $reports = [];
-            foreach ($model as $key => $appoint) {
-                $reports[$key]['amount'] = $appoint['amount'];
-                $reports[$key]['status_date'] = $appoint['status_date'];
-                $reports[$key]['tenant_name'] = $appoint['tenant_name'];
-                $reports[$key]['full_consultant_name'] = $appoint['full_consultant_name'];
-            }
+            //$reports = [];
+//            foreach ($model as $key => $appoint) {
+//                $reports[$key]['amount'] = $appoint['amount'];
+//                $reports[$key]['status_date'] = $appoint['status_date'];
+//                $reports[$key]['tenant_name'] = $appoint['tenant_name'];
+//                $reports[$key]['full_consultant_name'] = $appoint['full_consultant_name'];
+//            }
             return ['report' => $reports];
         }
     }
