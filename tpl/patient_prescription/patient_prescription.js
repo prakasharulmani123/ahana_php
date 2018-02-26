@@ -49,6 +49,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.drugs = {};
         $scope.routes = {};
         $scope.frequencies = {};
+        $scope.prescription_print_content = false;
         var secretEmptyKey = '[$empty$]'
         $scope.stateComparator = function (state, viewValue) {
             return viewValue === secretEmptyKey || ('' + state).toLowerCase().indexOf(('' + viewValue).toLowerCase()) > -1;
@@ -1811,6 +1812,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.presDetail = function (pres_id) {
+            $scope.prescription_print_content = true;
             $scope.data2 = {};
             $scope.prescriptionItems2 = [];
             $scope.loadbar('show');
@@ -2734,7 +2736,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $timeout(function () {
                 $scope.consFormData.consultant_id = $scope.data.consultant_id;
             }, 2000)
-
+            $scope.loadConsultantsList();
         };
         $scope.saveConsultantForm = function (mode) {
             consData = $scope.consFormData;
@@ -3005,6 +3007,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.loadmedicalcasehistory = function () {
+            $scope.isLoading = true;
             $scope.medicalAutoSaveStop();
             $('html, body').animate({
                 scrollTop: 0

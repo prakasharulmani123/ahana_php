@@ -30,7 +30,7 @@
                                     </a>
                                 </li>
                                 <li ng-show="(prescription_tab.PTM == 1)" ng-class="{active:tab == 2}">
-                                    <a href ng-click="Setempty_tab(); tab = 2">
+                                    <a href ng-click="Setempty_tab(); loadmedicalcasehistory(); tab = 2">
                                         <tab-heading > 
                                             <i class="fa fa-history" aria-hidden="true"></i> 
                                             Medical Case History
@@ -38,7 +38,7 @@
                                     </a>
                                 </li>
                                 <li ng-show="(prescription_tab.PTV == 1)" ng-class="{active:tab == 3}">
-                                    <a href ng-click="Setempty_tab(); tab = 3">
+                                    <a href ng-click="Setempty_tab(); loadVitals(); tab = 3">
                                         <tab-heading> 
                                             <i class="fa fa-heartbeat" aria-hidden="true"></i> 
                                             Vitals <span class="badge bg-success badge-sm m-l-xs" ng-show="unseen_vitals_count > 0">
@@ -48,14 +48,14 @@
                                     </a>
                                 </li>
                                 <li ng-show="(prescription_tab.PTR == 1)" ng-class="{active:tab == 4}">
-                                    <a href ng-click="Setempty_tab(); tab = 4">
+                                    <a href ng-click="Setempty_tab(); initResultForm(); tab = 4">
                                         <tab-heading> 
                                             <i class="fa fa-file-text" aria-hidden="true"></i> Results 
                                         </tab-heading>
                                     </a>
                                 </li>
                                 <li ng-show="(prescription_tab.PTN == 1)" ng-class="{active:tab == 5}">
-                                    <a href ng-click="Setempty_tab(); tab = 5">
+                                    <a href ng-click="Setempty_tab(); initConsultantForm(); tab = 5">
                                         <tab-heading> 
                                             <i class="fa fa-pencil" aria-hidden="true"></i> Consultant Notes
                                         </tab-heading>
@@ -1048,11 +1048,11 @@
 
                                             </div>
 
-                                            <div ng-if="medical_history == 'index'" class="col-sm-12">
+                                            <div ng-if="medical_history == 'index'" class="col-sm-12" ng-hide="isLoading">
                                                 <div ng-include="'tpl/blocks/alert.html'">
                                                     {% include 'tpl/blocks/alert.html' %}
                                                 </div>
-                                                <div class="create-vitals-table" ng-init="loadmedicalcasehistory()">
+                                                <div class="create-vitals-table">
                                                     <div class="row wrapper">
                                                         <div class="col-sm-12">
                                                             <button class="btn btn-info text-right" ng-click="initmedicalhistory()" style="">
@@ -1130,16 +1130,18 @@
                                                     </table>
                                                 </div>
                                             </div>
+                                            <div class="col-lg-12" ng-show="isLoading">
+                                                <div class="text-center"><i class="fa fa-spin fa-refresh"></i></div>
+                                            </div>
                                             <!-- Medical Case history Ending-->
                                         </div>
                                     </div>
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata = {} ; 
-                                            loadVitals();
-                                            vitaldata.formtype = 'add'">
-                                        <div class="col-lg-12"> 
+                                        <div class="row" ng-init="vitalda ta    =    { } ; 
+                                        vitaldata.formtype    =    'add'">
+                                        <div class="col-lg-12" ng-hide="isLoading"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
                                                 <accordion-group is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled">
@@ -1547,12 +1549,15 @@
                                                 </accordion-group>
                                             </accordion>
                                         </div>
+                                        <div class="col-lg-12" ng-show="isLoading">
+                                            <div class="text-center"><i class="fa fa-spin fa-refresh"></i></div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div ng-show="tab == 4" ng-init="initResultForm()">
+                                <div ng-show="tab == 4">
                                     <div class="row">
-                                        <div class="col-lg-12">
+                                        <div class="col-lg-12" ng-hide="isLoading">
                                             <div ng-include="'tpl/blocks/alert.html'">
                                                 {% include 'tpl/blocks/alert.html' %}
                                             </div>
@@ -1653,13 +1658,16 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-lg-12" ng-show="isLoading">
+                                            <div class="text-center"><i class="fa fa-spin fa-refresh"></i></div>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div ng-show="tab == 5">
                                     <div class="row">
-                                        <div class="col-lg-12">
-                                            <div ng-init='initConsultantForm()'>
+                                        <div class="col-lg-12" ng-hide="isLoading">
+                                            <div>
                                                 <form name="consultantForm" class="form-horizontal form-validation">
                                                     <div class="">
                                                         <div ng-include="'tpl/blocks/alert.html'">
@@ -1726,7 +1734,7 @@
 
                                             <div class="line line-dashed b-b line-lg "></div>
 
-                                            <div class="result-table" ng-init="loadConsultantsList();">
+                                            <div class="result-table">
                                                 <div class="panel-heading font-bold">Notes</div>
                                                 <div class="panel-body">
                                                     <table st-table="displayedconsultantCollection"  st-safe-src="consultantCollection"  class="table table-striped b-t b-light">
@@ -1800,6 +1808,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-lg-12" ng-show="isLoading">
+                                            <div class="text-center"><i class="fa fa-spin fa-refresh"></i></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1820,13 +1831,13 @@
         </table>
     </div>
     <!--Print Bill-->
-    <div id="Getprintval" ng-hide="true">
-        <io-barcode id="patient_barcode" code="{{patientObj.patient_global_int_code}}" type="{{ type}}" options="barcodeOptions"></io-barcode>
-        <img id="weather1" src="{{IRISOrgUrl}}/img/weather1.png" width="25" height="25" alt="" />
-        <img id="weather2" src="{{IRISOrgUrl}}/img/weather2.png" width="25" height="25" alt="" />
-        <img id="weather3" src="{{IRISOrgUrl}}/img/weather3.png" width="25" height="25" alt="" />
-        <img id="weather4" src="{{IRISOrgUrl}}/img/weather4.png" width="25" height="25" alt="" />
-    </div>     
+    <!--    <div id="Getprintval" ng-hide="true">
+            <io-barcode id="patient_barcode" code="{{patientObj.patient_global_int_code}}" type="{{ type}}" options="barcodeOptions"></io-barcode>
+            <img id="weather1" src="{{IRISOrgUrl}}/img/weather1.png" width="25" height="25" alt="" />
+            <img id="weather2" src="{{IRISOrgUrl}}/img/weather2.png" width="25" height="25" alt="" />
+            <img id="weather3" src="{{IRISOrgUrl}}/img/weather3.png" width="25" height="25" alt="" />
+            <img id="weather4" src="{{IRISOrgUrl}}/img/weather4.png" width="25" height="25" alt="" />
+        </div>     -->
 </div>
 
 <script>
