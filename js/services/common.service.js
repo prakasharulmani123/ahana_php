@@ -896,6 +896,7 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
             {value: 'Maestro', label: 'Maestro'},
             {value: 'Visa Debit', label: 'Visa Debit'},
             {value: 'MasterCard Debit', label: 'MasterCard Debit'},
+            {value: 'Rupay', label: 'Rupay'},
         ];
         callback(response);
     }
