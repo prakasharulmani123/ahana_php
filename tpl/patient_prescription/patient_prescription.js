@@ -3290,6 +3290,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.loadResultFromDatabase($scope.test_view_xml, function (resultxml) {
                             $scope.loadVitalsFromDatabase(resultxml, false, function (newxml) {
                                 $scope.view_xml = newxml;
+                                $timeout(function () {
+                                    $scope.setRefferedBy();
+                                }, 100);
                             });
                         });
                     });
