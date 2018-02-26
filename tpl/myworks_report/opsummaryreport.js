@@ -14,6 +14,12 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                     break;
             }
         };
+        
+        //Expand table in Index page
+        $scope.ctrl = {};
+        $scope.ctrl.expandAll = function (expanded) {
+            $scope.$broadcast('onExpandAll', {expanded: expanded});
+        };
 
         $scope.clearReport = function () {
             $scope.showTable = false;
@@ -88,6 +94,7 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
         //Index Page
         $scope.loadReport = function () {
             $scope.records = [];
+            $scope.branchwise_new = {};
             $scope.loadbar('show');
             $scope.loading = true;
             $scope.errorData = "";
@@ -126,7 +133,15 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                         $scope.errorData = "An Error has occured";
                     });
         };
-
+        $scope.total_pending = function (a, b) {
+            if (a == undefined)
+                return b;
+            if (a != undefined)
+            {
+                var total = parseFloat(a.replace(',', '')) + parseFloat(b.replace(',', ''));
+                return total.toFixed(2);
+            }
+        }
         $scope.parseFloat = function (row) {
             return parseFloat(row);
         }

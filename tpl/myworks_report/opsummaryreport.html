@@ -72,7 +72,7 @@
                     <div class="panel-body">No Records Found</div>
                 </div>
             </div>
-            
+
             <div class="col-sm-12" ng-if='showTable && records.length > 0'>
                 <div class="panel panel-default">
                     <div class="panel-body">
@@ -102,7 +102,7 @@
             </div>
 
             <div class="col-sm-12" ng-if='showTable && records.length > 0'>
-                <div id="op_summary_report">
+                <div>
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <b>Date Wise Report</b>
@@ -112,7 +112,12 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>S.No</th>
+                                            <th style="width: 5%" data-sort-ignore="true">
+                                                <button class="btn btn-sm btn-default hms-plus" type="button" ng-click="ctrl.expandAll(allExpanded = !allExpanded)">
+                                                    <i ng-if="!allExpanded" class="fa fa-plus text"></i>
+                                                    <i ng-if="allExpanded" class="fa fa-minus text"></i>
+                                                </button>
+                                            </th>
                                             <th>Branch Name</th>
                                             <th>Doctor Name</th>
                                             <th>Date</th>
@@ -120,12 +125,56 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="record in records">
-                                            <td>{{$index + 1}}</td>
-                                            <td>{{record.tenant_name}}</td>
-                                            <td>{{record.full_consultant_name}}</td>
-                                            <td>{{record.status_date}}</td>
-                                            <td>{{record.amount}}</td>
+                                        <tr ng-repeat-start="(statusDate, record) in records |orderBy:'status_date' | groupBy:'status_date'">
+                                            <td style="width: 5%" data-sort-ignore="true" data-value="{{row.all_dates}}">
+                                                <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
+                                                    <i ng-if="!expanded" class="fa fa-plus text"></i>
+                                                    <i ng-if="expanded" class="fa fa-minus text"></i>
+                                                </button>
+                                            </td>
+                                            <td>{{record[0].branch_name}}</td>
+                                            <td>{{record[0].consultant_name}}</td>
+                                            <td>{{statusDate}}</td>
+                                            <td>{{pending.total_amount}}</td>
+                                        </tr>
+                                        <tr ng-repeat-end ng-show="expanded">
+                                            <td colspan="5">
+                                                <table class="table table-condensed table-bordered" ng-init="pending = {}">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>S.No</th>
+                                                            <th>Patient Name</th>
+                                                            <th>Patient UHID</th>
+                                                            <th>Payment Type</th>
+                                                            <th>Total Amount</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="(Key, report) in record">
+                                                            <td>{{Key + 1}}</td>
+                                                            <td>{{report.patient_name}}</td>
+                                                            <td>{{report.patient_uhid}}</td>
+                                                            <td>
+                                                                <span ng-if="report.payment_mode == 'CA'">
+                                                                    Cash
+                                                                </span>
+                                                                <span ng-if="report.payment_mode == 'CD'">
+                                                                    Card
+                                                                </span>
+                                                                <span ng-if="report.payment_mode == 'CH'">
+                                                                    Cheque
+                                                                </span>
+                                                                <span ng-if="report.payment_mode == 'ON'">
+                                                                    Online.
+                                                                </span>
+                                                            </td>
+                                                            <td data-type="Number" ng-init="pending.total_amount = total_pending(pending.total_amount, report.amount);">
+                                                                {{report.amount}}
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -134,6 +183,46 @@
                     </div>
                 </div>
             </div>
+            <div id="op_summary_report" ng-hide="true">
+                <table>
+                    <tr>
+                        <td>Report Name</td>
+                        <td>Date / Duration</td>
+                        <td>Generated On</td>
+                        <td>Generated By</td>
+                    </tr>
+                    <tr>
+                        <td>OP Summary Report</td>
+                        <td>{{ data.from | date:'dd-MM-yyyy'}} - {{ data.to | date:'dd-MM-yyyy'}}</td>
+                        <td>{{generated_on}}</td>
+                        <td>{{app.username}}</td>
+                    </tr>
+                </table>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Branch Name</th>
+                            <th>Doctor Name</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="(statusDate, record) in records | groupBy: 'status_date'" ng-init="branchwise_new = {}">
+                            <td>{{record[0].branch_name}}</td>
+                            <td>{{record[0].consultant_name}}</td>
+                            <td>{{statusDate}}</td>
+                            <td data-type="Number">
+                                <span ng-repeat="(key, bran) in record" ng-init="row_total_new = parseFloat(bran.amount);
+                                                                        branchwise_new.total = branchwise_new.total + row_total_new;">
+                                </span>
+                                {{branchwise_new.total| number:2}}  
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     </div>
 </div>
