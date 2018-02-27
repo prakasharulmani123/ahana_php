@@ -88,7 +88,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         //Start Watch Functions
         $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             $scope.spinnerbar('show');
-            if (typeof newValue !== 'undefined' && newValue != '') {
+            if (typeof newValue !== 'undefined' && newValue != '' && (newValue !== oldValue)) {
                 $rootScope.commonService.GetEncounterListByPatient($scope.app.logged_tenant_id, '0,1', false, $scope.patientObj.patient_id, function (response) {
                     angular.forEach(response, function (resp) {
                         resp.encounter_id = resp.encounter_id.toString();
@@ -128,7 +128,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.loadPrevPrescriptionsList();
                 $scope.getConsultantFreq();
                 $scope.checkVitalaccess();
-                $scope.loadSideMenu();
+                //$scope.loadSideMenu();
                 $scope.$emit('encounter_id', newValue);
             }
         }, true);
@@ -163,7 +163,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.checkVitalaccess = function () {
             $scope.vital_enable_count = true;
             patient_type = $scope.patientObj.encounter_type;
-            url = $rootScope.IRISOrgServiceUrl + '/patientvitals/checkvitalaccess?patient_type=' + patient_type;
+            url = $rootScope.IRISOrgServiceUrl + '/patientvitals/checkvitalaccess?addtfields=pres_configuration&patient_type=' + patient_type;
             $http.get(url)
                     .success(function (vitals) {
                         angular.forEach(vitals, function (row) {
@@ -235,70 +235,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.data.prescriptionItems[key].in_stock = (parseInt(item.available_quantity) >= parseInt(qty));
             }
         };
-        $scope.loadSideMenu = function () {
-            $scope.presc_right.notedata = {};
-            $scope.presc_right.vitaldata = {};
-            //Get Notes
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientnotes/getpatientnotes?patient_id=' + $state.params.id)
-                    .success(function (notes) {
-
-                        $scope.child.notes = [];
-                        angular.forEach(notes.result, function (result) {
-                            angular.forEach(result.all, function (note) {
-                                $scope.child.notes.push(note);
-                            });
-                        });
-//                        var unseen = $filter('filter')($scope.child.notes, {seen_by: 0});
-//                        $scope.unseen_notes = unseen.length;
-                        $scope.unseen_notes = notes.usernotes;
-                        $scope.unseen_notes_count = notes.usernotes.length;
-                        angular.forEach($scope.child.notes, function (note) {
-                            note.seen_by = 1;
-                        });
-                        angular.forEach(notes.usernotes, function (note) {
-                            seen_filter_note = $filter('filter')($scope.child.notes, {pat_note_id: note.note_id});
-                            if (seen_filter_note.length > 0) {
-                                seen_filter_note[0].seen_by = 0;
-                            }
-                        });
-//                        //groupBy for reverse order keep - Nad
-//                        $scope.grouped.notes = [];
-//                        $scope.grouped.notes = $filter('groupBy')($scope.child.notes, 'created_date');
-//                        $scope.grouped.notes = Object.keys($scope.grouped.notes)
-//                                .map(function (key) {
-//                                    return $scope.grouped.notes[key];
-//                                });
-                    })
-                    .error(function () {
-                        $scope.errorData = "An Error has occured while loading patientnote!";
-                    });
-            //Get Vitals
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?addtfields=eprvitals&patient_id=' + $state.params.id)
-                    .success(function (vitals) {
-                        $scope.child.vitals = [];
-                        angular.forEach(vitals.result, function (result) {
-                            angular.forEach(result.all, function (vital) {
-                                $scope.child.vitals.push(vital);
-                            });
-                        });
-                        $scope.unseen_vitals = vitals.uservitals;
-                        $scope.unseen_vitals_count = vitals.uservitals.length;
-                        angular.forEach($scope.child.vitals, function (vital) {
-                            vital.seen_by = 1;
-                        });
-                        angular.forEach(vitals.uservitals, function (vital) {
-                            seen_filter_vital = $filter('filter')($scope.child.vitals, {vital_id: vital.vital_id});
-                            if (seen_filter_vital.length > 0) {
-                                seen_filter_vital[0].seen_by = 0;
-                            }
-                        });
-                    })
-                    .error(function () {
-                        $scope.errorData = "An Error has occured while loading patientvitals!";
-                    });
-            //Get Fav
-            $scope.getFav();
-        }
 
         $scope.getFav = function () {
             $http.get($rootScope.IRISOrgServiceUrl + '/patientprescriptionfavourite/getpatientprescriptionfavourite?patient_id=' + $state.params.id)
@@ -329,12 +265,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading drugclass!";
                     });
-            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbycode?code=CSP')
+            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbycode?code=CSP&addtfields=pres_configuration')
                     .success(function (response) {
                         $scope.presc_stock_status = response.value;
                     })
 
-            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=prescription_tab')
+            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=prescription_tab&addtfields=pres_configuration')
                     .success(function (response) {
                         angular.forEach(response, function (row) {
                             var listName = row.code;
@@ -342,7 +278,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         });
                     })
 
-            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=prescription_print')
+            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=prescription_print&addtfields=pres_configuration')
                     .success(function (response) {
                         angular.forEach(response, function (row) {
                             var listName = row.code;
@@ -381,9 +317,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 //            $rootScope.commonService.GetPatientRoute('', '1', false, function (response) {
 //                $scope.routes = response.routelist;
 //            });
-            $rootScope.commonService.GetPatientFrequency('', '1', false, function (response) {
-                $scope.frequencies = response.frequencylist;
-            });
+//            $rootScope.commonService.GetPatientFrequency('', '1', false, function (response) {
+//                $scope.frequencies = response.frequencylist;
+//            });
             //$scope.data.next_visit = moment().format('YYYY-MM-DD');
             //$scope.getDays();
             $scope.globalData.frequency_3_0 = '0';
@@ -1429,7 +1365,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                                 'freqType': item.freqType
                                                             };
                                                             var fav = $filter('filter')($scope.child.favourites, {product_id: item.product_id});
-                                                            if (fav.length > 0) {
+                                                            if (fav && fav.length > 0) {
                                                                 angular.extend(items, {is_favourite: 1});
                                                             }
 
@@ -3407,6 +3343,71 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 //            }
 //        }
 //Not Used
+
+//        $scope.loadSideMenu = function () {
+//            $scope.presc_right.notedata = {};
+//            $scope.presc_right.vitaldata = {};
+//            //Get Notes
+//            $http.get($rootScope.IRISOrgServiceUrl + '/patientnotes/getpatientnotes?patient_id=' + $state.params.id)
+//                    .success(function (notes) {
+//
+//                        $scope.child.notes = [];
+//                        angular.forEach(notes.result, function (result) {
+//                            angular.forEach(result.all, function (note) {
+//                                $scope.child.notes.push(note);
+//                            });
+//                        });
+////                        var unseen = $filter('filter')($scope.child.notes, {seen_by: 0});
+////                        $scope.unseen_notes = unseen.length;
+//                        $scope.unseen_notes = notes.usernotes;
+//                        $scope.unseen_notes_count = notes.usernotes.length;
+//                        angular.forEach($scope.child.notes, function (note) {
+//                            note.seen_by = 1;
+//                        });
+//                        angular.forEach(notes.usernotes, function (note) {
+//                            seen_filter_note = $filter('filter')($scope.child.notes, {pat_note_id: note.note_id});
+//                            if (seen_filter_note.length > 0) {
+//                                seen_filter_note[0].seen_by = 0;
+//                            }
+//                        });
+////                        //groupBy for reverse order keep - Nad
+////                        $scope.grouped.notes = [];
+////                        $scope.grouped.notes = $filter('groupBy')($scope.child.notes, 'created_date');
+////                        $scope.grouped.notes = Object.keys($scope.grouped.notes)
+////                                .map(function (key) {
+////                                    return $scope.grouped.notes[key];
+////                                });
+//                    })
+//                    .error(function () {
+//                        $scope.errorData = "An Error has occured while loading patientnote!";
+//                    });
+//            //Get Vitals
+//            $http.get($rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?addtfields=eprvitals&patient_id=' + $state.params.id)
+//                    .success(function (vitals) {
+//                        $scope.child.vitals = [];
+//                        angular.forEach(vitals.result, function (result) {
+//                            angular.forEach(result.all, function (vital) {
+//                                $scope.child.vitals.push(vital);
+//                            });
+//                        });
+//                        $scope.unseen_vitals = vitals.uservitals;
+//                        $scope.unseen_vitals_count = vitals.uservitals.length;
+//                        angular.forEach($scope.child.vitals, function (vital) {
+//                            vital.seen_by = 1;
+//                        });
+//                        angular.forEach(vitals.uservitals, function (vital) {
+//                            seen_filter_vital = $filter('filter')($scope.child.vitals, {vital_id: vital.vital_id});
+//                            if (seen_filter_vital.length > 0) {
+//                                seen_filter_vital[0].seen_by = 0;
+//                            }
+//                        });
+//                    })
+//                    .error(function () {
+//                        $scope.errorData = "An Error has occured while loading patientvitals!";
+//                    });
+//            //Get Fav
+//            $scope.getFav();
+//        }
 //        $scope.changeFreqMask = function (key, freq) {
 //            $('.freq_div_' + key).addClass('hide');
 //            $('.change_mask_' + key).addClass('hide');
