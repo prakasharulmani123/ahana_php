@@ -160,58 +160,117 @@ class PharmacyreorderhistoryController extends ActiveController {
         }
     }
 
-    public function actionReorder() {
-        $post = Yii::$app->getRequest()->post();
-        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
-
-        $stocks = PhaProductBatch::find()
-                ->joinWith('product')
-                ->joinWith('phaProductBatchRate')
-                ->andWhere(['pha_product.tenant_id' => $tenant_id])
-                ->addSelect([
-                    "CONCAT(
-                        IF(pha_product.product_name IS NULL OR pha_product.product_name = '', ' ', pha_product.product_name),
-                        IF(pha_product.product_unit_count IS NULL OR pha_product.product_unit_count = '', ' ', CONCAT(' | ', pha_product.product_unit_count)),
-                        IF(pha_product.product_unit IS NULL OR pha_product.product_unit = '', ' ', CONCAT(' | ', pha_product.product_unit))
-                    ) as product_name",
-                    'SUM(available_qty) as available_qty',
-                    'pha_product.product_id as product_id',
-                    'pha_product.product_code as product_code',
-                    'pha_product.supplier_id_1 as supplier_id_1',
-                    'pha_product.supplier_id_2 as supplier_id_2',
-                    'pha_product.supplier_id_3 as supplier_id_3',
-                    'pha_product.product_code as product_code',
-                    'pha_product.product_reorder_min as product_reorder_min',
-                    'pha_product_batch_rate.mrp as mrp'
-                ])
-                ->groupBy(['pha_product.product_id'])
-                ->having('available_qty <= product_reorder_min')
-                ->all();
-
-        $reorder_products = ArrayHelper::map(PhaReorderHistoryItem::find()->tenant()->status()->active()->all(), 'product_id', 'product_id');
-        $reports = [];
-
-        foreach ($stocks as $key => $purchase) {
-            if (!in_array($purchase['product_id'], $reorder_products)) {
-                $reports[$key]['product_id'] = $purchase['product_id'];
-                $reports[$key]['product_name'] = $purchase['product_name'];
-                $reports[$key]['product_code'] = $purchase['product_code'];
-                $reports[$key]['mrp'] = $purchase['mrp'];
-                $reports[$key]['product_reorder_min'] = $purchase['product_reorder_min'];
-                $reports[$key]['available_qty'] = $purchase['available_qty'];
-                $reports[$key]['stock_value'] = $purchase['mrp'] * $purchase['available_qty'];
-
-                $supplier_id = $purchase['supplier_id_1'];
-                if (empty($supplier_id))
-                    $supplier_id = $purchase['supplier_id_2'];
-                if (empty($supplier_id))
-                    $supplier_id = $purchase['supplier_id_3'];
-
-                $reports[$key]['supplier_id'] = intval($supplier_id);
+    public function actionReorderhistory() {
+        $get = Yii::$app->getRequest()->get();
+        $searchCondition = '';
+        $condition = [];
+        if (isset($get['pageIndex']) && isset($get['pageSize'])) {
+            $offset = abs($get['pageIndex'] - 1) * $get['pageSize'];
+            if (isset($get['d'])) {
+                $condition['reorder_date'] = $get['d'];
             }
-        }
+            if (isset($get['s']) && !empty($get['s']) && $get['s'] != 'null') {
+                $text = $get['s'];
+                $searchCondition = [
+                    'or',
+                    ['like', 'supplier_name', $text],
+                    ['like', 'title_code', $text],
+                    ['like', 'name', $text],
+                ];
+            }
+            $modelClass = $this->modelClass;
+            $q = $modelClass::find()->joinWith('supplier')->joinWith('user')->tenant()->active()->orderBy(['pha_reorder_history.created_at' => SORT_DESC]);
+            if ($condition)
+                $q->andWhere($condition);
+            if ($searchCondition)
+                $q->andFilterWhere($searchCondition);
 
-        return ['report' => $reports];
+            $ReOrderHistory = $q->limit($get['pageSize'])->offset($offset)->all();
+            $ReOrderHistory_count = $q->count();
+            return ['report' => $ReOrderHistory, 'totalCount' => $ReOrderHistory_count];
+        }
+        else {
+            return ['report' => [], 'totalCount' => []];
+        }
+    }
+
+    public function actionReorder() {
+        $get = Yii::$app->getRequest()->get();
+        $searchCondition = '';
+        $condition = [];
+        if (isset($get['pageIndex']) && isset($get['pageSize'])) {
+            $offset = abs($get['pageIndex'] - 1) * $get['pageSize'];
+            if (isset($get['s']) && !empty($get['s']) && $get['s'] != 'null') {
+                $text = $get['s'];
+                $searchCondition = [
+                    'or',
+                    ['like', 'pha_product.product_name', $text],
+                    ['like', 'pha_product.product_code', $text],
+                    ['like', 'pha_product.product_reorder_min', $text],
+                    ['like', 'available_qty', $text],
+                ];
+            }
+
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+
+            $stocks_count_data = PhaProductBatch::find()
+                    ->joinWith('product')
+                    ->joinWith('phaProductBatchRate')
+                    ->andWhere(['pha_product.tenant_id' => $tenant_id])
+                    ->addSelect([
+                        "CONCAT(
+                            IF(pha_product.product_name IS NULL OR pha_product.product_name = '', ' ', pha_product.product_name),
+                            IF(pha_product.product_unit_count IS NULL OR pha_product.product_unit_count = '', ' ', CONCAT(' | ', pha_product.product_unit_count)),
+                            IF(pha_product.product_unit IS NULL OR pha_product.product_unit = '', ' ', CONCAT(' | ', pha_product.product_unit))
+                        ) as product_name",
+                        'SUM(available_qty) as available_qty',
+                        'pha_product.product_id as product_id',
+                        'pha_product.product_code as product_code',
+                        'pha_product.supplier_id_1 as supplier_id_1',
+                        'pha_product.supplier_id_2 as supplier_id_2',
+                        'pha_product.supplier_id_3 as supplier_id_3',
+                        'pha_product.product_reorder_min as product_reorder_min',
+                        'pha_product_batch_rate.mrp as mrp'
+                    ])
+                    ->groupBy(['pha_product.product_id'])
+                    ->having('available_qty <= product_reorder_min');
+
+            if ($searchCondition) {
+                $stocks_count_data->andFilterWhere($searchCondition);
+            }
+            
+            $stocks_count = $stocks_count_data->count();
+            $stocks = $stocks_count_data
+                    ->limit($get['pageSize'])
+                    ->offset($offset)
+                    ->all();
+
+            $reorder_products = ArrayHelper::map(PhaReorderHistoryItem::find()->tenant()->status()->active()->all(), 'product_id', 'product_id');
+            $reports = [];
+
+            foreach ($stocks as $key => $purchase) {
+                if (!in_array($purchase['product_id'], $reorder_products)) {
+                    $reports[$key]['product_id'] = $purchase['product_id'];
+                    $reports[$key]['product_name'] = $purchase['product_name'];
+                    $reports[$key]['product_code'] = $purchase['product_code'];
+                    $reports[$key]['mrp'] = $purchase['mrp'];
+                    $reports[$key]['product_reorder_min'] = $purchase['product_reorder_min'];
+                    $reports[$key]['available_qty'] = $purchase['available_qty'];
+                    $reports[$key]['stock_value'] = $purchase['mrp'] * $purchase['available_qty'];
+
+                    $supplier_id = $purchase['supplier_id_1'];
+                    if (empty($supplier_id))
+                        $supplier_id = $purchase['supplier_id_2'];
+                    if (empty($supplier_id))
+                        $supplier_id = $purchase['supplier_id_3'];
+
+                    $reports[$key]['supplier_id'] = intval($supplier_id);
+                }
+            }
+
+            return ['report' => $reports, 'totalCount' => $stocks_count];
+        } else
+            return ['report' => [], 'totalCount' => []];
     }
 
     public function actionAddreorderhistory() {
