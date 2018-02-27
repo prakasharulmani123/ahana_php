@@ -1,18 +1,12 @@
 app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, modalService) {
         //demo start
         $scope.pageChanged = function (mode) {
-            if (mode == 'RE')
-                $scope.loadReordersList2('RE');
-            else if (mode == 'RH')
-                $scope.loadReordersList2('RH');
+            $scope.loadReordersList2(mode);
         };
         //This method is calling from dropDown  
         $scope.changePageSize = function (mode) {
             $scope.pageIndex = 1;
-            if (mode == 'RE')
-                $scope.loadReordersList2('RE');
-            else if (mode == 'RH')
-                $scope.loadReordersList2('RH');
+            $scope.loadReordersList2(mode);
         };
         // Demo End 
 
@@ -25,8 +19,8 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
         $scope.ctrl.expandAll = function (expanded) {
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
-        
-        $scope.paginationInit = function(){
+
+        $scope.paginationInit = function () {
             $rootScope.commonService.GetDay(function (response) {
                 $scope.days = response;
             });
@@ -74,14 +68,12 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
         {
             $scope.loadbar('show');
             $scope.isLoading = true;
-
             $scope.errorData = "";
             $scope.msg.successMessage = "";
-
             $scope.activeMenu = mode;
 
-            if (mode == 'RE')
-            {
+            if (mode == 'RE') {
+                $scope.reorder_page_heading = 'Reorders';
                 // Get data's from service
                 var pageURL = $rootScope.IRISOrgServiceUrl + '/pharmacyreorderhistory/reorder?pageIndex=' + $scope.pageIndex + '&pageSize=' + $scope.pageSizeSelected;
                 if (typeof $scope.form_filter != 'undefined' && $scope.form_filter != '')
@@ -105,13 +97,14 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
 
             } else if (mode == 'RH')
             {
+                $scope.reorder_page_heading = 'Reorders History';
                 // Get data's from service
                 var pageURL = $rootScope.IRISOrgServiceUrl + '/pharmacyreorderhistory/reorderhistory?addtfields=viewlist&pageIndex=' + $scope.pageIndex + '&pageSize=' + $scope.pageSizeSelected;
                 if (typeof $scope.rh_form_filter != 'undefined' && $scope.rh_form_filter != '')
                 {
                     pageURL += '&s=' + $scope.rh_form_filter;
                 }
-                if (typeof $scope.day != 'undefined' && $scope.day != '' && typeof $scope.month != 'undefined' && $scope.month != '' && typeof $scope.year != 'undefined' && $scope.year != '') 
+                if (typeof $scope.day != 'undefined' && $scope.day != '' && typeof $scope.month != 'undefined' && $scope.month != '' && typeof $scope.year != 'undefined' && $scope.year != '')
                 {
                     pageURL += '&d=' + $scope.year + '-' + $scope.month + '-' + $scope.day;
                 }
@@ -131,29 +124,8 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
         }
 
         $scope.loadReordersList = function (mode) {
-            $scope.loadbar('show');
-            $scope.isLoading = true;
-
-            $scope.errorData = "";
-            $scope.msg.successMessage = "";
-
-            $scope.activeMenu = mode;
-
             $scope.paginationInit();
-
-            if (mode == 'RE') {
-                $scope.reorder_page_heading = 'Reorders';
-                // pagination set up
-                $scope.records = [];  // base collection
-                //$scope.itemsByPage = 10; // No.of records per page
-                $scope.dispCollection = [].concat($scope.records);  // displayed collection
-                $scope.loadReordersList2('RE');
-
-            } else if (mode == 'RH') {
-                $scope.reorder_page_heading = 'Reorders History';
-                $scope.loadReordersList2('RH');
-
-            }
+            $scope.loadReordersList2(mode);
         };
 
         $scope.moreOptions = function (key, row) {
