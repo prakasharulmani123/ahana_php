@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\AppConfigurationQuery;
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -260,6 +261,30 @@ class AppConfiguration extends RActiveRecord {
 
     public static function find() {
         return new AppConfigurationQuery(get_called_class());
+    }
+
+    public function fields() {
+        $extend = [];
+
+        $parent_fields = parent::fields();
+        $addt_keys = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'pres_configuration':
+                    $parent_fields = [
+                        'group' => 'group',
+                        'code' => 'code',
+                        'key' => 'key',
+                        'value' => 'value',
+                        'notes' => 'notes'
+                    ];
+                    break;
+            endswitch;
+        }
+
+        $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+        return array_merge($parent_fields, $extFields);
     }
 
     public static function getConfigurationByKey($key) {
