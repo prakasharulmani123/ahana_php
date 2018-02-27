@@ -27,6 +27,15 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
         };
         
         $scope.paginationInit = function(){
+            $rootScope.commonService.GetDay(function (response) {
+                $scope.days = response;
+            });
+            $rootScope.commonService.GetMonth(function (response) {
+                $scope.months = response;
+            });
+            $rootScope.commonService.GetYear(function (response) {
+                $scope.years = response;
+            });
             $scope.maxSize = 5; // Limit number for pagination display number.  
             $scope.totalCount = 0; // Total number of items in all pages. initialize as a zero  
             $scope.pageIndex = 1; // Current page number. First page is 1.-->  
@@ -102,9 +111,9 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                 {
                     pageURL += '&s=' + $scope.rh_form_filter;
                 }
-                if (typeof $scope.form_filter1 != 'undefined' && $scope.form_filter1 != '')
+                if (typeof $scope.day != 'undefined' && $scope.day != '' && typeof $scope.month != 'undefined' && $scope.month != '' && typeof $scope.year != 'undefined' && $scope.year != '') 
                 {
-                    pageURL += '&d=' + moment($scope.form_filter1).format('YYYY-MM-DD');
+                    pageURL += '&d=' + $scope.year + '-' + $scope.month + '-' + $scope.day;
                 }
                 $http.get(pageURL)
                         .success(function (response) {

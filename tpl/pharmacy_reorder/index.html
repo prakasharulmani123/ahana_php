@@ -129,39 +129,43 @@
         <div class="panel panel-default" ng-show="activeMenu == 'RH'">
             <div class="panel-body">
                 <div class="row"> 
-                    <div class="col-sm-3">
+                    <div class="col-sm-9">
                         <button class="btn btn-sm btn-grey" ng-click="loadReordersList('RH')"> 
                             &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp; 
                         </button>
                         <input id="rh_filter" type="text" placeholder="Search" class="form-control input-sm w-sm inline m-r" ng-model="rh_form_filter"/>
-                        <div class="input-group pull-left">
-                            <input id="filter1" placeholder="Filter by date" prevent-enter type="text" class="form-control filter_text" datepicker-popup="yyyy-MM-dd" ng-model="form_filter1" is-open="opened1" datepicker-options="dateOptions" close-text="Close"/>
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="open($event, 'opened1')"><i class="glyphicon glyphicon-calendar"></i></button>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
                         
+                        <select class="form-control search-dropdown" ng-model="day" ng-options="day.value as day.label for day in days">
+                            <option value="">DD</option>
+                        </select>
+                        <select class="form-control search-dropdown" ng-model="month" ng-options="month.value as month.label for month in months">
+                            <option value="">MM</option>
+                        </select>
+                        <select class="form-control search-dropdown" ng-model="year" ng-options="year.value as year.label for year in years">
+                            <option value="">YYYY</option>
+                        </select>
                         <button class="btn btn-sm btn-grey" ng-click="loadReordersList('RH')">
                             &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
                         </button>
-                        <button class="btn btn-sm btn-dark" title="clear filter" ng-click="rh_form_filter = '';form_filter1='';loadReordersList('RH')">
+                        <button class="btn btn-sm btn-dark" title="clear filter" ng-click="rh_form_filter = '';day = '';month = '';year = '';loadReordersList('RH')">
                             <i class="fa fa-times"></i>
                         </button>
                     </div>
-<!--                    <div class="col-sm-3">
-                        <input id="filter" type="text" class="form-control input-sm w-sm inline m-r filter_text" placeholder="Search" ng-model="form_filter"/>
-                    </div>
                     <div class="col-sm-3">
-                        <div class="input-group">
-                            <input id="filter1" placeholder="Filter by date" prevent-enter type="text" class="form-control filter_text" datepicker-popup="yyyy-MM-dd" ng-model="form_filter1" is-open="opened1" datepicker-options="dateOptions" close-text="Close"/>
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="open($event, 'opened1')"><i class="glyphicon glyphicon-calendar"></i></button>
-                            </span>
+                        <div class="dataTables_length">
+                            <div class="dataTables_length">
+                                <label>Show
+                                    <select id="ddlPageSize" class=" "  
+                                            ng-model="pageSizeSelected"  
+                                            ng-change="changePageSize('RH')">  
+                                        <option value="10">10</option>  
+                                        <option value="25">25</option>  
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>  
+                                    </select> entries
+                                </label>
+                            </div>
                         </div>
-                    </div>-->
-                    <div class="col-sm-4">
                     </div>
                 </div>
             </div>
