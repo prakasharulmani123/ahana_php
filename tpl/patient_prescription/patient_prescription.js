@@ -111,10 +111,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         //$scope.all_encounters = actEnc;
                         $scope.spinnerbar('hide')
                     }
+                    //$scope.loadPrevPrescriptionsList();
                     $scope.getConsultantFreq();
-                    $scope.loadPrevPrescriptionsList();
                     $scope.checkVitalaccess();
-
                 }, 'prescription', '', '', '1');
             }
         }, true);
@@ -246,6 +245,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
 //For Form
         $scope.initForm = function () {
+            $scope.loadPrevPrescriptionsList();
             if (localStorage.getItem("Show_available_medicine") === null) {
                 $scope.available_medicine = '0';
                 localStorage.setItem("Show_available_medicine", '0');
