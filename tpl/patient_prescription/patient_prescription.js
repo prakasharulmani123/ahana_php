@@ -1339,7 +1339,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.maxSize = 5; // Limit number for pagination display number.  
             $scope.totalCount = 0; // Total number of items in all pages. initialize as a zero  
             $scope.pageIndex = 1; // Current page number. First page is 1.-->  
-            $scope.pageSizeSelected = 10; // Maximum number of items per page.
+            $scope.pageSizeSelected = 5; // Maximum number of items per page.
 
             $scope.isLoading = true;
             //$scope.spinnerbar('show');

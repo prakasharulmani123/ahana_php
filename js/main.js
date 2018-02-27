@@ -202,6 +202,7 @@ angular.module('app')
                         $http.post($rootScope.IRISOrgServiceUrl + '/patient/getpatientbyguid', {guid: $state.params.id})
                                 .success(function (patient) {
                                     if (patient.success == false) {
+                                        $scope.spinnerbar('hide');
                                         $state.go('myworks.dashboard');
                                         $scope.msg.errorMessage = "An Error has occured while loading patient!";
                                     } else {
