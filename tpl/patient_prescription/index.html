@@ -1085,6 +1085,11 @@
                                                         </tbody>
 
                                                         <tbody ng-hide="isLoading">
+                                                            <tr ng-if="MCHCollection.length == 0">
+                                                                <td colspan="6" class="text-center">
+                                                                    No Records Found
+                                                                </td>
+                                                            </tr>
                                                             <tr ng-repeat-start="(key, value) in MCHCollection" ng-init="expanded = (key == 0) ? true : false;">
                                                                 <td>
                                                                     <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
@@ -1139,8 +1144,8 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                        <div class="row" ng-init="vitaldata = {}; 
-                                        vitaldata.formtype = 'add'">
+                                    <div class="row" ng-init="vitaldata         =         {}; 
+                                        vitaldata.formtype     =     'add'">
                                         <div class="col-lg-12" ng-hide="isLoading"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
@@ -1491,6 +1496,11 @@
                                                                 </thead>
 
                                                                 <tbody ng-hide="isLoading">
+                                                                    <tr ng-if="vitaldisplayedCollection.length == 0">
+                                                                        <td colspan="12" class="text-center">
+                                                                            No Records Found
+                                                                        </td>
+                                                                    </tr>
                                                                     <tr ng-repeat-start="(key, value) in vitaldisplayedCollection" ng-init="expanded = (key == 0) ? true : false;">
                                                                         <td>
                                                                             <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
@@ -1604,6 +1614,11 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody ng-hide="isLoading">
+                                                            <tr ng-if="resultdisplayedCollection.length == 0">
+                                                                <td colspan="6" class="text-center">
+                                                                    No Records Found
+                                                                </td>
+                                                            </tr>
                                                             <tr ng-repeat-start="(key, value) in resultdisplayedCollection" ng-init="expanded = (key == 0) ? true : false;">
                                                                 <td>
                                                                     <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
@@ -1755,6 +1770,11 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody ng-hide="isLoading">
+                                                            <tr ng-if="displayedconsultantCollection.length == 0">
+                                                                <td colspan="6" class="text-center">
+                                                                    No Records Found
+                                                                </td>
+                                                            </tr>
                                                             <tr ng-repeat-start="(key, value) in displayedconsultantCollection" ng-init="expanded = (key == 0) ? true : false;">
                                                                 <td> <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
                                                                         <i ng-if="!expanded" class="fa fa-plus text"></i>
