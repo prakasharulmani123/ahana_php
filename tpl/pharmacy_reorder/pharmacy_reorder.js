@@ -1,4 +1,20 @@
 app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', '$anchorScroll', '$filter', '$timeout', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, $anchorScroll, $filter, $timeout, modalService) {
+        //demo start
+        $scope.pageChanged = function (mode) {
+            if (mode == 'RE')
+                $scope.loadReordersList2('RE');
+            else if (mode == 'RH')
+                $scope.loadReordersList2('RH');
+        };
+        //This method is calling from dropDown  
+        $scope.changePageSize = function (mode) {
+            $scope.pageIndex = 1;
+            if (mode == 'RE')
+                $scope.loadReordersList2('RE');
+            else if (mode == 'RH')
+                $scope.loadReordersList2('RH');
+        };
+        // Demo End 
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -9,9 +25,24 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
         $scope.ctrl.expandAll = function (expanded) {
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
+        
+        $scope.paginationInit = function(){
+            $scope.maxSize = 5; // Limit number for pagination display number.  
+            $scope.totalCount = 0; // Total number of items in all pages. initialize as a zero  
+            $scope.pageIndex = 1; // Current page number. First page is 1.-->  
+            $scope.pageSizeSelected = 10; // Maximum number of items per page.
+        }
 
         //Index Page
         $scope.initReordersList = function () {
+            //Demo start
+            $scope.paginationInit();
+            // pagination set up
+            $scope.records = [];  // base collection
+            //$scope.itemsByPage = 10; // No.of records per page
+            $scope.dispCollection = [].concat($scope.records);  // displayed collection
+            // Demo End
+
             $rootScope.commonService.GetSupplierList('', '1', false, function (response) {
                 $scope.suppliers = response.supplierList;
 
@@ -23,10 +54,71 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
                             $scope.users = response.data.userList;
                             var currentUser = $rootScope.authenticationService.getCurrentUser();
                             $scope.user_id = currentUser.credentials.user_id;
-                            $scope.loadReordersList('RE');
+                            //$scope.loadReordersList('RE');
+                            $scope.loadReordersList2('RE');
                         }
                 );
             });
+        }
+
+        $scope.loadReordersList2 = function (mode)
+        {
+            $scope.loadbar('show');
+            $scope.isLoading = true;
+
+            $scope.errorData = "";
+            $scope.msg.successMessage = "";
+
+            $scope.activeMenu = mode;
+
+            if (mode == 'RE')
+            {
+                // Get data's from service
+                var pageURL = $rootScope.IRISOrgServiceUrl + '/pharmacyreorderhistory/reorder?pageIndex=' + $scope.pageIndex + '&pageSize=' + $scope.pageSizeSelected;
+                if (typeof $scope.form_filter != 'undefined' && $scope.form_filter != '')
+                {
+                    pageURL += '&s=' + $scope.form_filter;
+                }
+                $http.post(pageURL)
+                        .success(function (response) {
+                            $scope.loadbar('hide');
+                            $scope.isLoading = false;
+                            $scope.records = response.report;
+                            $scope.date = moment().format('YYYY-MM-DD HH:MM:ss');
+
+                            // $scope.rowCollection = response.report;
+                            $scope.totalCount = response.totalCount;
+                            $scope.dispCollection = [].concat($scope.records);
+                        })
+                        .error(function () {
+                            $scope.errorData = "An Error has occured while loading products!";
+                        });
+
+            } else if (mode == 'RH')
+            {
+                // Get data's from service
+                var pageURL = $rootScope.IRISOrgServiceUrl + '/pharmacyreorderhistory/reorderhistory?addtfields=viewlist&pageIndex=' + $scope.pageIndex + '&pageSize=' + $scope.pageSizeSelected;
+                if (typeof $scope.rh_form_filter != 'undefined' && $scope.rh_form_filter != '')
+                {
+                    pageURL += '&s=' + $scope.rh_form_filter;
+                }
+                if (typeof $scope.form_filter1 != 'undefined' && $scope.form_filter1 != '')
+                {
+                    pageURL += '&d=' + moment($scope.form_filter1).format('YYYY-MM-DD');
+                }
+                $http.get(pageURL)
+                        .success(function (response) {
+                            $scope.isLoading = false;
+                            $scope.loadbar('hide');
+                            $scope.rowCollection = response.report;
+                            $scope.totalCount = response.totalCount;
+                            $scope.displayedCollection = [].concat($scope.rowCollection);
+                            $scope.form_filter = null;
+                        })
+                        .error(function () {
+                            $scope.errorData = "An Error has occured while loading saleList!";
+                        });
+            }
         }
 
         $scope.loadReordersList = function (mode) {
@@ -38,41 +130,20 @@ app.controller('ReordersController', ['$rootScope', '$scope', '$timeout', '$http
 
             $scope.activeMenu = mode;
 
+            $scope.paginationInit();
+
             if (mode == 'RE') {
                 $scope.reorder_page_heading = 'Reorders';
+                // pagination set up
+                $scope.records = [];  // base collection
+                //$scope.itemsByPage = 10; // No.of records per page
+                $scope.dispCollection = [].concat($scope.records);  // displayed collection
+                $scope.loadReordersList2('RE');
 
-                // Get data's from service
-                $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyreorderhistory/reorder')
-                        .success(function (response) {
-                            $scope.loadbar('hide');
-                            $scope.isLoading = false;
-                            $scope.records = response.report;
-                            $scope.date = moment().format('YYYY-MM-DD HH:MM:ss');
-
-                        })
-                        .error(function () {
-                            $scope.errorData = "An Error has occured while loading products!";
-                        });
             } else if (mode == 'RH') {
                 $scope.reorder_page_heading = 'Reorders History';
+                $scope.loadReordersList2('RH');
 
-                // pagination set up
-                $scope.rowCollection = [];  // base collection
-                $scope.itemsByPage = 10; // No.of records per page
-                $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
-
-                // Get data's from service
-                $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyreorderhistory?addtfields=viewlist')
-                        .success(function (response) {
-                            $scope.isLoading = false;
-                            $scope.loadbar('hide');
-                            $scope.rowCollection = response;
-                            $scope.displayedCollection = [].concat($scope.rowCollection);
-                            $scope.form_filter = null;
-                        })
-                        .error(function () {
-                            $scope.errorData = "An Error has occured while loading saleList!";
-                        });
             }
         };
 
