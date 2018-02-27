@@ -88,7 +88,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         //Start Watch Functions
         $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             $scope.spinnerbar('show');
-            if (typeof newValue !== 'undefined' && newValue != '' && (newValue !== oldValue)) {
+            if (typeof newValue !== 'undefined' && newValue != '') {
                 $rootScope.commonService.GetEncounterListByPatient($scope.app.logged_tenant_id, '0,1', false, $scope.patientObj.patient_id, function (response) {
                     angular.forEach(response, function (resp) {
                         resp.encounter_id = resp.encounter_id.toString();
@@ -110,12 +110,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         //var actEnc = $filter('filter')($scope.encounters, {status: '1'});
                         //$scope.all_encounters = actEnc;
                         $scope.spinnerbar('hide')
-                    } else {
-                        //$scope.spinnerbar('hide');
-                        $scope.getConsultantFreq();
-                        $scope.loadPrevPrescriptionsList();
-                        $scope.checkVitalaccess();
                     }
+                    $scope.getConsultantFreq();
+                    $scope.loadPrevPrescriptionsList();
+                    $scope.checkVitalaccess();
 
                 }, 'prescription', '', '', '1');
             }
@@ -125,9 +123,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             if (newValue != '' && typeof newValue != 'undefined') {
                 //$scope.spinnerbar('hide');
                 PrescriptionService.setPatientId($scope.patientObj.patient_id);
-                $scope.loadPrevPrescriptionsList();
-                $scope.getConsultantFreq();
-                $scope.checkVitalaccess();
+//                $scope.loadPrevPrescriptionsList();
+//                $scope.getConsultantFreq();
+//                $scope.checkVitalaccess();
                 //$scope.loadSideMenu();
                 $scope.$emit('encounter_id', newValue);
             }
