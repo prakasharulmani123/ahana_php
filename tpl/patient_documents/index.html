@@ -5,7 +5,7 @@
 <div class="wrapper-md document-filters" ng-controller="DocumentsController" ng-init="loadPatDocumentsList();">
     <div class="panel panel-default">
         <div class="row wrapper">
-            <div class="col-sm-6">
+            <div class="col-sm-5">
                 <div class="form-inline">
                     <!--                    <div class="input-group">
                                             <input placeholder="Filter by date" prevent-enter type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="filterdate" is-open="opened" datepicker-options="dateOptions" close-text="Close" max-date="maxDate" date-disabled="disabled(date, mode)" ng-change="loadPatDocumentsList(filterdate);"/>
@@ -25,7 +25,7 @@
                     <button class="btn m-b-xs btn-grey"  ng-disabled=" (day && month && year) ? false : true" ng-click="loadPatDocumentsList(year + '-' + month + '-' + day)">
                         &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
                     </button>
-                    <button title="Clear" ng-click="day = '';month = '';year = '';loadPatDocumentsList()" class="btn btn-dark">
+                    <button title="Clear" ng-click="day = '';month = '';year = '';loadPatDocumentsList()" class="btn btn-dark m-b-xs">
                         <i class="fa fa-times"></i>
                     </button>
 
@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-6   text-right"> 
+            <div class="col-sm-7   text-right"> 
                 <form role="form" class="form-inline" name="createForm" novalidate>
                     <!--<label><b> Encounter # :</b></label>-->
                     <select class="selectpicker" data-live-search="true" ng-model="add_doc_encounter_id" ng-options="encounter_list.encounter_id as encounter_list.encounter_full_details for encounter_list in encounters_list" required>
