@@ -462,7 +462,7 @@
                 </FIELD>
             </FIELD>
             
-            <FIELD id="past_medical_notes" type="TextArea" label="Notes">
+            <FIELD id="past_medical_notes" type="TextArea" label="Past Medical Notes">
                 <PROPERTIES>
                     <PROPERTY name="id">past_medical_notes</PROPERTY>
                     <PROPERTY name="name">past_medical_notes</PROPERTY>

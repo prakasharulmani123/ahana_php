@@ -263,12 +263,13 @@ class XmlController extends Controller {
 
     //3. Section of treatment history's table - it's showing currently under treatment in 3rd column Pls consider it as Treatment Response
     public function actionChangetext() {
-        $find = 'Presenting Compliants (In chronological order)';
-        $replace = 'Presenting Complaints (In chronological order)';
+        $find = 'Notes';
+        $replace = 'Past Medical Notes';
         //$xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadGrid' and @ADDButtonID='RGPhamacoadd']/HEADER/TH[3]";
-        $xpath = "/FIELDS/GROUP/PANELHEADER";
+        //$xpath = "/FIELDS/GROUP/PANELHEADER";
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='past_medical_notes']";
 
-        $all_files = $this->getAllFiles();
+        $all_files = $this->getAllMCHFiles();
         $error_files = [];
         if (!empty($all_files)) {
             foreach ($all_files as $key => $files) {
@@ -282,8 +283,8 @@ class XmlController extends Controller {
                     }
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
-                        if ($targets[1]->VALUE == $find) {
-                            $targets[1]->VALUE = $replace;
+                        if ($targets[0]['label'] == $find) {
+                            $targets[0]['label'] = $replace;
                         }
                     }
                     $xml->asXML($files);
