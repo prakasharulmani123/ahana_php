@@ -17,23 +17,32 @@
         </div>
     </div>
     <div class="wrapper-md" ng-init="initForm();">
-        <div class="panel-body" style="height:150px;overflow:scroll;overflow-x:hidden;overflow-y:scroll;" ng-if="document_type == 'MCH'" ng-show="pastMedical.length > 0">
-            <table width='100%' class="table table-striped b-t b-light">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Encounter</th>
-                        <th>Past Medical Notes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="past in pastMedical">
-                        <td>{{past.created_at| moment:'DD/MM/YYYY - hh:mm A'}}</td>
-                        <td>{{past.encounter_id}}</td>
-                        <td>{{past.past_medical}}</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="panel-body">
+            <div class="panel panel-default">
+                <div class="panel-heading bg-default">
+                    <b>Past Medical History</b>
+                </div>
+                <div class="panel-body" style="height:150px;overflow:scroll;overflow-x:hidden;overflow-y:scroll;" ng-if="document_type == 'MCH'" ng-show="pastMedical.length > 0">
+                    <table width='100%' class="table table-striped b-t b-light">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Encounter</th>
+                                <th>Past Medical Notes</th>
+                                <th>Created By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="past in pastMedical">
+                                <td>{{past.created_at| moment:'DD/MM/YYYY - hh:mm A'}}</td>
+                                <td>{{past.encounter_id}}</td>
+                                <td>{{past.past_medical}}</td>
+                                <td>{{past.created_by}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
         <div ng-include="'tpl/blocks/alert.html'">
             {% include 'tpl/blocks/alert.html' %}

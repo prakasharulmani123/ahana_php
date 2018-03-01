@@ -1011,23 +1011,32 @@
                                             <div ng-if="medical_history == 'form'">
                                                 <button class="pull-right btn m-b-xs btn-dark" style='margin-right: 16px;' ng-click="loadmedicalcasehistory()"> <i class="fa fa-arrow-left"></i> Back</button>
                                                 <div class="col-sm-12">
-                                                    <div class="panel-body" style="height:150px;overflow:scroll;overflow-x:hidden;overflow-y:scroll;" ng-show = "pastMedical.length > 0">
-                                                        <table width='100%' class="table table-striped b-t b-light" >
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Date</th>
-                                                                    <th>Encounter</th>
-                                                                    <th>Past Medical Notes</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr ng-repeat="past in pastMedical">
-                                                                    <td>{{past.created_at| moment:'DD/MM/YYYY - hh:mm A'}}</td>
-                                                                    <td>{{past.encounter_id}}</td>
-                                                                    <td>{{past.past_medical}}</td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
+                                                    <div class="panel-body">
+                                                        <div class="panel panel-default">
+                                                            <div class="panel-heading bg-default">
+                                                                <b>Past Medical History</b>
+                                                            </div>
+                                                            <div class="panel-body" style="height:150px;overflow:scroll;overflow-x:hidden;overflow-y:scroll;" ng-show = "pastMedical.length > 0">
+                                                                <table width='100%' class="table table-striped b-t b-light" >
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Date</th>
+                                                                            <th>Encounter</th>
+                                                                            <th>Past Medical Notes</th>
+                                                                            <th>Created By</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr ng-repeat="past in pastMedical">
+                                                                            <td>{{past.created_at| moment:'DD/MM/YYYY - hh:mm A'}}</td>
+                                                                            <td>{{past.encounter_id}}</td>
+                                                                            <td>{{past.past_medical}}</td>
+                                                                            <td>{{past.created_by}}</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div ng-include="'tpl/blocks/alert.html'">
                                                         {% include 'tpl/blocks/alert.html' %}
@@ -1162,13 +1171,188 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata                   =                   {}; 
-                                        vitaldata.formtype          =          'add'">
+                                    <div class="row" ng-init="vitaldata = {}; 
+                                        vitaldata.formtype = 'add'">
                                         <div class="col-lg-12" ng-hide="isLoading"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
                                                 <accordion-group is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled">
-                                                    <accordion-heading><i class="fa fa-minus" ng-class="{'fa-minus': status.isFirstOpen, 'fa-plus': !status.isFirstOpen}"></i> &nbsp;&nbsp;Graph</accordion-heading>
+                                                    <accordion-heading><i class="fa fa-minus" ng-class="{'fa-minus': status.isFirstOpen, 'fa-plus': !status.isFirstOpen}"></i> &nbsp;&nbsp;Add Vitals</accordion-heading>
+                                                    <div>
+                                                        <form name="vitalForm" class="form-horizontal form-validation">
+                                                            <div class="create-vitals">
+                                                                <div ng-include="'tpl/blocks/alert.html'">
+                                                                    {% include 'tpl/blocks/alert.html' %}
+                                                                </div>
+
+                                                                <div class="col-sm-6">
+                                                                    <label>Encounter # :</label>
+                                                                    {{enc.selected.encounter_id}} </div>
+                                                                <div class="col-sm-6">
+                                                                    <label>Date: </label>
+                                                                    {{enc.selected.encounter_date}} </div>
+
+                                                                <div class="col-sm-6" ng-show="(vitalcong.Temperature == 1)">
+                                                                    <label>Temperature </label>
+                                                                    <div class="input-group m-b">
+                                                                        <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.temperature" number-mask="" one-decimal-places>
+                                                                        <span class="input-group-addon">°C</span> </div>
+                                                                </div>
+
+                                                                <div class="col-sm-6" ng-show="(vitalcong.BP == 1)">
+                                                                    <label>Blood Pressure &nbsp; &nbsp; &nbsp; </label>
+                                                                    <div class="form-inline" role="form">
+                                                                        <div class="form-group">
+                                                                            <input type="text" maxlength="3" class="form-control" placeholder="Systolic" ng-model="vitaldata.blood_pressure_systolic" number-mask="">
+                                                                        </div>
+                                                                        <div class="form-group"> &nbsp;/&nbsp; </div>
+                                                                        <div class="form-group">
+                                                                            <label class="sr-only" for="exampleInputPassword2">Password</label>
+                                                                            <div class="input-group m-b">
+                                                                                <input type="text" maxlength="3" class="form-control" placeholder="Diastolic" ng-model="vitaldata.blood_pressure_diastolic" number-mask="">
+                                                                                <span class="input-group-addon">mmHg </span> </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-sm-6" ng-show="(vitalcong.Pulse == 1)">
+                                                                    <label>Pulse </label>
+                                                                    <div class="input-group m-b">
+                                                                        <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.pulse_rate" number-mask="">
+                                                                        <span class="input-group-addon">Beats</span> </div>
+                                                                </div>
+
+                                                                <div class="col-sm-6" ng-show="(vitalcong.Weight == 1)">
+                                                                    <label>Weight </label>
+                                                                    <div class="input-group m-b">
+                                                                        <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.weight" ng-blur="Calculatebmi()" number-mask="" two-decimal-places>
+                                                                        <span class="input-group-addon">Kg</span> </div>
+                                                                </div>
+
+                                                                <div class="col-sm-6" ng-show="(vitalcong.Height == 1)">
+                                                                    <label>Height </label>
+                                                                    <div class="input-group m-b">
+                                                                        <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.height" ng-blur="Calculatebmi()" number-mask="" two-decimal-places>
+                                                                        <span class="input-group-addon">Cm</span> </div>
+                                                                </div>
+
+                                                                <div class="col-sm-6" ng-show="(vitalcong.SP02 == 1)">
+                                                                    <label>SP02 </label>
+                                                                    <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.sp02" number-mask="" two-decimal-places>
+                                                                </div>
+
+                                                                <div class="col-sm-6" ng-show="(vitalcong.Pain_Score == 1)">
+                                                                    <label>Pain Score </label>
+                                                                    <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.pain_score" number-mask="" two-decimal-places>
+                                                                </div>
+
+                                                                <div class="col-sm-6" ng-show="(vitalcong.BMI == 1)">
+                                                                    <label>BMI </label>
+                                                                    <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.bmi" readonly='true' number-mask="" two-decimal-places>
+                                                                </div>
+
+                                                                <div class=" form-group col-sm-3">
+                                                                    <label>&nbsp;</label>
+                                                                    <button class="btn m-b-xs  btn-success save-btn" ng-disabled="vital_enable_count" ng-click="savevitalForm(vitaldata.formtype)">Save</button>
+                                                                    &nbsp;
+                                                                    <button class="btn m-b-xs  btn-dark" ng-click="resetvitalForm()">
+                                                                        <i class="fa fa-times"></i> Clear
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="line line-dashed b-b line-lg "></div>
+                                                    <div class="create-vitals-table"> 
+                                                        <div class="font-bold">Vitals</div>
+                                                        <div class="panel-body">
+                                                            <table st-table="vitaldisplayedCollection"  st-safe-src="vitalCollection"  class="table table-striped b-t b-light">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>
+                                                                            <button class="btn btn-sm btn-default hms-plus" type="button" ng-click="ctrl.expandAll(allExpanded = !allExpanded)">
+                                                                                <i ng-if="!allExpanded" class="fa fa-plus text"></i>
+                                                                                <i ng-if="allExpanded" class="fa fa-minus text"></i>
+                                                                            </button>
+                                                                        </th>
+                                                                        <th>Branch</th>
+                                                                        <th>Vital Time</th>
+                                                                        <th>Temperature</th>
+                                                                        <th>Blood Pressure</th>
+                                                                        <th>Pulse Rate</th>
+                                                                        <th>Weight</th>
+                                                                        <th>Height</th>
+                                                                        <th>SP02</th>
+                                                                        <th>Pain Score</th>
+                                                                        <th>BMI</th>
+                                                                        <th>Action</th>
+                                                                    </tr>
+                                                                </thead>
+
+                                                                <tbody ng-hide="isLoading">
+                                                                    <tr ng-if="vitaldisplayedCollection.length == 0">
+                                                                        <td colspan="12" class="text-center">
+                                                                            No Records Found
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr ng-repeat-start="(key, value) in vitaldisplayedCollection" ng-init="expanded = (key == 0) ? true : false;">
+                                                                        <td>
+                                                                            <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
+                                                                                <i ng-if="!expanded" class="fa fa-plus text"></i>
+                                                                                <i ng-if="expanded" class="fa fa-minus text"></i>
+                                                                            </button>
+                                                                        </td>
+                                                                        <td colspan="12">
+                                                                            <!--                                                                            <span class="badge bg-success">Branch: {{value.branch_name}}</span>&nbsp; &nbsp;-->
+                                                                            <span class="badge bg-primary">Encounter: {{value.encounter_id}}</span>&nbsp; &nbsp;
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr ng-repeat-end ng-show="expanded" ng-repeat="(vital_key, vital) in value.all">
+                                                                        <td>&nbsp;  </td>
+                                                                        <td>{{vital.branch_name}}</td>
+                                                                        <td> {{vital.vital_time| moment:'DD/MM/YYYY'}} &nbsp;
+                                                                            <span class="label bg-light dk">{{vital.vital_time| moment:'hh:mm A'}}</span>
+                                                                        </td>
+                                                                        <td> {{vital.temperature|| '-'}} </td>
+                                                                        <td> {{vital.blood_pressure_systolic|| '-'}} / {{vital.blood_pressure_diastolic|| '-'}}</td>
+                                                                        <td> {{vital.pulse_rate|| '-'}} </td>
+                                                                        <td> {{vital.weight|| '-'}} </td>
+                                                                        <td> {{vital.height|| '-'}} </td>
+                                                                        <td> {{vital.sp02|| '-'}} </td>
+                                                                        <td> {{vital.pain_score|| '-'}} </td>
+                                                                        <td> {{vital.bmi|| '-'}} </td>
+                                                                        <td>
+                                                                            <div ng-if="vital.tenant_id != null && vital.encounter_status">
+                                                                                <a ng-show="vital.tenant_id == app.logged_tenant_id" data-button="patient.vitalUpdate({id: '{{$state.params.id}}', vital_id: '{{vital.vital_id}}'})" check-access-custom class="label bg-info dk" title="Edit" ng-click="updatevitalRow(vital.vital_id)">
+                                                                                    <i class="fa fa-pencil"></i>
+                                                                                </a>&nbsp;&nbsp;&nbsp;
+                                                                                <a ng-show="vital.tenant_id == app.logged_tenant_id" title="Delete" ng-click="removevitalRow(vital.vital_id)" class="label bg-dark dk">
+                                                                                    <i class="fa fa-trash"></i>
+                                                                                </a>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+
+                                                                <tbody ng-show="isLoading">
+                                                                    <tr>
+                                                                        <td colspan="12" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                                                                    </tr>
+                                                                </tbody>
+
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <td colspan="12" class="text-center">
+                                                                            <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </accordion-group>
+                                                <accordion-group is-open="status.open"  class="">
+                                                    <accordion-heading> <i class="fa fa-plus" ng-class="{'fa-minus': status.open, 'fa-plus': !status.open}"></i> &nbsp;&nbsp;Graph </accordion-heading>
                                                     <div class="row">
                                                         <div class="col-md-6 graph1" ng-show="(vitalcong.Temperature == 1)">
                                                             <div class="panel panel-default">
@@ -1397,181 +1581,6 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                </accordion-group>
-                                                <accordion-group is-open="status.open"  class="">
-                                                    <accordion-heading> <i class="fa fa-plus" ng-class="{'fa-minus': status.open, 'fa-plus': !status.open}"></i> &nbsp;&nbsp;Add Vitals </accordion-heading>
-                                                    <div>
-                                                        <form name="vitalForm" class="form-horizontal form-validation">
-                                                            <div class="create-vitals">
-                                                                <div ng-include="'tpl/blocks/alert.html'">
-                                                                    {% include 'tpl/blocks/alert.html' %}
-                                                                </div>
-
-                                                                <div class="col-sm-6">
-                                                                    <label>Encounter # :</label>
-                                                                    {{enc.selected.encounter_id}} </div>
-                                                                <div class="col-sm-6">
-                                                                    <label>Date: </label>
-                                                                    {{enc.selected.encounter_date}} </div>
-
-                                                                <div class="col-sm-6" ng-show="(vitalcong.Temperature == 1)">
-                                                                    <label>Temperature </label>
-                                                                    <div class="input-group m-b">
-                                                                        <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.temperature" number-mask="" one-decimal-places>
-                                                                        <span class="input-group-addon">°C</span> </div>
-                                                                </div>
-
-                                                                <div class="col-sm-6" ng-show="(vitalcong.BP == 1)">
-                                                                    <label>Blood Pressure &nbsp; &nbsp; &nbsp; </label>
-                                                                    <div class="form-inline" role="form">
-                                                                        <div class="form-group">
-                                                                            <input type="text" maxlength="3" class="form-control" placeholder="Systolic" ng-model="vitaldata.blood_pressure_systolic" number-mask="">
-                                                                        </div>
-                                                                        <div class="form-group"> &nbsp;/&nbsp; </div>
-                                                                        <div class="form-group">
-                                                                            <label class="sr-only" for="exampleInputPassword2">Password</label>
-                                                                            <div class="input-group m-b">
-                                                                                <input type="text" maxlength="3" class="form-control" placeholder="Diastolic" ng-model="vitaldata.blood_pressure_diastolic" number-mask="">
-                                                                                <span class="input-group-addon">mmHg </span> </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="col-sm-6" ng-show="(vitalcong.Pulse == 1)">
-                                                                    <label>Pulse </label>
-                                                                    <div class="input-group m-b">
-                                                                        <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.pulse_rate" number-mask="">
-                                                                        <span class="input-group-addon">Beats</span> </div>
-                                                                </div>
-
-                                                                <div class="col-sm-6" ng-show="(vitalcong.Weight == 1)">
-                                                                    <label>Weight </label>
-                                                                    <div class="input-group m-b">
-                                                                        <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.weight" ng-blur="Calculatebmi()" number-mask="" two-decimal-places>
-                                                                        <span class="input-group-addon">Kg</span> </div>
-                                                                </div>
-
-                                                                <div class="col-sm-6" ng-show="(vitalcong.Height == 1)">
-                                                                    <label>Height </label>
-                                                                    <div class="input-group m-b">
-                                                                        <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.height" ng-blur="Calculatebmi()" number-mask="" two-decimal-places>
-                                                                        <span class="input-group-addon">Cm</span> </div>
-                                                                </div>
-
-                                                                <div class="col-sm-6" ng-show="(vitalcong.SP02 == 1)">
-                                                                    <label>SP02 </label>
-                                                                    <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.sp02" number-mask="" two-decimal-places>
-                                                                </div>
-
-                                                                <div class="col-sm-6" ng-show="(vitalcong.Pain_Score == 1)">
-                                                                    <label>Pain Score </label>
-                                                                    <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.pain_score" number-mask="" two-decimal-places>
-                                                                </div>
-
-                                                                <div class="col-sm-6" ng-show="(vitalcong.BMI == 1)">
-                                                                    <label>BMI </label>
-                                                                    <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.bmi" readonly='true' number-mask="" two-decimal-places>
-                                                                </div>
-
-                                                                <div class=" form-group col-sm-3">
-                                                                    <label>&nbsp;</label>
-                                                                    <button class="btn m-b-xs  btn-success save-btn" ng-disabled="vital_enable_count" ng-click="savevitalForm(vitaldata.formtype)">Save</button>
-                                                                    &nbsp;
-                                                                    <button class="btn m-b-xs  btn-dark" ng-click="resetvitalForm()">
-                                                                        <i class="fa fa-times"></i> Clear
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <div class="line line-dashed b-b line-lg "></div>
-                                                    <div class="create-vitals-table"> 
-                                                        <div class="font-bold">Vitals</div>
-                                                        <div class="panel-body">
-                                                            <table st-table="vitaldisplayedCollection"  st-safe-src="vitalCollection"  class="table table-striped b-t b-light">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>
-                                                                            <button class="btn btn-sm btn-default hms-plus" type="button" ng-click="ctrl.expandAll(allExpanded = !allExpanded)">
-                                                                                <i ng-if="!allExpanded" class="fa fa-plus text"></i>
-                                                                                <i ng-if="allExpanded" class="fa fa-minus text"></i>
-                                                                            </button>
-                                                                        </th>
-                                                                        <th>Branch</th>
-                                                                        <th>Vital Time</th>
-                                                                        <th>Temperature</th>
-                                                                        <th>Blood Pressure</th>
-                                                                        <th>Pulse Rate</th>
-                                                                        <th>Weight</th>
-                                                                        <th>Height</th>
-                                                                        <th>SP02</th>
-                                                                        <th>Pain Score</th>
-                                                                        <th>BMI</th>
-                                                                        <th>Action</th>
-                                                                    </tr>
-                                                                </thead>
-
-                                                                <tbody ng-hide="isLoading">
-                                                                    <tr ng-if="vitaldisplayedCollection.length == 0">
-                                                                        <td colspan="12" class="text-center">
-                                                                            No Records Found
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr ng-repeat-start="(key, value) in vitaldisplayedCollection" ng-init="expanded = (key == 0) ? true : false;">
-                                                                        <td>
-                                                                            <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
-                                                                                <i ng-if="!expanded" class="fa fa-plus text"></i>
-                                                                                <i ng-if="expanded" class="fa fa-minus text"></i>
-                                                                            </button>
-                                                                        </td>
-                                                                        <td colspan="12">
-                                                                            <!--                                                                            <span class="badge bg-success">Branch: {{value.branch_name}}</span>&nbsp; &nbsp;-->
-                                                                            <span class="badge bg-primary">Encounter: {{value.encounter_id}}</span>&nbsp; &nbsp;
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr ng-repeat-end ng-show="expanded" ng-repeat="(vital_key, vital) in value.all">
-                                                                        <td>&nbsp;  </td>
-                                                                        <td>{{vital.branch_name}}</td>
-                                                                        <td> {{vital.vital_time| moment:'DD/MM/YYYY'}} &nbsp;
-                                                                            <span class="label bg-light dk">{{vital.vital_time| moment:'hh:mm A'}}</span>
-                                                                        </td>
-                                                                        <td> {{vital.temperature|| '-'}} </td>
-                                                                        <td> {{vital.blood_pressure_systolic|| '-'}} / {{vital.blood_pressure_diastolic|| '-'}}</td>
-                                                                        <td> {{vital.pulse_rate|| '-'}} </td>
-                                                                        <td> {{vital.weight|| '-'}} </td>
-                                                                        <td> {{vital.height|| '-'}} </td>
-                                                                        <td> {{vital.sp02|| '-'}} </td>
-                                                                        <td> {{vital.pain_score|| '-'}} </td>
-                                                                        <td> {{vital.bmi|| '-'}} </td>
-                                                                        <td>
-                                                                            <div ng-if="vital.tenant_id != null && vital.encounter_status">
-                                                                                <a ng-show="vital.tenant_id == app.logged_tenant_id" data-button="patient.vitalUpdate({id: '{{$state.params.id}}', vital_id: '{{vital.vital_id}}'})" check-access-custom class="label bg-info dk" title="Edit" ng-click="updatevitalRow(vital.vital_id)">
-                                                                                    <i class="fa fa-pencil"></i>
-                                                                                </a>&nbsp;&nbsp;&nbsp;
-                                                                                <a ng-show="vital.tenant_id == app.logged_tenant_id" title="Delete" ng-click="removevitalRow(vital.vital_id)" class="label bg-dark dk">
-                                                                                    <i class="fa fa-trash"></i>
-                                                                                </a>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-
-                                                                <tbody ng-show="isLoading">
-                                                                    <tr>
-                                                                        <td colspan="12" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
-                                                                    </tr>
-                                                                </tbody>
-
-                                                                <tfoot>
-                                                                    <tr>
-                                                                        <td colspan="12" class="text-center">
-                                                                            <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tfoot>
-                                                            </table>
                                                         </div>
                                                     </div>
                                                 </accordion-group>
