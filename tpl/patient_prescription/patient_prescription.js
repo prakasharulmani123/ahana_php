@@ -2817,6 +2817,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.initmedicalhistory = function () {
+            $scope.getAllPastmedical();
             $scope.getDocumentType(function (doc_type_response) {
                 if (doc_type_response.success == false) {
                     alert("Sorry, you can't create a document");
@@ -2843,6 +2844,16 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     }, true);
                 }
             });
+        }
+
+        $scope.getAllPastmedical = function () {
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getpastmedicalhistory?patient_id=' + $state.params.id)
+                    .success(function (pastmedical) {
+                        $scope.pastMedical = pastmedical.result;
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading patient medical history!";
+                    });
         }
 
         var stop;
@@ -2959,6 +2970,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.Updatemedicaldocument = function (doc_id) {
+            $scope.getAllPastmedical();
             $scope.getDocumentType(function (doc_type_response) {
                 if (doc_type_response.success == false) {
                     $scope.isLoading = false;

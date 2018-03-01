@@ -233,6 +233,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
 
 // Initialize Create Form
         $scope.initForm = function () {
+            $scope.getAllPastmedical();
             $scope.document_type = $state.params.document;
             $scope.isLoading = true;
 
@@ -456,6 +457,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         });
         // Initialize Update Form
         $scope.initFormUpdate = function () {
+            $scope.getAllPastmedical();
             $scope.document_type = $state.params.document;
             $scope.isLoading = true;
             $scope.getDocumentType(function (doc_type_response) {
@@ -487,6 +489,16 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
                 }
             });
+        }
+
+        $scope.getAllPastmedical = function () {
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getpastmedicalhistory?patient_id=' + $state.params.id)
+                    .success(function (pastmedical) {
+                        $scope.pastMedical = pastmedical.result;
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading patient medical history!";
+                    });
         }
 
         $("body").on("click", ".MCHaddMore", function () {

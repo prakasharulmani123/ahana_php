@@ -1011,6 +1011,24 @@
                                             <div ng-if="medical_history == 'form'">
                                                 <button class="pull-right btn m-b-xs btn-dark" style='margin-right: 16px;' ng-click="loadmedicalcasehistory()"> <i class="fa fa-arrow-left"></i> Back</button>
                                                 <div class="col-sm-12">
+                                                    <div class="panel-body" style="height:150px;overflow:scroll;overflow-x:hidden;overflow-y:scroll;" ng-show = "pastMedical.length > 0">
+                                                        <table width='100%' class="table table-striped b-t b-light" >
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Date</th>
+                                                                    <th>Encounter</th>
+                                                                    <th>Past Medical Notes</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat="past in pastMedical">
+                                                                    <td>{{past.created_at| moment:'DD/MM/YYYY - hh:mm A'}}</td>
+                                                                    <td>{{past.encounter_id}}</td>
+                                                                    <td>{{past.past_medical}}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                     <div ng-include="'tpl/blocks/alert.html'">
                                                         {% include 'tpl/blocks/alert.html' %}
                                                     </div>
@@ -1144,8 +1162,8 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata         =         {}; 
-                                        vitaldata.formtype     =     'add'">
+                                    <div class="row" ng-init="vitaldata                   =                   {}; 
+                                        vitaldata.formtype          =          'add'">
                                         <div class="col-lg-12" ng-hide="isLoading"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
