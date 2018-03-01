@@ -3221,6 +3221,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.viewMedicaldocument = function (doc_id) {
+            $scope.getAllPastmedical();
             $scope.getDocumentType(function (doc_type_response) {
                 if (doc_type_response.success == false) {
                     $scope.isLoading = false;

@@ -17,12 +17,12 @@
         </div>
     </div>
     <div class="wrapper-md" ng-init="initFormUpdate();">
-        <div class="panel-body">
+        <div class="panel-body" ng-if="document_type == 'MCH'" ng-show="pastMedical.length > 0">
             <div class="panel panel-default">
                 <div class="panel-heading bg-default">
                     <b>Past Medical History</b>
                 </div>
-                <div class="panel-body" style="height:150px;overflow:scroll;overflow-x:hidden;overflow-y:scroll;" ng-if="document_type == 'MCH'" ng-show="pastMedical.length > 0">
+                <div class="panel-body" style="height:150px;overflow:scroll;overflow-x:hidden;overflow-y:scroll;">
                     <table width='100%' class="table table-striped b-t b-light">
                         <thead>
                             <tr>

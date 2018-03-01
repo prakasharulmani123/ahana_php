@@ -621,6 +621,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                             if ($scope.document_type == 'CH') {
                                 $scope.checkTablerow();
                             } else {
+                                $scope.getAllPastmedical();
                                 $(".classy-edit").each(function () {
                                     $(this).removeClass("form-control");
                                     $(this).html($(this).text());
