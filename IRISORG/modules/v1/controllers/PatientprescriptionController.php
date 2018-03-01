@@ -14,6 +14,7 @@ use common\models\VDocuments;
 use common\models\PatDocumentTypes;
 use common\models\PatDocuments;
 use common\models\PatVitals;
+use common\models\PatPastMedical;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -382,6 +383,20 @@ class PatientprescriptionController extends ActiveController {
         $patient_document->patient_id = $patient->patient_id;
         $patient_document->encounter_id = $post['encounter_id'];
         $patient_document->doc_type_id = $case_history_xml->doc_type_id;
+
+        if (!empty($post['past_medical_notes'])) {
+            $check_past_medical = PatPastMedical::find()->andWhere(['doc_id' => $post['doc_id']])->one();
+            if (!empty($check_past_medical)) {
+                $pastMedical = $check_past_medical;
+            } else {
+                $pastMedical = new PatPastMedical();
+            }
+            $pastMedical->patient_id = $patient->patient_id;
+            $pastMedical->encounter_id = $post['encounter_id'];
+            $pastMedical->past_medical = $post['past_medical_notes'];
+            $pastMedical->doc_id = $patient_document->doc_id;
+            $pastMedical->save(false);
+        }
 
         if ($patient_document->validate() || $post['novalidate'] == 'true' || $post['novalidate'] == '1') {
             $result = $this->prepareXml($xml, $post);
@@ -1317,6 +1332,24 @@ class PatientprescriptionController extends ActiveController {
                 $data[$key]['all'] = $details;
             }
             return ['success' => true, 'result' => $data];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
+
+    public function actionGetpastmedicalhistory() {
+        $get = Yii::$app->getRequest()->get();
+        if (isset($get['patient_id'])) {
+            $patient = PatPatient::getPatientByGuid($get['patient_id']);
+            $all_patient_id = PatPatient::find()
+                    ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                    ->where(['patient_global_guid' => $patient->patient_global_guid])
+                    ->one();
+            $details = PatPastMedical::find()
+                    ->andWhere("patient_id IN ($all_patient_id->allpatient)")
+                    ->orderBy(['pat_past_medical_id' => SORT_DESC])
+                    ->all();
+            return ['success' => true, 'result' => $details];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
