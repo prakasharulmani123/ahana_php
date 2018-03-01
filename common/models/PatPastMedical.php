@@ -38,7 +38,7 @@ class PatPastMedical extends RActiveRecord {
                 [['encounter_id', 'patient_id', 'past_medical'], 'required'],
                 [['tenant_id', 'encounter_id', 'patient_id', 'created_by', 'modified_by'], 'integer'],
                 [['past_medical', 'status'], 'string'],
-                [['doc_id','created_at', 'modified_at', 'deleted_at'], 'safe'],
+                [['doc_id', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
                 [['encounter_id'], 'exist', 'skipOnError' => true, 'targetClass' => PatEncounter::className(), 'targetAttribute' => ['encounter_id' => 'encounter_id']],
                 [['patient_id'], 'exist', 'skipOnError' => true, 'targetClass' => PatPatient::className(), 'targetAttribute' => ['patient_id' => 'patient_id']],
                 [['tenant_id'], 'exist', 'skipOnError' => true, 'targetClass' => CoTenant::className(), 'targetAttribute' => ['tenant_id' => 'tenant_id']],
@@ -67,6 +67,16 @@ class PatPastMedical extends RActiveRecord {
 
     public static function find() {
         return new PatPastMedicalQuery(get_called_class());
+    }
+
+    public function fields() {
+        $extend = [
+            'created_by' => function ($model) {
+                return $model->createdUser->name;
+            }
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
     }
 
 }
