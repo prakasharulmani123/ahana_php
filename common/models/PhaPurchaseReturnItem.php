@@ -150,11 +150,15 @@ class PhaPurchaseReturnItem extends RActiveRecord {
     }
 
     public function getTotalReturnedQuantity() {
-        return PhaPurchaseReturnItem::find()
+        $sum_qty=PhaPurchaseReturnItem::find()
                         ->tenant()
                         ->andWhere(['purchase_item_id' => $this->purchase_item_id])
                         ->andWhere("purchase_ret_item_id != " . $this->purchase_ret_item_id)
                         ->sum("quantity");
+        if(empty($sum_qty))
+           return "0";
+        else
+           return $sum_qty;
     }
 
     public function fields() {
@@ -178,7 +182,7 @@ class PhaPurchaseReturnItem extends RActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'purchase_return':
-                    $addt_keys = ['purchase_quantity','product','batch'];
+                    $addt_keys = ['purchase_quantity','product','batch','total_returned_quantity'];
                     $parent_fields = [
                         'purchase_ret_item_id' => 'purchase_ret_item_id',
                         'purchase_ret_id' => 'purchase_ret_id',

@@ -138,11 +138,15 @@ class PhaSaleReturnItem extends RActiveRecord {
     }
     
     public function getTotalReturnedQuantity() {
-        return PhaSaleReturnItem::find()
+        $sum_qty=PhaSaleReturnItem::find()
                         ->tenant()
                         ->andWhere(['sale_item_id' => $this->sale_item_id])
                         ->andWhere("sale_ret_item_id != " . $this->sale_ret_item_id)
                         ->sum("quantity");
+        if(empty($sum_qty))
+           return "0";
+        else
+           return $sum_qty;
     }
 
     public function fields() {
