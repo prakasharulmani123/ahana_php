@@ -73,7 +73,8 @@
                                     {{ purchasereturnitem.batch_details || 'empty' }}
                                 </td>
                                 <td>
-                                    {{purchasereturnitem.purchase_quantity || 0}}
+<!--                                    {{purchasereturnitem.purchase_quantity || 0}}-->
+                                    {{purchasereturnitem.total_returned_quantity > 0 ? purchasereturnitem.purchase_quantity - purchasereturnitem.total_returned_quantity + ' (' + purchasereturnitem.purchase_quantity + ')' : purchasereturnitem.purchase_quantity}}
                                 </td>
                                 <td>
                                     {{ purchasereturnitem.package_name || '-' }}

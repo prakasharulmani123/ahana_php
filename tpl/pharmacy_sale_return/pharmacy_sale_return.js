@@ -544,7 +544,11 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
 
                         $scope.data = response;
 //                            $scope.products = response2.productList;
-
+                        if($scope.formtype=="update")
+                        {
+                            $scope.data.bill_payment=response.sale_payment_type;
+                            $scope.data.patient_group_name=response.sale_group_name;
+                        }
                         $scope.saleItems = response.items;
                         angular.forEach($scope.saleItems, function (item, key) {
                             angular.extend($scope.saleItems[key], {
