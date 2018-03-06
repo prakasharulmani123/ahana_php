@@ -352,6 +352,9 @@ app.controller('ProductsController', ['$rootScope', '$scope', '$timeout', '$http
             purchasePackage = $filter('filter')($scope.packingUnits, {package_id: $scope.data.purchase_package_id});
             if (purchasePackage.length > 0) {
                 $scope.packing_unit = purchasePackage[0].package_unit;
+                $timeout(function () {
+                    $('.selectpicker').selectpicker('refresh');
+                }, 0);
             } else {
                 $scope.packing_unit = 0;
                 $scope.data.sales_package_id = '';
