@@ -854,11 +854,11 @@
                                                                                 </td>
                                                                             </tr>                                                    
                                                                         </tbody>
-<!--                                                                        <tbody ng-show="isLoading">
-                                                                            <tr>
-                                                                                <td colspan="11" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
-                                                                            </tr>
-                                                                        </tbody>-->
+                                                                        <!--                                                                        <tbody ng-show="isLoading">
+                                                                                                                                                    <tr>
+                                                                                                                                                        <td colspan="11" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                                                                                                                                                    </tr>
+                                                                                                                                                </tbody>-->
                                                                     </table>
                                                                 </div>                                     
                                                             </div>
@@ -1198,13 +1198,14 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata   =   {}; 
-                                        vitaldata.formtype  =  'add'">
+                                    <div class="row" ng-init="vitaldata     =     {}; 
+                                        vitaldata.formtype   =   'add'">
                                         <div class="col-lg-12" ng-hide="isLoading"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
-                                                <accordion-group is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled">
-                                                    <accordion-heading><i class="fa fa-minus" ng-class="{'fa-minus': status.isFirstOpen, 'fa-plus': !status.isFirstOpen}"></i> &nbsp;&nbsp;Add Vitals</accordion-heading>
+                                                <accordion-group is-open="status.open"  class="">
+                                                    <accordion-heading><i class="fa fa-plus" ng-class="{'fa-minus': status.open, 'fa-plus': !status.open}"></i> &nbsp;&nbsp;Add Vitals</accordion-heading>
+                                                    
                                                     <div>
                                                         <form name="vitalForm" class="form-horizontal form-validation">
                                                             <div class="create-vitals">
@@ -1378,8 +1379,8 @@
                                                         </div>
                                                     </div>
                                                 </accordion-group>
-                                                <accordion-group is-open="status.open"  class="">
-                                                    <accordion-heading> <i class="fa fa-plus" ng-class="{'fa-minus': status.open, 'fa-plus': !status.open}"></i> &nbsp;&nbsp;Graph </accordion-heading>
+                                                <accordion-group is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled">
+                                                    <accordion-heading><i class="fa fa-minus" ng-class="{'fa-minus': status.isFirstOpen, 'fa-plus': !status.isFirstOpen}"></i> &nbsp;&nbsp;Graph </accordion-heading>
                                                     <div class="row">
                                                         <div class="col-md-6 graph1" ng-show="(vitalcong.Temperature == 1)">
                                                             <div class="panel panel-default">
