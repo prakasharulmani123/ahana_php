@@ -213,7 +213,7 @@ class PhaPurchase extends RActiveRecord {
                     break;
                 case 'purchase_update':
                     $addt_keys = ['supplier_name', 'items'];
-                    $pFields = ['invoice_no', 'supplier_id', 'invoice_date', 'purchase_id'];
+                    $pFields = ['invoice_no', 'supplier_id', 'invoice_date', 'purchase_id','payment_type'];
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
                 case 'purchase_bill_search':
