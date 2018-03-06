@@ -1086,6 +1086,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                             delete $scope.data.supplier;
                             delete $scope.data.items;
                         }, 3000);
+                        $scope.updatePurchaseRate();
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
