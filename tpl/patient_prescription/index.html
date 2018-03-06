@@ -1198,14 +1198,14 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata     =     {}; 
-                                        vitaldata.formtype   =   'add'">
+                                    <div class="row" ng-init="vitaldata           =           {}; 
+                                        vitaldata.formtype      =      'add'">
                                         <div class="col-lg-12" ng-hide="isLoading"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">
                                                 <accordion-group is-open="status.open"  class="">
                                                     <accordion-heading><i class="fa fa-plus" ng-class="{'fa-minus': status.open, 'fa-plus': !status.open}"></i> &nbsp;&nbsp;Add Vitals</accordion-heading>
-                                                    
+
                                                     <div>
                                                         <form name="vitalForm" class="form-horizontal form-validation">
                                                             <div class="create-vitals">
@@ -1213,73 +1213,73 @@
                                                                     {% include 'tpl/blocks/alert.html' %}
                                                                 </div>
 
-                                                                <div class="col-sm-6">
+                                                                <div class="col-sm-2">
                                                                     <label>Encounter # :</label>
                                                                     {{enc.selected.encounter_id}} </div>
-                                                                <div class="col-sm-6">
+                                                                <div class="col-sm-2">
                                                                     <label>Date: </label>
                                                                     {{enc.selected.encounter_date}} </div>
+                                                                <div class="col-sm-8">
+                                                                    <label>&nbsp; </label>
+                                                                    &nbsp;</div> 
+                                                                
 
-                                                                <div class="col-sm-6" ng-show="(vitalcong.Temperature == 1)">
+                                                                <div class="col-sm-1" ng-show="(vitalcong.Temperature == 1)">
                                                                     <label>Temperature </label>
                                                                     <div class="input-group m-b">
                                                                         <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.temperature" number-mask="" one-decimal-places>
                                                                         <span class="input-group-addon">°C</span> </div>
                                                                 </div>
 
-                                                                <div class="col-sm-6" ng-show="(vitalcong.BP == 1)">
+                                                                <div class="col-sm-2" ng-show="(vitalcong.BP == 1)">
                                                                     <label>Blood Pressure &nbsp; &nbsp; &nbsp; </label>
-                                                                    <div class="form-inline" role="form">
-                                                                        <div class="form-group">
-                                                                            <input type="text" maxlength="3" class="form-control" placeholder="Systolic" ng-model="vitaldata.blood_pressure_systolic" number-mask="">
-                                                                        </div>
-                                                                        <div class="form-group"> &nbsp;/&nbsp; </div>
-                                                                        <div class="form-group">
-                                                                            <label class="sr-only" for="exampleInputPassword2">Password</label>
-                                                                            <div class="input-group m-b">
-                                                                                <input type="text" maxlength="3" class="form-control" placeholder="Diastolic" ng-model="vitaldata.blood_pressure_diastolic" number-mask="">
-                                                                                <span class="input-group-addon">mmHg </span> </div>
-                                                                        </div>
-                                                                    </div>
+                                                                    <input type="text" maxlength="3" class="form-control" placeholder="Systolic" ng-model="vitaldata.blood_pressure_systolic" number-mask="">
                                                                 </div>
 
-                                                                <div class="col-sm-6" ng-show="(vitalcong.Pulse == 1)">
+                                                                <div class="col-sm-2" ng-show="(vitalcong.BP == 1)">
+                                                                    <label>&nbsp;</label>
+                                                                    <div class="input-group m-b">
+                                                                        <input type="text" maxlength="3" class="form-control" placeholder="Diastolic" ng-model="vitaldata.blood_pressure_diastolic" number-mask="">
+                                                                        <span class="input-group-addon">mmHg </span> </div>
+                                                                </div>
+
+                                                                <div class="col-sm-2" ng-show="(vitalcong.Pulse == 1)">
                                                                     <label>Pulse </label>
                                                                     <div class="input-group m-b">
                                                                         <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.pulse_rate" number-mask="">
                                                                         <span class="input-group-addon">Beats</span> </div>
                                                                 </div>
 
-                                                                <div class="col-sm-6" ng-show="(vitalcong.Weight == 1)">
+                                                                <div class="col-sm-1" ng-show="(vitalcong.Weight == 1)">
                                                                     <label>Weight </label>
                                                                     <div class="input-group m-b">
                                                                         <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.weight" ng-blur="Calculatebmi()" number-mask="" two-decimal-places>
                                                                         <span class="input-group-addon">Kg</span> </div>
                                                                 </div>
 
-                                                                <div class="col-sm-6" ng-show="(vitalcong.Height == 1)">
+                                                                <div class="col-sm-1" ng-show="(vitalcong.Height == 1)">
                                                                     <label>Height </label>
                                                                     <div class="input-group m-b">
                                                                         <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.height" ng-blur="Calculatebmi()" number-mask="" two-decimal-places>
                                                                         <span class="input-group-addon">Cm</span> </div>
                                                                 </div>
 
-                                                                <div class="col-sm-6" ng-show="(vitalcong.SP02 == 1)">
+                                                                <div class="col-sm-1" ng-show="(vitalcong.SP02 == 1)">
                                                                     <label>SP02 </label>
                                                                     <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.sp02" number-mask="" two-decimal-places>
                                                                 </div>
 
-                                                                <div class="col-sm-6" ng-show="(vitalcong.Pain_Score == 1)">
+                                                                <div class="col-sm-1" ng-show="(vitalcong.Pain_Score == 1)">
                                                                     <label>Pain Score </label>
                                                                     <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.pain_score" number-mask="" two-decimal-places>
                                                                 </div>
 
-                                                                <div class="col-sm-6" ng-show="(vitalcong.BMI == 1)">
+                                                                <div class="col-sm-1" ng-show="(vitalcong.BMI == 1)">
                                                                     <label>BMI </label>
                                                                     <input type="text" maxlength="5" class="form-control" placeholder="" ng-model="vitaldata.bmi" readonly='true' number-mask="" two-decimal-places>
                                                                 </div>
 
-                                                                <div class=" form-group col-sm-3">
+                                                                <div class=" form-group text-right col-sm-12">
                                                                     <label>&nbsp;</label>
                                                                     <button class="btn m-b-xs  btn-success save-btn" ng-disabled="vital_enable_count" ng-click="savevitalForm(vitaldata.formtype)">Save</button>
                                                                     &nbsp;
