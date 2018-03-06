@@ -1275,7 +1275,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.pageIndex = 1; // Current page number. First page is 1.-->  
             $scope.pageSizeSelected = 5; // Maximum number of items per page.
 
-            $scope.isLoading = true;
+            //$scope.isLoading = true;
             //$scope.spinnerbar('show');
             // pagination set up
 
@@ -1303,7 +1303,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         // Get data's from service
                         $http.get(url)
                                 .success(function (prescriptionList) {
-                                    $scope.spinnerbar('hide');
+                                    //$scope.spinnerbar('hide');
                                     $scope.rowCollection = prescriptionList.prescriptions;
                                     $scope.totalCount = prescriptionList.totalCount;
                                     if ($scope.rowCollection.length > 0) {
@@ -1388,7 +1388,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                             }
                                         }
                                     } else {
-                                        $scope.isLoading = false;
+                                        //$scope.isLoading = false;
+                                        $scope.spinnerbar('hide');
                                         if (typeof date == 'undefined') {
                                             var typed_prescription = PrescriptionService.getPrescriptionItems();
                                             if (typed_prescription.length > 0) {
@@ -1421,7 +1422,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                     $scope.errorData = "An Error has occured while loading list!";
                                 });
                         $timeout(function () {
-                            $scope.isLoading = false;
+                            $scope.spinnerbar('hide');
+                            //$scope.isLoading = false;
                         }, 2500);
                     })
                     .error(function () {

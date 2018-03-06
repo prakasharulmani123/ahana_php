@@ -501,7 +501,7 @@
                                                                                 <th width="35" align="right"  class="pres-main-total" valign="middle" class="text-right prescription-total-b-l">Total</th>
                                                                             </tr>
                                                                         </thead>
-                                                                        <tbody ng-hide="isLoading">                                                   
+                                                                        <tbody>                                                   
                                                                             <tr class="{{((item.available_quantity == 0 || !item.in_stock) && presc_stock_status == 1) ? 'out_of_stock' : ''}}" ng-repeat="item in data.prescriptionItems" ng-init="key = item.item_key">
                                                                                 <td align="center">                                                         
                                                                                     <button type="button" class="label bg-info" ng-click="removeItem(item)"><i class=" fa fa-trash"></i></button>
@@ -854,11 +854,11 @@
                                                                                 </td>
                                                                             </tr>                                                    
                                                                         </tbody>
-                                                                        <tbody ng-show="isLoading">
+<!--                                                                        <tbody ng-show="isLoading">
                                                                             <tr>
                                                                                 <td colspan="11" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                                                                             </tr>
-                                                                        </tbody>
+                                                                        </tbody>-->
                                                                     </table>
                                                                 </div>                                     
                                                             </div>
