@@ -40,7 +40,8 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                     $scope.tenants = response.tenantList;
                 }
             });
-
+            $scope.branchwise_new = {};
+            $scope.branchwise = {};
             $scope.clearReport();
         }
 

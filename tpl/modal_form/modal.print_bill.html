@@ -548,7 +548,7 @@
                             </tr>
                             <tr ng-init="detailed_billing.total.net_step_42_total = detailed_billing.total.pharmacy_net_total" ng-repeat="(key, row) in pharmacy_bill">
                                 <td>{{row.paid_date| moment:'DD-MMM-YYYY'}}</td>
-                                <td>{{row.bill_no}}</td>
+                                <td>{{row.bill_no}}<span ng-if="row.sale_return_bill_no"> (Sale Return Bill No [{{row.sale_return_bill_no}}]) </span></td>
                                 <td>&nbsp;</td>
                                 <td align="center" ng-init="
                                             detailed_non_billing.total.pharmacy_adv_charge = detailed_non_billing.total.pharmacy_adv_charge + parseFloat(row.paid_amount);

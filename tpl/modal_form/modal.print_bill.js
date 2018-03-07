@@ -644,9 +644,15 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                     var row_total = parseFloat(row.paid_amount);
                     var net_total = parseFloat(detailed_billing.total.net_step_42_total) - parseFloat(row.net_amount);
                     var payment_date = moment(row.paid_date).format('DD/MM/YYYY');
+                    if (row.sale_return_bill_no) {
+                        var return_bill_no = row.bill_no + ' ( Sale Return Bill No [' + row.sale_return_bill_no + '] )';
+                    } else {
+                        var return_bill_no = row.bill_no;
+                    }
+
                     bill.push([
                         {text: payment_date, style: 'rows'},
-                        {text: row.bill_no, colSpan: 2, style: 'rows'},
+                        {text: return_bill_no, colSpan: 2, style: 'rows'},
                         '',
                         '',
                         {text: parseInt(row.paid_amount).toString(), style: 'rows', alignment: 'right'},

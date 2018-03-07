@@ -326,7 +326,7 @@
                 <div class="panel-body" ng-init="pharmacy = {}">
                     <div class="form-group">
                         <span class="pull-right"> <b> Total Pending Amount : </b><span class="label bg-danger"> {{pharmacy.total| number:2}} </span></span>
-                        <span class="pull-right"> <b> Total Paid Amount : </b><span class="label bg-success"> {{pharmacy.total_paid| number:2}} </span></span>
+<!--                        <span class="pull-right"> <b> Total Paid Amount : </b><span class="label bg-success"> {{pharmacy.total_paid| number:2}} </span></span>-->
                     </div>
                     <div class="m-b-sm">
                     </div>
@@ -353,6 +353,37 @@
                                     recurr_billing.total_pharmacy.recurring_total = recurr_billing.total_pharmacy.recurring_total + parseFloatIgnoreCommas(row.bill_amount);
                                     recurr_billing.total_pharmacy.recurring_total_paid = recurr_billing.total_pharmacy.recurring_total_paid + parseFloatIgnoreCommas(row.billings_total_paid_amount_using_pharmacy);"> 
                                 {{row.billings_total_balance_amount}} </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="wrapper-md p-b" ng-if="pharmacy_bill.length > 0">
+            <div class="panel panel-default m-b">
+                <div class="panel-heading no-border bg-primary"> <i class="fa fa-medkit"></i> Pharmacy Bill</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <span class="pull-right"> <b> Total Paid Amount : </b><span class="label bg-success"> {{recurr_billing.total_pharmacy.recurring_total_paid| number:2}} </span></span>
+                    </div>
+                    <div class="m-b-sm">
+                    </div>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table">
+                        <tr>
+                            <th>S.No</th>
+                            <th>Bill No</th>
+                            <th>Date</th>
+                            <th>Return Bill No</th>
+                            <th>Payment Status</th>
+                            <th style="text-align:right;" align="right">Paid Amount</th>
+                        </tr>
+                        <tr ng-repeat="(key, row) in pharmacy_bill | orderBy:'sale_billing_id'">
+                            <td>{{key + 1}}</td>
+                            <td>{{row.bill_no}}<span ng-if="row.tenant_id != logged_tenant_id"> ({{row.branch_name}}) </span></td>
+                            <td>{{row.paid_date| moment:'DD/MM/YYYY'}}</td>
+                            <td>{{row.sale_return_bill_no == '' ? '-' : row.sale_return_bill_no}}</td>
+                            <td>{{row.sale_return_bill_no == '' ? 'Payment' : 'Return'}}</td>
+                            <td align="right">{{row.paid_amount}}</td>
                         </tr>
                     </table>
                 </div>
