@@ -56,10 +56,12 @@ app.controller('PatientGroupsController', ['$rootScope', '$scope', '$timeout', '
                     });
         }
         $scope.pageChanged = function () {
+            $scope.isLoading = true
             $scope.getPharmacyPatientGroupsList();
         };
         //This method is calling from dropDown  
         $scope.changePageSize = function () {
+            $scope.isLoading = true
             $scope.pageIndex = 1;
             $scope.getPharmacyPatientGroupsList();
         };
