@@ -138,13 +138,13 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
 
             $scope.errorData = "";
             $scope.msg.successMessage = "";
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getbatchlists?addtfields=viewlist')
-                    .success(function (response) {
-                        $scope.batch = response;
-                    })
-                    .error(function () {
-                        $scope.errorData = "An Error has occured while loading products!";
-                    });
+//            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getbatchlists?addtfields=viewlist')
+//                    .success(function (response) {
+//                        $scope.batch = response;
+//                    })
+//                    .error(function () {
+//                        $scope.errorData = "An Error has occured while loading products!";
+//                    });
 
             // pagination set up
             $scope.rowCollection = [];  // base collection
@@ -235,13 +235,13 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
                         $scope.loadbar('hide');
                         if (response.success === true) {
                             $scope.msg.successMessage = 'Batch Details saved successfully';
-                            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getbatchlists?addtfields=viewlist')
-                                    .success(function (response) {
-                                        $scope.batch = response;
-                                    })
-                                    .error(function () {
-                                        $scope.errorData = "An Error has occured while loading products!";
-                                    });
+//                            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getbatchlists?addtfields=viewlist')
+//                                    .success(function (response) {
+//                                        $scope.batch = response;
+//                                    })
+//                                    .error(function () {
+//                                        $scope.errorData = "An Error has occured while loading products!";
+//                                    });
 //                            $scope.rowCollection[key].available_qty = response.batch.available_qty;
 //                            $scope.rowCollection[key].add_stock = 0;
                         } else {
