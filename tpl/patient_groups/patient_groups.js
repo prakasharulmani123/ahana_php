@@ -27,25 +27,42 @@ app.controller('PatientGroupsController', ['$rootScope', '$scope', '$timeout', '
         $scope.ctrl.expandAll = function (expanded) {
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
-
+        
         $scope.loadPharmacyPatientGroupsList = function () {
             $scope.isLoading = true;
             $scope.rowCollection = [];
             $scope.patients = [];
-
+            $scope.maxSize = 5; // Limit number for pagination display number.  
+            $scope.totalCount = 0; // Total number of items in all pages. initialize as a zero  
+            $scope.pageIndex = 1; // Current page number. First page is 1.-->  
+            $scope.pageSizeSelected = 10; // Maximum number of items per page.
+            $scope.getPharmacyPatientGroupsList();
+        };
+        $scope.getPharmacyPatientGroupsList = function(){
+            var pageURL = $rootScope.IRISOrgServiceUrl + '/patientgroup/patientgroup?onlyfields=pharmacylist&p=' + $scope.pageIndex + '&l=' + $scope.pageSizeSelected;
+            if (typeof $scope.form_filter != 'undefined' && $scope.form_filter != '') {
+                pageURL += '&s=' + $scope.form_filter;
+            }
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/patientgroup?onlyfields=pharmacylist')
+            $http.get(pageURL)
                     .success(function (response) {
                         $scope.isLoading = false;
-                        $scope.rowCollection = response;
-                        $scope.form_filter = null;
+                        $scope.rowCollection = response.patientgroups;
+                        $scope.totalCount = response.totalCount;
+                       // $scope.form_filter = null;
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading groups!";
                     });
-
+        }
+        $scope.pageChanged = function () {
+            $scope.getPharmacyPatientGroupsList();
         };
-
+        //This method is calling from dropDown  
+        $scope.changePageSize = function () {
+            $scope.pageIndex = 1;
+            $scope.getPharmacyPatientGroupsList();
+        };
         $scope.addSubRow = function (id) {
             angular.forEach($scope.rowCollection, function (parent) {
                 if (parent.patient_group_id == id) {
