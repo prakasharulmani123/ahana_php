@@ -168,12 +168,13 @@ class PharmacyproductController extends ActiveController {
         $offset = abs($get['pageIndex'] - 1) * $get['pageSize'];
 
         if (isset($get['s'])) {
-            $condition['batch_no'] = $get['s'];
+            $condition = $get['s'];
         }
-
+        //echo $condition=$get['s'];
         if (isset($get['text'])) {
             $filters = [
                 'OR',
+                    ['like', 'pha_product_batch.batch_no', $get['text']],
                     ['like', 'pha_product_description.description_name', $get['text']],
                     ['like', 'pha_product.product_name', $get['text']],
                     ['like', 'pha_product.product_unit_count', $get['text']],
@@ -185,23 +186,23 @@ class PharmacyproductController extends ActiveController {
             ];
         }
 
-        //Count batch details value
+//        Count batch details value
         $count = $modelClass::find()->joinWith($relations)->tenant()->status();
         if ($condition) {
-            $count->andWhere($condition);
+            $count->andWhere(['pha_product_batch.batch_no'=>$condition]);
         }
         if ($filters) {
             $count->andFilterWhere($filters);
         }
         $totalCount = $count->count();
-
+        
         //Fetch the batch details result
         $result = $modelClass::find()
                 ->joinWith($relations)
                 ->tenant()
                 ->status();
         if ($condition) {
-            $result->andWhere($condition);
+            $result->andWhere(['pha_product_batch.batch_no'=>$condition]);
         }
         if ($filters) {
             $result->andFilterWhere($filters);
@@ -209,9 +210,9 @@ class PharmacyproductController extends ActiveController {
         $result->limit($get['pageSize'])
                 ->offset($offset);
 
-
+        
         $productLists = $result->all();
-
+        
         return ['success' => true, 'productLists' => $productLists, 'totalCount' => $totalCount];
     }
 
@@ -751,7 +752,8 @@ class PharmacyproductController extends ActiveController {
     }
 
     public function actionGetbatchlists() {
-        $list = PhaProductBatch::find()->status()->active()->select('batch_no')->distinct()->all();
+        //$list = PhaProductBatch::find()->status()->active()->select('batch_no','expiry_date','available_qty')->distinct()->all();
+        $list = PhaProductBatch::find()->status()->active()->select(['batch_no','expiry_date','available_qty'])->distinct()->all();
         return $list;
 //        echo 'asdasa'; die;
     }
