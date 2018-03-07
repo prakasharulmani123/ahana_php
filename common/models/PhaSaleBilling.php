@@ -43,7 +43,7 @@ class PhaSaleBilling extends RActiveRecord {
         return [
                 [['paid_date', 'paid_amount'], 'required'],
                 [['sale_id', 'tenant_id', 'created_by', 'modified_by'], 'integer'],
-                [['paid_date', 'created_at', 'modified_at', 'deleted_at', 'sale_ids','payment_mode','card_type','card_number','bank_name','bank_date','cheque_no','ref_no'], 'safe'],
+                [['paid_date', 'created_at', 'modified_at', 'deleted_at', 'sale_ids', 'payment_mode', 'card_type', 'card_number', 'bank_name', 'bank_date', 'cheque_no', 'ref_no'], 'safe'],
                 [['paid_amount'], 'number'],
                 [['status'], 'string'],
                 ['paid_amount', 'validateBillAmount'],
@@ -105,6 +105,10 @@ class PhaSaleBilling extends RActiveRecord {
         return $this->hasOne(PhaSale::className(), ['sale_id' => 'sale_id']);
     }
 
+    public function getSaleReturn() {
+        return $this->hasOne(PhaSaleReturn::className(), ['sale_ret_id' => 'sale_ret_id']);
+    }
+
     /**
      * @return ActiveQuery
      */
@@ -148,9 +152,13 @@ class PhaSaleBilling extends RActiveRecord {
             },
             'sale_details' => function ($model) {
                 return (isset($model->sale) ? $model->sale : '-');
-            },        
-            ];
+            },
+            'sale_return_bill_no' => function ($model) {
+                return (isset($model->saleReturn->bill_no) ? $model->saleReturn->bill_no : '');
+            }
+        ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
+
 }
