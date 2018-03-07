@@ -38,11 +38,11 @@
                                     </a>
                                 </li>
                                 <li ng-show="(prescription_tab.PTV == 1)" ng-class="{active:tab == 3}">
-                                    <a href ng-click="Setempty_tab(); loadVitals(); tab = 3">
+                                    <a href ng-click="Setempty_tab(); loadVitals(); seen_vitals_left_notification(); tab = 3">
                                         <tab-heading> 
                                             <i class="fa fa-heartbeat" aria-hidden="true"></i> 
-                                            Vitals <span class="badge bg-success badge-sm m-l-xs" ng-show="unseen_vitals_count > 0">
-                                                {{unseen_vitals_count}} New
+                                            Vitals <span class="badge bg-success badge-sm m-l-xs" ng-show="app.patientDetail.patientUnseenVitalsCount > 0">
+                                                {{app.patientDetail.patientUnseenVitalsCount}} New
                                             </span> 
                                         </tab-heading>
                                     </a>
