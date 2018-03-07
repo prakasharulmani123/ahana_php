@@ -53,6 +53,30 @@ class PatientgroupController extends ActiveController {
             'pagination' => false,
         ]);
     }
+    
+    public function actionPatientgroup() {
+        $GET = Yii::$app->getRequest()->get();
+        $limit = isset($GET['l']) ? $GET['l'] : 10;
+        $page = isset($GET['p']) ? $GET['p'] : 1;
+        $data=$result=$totalCount=[];
+        $data = CoPatientGroup::find()->active();
+        if (isset($GET['s']) && !empty($GET['s'])) {
+                $text = $GET['s'];
+                $data->andFilterWhere([
+                'or',
+                    ['like', 'group_name', $text],
+                ]);
+            }
+        $offset = abs($page - 1) * $limit;
+        
+        $totalCount= $data->count();
+        $result = $data->orderBy(['group_name' => SORT_ASC])
+                ->limit($limit)
+                ->offset($offset)
+                ->all();
+
+        return ['success' => true, 'patientgroups' => $result,  'totalCount' => $totalCount];
+    }
 
     public function actionGetpatientgrouplist() {
         $get = Yii::$app->getRequest()->get();
