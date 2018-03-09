@@ -52,6 +52,8 @@ use Yii;
  */
 class GlPatient extends ActiveRecord {
 
+    public $complete_profile_fields;
+
 //    public $parent_id;
     /**
      * @inheritdoc
@@ -59,6 +61,13 @@ class GlPatient extends ActiveRecord {
     public static function tableName() {
         $current_database = Yii::$app->db->createCommand("SELECT DATABASE()")->queryScalar();
         return "$current_database.gl_patient";
+    }
+
+    public function init() {
+        $global_attributes = self::getTableSchema()->getColumnNames();
+        $unset_fields = ['parent_id', 'migration_created_by', 'casesheetno', 'patient_global_int_code', 'patient_reg_date', 'patient_relation_code', 'patient_relation_name', 'patient_care_taker', 'patient_care_taker_name', 'patient_marital_status', 'patient_occupation', 'patient_blood_group', 'patient_email', 'patient_reg_mode', 'patient_type', 'patient_ref_hospital', 'patient_ref_doctor', 'patient_ref_id', 'patient_secondary_contact', 'patient_bill_type', 'patient_image', 'created_by', 'created_at', 'modified_by', 'modified_at', 'deleted_at'];
+        $this->complete_profile_fields = array_diff($global_attributes, $unset_fields);
+        return parent::init();
     }
 
 //    public function init() {
@@ -73,20 +82,20 @@ class GlPatient extends ActiveRecord {
      */
     public function rules() {
         return [
-            [['patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode', 'patient_mobile', 'patient_dob'], 'required'],
-            [['casesheetno', 'tenant_id', 'patient_care_taker', 'patient_category_id', 'created_by', 'modified_by'], 'integer'],
-            [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type', 'patient_guid', 'patient_image', 'patient_global_guid', 'patient_global_int_code', 'patient_int_code', 'patient_secondary_contact', 'parent_id', 'migration_created_by'], 'safe'],
-            [['status'], 'string'],
-            [['patient_title_code'], 'string', 'max' => 10],
-            [['patient_firstname', 'patient_lastname', 'patient_relation_name', 'patient_care_taker_name', 'patient_occupation', 'patient_email', 'patient_ref_id'], 'string', 'max' => 50],
-            [['patient_relation_code', 'patient_gender', 'patient_marital_status', 'patient_reg_mode', 'patient_type'], 'string', 'max' => 2],
-            [['patient_blood_group'], 'string', 'max' => 5],
-            [['patient_ref_hospital', 'patient_ref_doctor'], 'string', 'max' => 255],
-            ['patient_mobile', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => 'Mobile must be 10 digits only'],
-            ['patient_secondary_contact', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => 'Secondary contact must be 10 digits only'],
-//            ['patient_image', 'file', 'extensions'=> 'jpg, gif, png'],
+                [['patient_title_code', 'patient_firstname', 'patient_gender', 'patient_reg_mode', 'patient_mobile', 'patient_dob'], 'required'],
+                [['casesheetno', 'tenant_id', 'patient_care_taker', 'patient_category_id', 'created_by', 'modified_by'], 'integer'],
+                [['patient_reg_date', 'patient_dob', 'created_at', 'modified_at', 'deleted_at', 'patient_mobile', 'patient_bill_type', 'patient_guid', 'patient_image', 'patient_global_guid', 'patient_global_int_code', 'patient_int_code', 'patient_secondary_contact', 'parent_id', 'migration_created_by'], 'safe'],
+                [['status'], 'string'],
+                [['patient_title_code'], 'string', 'max' => 10],
+                [['patient_firstname', 'patient_lastname', 'patient_relation_name', 'patient_care_taker_name', 'patient_occupation', 'patient_email', 'patient_ref_id'], 'string', 'max' => 50],
+                [['patient_relation_code', 'patient_gender', 'patient_marital_status', 'patient_reg_mode', 'patient_type'], 'string', 'max' => 2],
+                [['patient_blood_group'], 'string', 'max' => 5],
+                [['patient_ref_hospital', 'patient_ref_doctor'], 'string', 'max' => 255],
+                ['patient_mobile', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => 'Mobile must be 10 digits only'],
+                ['patient_secondary_contact', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => 'Secondary contact must be 10 digits only'],
+//              ['patient_image', 'file', 'extensions'=> 'jpg, gif, png'],
             [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'casesheetno', 'deleted_at'], 'message' => 'The combination of Casesheetno has already been taken.', 'on' => 'casesheetunique'],
-            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_int_code', 'deleted_at'], 'message' => 'The combination of Patient Internal Code has already been taken.'],
+                [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'patient_int_code', 'deleted_at'], 'message' => 'The combination of Patient Internal Code has already been taken.'],
         ];
     }
 
@@ -133,7 +142,7 @@ class GlPatient extends ActiveRecord {
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public function getPatPatientChildrens() {
         return $this->hasMany(self::className(), ['parent_id' => 'patient_global_guid']);
     }
@@ -144,6 +153,16 @@ class GlPatient extends ActiveRecord {
 
     public function getPatPatientChildrensGlobalIds() {
         return ArrayHelper::map($this->getPatPatientChildrens()->all(), 'patient_global_guid', 'patient_global_int_code');
+    }
+
+    public function isIncompleteProfile() {
+        $global_fields = [];
+
+        foreach ($this->complete_profile_fields as $global_field) {
+            $global_fields[$global_field] = $this->$global_field;
+        }
+
+        return (in_array(null, $global_fields));
     }
 
     /**

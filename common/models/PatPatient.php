@@ -96,7 +96,7 @@ class PatPatient extends RActiveRecord {
 
     public function init() {
         $global_fields = GlPatient::getTableSchema()->getColumnNames();
-        $unset_fields = ['status', 'created_by', 'created_at', 'modified_by', 'modified_at', 'deleted_at', 'global_patient_id', 'patient_id', 'patient_guid'];
+        $unset_fields = ['status', 'created_by', 'created_at', 'modified_by', 'modified_at', 'deleted_at', 'patient_id', 'patient_guid'];
         $this->_global_fields = array_diff($global_fields, $unset_fields);
         return parent::init();
     }
@@ -748,7 +748,7 @@ class PatPatient extends RActiveRecord {
             return true;
         } else if ($this->patPatientAddress->isIncompleteProfile()) {
             return true;
-        } else if ($this->patGlobalPatient->isIncompleteProfile()) {
+        } else if ($this->glPatient->isIncompleteProfile()) {
             return true;
         }
         return false;
