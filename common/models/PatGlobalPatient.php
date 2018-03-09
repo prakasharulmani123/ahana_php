@@ -164,7 +164,7 @@ class PatGlobalPatient extends RActiveRecord {
     public function getGlPatient() {
         return $this->hasOne(GlPatient::className(), ['patient_global_guid' => 'patient_global_guid']);
     }
-
+    //Not Needed this function
     public function isIncompleteProfile() {
         $global_fields = [];
 
