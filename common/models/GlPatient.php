@@ -4,6 +4,8 @@ namespace common\models;
 
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
+use Yii;
 
 /**
  * This is the model class for table "pat_patient".
@@ -55,7 +57,8 @@ class GlPatient extends ActiveRecord {
      * @inheritdoc
      */
     public static function tableName() {
-        return 'gl_patient';
+        $current_database = Yii::$app->db->createCommand("SELECT DATABASE()")->queryScalar();
+        return "$current_database.gl_patient";
     }
 
 //    public function init() {
@@ -129,6 +132,18 @@ class GlPatient extends ActiveRecord {
      */
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
+    }
+    
+    public function getPatPatientChildrens() {
+        return $this->hasMany(self::className(), ['parent_id' => 'patient_global_guid']);
+    }
+
+    public function getPatPatientChildrensCount() {
+        return $this->getPatPatientChildrens()->count();
+    }
+
+    public function getPatPatientChildrensGlobalIds() {
+        return ArrayHelper::map($this->getPatPatientChildrens()->all(), 'patient_global_guid', 'patient_global_int_code');
     }
 
     /**
