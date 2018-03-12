@@ -73,12 +73,15 @@ class PharmacysaleController extends ActiveController {
         $sales = PhaSale::find()
                 ->tenant()
                 ->active()
-                ->leftJoin('pat_patient', 'pha_sale.patient_id=pat_patient.patient_id')
-                ->leftJoin('pat_global_patient', 'pat_global_patient.patient_global_guid=pat_patient.patient_global_guid')
+                //By Nad at 2018-03-10 5:47 PM
+                ->joinWith(['patient.glPatient'])
+//                ->leftJoin('pat_patient', 'pha_sale.patient_id=pat_patient.patient_id')
+//                ->leftJoin('pat_global_patient', 'pat_global_patient.patient_global_guid=pat_patient.patient_global_guid')
                 ->andFilterWhere([
                     'or',
                         ['like', 'bill_no', $text],
-                        ['like', 'pat_global_patient.patient_global_int_code', $text],
+//                        ['like', 'pat_global_patient.patient_global_int_code', $text],
+                        ['like', 'gl_patient.patient_global_int_code', $text],
                 ])
                 ->limit(100)
                 ->all();
@@ -105,7 +108,7 @@ class PharmacysaleController extends ActiveController {
                     'or',
                         ['like', 'patient_name', $text],
                         ['like', 'encounter_id', $text],
-                        ['like', 'pat_global_patient.patient_global_int_code', $text],
+                        ['like', 'gl_patient.patient_global_int_code', $text],
                 ];
             }
 
@@ -114,7 +117,7 @@ class PharmacysaleController extends ActiveController {
                     ->active()
                     ->andWhere($condition);
             if ($searchCondition) {
-                $result->joinWith(['patient.patGlobalPatient']);
+                $result->joinWith(['patient.glPatient']);
                 $result->andFilterWhere($searchCondition);
             }
             $result->groupBy(['patient_name', 'patient_id', 'encounter_id']);
@@ -126,7 +129,7 @@ class PharmacysaleController extends ActiveController {
                     ->active()
                     ->andWhere($condition);
             if ($searchCondition) {
-                $resultCount->joinWith(['patient.patGlobalPatient']);
+                $resultCount->joinWith(['patient.glPatient']);
                 $resultCount->andFilterWhere($searchCondition);
             }
             $resultCount->groupBy(['patient_name', 'patient_id', 'encounter_id']);
