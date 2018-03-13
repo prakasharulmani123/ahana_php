@@ -851,9 +851,9 @@ class EncounterController extends ActiveController {
 
             $data = VBillingProcedures::find()->where([
                         'encounter_id' => $encounter_id,
-                        'tenant_id' => $tenant_id,
+                        //'tenant_id' => $tenant_id,
                         'category_id' => $category_id,
-                        'patient_id' => $patient_id
+                        //'patient_id' => $patient_id
                     ])->one();
         }
         return $data;
@@ -871,9 +871,9 @@ class EncounterController extends ActiveController {
 
             $data = VBillingProfessionals::find()->where([
                         'encounter_id' => $encounter_id,
-                        'tenant_id' => $tenant_id,
+                        //'tenant_id' => $tenant_id,
                         'category_id' => $category_id,
-                        'patient_id' => $patient_id
+                        //'patient_id' => $patient_id
                     ])->one();
         }
         return $data;
