@@ -67,9 +67,16 @@ class RActiveRecord extends ActiveRecord {
             $this->setTenant();
         } else {
             if ($this->hasAttribute('tenant_id')) {
-                if ($this->tenant_id != Yii::$app->user->identity->logged_tenant_id) {
-                    $this->addError('tenant_id', 'Branch Mismatch');
-                    return FALSE;
+                if ($this->hasAttribute('current_tenant_id')) {
+                    if ($this->current_tenant_id != Yii::$app->user->identity->logged_tenant_id) {
+                        $this->addError('tenant_id', 'Branch Mismatch');
+                        return FALSE;
+                    }
+                } else {
+                    if ($this->tenant_id != Yii::$app->user->identity->logged_tenant_id) {
+                        $this->addError('tenant_id', 'Branch Mismatch');
+                        return FALSE;
+                    }
                 }
             }
         }
