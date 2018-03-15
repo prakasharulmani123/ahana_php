@@ -45,17 +45,18 @@ class CoOrganization extends GActiveRecord {
      */
     public function rules() {
         return [
-            [['org_name', 'org_description', 'org_db_host', 'org_db_username', 'org_database', 'org_domain'], 'required'],
+                [['org_name', 'org_description', 'org_db_host', 'org_db_username', 'org_database', 'org_domain', 'org_db_pharmacy'], 'required'],
             [['org_domain'], 'url'],
             [['org_description', 'status'], 'string'],
             [['created_by', 'modified_by'], 'integer'],
             [['created_at', 'modified_at', 'deleted_at', 'status'], 'safe'],
             [['org_name'], 'string', 'max' => 100],
-            [['org_db_host', 'org_db_username', 'org_db_password', 'org_database', 'org_domain'], 'string', 'max' => 255],
+                [['org_db_host', 'org_db_username', 'org_db_password', 'org_database', 'org_domain', 'org_db_pharmacy'], 'string', 'max' => 255],
             [['org_name', 'org_database'], 'unique', 'on' => 'Create'],
-            [['patient_UHID_prefix'],'required', 'on' => 'Create'],
+                [['patient_UHID_prefix'], 'required', 'on' => 'Create'],
             [['org_domain'], 'unique', 'on' => 'Create'],
             ['org_database', 'checkDB', 'on' => 'Create'],
+                ['org_db_pharmacy', 'checkDBPharmacy', 'on' => 'Create'],
             ['patient_UHID_prefix', 'validateCodeprefix', 'on' => 'Create'],
         ];
     }
@@ -71,7 +72,8 @@ class CoOrganization extends GActiveRecord {
             'org_db_host' => 'Host Name',
             'org_db_username' => 'Database Username',
             'org_db_password' => 'Database Password',
-            'org_database' => 'Database Name',
+            'org_database' => 'Org Db Name',
+            'org_db_pharmacy' => 'Org Pharmacy Db Name',
             'org_domain' => 'Domain Name',
             'patient_UHID_prefix' => 'Patient UHID Prefix',
             'status' => 'Status',
@@ -132,10 +134,24 @@ class CoOrganization extends GActiveRecord {
         }
     }
     
+    public function checkDBPharmacy($attribute, $params) {
+        try {
+            $connection = new Connection([
+                'dsn' => "mysql:host={$this->org_db_host};dbname={$this->org_db_pharmacy}",
+                'username' => $this->org_db_username,
+                'password' => $this->org_db_password,
+            ]);
+            $connection->open();
+            $connection->close();
+        } catch (Exception $ex) {
+            $this->addError($attribute, $ex->getMessage());
+        }
+    }
+
     public function validateCodeprefix($attribute, $params) {
-        if($this->patient_UHID_prefix) {
+        if ($this->patient_UHID_prefix) {
             $InternalCode = GlInternalCode::find()->where(['code_prefix' => $this->patient_UHID_prefix])->one();
-            if(!empty($InternalCode)) {
+            if (!empty($InternalCode)) {
                 $this->addError($attribute, "Patient UHID Prefix already taken. Kindly choose another Prefix");
             }
         }
@@ -152,6 +168,7 @@ class CoOrganization extends GActiveRecord {
             $this->org_db_username = base64_encode($this->org_db_username);
             $this->org_db_password = base64_encode($this->org_db_password);
             $this->org_database = base64_encode($this->org_database);
+            $this->org_db_pharmacy = base64_encode($this->org_db_pharmacy);
         }
         
         return parent::beforeSave($insert);
@@ -162,6 +179,7 @@ class CoOrganization extends GActiveRecord {
         $this->org_db_username = base64_decode($this->org_db_username);
         $this->org_db_password = base64_decode($this->org_db_password);
         $this->org_database = base64_decode($this->org_database);
+        $this->org_db_pharmacy = base64_decode($this->org_db_pharmacy);
 
         $this->is_decoded = true;
         return parent::afterFind();
@@ -187,7 +205,7 @@ class CoOrganization extends GActiveRecord {
             $internal_code->code = '1';
             $internal_code->save(false);
             
-            $sql = "INSERT INTO co_organization VALUES({$this->org_id},'{$this->org_name}','{$this->org_description}','{$this->org_db_host}','{$this->org_db_username}','{$this->org_db_password}','{$this->org_database}','{$this->org_domain}','{$this->status}',{$this->created_by},'{$this->created_at}',{$this->modified_by},'{$this->modified_at}','{$this->deleted_at}')";
+            $sql = "INSERT INTO co_organization VALUES({$this->org_id},'{$this->org_name}','{$this->org_description}','{$this->org_db_host}','{$this->org_db_username}','{$this->org_db_password}','{$this->org_database}','{$this->org_db_pharmacy}','{$this->org_domain}','','','','{$this->status}',{$this->created_by},'{$this->created_at}',{$this->modified_by},'{$this->modified_at}','{$this->deleted_at}')";
         } else {
             $sql = "UPDATE co_organization SET org_name = '{$this->org_name}', org_description = '{$this->org_description}', org_db_host = '{$this->org_db_host}', org_db_username = '{$this->org_db_username}', org_db_password = '{$this->org_db_password}', org_database = '{$this->org_database}', org_domain = '{$this->org_domain}', status = '{$this->status}', modified_by = '{$this->modified_by}', modified_at = '{$this->modified_at}', deleted_at = '{$this->deleted_at}' WHERE org_id={$this->org_id}";
         }
@@ -197,6 +215,5 @@ class CoOrganization extends GActiveRecord {
         
         return parent::afterSave($insert, $changedAttributes);
     }
-
 
 }

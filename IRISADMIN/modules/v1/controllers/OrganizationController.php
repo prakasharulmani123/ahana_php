@@ -106,6 +106,12 @@ class OrganizationController extends ActiveController {
             $v_billing_recurring = file_get_contents(Url::base(true) . '/v_billing_recurring.sql');
             $v_documents = file_get_contents(Url::base(true) . '/v_documents.sql');
             $v_encounter = file_get_contents(Url::base(true) . '/v_encounter.sql');
+            $pharmacy_structure = file_get_contents(Url::base(true) . '/pharmacy_structure.sql');
+            $database = $post['org_database'];
+            $pharmacy_structure = str_replace("REFERENCES `ahana`", "REFERENCES `$database`", $pharmacy_structure);
+
+            $pha_database = $post['org_db_pharmacy'];
+            $structure = str_replace("REFERENCES `ahana_pharmacy`", "REFERENCES `$pha_database`", $structure);
 
             $connection = new Connection([
                 'dsn' => "mysql:host={$post['org_db_host']};dbname={$post['org_database']}",
@@ -119,12 +125,6 @@ class OrganizationController extends ActiveController {
             $command->execute();
 
             $command = $connection->createCommand($data);
-            $command->execute();
-
-            $command = $connection->createCommand($functions);
-            $command->execute();
-
-            $command = $connection->createCommand($sp);
             $command->execute();
 
             $command = $connection->createCommand($v_billing_advance_charges);
@@ -150,6 +150,25 @@ class OrganizationController extends ActiveController {
 
             $connection->close();
             //End
+            //Pharmacy database section import start
+            $pharmacyConnection = new Connection([
+                'dsn' => "mysql:host={$post['org_db_host']};dbname={$post['org_db_pharmacy']}",
+                'username' => $post['org_db_username'],
+                'password' => isset($post['org_db_password']) ? $post['org_db_password'] : '',
+            ]);
+            $pharmacyConnection->open();
+
+            $pharmacyCommand = $pharmacyConnection->createCommand($pharmacy_structure);
+            $pharmacyCommand->execute();
+
+            $pharmacyCommand = $pharmacyConnection->createCommand($functions);
+            $pharmacyCommand->execute();
+
+            $pharmacyCommand = $pharmacyConnection->createCommand($sp);
+            $pharmacyCommand->execute();
+
+            $pharmacyConnection->close();
+            //Pharmacy database section import end
         }
     }
 
@@ -293,7 +312,6 @@ class OrganizationController extends ActiveController {
 //            $user_role = CoUsersRoles::find()->where(['user_id' => $query_php[0]['user_id']])->one();
 //            print_r($user_role);
 //            die;
-
             //$login = CoLogin::find()->where(['user_id' => $userProf->user_id])->one();
             //$login->password = '';
             //$return['Tenant'] = $this->excludeColumns($organization->attributes);
