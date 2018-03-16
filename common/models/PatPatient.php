@@ -91,7 +91,8 @@ class PatPatient extends RActiveRecord {
      * @inheritdoc
      */
     public static function tableName() {
-        return 'pat_patient';
+        $current_database = Yii::$app->client->createCommand("SELECT DATABASE()")->queryScalar();
+        return "$current_database.pat_patient";
     }
 
     public function init() {
@@ -439,6 +440,7 @@ class PatPatient extends RActiveRecord {
 
         $result = array_diff_assoc($newAttrs, $oldAttrs);
         $attr = array_diff_key($result, $unset_cols);
+
         if (!empty($attr)) {
             $tenants = GlPatientTenant::find()->where(['patient_global_guid' => $this->patient_global_guid])->all();
             foreach ($tenants as $key => $tenant) {

@@ -349,7 +349,7 @@ class PharmacyproductController extends ActiveController {
             $text = rtrim($post['search'], '-');
             $available_medicine = $post['available_medicine'];
 
-            $this->_connection = Yii::$app->client;
+            $this->_connection = Yii::$app->client_pharmacy;
             $limit = 1000;
 
             //Check generic name exists in the search word.
@@ -604,6 +604,7 @@ class PharmacyproductController extends ActiveController {
         return $routes;
     }
 
+    /* NOT NEED*/
     private function _getFrequencies($text, $tenant_id, $limit) {
         $post = Yii::$app->getRequest()->post();
         $frequencies = [];

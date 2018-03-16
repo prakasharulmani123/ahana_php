@@ -252,7 +252,7 @@ class PatientController extends ActiveController {
                     ->andWhere([
                         'pat_patient.tenant_id' => $tenant_id,
                         'pat_patient.deleted_at' => '0000-00-00 00:00:00',
-                            //'pat_global_patient.parent_id' => NULL
+                        'b.parent_id' => NULL
                     ])
                     ->andFilterWhere([
                         'or',

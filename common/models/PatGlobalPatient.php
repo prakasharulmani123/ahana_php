@@ -48,7 +48,7 @@ use yii\helpers\ArrayHelper;
  * @property string $deleted_at
  */
 class PatGlobalPatient extends RActiveRecord {
-
+    
     public $complete_profile_fields;
 
     /**
@@ -57,7 +57,7 @@ class PatGlobalPatient extends RActiveRecord {
     public static function tableName() {
         return 'pat_global_patient';
     }
-
+    
     public function init() {
         $global_attributes = self::getTableSchema()->getColumnNames();
         //$unset_fields = ['parent_id', 'migration_created_by', 'casesheetno', 'patient_global_int_code', 'patient_reg_date', 'patient_relation_code', 'patient_relation_name', 'patient_care_taker', 'patient_care_taker_name', 'patient_marital_status', 'patient_occupation', 'patient_blood_group', 'patient_email', 'patient_reg_mode', 'patient_type', 'patient_ref_hospital', 'patient_ref_doctor', 'patient_ref_id', 'patient_secondary_contact', 'patient_bill_type', 'patient_image', 'created_by', 'created_at', 'modified_by', 'modified_at', 'deleted_at'];
@@ -167,11 +167,11 @@ class PatGlobalPatient extends RActiveRecord {
     //Not Needed this function
     public function isIncompleteProfile() {
         $global_fields = [];
-
+        
         foreach ($this->complete_profile_fields as $global_field) {
             $global_fields[$global_field] = $this->$global_field;
         }
-
+        
         return (in_array(null, $global_fields));
     }
 
@@ -185,7 +185,7 @@ class PatGlobalPatient extends RActiveRecord {
             }];
 
         $fields = array_merge(parent::fields(), $extend);
-
+                
         if ($onlyField = Yii::$app->request->get('onlyfields')) {
             switch ($onlyField):
                 case 'pharmacylist':
