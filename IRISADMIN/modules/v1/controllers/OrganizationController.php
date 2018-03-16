@@ -93,6 +93,15 @@ class OrganizationController extends ActiveController {
 
     public function actionCreatedb() {
         $post = Yii::$app->request->post('Organization');
+        
+        $user_form_model = new CoUserForm();
+        $user_form_model->scenario = 'saveorg';
+        $user_form_model->attributes = Yii::$app->request->post('User');
+        $valid = $user_form_model->validate();
+        if(!$valid) {
+            return ['success' => false];
+        }
+        
         if (!empty($post)) {
             //Execute DB Structure to client DB Connection
             $structure = file_get_contents(Url::base(true) . '/structure.sql');
