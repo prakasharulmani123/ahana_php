@@ -714,7 +714,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     'freqType': value.freqType
                 };
                 var fav = $filter('filter')($scope.child.favourites, {product_id: value.product_id});
-                if (fav.length > 0) {
+                if (fav && fav.length > 0) {
                     angular.extend(items, {is_favourite: 1});
                 }
                 PrescriptionService.addPrescriptionItem(items);
