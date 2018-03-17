@@ -787,7 +787,7 @@ class PharmacyproductController extends ActiveController {
     }
 
     public function phamastersupdateimport($filename, $tenant_id, $log) {
-        $connection = Yii::$app->client;
+        $connection = Yii::$app->client_pharmacy;
         $connection->open();
 
         $row = 1;
@@ -817,7 +817,7 @@ class PharmacyproductController extends ActiveController {
     private $migrateTables;
 
     private function _getMigrationTable($table_name, $field_name, $org_id, $update_id) {
-        $connection = Yii::$app->client;
+        $connection = Yii::$app->client_pharmacy;
 
         $database = $connection->createCommand("SELECT DATABASE()")->queryScalar();
 
@@ -873,7 +873,7 @@ class PharmacyproductController extends ActiveController {
 
         if ($id <= $max_id) {
             $next_id = $id + 1;
-            $connection = Yii::$app->client;
+            $connection = Yii::$app->client_pharmacy;
             $connection->open();
             $command = $connection->createCommand("SELECT * FROM test_pha_masters_update WHERE id = {$id} AND import_log = $import_log");
             $result = $command->queryAll(PDO::FETCH_OBJ);
@@ -1035,7 +1035,7 @@ class PharmacyproductController extends ActiveController {
     }
 
     public function stockimport($filename, $tenant_id, $log) {
-        $connection = Yii::$app->client;
+        $connection = Yii::$app->client_pharmacy;
         $connection->open();
 
         $row = 1;
@@ -1106,7 +1106,7 @@ class PharmacyproductController extends ActiveController {
 
         if ($id <= $max_id) {
             $next_id = $id + 1;
-            $connection = Yii::$app->client;
+            $connection = Yii::$app->client_pharmacy;
             $connection->open();
             $command = $connection->createCommand("SELECT * FROM test_os_batch_wise WHERE id = {$id} AND import_log = $import_log");
             $result = $command->queryAll(PDO::FETCH_OBJ);
@@ -1230,7 +1230,7 @@ class PharmacyproductController extends ActiveController {
     }
 
     public function import($filename, $tenant_id, $log) {
-        $connection = Yii::$app->client;
+        $connection = Yii::$app->client_pharmacy;
         $connection->open();
 
         $row = 1;
@@ -1279,7 +1279,7 @@ class PharmacyproductController extends ActiveController {
 
         if ($id <= $max_id) {
             $next_id = $id + 1;
-            $connection = Yii::$app->client;
+            $connection = Yii::$app->client_pharmacy;
             $connection->open();
             $command = $connection->createCommand("SELECT * FROM test_product_import WHERE id = {$id} AND import_log = $import_log");
             $result = $command->queryAll(PDO::FETCH_OBJ);
@@ -1590,7 +1590,7 @@ class PharmacyproductController extends ActiveController {
     }
 
     public function productgstupdateimport($filename, $tenant_id, $log) {
-        $connection = Yii::$app->client;
+        $connection = Yii::$app->client_pharmacy;
         $connection->open();
 
         $row = 1;
@@ -1628,7 +1628,7 @@ class PharmacyproductController extends ActiveController {
 
         if ($id <= $max_id) {
             $next_id = $id + 1;
-            $connection = Yii::$app->client;
+            $connection = Yii::$app->client_pharmacy;
             $connection->open();
             $command = $connection->createCommand("SELECT * FROM test_product_gst_import WHERE id = {$id} AND import_log = $import_log");
             $result = $command->queryAll(PDO::FETCH_OBJ);
@@ -1714,7 +1714,7 @@ class PharmacyproductController extends ActiveController {
     }
 
     public function productpriceupdateimport($filename, $tenant_id, $log) {
-        $connection = Yii::$app->client;
+        $connection = Yii::$app->client_pharmacy;
         $connection->open();
 
         $row = 1;
@@ -1748,7 +1748,7 @@ class PharmacyproductController extends ActiveController {
 
         if ($id <= $max_id) {
             $next_id = $id + 1;
-            $connection = Yii::$app->client;
+            $connection = Yii::$app->client_pharmacy;
             $connection->open();
             $command = $connection->createCommand("SELECT * FROM test_product_price_import WHERE id = {$id} AND import_log = $import_log");
             $result = $command->queryAll(PDO::FETCH_OBJ);
