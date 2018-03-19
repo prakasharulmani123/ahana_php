@@ -174,6 +174,29 @@ class MyworkreportsController extends ActiveController {
 
         return $result;
     }
+    
+    public function actionDischargedpatientdues() {
+        $post = Yii::$app->getRequest()->post();
+
+        $encounters = PatEncounter::find()
+                ->joinWith('patAdmissionAdministrativeDischarge')
+//                ->status()
+                ->encounterType("IP");
+                //->finalized();
+
+        if (isset($post['from']) && isset($post['to']) && isset($post['tenant_id'])) {
+            $encounters->andWhere("date(pat_admission.status_date) between '{$post['from']}' AND '{$post['to']}'");
+            //$tenant_ids = join("','", $post['tenant_id']);
+            //$encounters->andWhere("pat_encounter.tenant_id IN ( '$tenant_ids' )");
+            $encounters->andWhere(['pat_encounter.tenant_id' => $post['tenant_id']]);
+        }
+
+        $encounters->andWhere("pat_encounter.bill_no != ''");
+
+        $result = $encounters->all();
+
+        return $result;
+    }
 
     public function actionIpdoctorspay() {
         $post = Yii::$app->getRequest()->post();
