@@ -3052,6 +3052,21 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            //Myworks Discharged Patient Dues
+            .state('myworks.dischargedPatientDues', {
+                url: '/dischargedPatientDues',
+                templateUrl: 'tpl/myworks_report/dischargedPatientDues.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myworks_report/dischargedPatientDues.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
             //Myworks IP Doctors Pay
             .state('myworks.ipDoctorsPay', {
                 url: '/ipDoctorsPay',
