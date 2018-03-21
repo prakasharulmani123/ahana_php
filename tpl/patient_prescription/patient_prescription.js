@@ -464,7 +464,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             deferred.notify();
             $scope.errorData = "";
 //            &full_name_with_stock=1
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getproductlistbygeneric?generic_id=' + generic_id + '&addtfields=presc_search&page_action=branch_pharmacy&full_name_with_stock=1')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getproductlistbygeneric?generic_id=' + generic_id + '&addtfields=presc_search&page_action=branch_pharmacy')
                     .success(function (response) {
                         $scope.products = $scope.allproducts = response.productList;
                         deferred.resolve();
