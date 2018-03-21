@@ -717,7 +717,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 if (fav && fav.length > 0) {
                     angular.extend(items, {is_favourite: 1});
                 }
-                PrescriptionService.addPrescriptionItem(items);
+                //In Master table product, changed geneic and drug glass remove the product   
+                var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
+                if (chkProduct.length != 0) {
+                    PrescriptionService.addPrescriptionItem(items);
+                }
             });
         }
         $scope.addToCurrentPrescription = function () {
@@ -1369,7 +1373,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
                                                             //Multiple entries created, Check duplicate once again 
                                                             var chkDuplicate = $filter('filter')(PrescriptionService.getPrescriptionItems(), {product_id: items.product_id}, true);
-                                                            if (chkDuplicate.length == 0) {
+
+                                                            //In Master table product, changed geneic and drug glass remove the product   
+                                                            var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
+                                                            if (chkDuplicate.length == 0 && chkProduct.length != 0) {
                                                                 PrescriptionService.addPrescriptionItem(items);
                                                             }
                                                             loop_start = parseFloat(loop_start) + parseFloat(1);
