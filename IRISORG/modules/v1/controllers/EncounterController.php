@@ -853,7 +853,7 @@ class EncounterController extends ActiveController {
                         'encounter_id' => $encounter_id,
                         //'tenant_id' => $tenant_id,
                         'category_id' => $category_id,
-                        //'patient_id' => $patient_id
+                            //'patient_id' => $patient_id
                     ])->one();
         }
         return $data;
@@ -873,7 +873,7 @@ class EncounterController extends ActiveController {
                         'encounter_id' => $encounter_id,
                         //'tenant_id' => $tenant_id,
                         'category_id' => $category_id,
-                        //'patient_id' => $patient_id
+                            //'patient_id' => $patient_id
                     ])->one();
         }
         return $data;
@@ -906,6 +906,9 @@ class EncounterController extends ActiveController {
                 ])
                 ->status()
                 ->encounterType($GET['type']);
+        if ($GET['type'] == 'IP') {
+            $model->unfinalized();
+        }
         if ($GET['type'] == 'OP') {
             $model->andFilterWhere(['DATE(encounter_date)' => date('Y-m-d')]);
         }
