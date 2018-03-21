@@ -267,7 +267,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 var pharmacy_paid = 0;
                 angular.forEach($scope.pharmacy_charge, function (row, key) {
                     pharmacy_charge += $scope.parseFloatIgnoreCommas(row.bill_amount);
-                    pharmacy_paid += $scope.parseFloatIgnoreCommas(row.billings_total_paid_amount);
+                    pharmacy_paid += $scope.parseFloatIgnoreCommas(row.billings_total_paid_amount_using_pharmacy);
                 });
                 bill.push([
                     {text: 'Pharmacy charges', style: 'rows', colSpan: 5},
@@ -642,6 +642,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                 angular.forEach($scope.pharmacy_bill, function (row, key) {
                     detailed_billing.total.net_step_42_total = detailed_billing.total.pharmacy_net_total;
                     var row_total = parseFloat(row.paid_amount);
+                    var row_total_using_pharmacy = parseFloat(row.sale_details.billings_total_paid_amount_using_pharmacy);
                     var net_total = parseFloat(detailed_billing.total.net_step_42_total) - parseFloat(row.net_amount);
                     var payment_date = moment(row.paid_date).format('DD/MM/YYYY');
                     if (row.sale_return_bill_no) {
@@ -655,12 +656,12 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
                         {text: return_bill_no, colSpan: 2, style: 'rows'},
                         '',
                         '',
-                        {text: parseInt(row.paid_amount).toString(), style: 'rows', alignment: 'right'},
+                        {text: parseInt(row_total_using_pharmacy).toString(), style: 'rows', alignment: 'right'},
                         {text: net_total.toString(), style: 'rows', alignment: 'right'}
                     ]);
 
                     detailed_non_billing.total.pharmacy_adv_charge = parseFloat(detailed_non_billing.total.pharmacy_adv_charge) + row_total;
-                    detailed_billing.total.pharmacy_bill_total = parseFloat(detailed_billing.total.pharmacy_bill_total) + row_total;
+                    detailed_billing.total.pharmacy_bill_total = parseFloat(detailed_billing.total.pharmacy_bill_total) + row_total_using_pharmacy;
                     detailed_billing.total.pharmacy_bill_net_total = parseFloat(detailed_billing.total.pharmacy_net_total) - parseFloat(row.net_amount);
                 });
                 bill.push([

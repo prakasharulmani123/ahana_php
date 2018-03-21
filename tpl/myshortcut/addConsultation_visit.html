@@ -22,7 +22,7 @@
             <div class="col-sm-12">
                 <form name="consultantVisitForm" class="form-horizontal form-validation" novalidate="">
                     <div class="row" ng-init="loadPatientsList('IP')">
-                        <div class="col-sm-3" style="height:70vh; overflow-y: auto; overflow-x: hidden;">
+                        <div class="col-sm-4" style="height:70vh; overflow-y: auto; overflow-x: hidden;">
                             <div class="panel panel-default">
                                 <div class="panel-heading font-bold">
                                     All Patient
@@ -53,6 +53,7 @@
                                                     <a ui-sref="patient.view({id: row.apptPatientData.patient_guid})" tooltip="{{row.apptPatientData.fullcurrentaddress}}">
                                                         {{row.apptPatientData.fullname}}
                                                     </a>({{row.apptPatientData.patient_age_ym}})<br/>
+                                                    {{row.apptPatientData.current_room}} {{row.encounter_date}}
                                                     {{row.apptPatientData.patient_global_int_code}}
                                                 </td>
                                             </tr>
@@ -71,7 +72,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-9" ng-init="initForm()">
+                        <div class="col-sm-8" ng-init="initForm()">
                             <div class="panel panel-default">
                                 <div class="panel-heading font-bold">
                                     Consultant
