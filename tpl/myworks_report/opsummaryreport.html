@@ -12,7 +12,7 @@
                     <div class="panel-body p-b">
                         <div class="form-group report-inst">
                             <ul>
-                                <li>This report will be generate only 31 days</li>
+                                <li>This report will be generated only for 31 days</li>
                             </ul>
                         </div>
                     </div>
@@ -125,7 +125,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat-start="(statusDate, record) in records |orderBy:'status_date' | groupBy:'status_date'">
+                                        <tr ng-repeat-start="(statusDate, record) in records |orderBy:'status_date' | groupBy:'[status_date, consultant_id]'">
                                             <td style="width: 5%" data-sort-ignore="true" data-value="{{row.all_dates}}">
                                                 <button ng-click="expanded = !expanded" expand class="btn btn-sm btn-default hms-plus">
                                                     <i ng-if="!expanded" class="fa fa-plus text"></i>
@@ -134,7 +134,7 @@
                                             </td>
                                             <td>{{record[0].branch_name}}</td>
                                             <td>{{record[0].consultant_name}}</td>
-                                            <td>{{statusDate}}</td>
+                                            <td>{{record[0].status_date}}</td>
                                             <td>{{pending.total_amount}}</td>
                                         </tr>
                                         <tr ng-repeat-end ng-show="expanded">
@@ -208,7 +208,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="(statusDate, record) in records | groupBy: 'status_date'" ng-init="branchwise_new = {}">
+                        <tr ng-repeat="(statusDate, record) in records |orderBy:'status_date' | groupBy:'[status_date, consultant_id]'" ng-init="branchwise_new = {}">
+<!--                        <tr ng-repeat="(statusDate, record) in records | groupBy: 'status_date'" >-->
                             <td>{{record[0].branch_name}}</td>
                             <td>{{record[0].consultant_name}}</td>
                             <td>{{statusDate}}</td>
