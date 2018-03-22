@@ -2,8 +2,8 @@
 
 /* Controllers */
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService', 'toaster', 'hotkeys', '$modal', '$filter', 'deviceDetector', 'IO_BARCODE_TYPES',
-            function ($scope, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService, toaster, hotkeys, $modal, $filter, deviceDetector, IO_BARCODE_TYPES) {
+        .controller('AppCtrl', ['$scope', 'Idle', 'Keepalive', '$localStorage', '$window', '$rootScope', '$state', '$cookieStore', '$http', 'CommonService', '$timeout', 'AuthenticationService', 'toaster', 'hotkeys', '$modal', '$filter', 'deviceDetector', 'IO_BARCODE_TYPES',
+            function ($scope, Idle, Keepalive, $localStorage, $window, $rootScope, $state, $cookieStore, $http, CommonService, $timeout, AuthenticationService, toaster, hotkeys, $modal, $filter, deviceDetector, IO_BARCODE_TYPES) {
 //                socket.forward('someEvent', $scope);
 
                 //Angular module to detect OS / Browser / Device
@@ -32,9 +32,9 @@ angular.module('app')
                     version: '',
                     username: '',
                     logged_tenant_id: '',
-                    org_logo:'',
-                    org_small_logo:'',
-                    org_document_logo:'',
+                    org_logo: '',
+                    org_small_logo: '',
+                    org_document_logo: '',
                     // for chart colors
                     color: {
                         primary: '#7266ba',
@@ -81,6 +81,41 @@ angular.module('app')
                         },
                     }
                 }
+                //Idle Provider coding start
+                Idle.watch();
+                function closeModals() {
+                    if ($scope.warning) {
+                        $scope.warning.close();
+                        $scope.warning = null;
+                    }
+
+                    if ($scope.timedout) {
+                        $scope.timedout.close();
+                        $scope.timedout = null;
+                    }
+                }
+                $scope.$on('IdleStart', function () {
+                    closeModals();
+                    $scope.warning = $modal.open({
+                        templateUrl: 'warning-dialog.html',
+                        windowClass: 'modal-danger'
+                    });
+                });
+
+                $scope.$on('IdleEnd', function () {
+                    closeModals();
+                });
+
+                $scope.$on('IdleTimeout', function () {
+                    closeModals();
+                    $scope.timedout = $modal.open({
+                        templateUrl: 'timedout-dialog.html',
+                        windowClass: 'modal-danger'
+                    });
+                    $scope.logout();
+                });
+                //Idle Provider coding end
+
 
                 // save settings to local storage
 //                if (angular.isDefined($localStorage.settings)) {
@@ -285,6 +320,11 @@ angular.module('app')
                     $scope.app.org_full_address = user.credentials.org_address + ', ' + user.credentials.org_city;
                     $scope.app.username = user.credentials.username;
                     $scope.app.page_title = $scope.app.name + '(' + $scope.app.org_name + ')';
+                    if(user.credentials.user_timeout) {
+                        Idle.setIdle(user.credentials.user_timeout * 60);
+                    } else {
+                        Idle.setIdle(3600);
+                    }
                 };
 
                 $scope.checkAccess = function (url) {
@@ -1754,7 +1794,7 @@ angular.module('app').filter('moment', function () {
 angular.module('app').filter('words', ['$rootScope', function ($rootScope) {
         return function (value) {
             var value1 = parseInt(value);
-            if(value1 == '0')
+            if (value1 == '0')
                 return 'Zero ';
             if (value1 && isInteger(value1))
                 return  $rootScope.commonService.GettoWords(value1);

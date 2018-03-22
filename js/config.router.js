@@ -6,8 +6,8 @@
 angular.module('app')
         .run(run)
         .config(config);
-config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider', 'ivhTreeviewOptionsProvider', 'JQ_CONFIG', 'hotkeysProvider', '$compileProvider'];
-function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOptionsProvider, JQ_CONFIG, hotkeysProvider, $compileProvider) {
+config.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider', 'ivhTreeviewOptionsProvider', 'JQ_CONFIG', 'hotkeysProvider', '$compileProvider', 'KeepaliveProvider', 'IdleProvider'];
+function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOptionsProvider, JQ_CONFIG, hotkeysProvider, $compileProvider, KeepaliveProvider, IdleProvider) {
 
 //    hotkeysProvider.template = '<div class="my-own-cheatsheet">Hai</div>';
     $compileProvider.debugInfoEnabled(false);
@@ -17,6 +17,9 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
         twistieCollapsedTpl: '<i class="fa fa-caret-down"></i>',
         twistieLeafTpl: '',
     });
+    IdleProvider.idle(5);
+    IdleProvider.timeout(10);
+    KeepaliveProvider.interval(10);
 //    var newBaseUrl = "";
 //
 //    if (window.location.hostname == "localhost") {
