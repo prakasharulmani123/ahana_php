@@ -208,7 +208,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             } else {
                 $scope.data.prescriptionItems[key].number_of_days = '';
             }
-
+            
 //            if (days == 0) {
 //                $scope.data.prescriptionItems[key].available_quantity = 0;
 //            }
@@ -225,12 +225,38 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     editableValue.scope.$data = $scope.data.prescriptionItems[key].qty;
                 }
             });
+            
+            //Bc-179 Dropdown - Qty 
+            angular.forEach(tableform.$editables, function (editableValue, editableKey) {
+                if (editableValue.attrs.eIndex == key && editableValue.attrs.eName == 'product_id') {
+                    var options = editableValue.inputEl[0].childNodes;
+                    angular.forEach(options, function (optionValue, optionKey) {
+                        if(parseFloat(optionValue.dataset.availablequantity) < parseFloat($scope.data.prescriptionItems[key].qty) )
+                            optionValue.className = 'out-of-stock';
+                        else
+                            optionValue.className = 'in-stock';
+                    });
+                }
+            });
         };
         $scope.qtyChange = function (qty, item, key, tableform) {
             if (typeof qty != 'undefined') {
                 $scope.data.prescriptionItems[key].total = $scope.calculate_price(qty, item.price);
                 $scope.data.prescriptionItems[key].in_stock = (parseInt(item.available_quantity) >= parseInt(qty));
             }
+            
+            //Bc-179 Dropdown - Qty 
+            angular.forEach(tableform.$editables, function (editableValue, editableKey) {
+                if (editableValue.attrs.eIndex == key && editableValue.attrs.eName == 'product_id') {
+                    var options = editableValue.inputEl[0].childNodes;
+                    angular.forEach(options, function (optionValue, optionKey) {
+                        if(parseFloat(optionValue.dataset.availablequantity) < parseFloat(qty) )
+                            optionValue.className = 'out-of-stock';
+                        else
+                            optionValue.className = 'in-stock';
+                    });
+                }
+            });
         };
 
         $scope.getFav = function () {
