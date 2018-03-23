@@ -638,7 +638,8 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
         }
 
         $scope.printVoucher = {};
-        $scope.setVoucher = function (row, id) {
+        $scope.setVoucher = function (row, id, model, pk_id) {
+            $scope.updatePrintcreatedby(model, pk_id);
             $scope.printVoucher = row;
             $timeout(function () {
                 var innerContents = document.getElementById(id).innerHTML;

@@ -169,6 +169,18 @@ angular.module('app')
                         $scope.msg.successMessage = 'Status changed successfully !!!';
                     });
                 }
+                
+                //Added print created by user
+                $scope.updatePrintcreatedby = function (modelName, primaryKey) {
+                    $scope.service = CommonService;
+                    $scope.service.UpdatePrintUser(modelName, primaryKey, function (response) {
+                        if (response.success === true) {
+                            $scope.duplicate_copy = false;
+                        } else {
+                            $scope.duplicate_copy = true;
+                        }
+                    });
+                }
 
                 //error Summary
                 $scope.errorSummary = function (error) {

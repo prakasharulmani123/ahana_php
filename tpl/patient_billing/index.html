@@ -449,7 +449,7 @@
                                     <div ng-show="row.trans_mode == 'Cash'"> - </div> 
                                 </td>
                                 <td>                             
-                                    <button class="btn btn-sm btn-primary" ng-click="setVoucher(row, 'voucherPrint')">
+                                    <button class="btn btn-sm btn-primary" ng-click="setVoucher(row, 'voucherPrint', 'PatBillingPayment', row.payment_id)">
                                         <i class="fa fa-print"></i>
                                     </button>
                                 </td>
@@ -517,7 +517,7 @@
                                     <div ng-show="refund.trans_mode == 'CA'"> - </div> 
                                 </td>
                                 <td>                             
-                                    <button class="btn btn-sm btn-primary" ng-click="setVoucher(refund, 'refundvoucherPrint'); increasePrintCount();">
+                                    <button class="btn btn-sm btn-primary" ng-click="setVoucher(refund, 'refundvoucherPrint', 'PatRefundPayment', refund.refund_payment_id); increasePrintCount();">
                                         <i class="fa fa-print"></i>
                                     </button>
                                 </td>
