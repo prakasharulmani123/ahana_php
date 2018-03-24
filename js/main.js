@@ -169,7 +169,7 @@ angular.module('app')
                         $scope.msg.successMessage = 'Status changed successfully !!!';
                     });
                 }
-                
+
                 //Added print created by user
                 $scope.updatePrintcreatedby = function (modelName, primaryKey) {
                     $scope.service = CommonService;
@@ -332,7 +332,7 @@ angular.module('app')
                     $scope.app.org_full_address = user.credentials.org_address + ', ' + user.credentials.org_city;
                     $scope.app.username = user.credentials.username;
                     $scope.app.page_title = $scope.app.name + '(' + $scope.app.org_name + ')';
-                    if(user.credentials.user_timeout) {
+                    if (user.credentials.user_timeout) {
                         Idle.setIdle(user.credentials.user_timeout * 60);
                     } else {
                         Idle.setIdle(3600);
@@ -991,6 +991,7 @@ angular.module('app')
                 $scope.printOPBill = function (item) {
                     $scope.printBillData.date = moment(item.date).format('DD/MM/YYYY hh:mm A');
                     $scope.printBillData.doctor = item.doctor;
+                    $scope.updatePrintcreatedby('PatEncounter', item.encounter_id);
 
                     //Get appointment details
                     $http.post($rootScope.IRISOrgServiceUrl + '/encounter/appointmentseenencounter', {patient_id: $state.params.id, enc_id: item.encounter_id})
@@ -999,6 +1000,7 @@ angular.module('app')
                                 $scope.printBillData.op_amount = response.model.appointmentSeen.amount;
                                 $scope.printBillData.op_amount_inwords = response.model.appointmentSeen_amt_inwords;
                                 $scope.printBillData.bill_no = response.model.bill_no;
+                                $scope.printBillData.encounter_id = item.encounter_id;
                                 if (response.model.appointmentSeen.payment_mode == "CA")
                                     $scope.printBillData.payment_mode = 'Cash';
                                 else if (response.model.appointmentSeen.payment_mode == "CD")
@@ -1045,28 +1047,36 @@ angular.module('app')
                     return dataURL;
                 }
                 $scope.opBillPrint = function (printData) {
-                    $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
-                    var print_content = $scope.printContent(printData);
-                    if (print_content.length > 0) {
-                        var docDefinition = {
-                            header: $scope.printHeader(),
-                            footer: $scope.printFooter(),
-                            styles: $scope.printStyle(),
-                            content: print_content,
-                            defaultStyle: {
-                                fontSize: 10
-                            },
-                            //pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 50 : 50),
-                            pageMargins: [20, 20, 20, 48],
-                            pageSize: 'A5',
-                            pageOrientation: 'landscape',
-                        };
-                        var pdf_document = pdfMake.createPdf(docDefinition);
-                        var doc_content_length = Object.keys(pdf_document).length;
-                        if (doc_content_length > 0) {
-                            pdf_document.print();
+                    $timeout(function () {
+                        $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
+                        var print_content = $scope.printContent(printData);
+                        if ($scope.duplicate_copy) {
+                            var bill = 'DUPLICATE COPY';
+                        } else {
+                            var bill = '';
                         }
-                    }
+                        if (print_content.length > 0) {
+                            var docDefinition = {
+                                watermark: {text: bill, color: 'lightgrey', opacity: 0.3},
+                                header: $scope.printHeader(),
+                                footer: $scope.printFooter(),
+                                styles: $scope.printStyle(),
+                                content: print_content,
+                                defaultStyle: {
+                                    fontSize: 10
+                                },
+                                //pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 50 : 50),
+                                pageMargins: [20, 20, 20, 48],
+                                pageSize: 'A5',
+                                pageOrientation: 'landscape',
+                            };
+                            var pdf_document = pdfMake.createPdf(docDefinition);
+                            var doc_content_length = Object.keys(pdf_document).length;
+                            if (doc_content_length > 0) {
+                                pdf_document.print();
+                            }
+                        }
+                    }, 1000);
                 }
                 /*PRINT BILL*/
                 $scope.printHeader = function () {
@@ -1345,7 +1355,7 @@ angular.module('app')
                                                     },
                                                     {
                                                         border: [false, false, false, false],
-                                                        text: $scope.printBillData.bill_no,
+                                                        text: printData.bill_no,
                                                         style: 'normaltxt'
                                                     }
                                                 ],
@@ -1360,7 +1370,7 @@ angular.module('app')
                                                         style: 'h2'
                                                     },
                                                     {
-                                                        text: $scope.printBillData.date,
+                                                        text: printData.date,
                                                         style: 'normaltxt'
                                                     }
                                                 ],

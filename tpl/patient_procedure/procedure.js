@@ -340,6 +340,7 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.loadbar('show');
             _that = this;
             $scope.errorData = "";
+            $scope.updatePrintcreatedby('PatProcedure', proc_id);
             $http({
                 url: $rootScope.IRISOrgServiceUrl + "/procedures/" + proc_id,
                 method: "GET"
@@ -360,25 +361,33 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.opBillPrint = function (printData) {
             $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
             var print_content = $scope.printContent(printData);
+            if ($scope.duplicate_copy) {
+                var bill = 'DUPLICATE COPY';
+            } else {
+                var bill = '';
+            }
             if (print_content.length > 0) {
-                var docDefinition = {
-                    header: $scope.printHeader(),
-                    footer: $scope.printFooter(),
-                    styles: $scope.printStyle(),
-                    content: print_content,
-                    defaultStyle: {
-                        fontSize: 10
-                    },
-                    //pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 50 : 50),
-                    pageMargins: [20, 20, 20, 48],
-                    pageSize: 'A5',
-                    pageOrientation: 'landscape',
-                };
-                var pdf_document = pdfMake.createPdf(docDefinition);
-                var doc_content_length = Object.keys(pdf_document).length;
-                if (doc_content_length > 0) {
-                    pdf_document.print();
-                }
+                $timeout(function () {
+                    var docDefinition = {
+                        watermark: {text: bill, color: 'lightgrey', opacity: 0.3},
+                        header: $scope.printHeader(),
+                        footer: $scope.printFooter(),
+                        styles: $scope.printStyle(),
+                        content: print_content,
+                        defaultStyle: {
+                            fontSize: 10
+                        },
+                        //pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 50 : 50),
+                        pageMargins: [20, 20, 20, 48],
+                        pageSize: 'A5',
+                        pageOrientation: 'landscape',
+                    };
+                    var pdf_document = pdfMake.createPdf(docDefinition);
+                    var doc_content_length = Object.keys(pdf_document).length;
+                    if (doc_content_length > 0) {
+                        pdf_document.print();
+                    }
+                }, 1000);
             }
         }
 
