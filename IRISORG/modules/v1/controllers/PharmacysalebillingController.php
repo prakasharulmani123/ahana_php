@@ -125,4 +125,22 @@ class PharmacysalebillingController extends ActiveController {
         return ['report' => $reports];
     }
 
+    public function actionConcessionpayment() {
+        $post = Yii::$app->getRequest()->post();
+
+        if (!empty($post['bill_details'])) {
+            foreach ($post['bill_details'] as $bill_details) {
+                $model = new PhaSaleBilling;
+                $model->sale_id = $bill_details['sale_id'];
+                $model->paid_date = date('Y-m-d');
+                $model->paid_amount = $bill_details['concession_amount'];
+                $model->settlement = 'C';
+                $model->save(false);
+            }
+            return ['success' => true];
+        } else {
+            return ['success' => false];
+        }
+    }
+
 }

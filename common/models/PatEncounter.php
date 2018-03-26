@@ -647,7 +647,7 @@ class PatEncounter extends RActiveRecord {
 //            }
 
     public function getViewChargeCalculation() {
-        $total_charge = $total_concession = $total_paid = $balance = 0;
+        $total_charge = $total_concession = $total_paid = $balance = $total_pharmacy_concession = 0;
 
         if ($this->encounter_type == 'IP') {
             $recurring = VBillingRecurring::find()
@@ -698,12 +698,13 @@ class PatEncounter extends RActiveRecord {
                 $total_amount += $sale['bill_amount'];
                 //$pending_amount += $sale['bill_amount'] - $sale->phaSaleBillingsTotalPaidAmount;
                 $total_paid += $sale->phaSaleBillingsTotalPaidAmountPharmacySettlement;
+                $total_pharmacy_concession += $sale->phaSaleBillingsTotalConcessionAmount;
             }
 
             $row_total_charge = $recurring->total_charge + $procedure->total_charge + $professional->total_charge + $other_charge->total_charge;
             $extra_charge = $procedure->extra_amount + $professional->extra_amount + $other_charge->extra_amount;
             $total_charge = $row_total_charge + $extra_charge + $total_amount;
-            $total_concession = $this->concession_amount + $procedure->concession_amount + $professional->concession_amount + $other_charge->concession_amount;
+            $total_concession = $this->concession_amount + $procedure->concession_amount + $professional->concession_amount + $other_charge->concession_amount + $total_pharmacy_concession;
 
             $balance = $total_charge - $total_concession - $total_paid;
         } elseif ($this->encounter_type == 'OP') {

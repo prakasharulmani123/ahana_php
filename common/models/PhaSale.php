@@ -224,6 +224,10 @@ class PhaSale extends PActiveRecord {
     public function getPhaSaleBillingsTotalPaidAmountPharmacySettlement() {
         return $this->hasMany(PhaSaleBilling::className(), ['sale_id' => 'sale_id'])->andWhere("settlement = 'P'")->sum('paid_amount');
     }
+    
+    public function getPhaSaleBillingsTotalConcessionAmount() {
+        return $this->hasMany(PhaSaleBilling::className(), ['sale_id' => 'sale_id'])->andWhere("settlement = 'C'")->sum('paid_amount');
+    }
 
     public function getPhaSaleTotalCgstAmount() {
         return $this->hasMany(PhaSaleItem::className(), ['sale_id' => 'sale_id'])->andWhere("pha_sale_item.deleted_at = '0000-00-00 00:00:00'")->sum('cgst_amount');
@@ -292,6 +296,9 @@ class PhaSale extends PActiveRecord {
             'billings_total_paid_amount_using_pharmacy' => function ($model) {
                 return (isset($model->phaSaleBillingsTotalPaidAmountPharmacySettlement) ? $model->phaSaleBillingsTotalPaidAmountPharmacySettlement : '0');
             },
+            'billings_total_paid_amount_using_concession' => function ($model) {
+                return (isset($model->phaSaleBillingsTotalConcessionAmount) ? $model->phaSaleBillingsTotalConcessionAmount : '0');
+            },        
             'sale_bill_paid_type' => function ($model) {
                 return $model->billingPaidType;
             },
@@ -401,7 +408,7 @@ class PhaSale extends PActiveRecord {
                     ];
                     break;
                 case 'patient_report':
-                    $addt_keys = ['patient_name', 'billings_total_balance_amount', 'billings_total_paid_amount', 'bill_payment', 'patient_uhid', 'branch_name', 'billings_total_paid_amount_using_pharmacy'];
+                    $addt_keys = ['patient_name', 'billings_total_balance_amount', 'billings_total_paid_amount', 'bill_payment', 'patient_uhid', 'branch_name', 'billings_total_paid_amount_using_pharmacy', 'billings_total_paid_amount_using_concession'];
                     $parent_fields = [
                         'sale_id' => 'sale_id',
                         'bill_no' => 'bill_no',
