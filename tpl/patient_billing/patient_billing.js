@@ -406,6 +406,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                     function (response) {
                         $scope.pharmacy_charge = response.sale;
                         $scope.pharmacy_bill = response.billing;
+                        $scope.pharmacy_concession = response.pharmacy_concession;
                         $scope.logged_tenant_id = response.logged_tenant;
                         var grandTotal = 0;
                         angular.forEach($scope.pharmacy_charge, function (obj) {
@@ -415,6 +416,11 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                         var grandTotal = 0;
                         angular.forEach($scope.pharmacy_bill, function (obj) {
                             grandTotal += $scope.parseFloatIgnoreCommas(obj.sale_details.billings_total_paid_amount_using_pharmacy);
+                            obj.net_amount = grandTotal;
+                        });
+                        var grandTotal = 0;
+                        angular.forEach($scope.pharmacy_concession, function (obj) {
+                            grandTotal += $scope.parseFloatIgnoreCommas(obj.sale_details.billings_total_paid_amount_using_concession);
                             obj.net_amount = grandTotal;
                         });
                     }

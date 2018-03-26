@@ -2588,7 +2588,19 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-
+            
+            //Patient Billing Room Concession
+            .state('patient.pharmacyConcession', {
+                url: '/pharmacyConcession/{id}/{enc_id}',
+                templateUrl: 'tpl/patient_billing/pharmacy_concession.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_billing/pharmacy_concession.js?v=' + APP_VERSION]);
+                        }]
+                }
+            })
+            
             //Patient Billing Room Concession
             .state('patient.timeLine', {
                 url: '/timeLine/{id}',
