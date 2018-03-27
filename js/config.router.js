@@ -2588,7 +2588,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Patient Billing Room Concession
             .state('patient.pharmacyConcession', {
                 url: '/pharmacyConcession/{id}/{enc_id}',
@@ -2600,7 +2600,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
-            
+
             //Patient Billing Room Concession
             .state('patient.timeLine', {
                 url: '/timeLine/{id}',
@@ -2847,12 +2847,15 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 url: '/editDocument/{id}/{doc_id}/{document}',
                 templateUrl: 'tpl/patient_documents/update.html',
                 resolve: {
-                    deps: ['uiLoad',
-                        function (uiLoad) {
-                            return uiLoad.load([
-                                'ckeditor/ckeditor.js?v=' + APP_VERSION,
-                                'tpl/patient_documents/patient_documents.js?v=' + APP_VERSION
-                            ]);
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load([
+                                                'ckeditor/ckeditor.js?v=' + APP_VERSION,
+                                                'tpl/patient_documents/patient_documents.js?v=' + APP_VERSION]);
+                                    }
+                            );
                         }]
                 }
             })

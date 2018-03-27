@@ -501,6 +501,23 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
         }
 
+        $scope.updatePastmedical = function ($data, past_medical_id) {
+            angular.extend($data, {
+                pat_past_medical_id: past_medical_id,
+            });
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/patientprescription/updatepastmedical',
+                data: $data,
+            }).success(
+                    function (response) {
+                        $timeout(function () {
+                            $state.go($state.current, {}, {reload: true});
+                        }, 1000)
+                    }
+            );
+        }
+
         $("body").on("click", ".MCHaddMore", function () {
             if (!jQuery.isEmptyObject($scope.encounter)) {
                 $scope.spinnerbar('show');
