@@ -309,7 +309,7 @@ class PharmacysaleController extends ActiveController {
         $get = Yii::$app->getRequest()->get();
         $sale = PhaSale::find()
                 ->andWhere(['!=', 'payment_status', 'C'])
-                ->where(['encounter_id' => $get['encounter_id']])
+                ->andWhere(['encounter_id' => $get['encounter_id']])
                 ->orderBy(['sale_id' => SORT_DESC])
                 ->all();
         return ['sale' => $sale];
