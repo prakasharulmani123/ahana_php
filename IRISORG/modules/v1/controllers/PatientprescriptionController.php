@@ -1355,4 +1355,34 @@ class PatientprescriptionController extends ActiveController {
         }
     }
 
+    public function actionUpdatepastmedical() {
+        $post = Yii::$app->getRequest()->post();
+        if (!empty($post)) {
+            $model = PatPastMedical::find()
+                    ->joinWith(['patDocuments'])
+                    ->where(['pat_past_medical_id' => $post['pat_past_medical_id']])
+                    ->one();
+            $model->past_medical = $post['past_medical'];
+            $model->save(FALSE);
+            $this->replaceTextareavalue($post['past_medical'], $model->patDocuments->xml_path);
+            return ['success' => true];
+        } else {
+            return ['success' => false];
+        }
+    }
+
+    protected function replaceTextareavalue($textareaValue, $file) {
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@id='past_medical_notes']";
+        $xml = simplexml_load_file($file, null, LIBXML_NOERROR);
+        $targets = $xml->xpath($xpath);
+        if (!empty($targets)) {
+            foreach ($targets as $key => $value) {
+                unset($value->VALUE);
+                $value->addChild('VALUE');
+                $this->addCData($textareaValue, $value->VALUE);
+            }
+        }
+        $xml->asXML($file);
+    }
+
 }
