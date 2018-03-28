@@ -189,20 +189,20 @@ class PharmacyproductController extends ActiveController {
 //        Count batch details value
         $count = $modelClass::find()->joinWith($relations)->tenant()->status();
         if ($condition) {
-            $count->andWhere(['pha_product_batch.batch_no'=>$condition]);
+            $count->andWhere(['pha_product_batch.batch_no' => $condition]);
         }
         if ($filters) {
             $count->andFilterWhere($filters);
         }
         $totalCount = $count->count();
-        
+
         //Fetch the batch details result
         $result = $modelClass::find()
                 ->joinWith($relations)
                 ->tenant()
                 ->status();
         if ($condition) {
-            $result->andWhere(['pha_product_batch.batch_no'=>$condition]);
+            $result->andWhere(['pha_product_batch.batch_no' => $condition]);
         }
         if ($filters) {
             $result->andFilterWhere($filters);
@@ -210,9 +210,9 @@ class PharmacyproductController extends ActiveController {
         $result->limit($get['pageSize'])
                 ->offset($offset);
 
-        
+
         $productLists = $result->all();
-        
+
         return ['success' => true, 'productLists' => $productLists, 'totalCount' => $totalCount];
     }
 
@@ -338,7 +338,7 @@ class PharmacyproductController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
         $appConfiguration = AppConfiguration::find()
-                ->andWhere(['<>','value', '0'])
+                ->andWhere(['<>', 'value', '0'])
                 ->andWhere(['tenant_id' => $tenant_id, 'code' => 'PB'])
                 ->one();
         if (!empty($appConfiguration)) {
@@ -417,6 +417,7 @@ class PharmacyproductController extends ActiveController {
                     ORDER BY a.product_name
                     LIMIT 0,:limit", [':limit' => $limit, ':tenant_id' => $tenant_id, ':product_id' => $post['product_id']]
             );
+            $products = $command->queryAll();
         } else {
             //Retrieve (product || generic || drug)
             $command = $this->_connection->createCommand("
@@ -445,8 +446,36 @@ class PharmacyproductController extends ActiveController {
                     ORDER BY a.product_name
                     LIMIT 0,:limit", [':search_text' => $like_text_search, ':limit' => $limit, ':tenant_id' => $tenant_id]
             );
+            $products = $command->queryAll();
+            if (empty($products)) {
+                $command = $this->_connection->createCommand("
+                    SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name,
+                    CONCAT(
+                        IF(b.generic_name IS NOT NULL, b.generic_name, ''),
+                        IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
+                        IF(a.product_unit_count IS NOT NULL, CONCAT(' ', a.product_unit_count), ''),
+                        IF(a.product_unit IS NOT NULL, CONCAT(' ', a.product_unit), '')
+                    ) AS prescription, '' as selected, a.product_description_id,
+                    (
+                        SELECT IF(SUM(d.available_qty) IS NOT NULL, SUM(d.available_qty), 0)
+                        FROM pha_product_batch d
+                        WHERE d.tenant_id = a.tenant_id
+                        AND d.product_id = a.product_id
+                    ) as available_quantity
+                    FROM pha_product a
+                    LEFT OUTER JOIN pha_generic b
+                    ON b.generic_id = a.generic_id
+                    LEFT OUTER JOIN pha_drug_class c
+                    ON c.drug_class_id = a.drug_class_id
+                    WHERE (a.tenant_id = :tenant_id AND a.status='1' AND SOUNDEX(a.product_name) LIKE SOUNDEX(:search_text))
+                    $filter_query
+                    ORDER BY a.product_name
+                    LIMIT 0,:limit", [':search_text' => $like_text_search, ':limit' => $limit, ':tenant_id' => $tenant_id]
+                );
+                $products = $command->queryAll();
+            }
         }
-        $products = $command->queryAll();
+
         return $products;
     }
 
@@ -604,7 +633,8 @@ class PharmacyproductController extends ActiveController {
         return $routes;
     }
 
-    /* NOT NEED*/
+    /* NOT NEED */
+
     private function _getFrequencies($text, $tenant_id, $limit) {
         $post = Yii::$app->getRequest()->post();
         $frequencies = [];
@@ -754,7 +784,7 @@ class PharmacyproductController extends ActiveController {
 
     public function actionGetbatchlists() {
         //$list = PhaProductBatch::find()->status()->active()->select('batch_no','expiry_date','available_qty')->distinct()->all();
-        $list = PhaProductBatch::find()->status()->active()->select(['batch_no','expiry_date','available_qty'])->distinct()->all();
+        $list = PhaProductBatch::find()->status()->active()->select(['batch_no', 'expiry_date', 'available_qty'])->distinct()->all();
         return $list;
 //        echo 'asdasa'; die;
     }
