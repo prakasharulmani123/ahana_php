@@ -272,6 +272,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 //For Form
         $scope.initForm = function () {
             $scope.loadPrevPrescriptionsList();
+            $scope.getFav();
             if (localStorage.getItem("Show_available_medicine") === null) {
                 $scope.available_medicine = '0';
                 localStorage.setItem("Show_available_medicine", '0');
@@ -773,8 +774,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 });
                 $scope.pres_status = 'current';
                 $("#current_prescription").focus();
-                toaster.clear();
-                toaster.pop('success', '', 'Medicine has been added to the current prescription');
+                //toaster.clear();
+                //toaster.pop('success', '', 'Medicine has been added to the current prescription');
+                $scope.msg.successMessage = "Medicine has been added to the current prescription";
             }
         }
 
@@ -798,8 +800,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 });
                 $scope.pres_status = 'current';
                 $("#current_prescription").focus();
-                toaster.clear();
-                toaster.pop('success', '', 'Medicine has been added to the represcribe');
+                //toaster.clear();
+                //toaster.pop('success', '', 'Medicine has been added to the represcribe');
+                $scope.msg.successMessage = "Medicine has been added to the represcribe";
             }
         }
 
@@ -966,8 +969,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     $timeout(function () {
                         $scope.setFocus('route', $scope.data.prescriptionItems.length - 1);
                     });
-                    toaster.clear();
-                    toaster.pop('success', 'Favourite', 'Medicine has been added to the current prescription');
+                    //toaster.clear();
+                    //toaster.pop('success', 'Favourite', 'Medicine has been added to the current prescription');
+                    $scope.msg.successMessage = "Medicine has been added to the current prescription";
                 });
             }
         });
