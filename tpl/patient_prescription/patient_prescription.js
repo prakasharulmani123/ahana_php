@@ -208,7 +208,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             } else {
                 $scope.data.prescriptionItems[key].number_of_days = '';
             }
-            
+
 //            if (days == 0) {
 //                $scope.data.prescriptionItems[key].available_quantity = 0;
 //            }
@@ -225,13 +225,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     editableValue.scope.$data = $scope.data.prescriptionItems[key].qty;
                 }
             });
-            
+
             //Bc-179 Dropdown - Qty 
             angular.forEach(tableform.$editables, function (editableValue, editableKey) {
                 if (editableValue.attrs.eIndex == key && editableValue.attrs.eName == 'product_id') {
                     var options = editableValue.inputEl[0].childNodes;
                     angular.forEach(options, function (optionValue, optionKey) {
-                        if(parseFloat(optionValue.dataset.availablequantity) < parseFloat($scope.data.prescriptionItems[key].qty) )
+                        if (parseFloat(optionValue.dataset.availablequantity) < parseFloat($scope.data.prescriptionItems[key].qty))
                             optionValue.className = 'out-of-stock';
                         else
                             optionValue.className = 'in-stock';
@@ -244,13 +244,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.data.prescriptionItems[key].total = $scope.calculate_price(qty, item.price);
                 $scope.data.prescriptionItems[key].in_stock = (parseInt(item.available_quantity) >= parseInt(qty));
             }
-            
+
             //Bc-179 Dropdown - Qty 
             angular.forEach(tableform.$editables, function (editableValue, editableKey) {
                 if (editableValue.attrs.eIndex == key && editableValue.attrs.eName == 'product_id') {
                     var options = editableValue.inputEl[0].childNodes;
                     angular.forEach(options, function (optionValue, optionKey) {
-                        if(parseFloat(optionValue.dataset.availablequantity) < parseFloat(qty) )
+                        if (parseFloat(optionValue.dataset.availablequantity) < parseFloat(qty))
                             optionValue.className = 'out-of-stock';
                         else
                             optionValue.className = 'in-stock';
@@ -1681,7 +1681,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 //Scroll dropdown when key up / down
                 $timeout(function () {
                     var selected_li = $('ul.search-patientcont-header li.selected');
-                    $('ul.search-patientcont-header')[0].scrollTop = selected_li.index() * selected_li.outerHeight();
+                    if (selected_li.index() < 12) {
+                        var selected_ind = 0;
+                    } else {
+                        var selected_ind = selected_li.index() - 12;
+                    }
+                    $('ul.search-patientcont-header')[0].scrollTop = selected_ind * selected_li.outerHeight();
                 });
                 var a = $("#prescriptioncont-header .selected a");
                 if (a.length > 0) {
