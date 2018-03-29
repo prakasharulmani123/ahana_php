@@ -1163,6 +1163,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.data = response;
+                        $scope.data.payment_mode = response.billing_payment_mode;
 //                        $scope.data.patient_name = response.patient.fullname;
                         $scope.data.patient_guid = response.patient.patient_guid;
                         $scope.getConsultantDetail($scope.data.consultant_id);
