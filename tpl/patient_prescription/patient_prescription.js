@@ -2862,6 +2862,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.initmedicalhistory = function () {
             $scope.getAllPastmedical();
+            $scope.getMCHdocument();
             $scope.getDocumentType(function (doc_type_response) {
                 if (doc_type_response.success == false) {
                     alert("Sorry, you can't create a document");
@@ -2888,6 +2889,44 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     }, true);
                 }
             });
+        }
+
+        $scope.getMCHdocument = function () {
+            $scope.data.current_mch_id = '';
+            $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getmchdocument?patient_id=' + $state.params.id)
+                    .success(function (pastmedical) {
+                        $scope.MCHdocument = pastmedical.result;
+                    })
+                    .error(function () {
+                        $scope.errorData = "An Error has occured while loading patient medical history!";
+                    });
+        }
+
+        $scope.getdocumentdetails = function () {
+            $scope.view_xml = '';
+            if ($scope.data.current_mch_id) {
+                $scope.getDocumentType(function (doc_type_response) {
+                    if (doc_type_response.success == false) {
+                        $scope.isLoading = false;
+                        alert("Sorry, you can't view a document");
+                        $state.go("patient.document", {id: $state.params.id});
+                    } else {
+                        $scope.viewxslt = doc_type_response.result.document_out_xslt;
+                        $scope.getDocument($scope.data.current_mch_id, function (pat_doc_response) {
+                            $scope.encounter = {encounter_id: pat_doc_response.result.encounter_id};
+                            $scope.test_view_xml = pat_doc_response.result.document_xml;
+                            $scope.loadResultFromDatabase($scope.test_view_xml, function (resultxml) {
+                                $scope.loadVitalsFromDatabase(resultxml, false, function (newxml) {
+                                    $scope.view_xml = newxml;
+                                    $timeout(function () {
+                                        $scope.setRefferedBy();
+                                    }, 100);
+                                });
+                            });
+                        });
+                    }
+                });
+            }
         }
 
         $scope.getAllPastmedical = function () {
@@ -3015,6 +3054,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.Updatemedicaldocument = function (doc_id) {
             $scope.getAllPastmedical();
+            $scope.getMCHdocument();
             $scope.getDocumentType(function (doc_type_response) {
                 if (doc_type_response.success == false) {
                     $scope.isLoading = false;
@@ -3338,6 +3378,17 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $('#date_name').html(output);
                 $('#time').html(time);
             }, 100);
+        }
+
+        $scope.updatePastmedical = function ($data, past_medical_id) {
+            angular.extend($data, {
+                pat_past_medical_id: past_medical_id,
+            });
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/patientprescription/updatepastmedical',
+                data: $data,
+            });
         }
 
 // Prescription - Frequency Tab Navigation.
