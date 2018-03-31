@@ -1385,4 +1385,24 @@ class PatientprescriptionController extends ActiveController {
         $xml->asXML($file);
     }
 
+    public function actionGetmchdocument() {
+        $get = Yii::$app->getRequest()->get();
+        if (isset($get['patient_id'])) {
+            $patient = PatPatient::getPatientByGuid($get['patient_id']);
+            $all_patient_id = PatPatient::find()
+                    ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                    ->where(['patient_global_guid' => $patient->patient_global_guid])
+                    ->one();
+            $details = PatDocuments::find()
+                    ->joinWith(['docType'])
+                    ->andWhere("patient_id IN ($all_patient_id->allpatient)")
+                    ->andWhere(["pat_document_types.doc_type" => "MCH"])
+                    ->orderBy(['doc_id' => SORT_DESC])
+                    ->all();
+            return ['success' => true, 'result' => $details];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
+
 }
