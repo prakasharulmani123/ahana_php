@@ -2920,6 +2920,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                     $scope.view_xml = newxml;
                                     $timeout(function () {
                                         $scope.setRefferedBy();
+                                        $scope.checkmedicalcaseemptyrow('print_medical_case');
                                     }, 100);
                                 });
                             });

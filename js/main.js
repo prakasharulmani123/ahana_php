@@ -1610,6 +1610,12 @@ angular.module('app')
                         });
                         $("tr:empty").remove(); //Remove Empty table tr
                         //Removed empty icd code row
+                        $("#TBicdcode tbody tr td").each(function () {
+                            var cellText = $.trim($(this).text());
+                            if (cellText.length == 0) {
+                                $(this).parent().remove();
+                            }
+                        });
                         var icd_code = $('#TBicdcode tbody').children().length;
                         if (icd_code == 0) {
                             $('#TBicdcode').remove();
@@ -1634,6 +1640,20 @@ angular.module('app')
                         if (past_medical == 1) {
                             $('#past_medical_history').remove();
                         }
+
+                        $(".header2").each(function () {
+                            if ($(this).text() == 'Personal History') {
+                                var header_class = $(this).next('div').text();
+                                if (header_class == 'Physical Examination') {
+                                    $(this).remove();
+                                }
+                            } else if ($(this).text() == 'Informant') {
+                                var header_class = $(this).next('div').text();
+                                if(header_class.length == 0) {
+                                    $(this).remove();
+                                }
+                            }
+                        });
                     });
                 }
 
