@@ -1081,7 +1081,7 @@
                                                         </footer>
                                                     </div>
                                                     <div class="col-sm-6">
-                                                        <select class="form-control" ng-model="data.current_mch_id" ng-options="MCHdocuments.doc_id as MCHdocuments.document_details for MCHdocuments in MCHdocument| orderBy: doc_id" ng-change="getdocumentdetails()">
+                                                        <select class="form-control" ng-model="data.current_mch_id" ng-options="MCHdocuments.doc_id as MCHdocuments.document_details for MCHdocuments in MCHdocument| orderBy: '-doc_id'" ng-change="getdocumentdetails()">
                                                             <option value="">Select Medical Case History</option>
                                                         </select>
                                                         <table id='print_medical_case' style="width:100%">
