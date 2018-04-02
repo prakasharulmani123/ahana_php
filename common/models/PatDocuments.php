@@ -349,7 +349,7 @@ class PatDocuments extends RActiveRecord {
     }
     
     public function getDocumentFulldetails($model) {
-        return ucwords("{$this->doc_id} [" . date('d/m/Y', strtotime($this->created_at)) . " | {$model->tenant->tenant_name}]");
+        return ucwords("{$this->encounter_id} [" . date('d/m/Y', strtotime($this->created_at)) . " | {$model->tenant->tenant_name}]");
     }
 
 }
