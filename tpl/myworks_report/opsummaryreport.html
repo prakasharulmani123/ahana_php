@@ -212,7 +212,7 @@
 <!--                        <tr ng-repeat="(statusDate, record) in records | groupBy: 'status_date'" >-->
                             <td>{{record[0].branch_name}}</td>
                             <td>{{record[0].consultant_name}}</td>
-                            <td>{{statusDate}}</td>
+                            <td>{{record[0].status_date}}</td>
                             <td data-type="Number">
                                 <span ng-repeat="(key, bran) in record" ng-init="row_total_new = parseFloat(bran.amount);
                                                                         branchwise_new.total = branchwise_new.total + row_total_new;">
