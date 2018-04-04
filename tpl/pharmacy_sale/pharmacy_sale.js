@@ -951,7 +951,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             // Bill Amount = (Total Amount - Discount Amount) +- RoundOff
             var total_bill_amount = parseFloat(after_discount_item_amount) + parseFloat(welfare);
             bill_amount = Math.round(total_bill_amount);
-            roundoff_amount = Math.abs(bill_amount - total_bill_amount);
+            //roundoff_amount = Math.abs(bill_amount - total_bill_amount);
+            roundoff_amount = bill_amount - total_bill_amount;
 
             $scope.data.roundoff_amount = roundoff_amount.toFixed(2);
             $scope.data.bill_amount = bill_amount.toFixed(2);
