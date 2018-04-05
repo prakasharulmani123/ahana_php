@@ -143,4 +143,27 @@ class PharmacysalebillingController extends ActiveController {
         }
     }
 
+    public function actionOverallincome() {
+        $post = Yii::$app->getRequest()->post();
+        if (!empty($post)) {
+            $sale = PhaSaleBilling::find()
+                    ->andWhere("paid_date between '{$post['from']}' AND '{$post['to']}'")
+                    ->andWhere(['tenant_id' => $post['tenant_id']])
+                    ->all();
+            $ip_income = \common\models\PatBillingPayment::find()
+                    ->active()
+                    ->andWhere("payment_date between '{$post['from']}' AND '{$post['to']}'")
+                    ->andWhere(['tenant_id' => $post['tenant_id']])
+                    ->all();
+            $op_income = \common\models\PatConsultant::find()
+                    ->active()
+                    ->andWhere("consult_date between '{$post['from']}' AND '{$post['to']}'")
+                    ->andWhere(['tenant_id' => $post['tenant_id']])
+                    ->all();
+            return ['sale' => $sale, 'ip_income' => $ip_income,'op_income'=> $op_income,'success' => true];
+        } else {
+            return ['success' => false];
+        }
+    }
+
 }
