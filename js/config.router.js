@@ -2415,6 +2415,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
 
+            //Patient Overall Report
+            .state('pharmacy.overallincome', {
+                url: '/overallIncomeReport',
+                templateUrl: 'tpl/pharmacy_report/overallincomeReport.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_report/overallincomeReport.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
+
             //PHARMACY PATIENT GROUP
             .state('configuration.patientgroupassign', {
                 url: '/patientgroupassign',
@@ -2852,8 +2868,8 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
                                     function () {
                                         return $ocLazyLoad.load([
-                                                'ckeditor/ckeditor.js?v=' + APP_VERSION,
-                                                'tpl/patient_documents/patient_documents.js?v=' + APP_VERSION]);
+                                            'ckeditor/ckeditor.js?v=' + APP_VERSION,
+                                            'tpl/patient_documents/patient_documents.js?v=' + APP_VERSION]);
                                     }
                             );
                         }]
