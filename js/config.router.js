@@ -2417,7 +2417,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
 
             //Patient Overall Report
             .state('pharmacy.overallincome', {
-                url: '/overallIncomeReport',
+                url: '/overallincome',
                 templateUrl: 'tpl/pharmacy_report/overallincomeReport.html',
                 resolve: {
                     deps: ['$ocLazyLoad',
