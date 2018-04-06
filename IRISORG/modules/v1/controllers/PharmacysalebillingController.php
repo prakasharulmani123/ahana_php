@@ -157,8 +157,10 @@ class PharmacysalebillingController extends ActiveController {
                     ->all();
             $op_income = \common\models\PatConsultant::find()
                     ->active()
+                    ->joinWith(['encounter'])
+                    ->andWhere(["pat_encounter.encounter_type" => 'OP'])
                     ->andWhere("consult_date between '{$post['from']}' AND '{$post['to']}'")
-                    ->andWhere(['tenant_id' => $post['tenant_id']])
+                    ->andWhere(['pat_consultant.tenant_id' => $post['tenant_id']])
                     ->all();
             return ['sale' => $sale, 'ip_income' => $ip_income,'op_income'=> $op_income,'success' => true];
         } else {
