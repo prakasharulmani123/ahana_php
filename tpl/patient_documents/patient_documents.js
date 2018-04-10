@@ -1276,10 +1276,12 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         });
 
         $scope.openModel = function (size, ctrlr, tmpl, update_col, doc_id, doc_name, encounter_id, date_time) {
+            $scope.popupLoading = true;
             $http.get($rootScope.IRISOrgServiceUrl + "/patientscanneddocuments/getscanneddocument?id=" + doc_id + "&doc_name=" + doc_name + "&encounter_id=" + encounter_id + "&date_time=" + date_time)
                     .success(function (response) {
                         if (response.success === true) {
                             $scope.scan_document = response.result;
+                            $scope.popupLoading = false;
                         } else {
                             $scope.errorData = response.message;
                         }
