@@ -971,3 +971,7 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
     background-repeat: no-repeat;
     background-position: 50%;
 }
+
+.ng-camera-overlay {
+    width: 100%;
+}
