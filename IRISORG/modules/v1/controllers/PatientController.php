@@ -126,6 +126,12 @@ class PatientController extends ActiveController {
                 }
 
                 $updated_patient = PatPatient::find()->where(['patient_id' => $model->patient_id])->one();
+                
+                //Patient Image save - By Nad.
+                $filename = $this->convertBlobToFile($post['PatPatient']['patient_img_url'], $updated_patient);
+                $updated_patient->patient_image = $filename;
+                $updated_patient->save(false);
+                $updated_patient->refresh();
 
                 return ['success' => true, 'patient_id' => $model->patient_id, 'patient_guid' => $model->patient_guid, 'patient' => $updated_patient];
             } else {
