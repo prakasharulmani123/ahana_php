@@ -255,6 +255,18 @@ class AppConfiguration extends RActiveRecord {
                 'code' => 'BMI',
                 'value' => '1',
                 'notes' => 'Show BMI field in vital form',
+            ],
+            'Page Size' => [
+                'group' => 'op_bill_print',
+                'code' => 'PS',
+                'value' => 'A5',
+                'notes' => 'Change OP bill page size',
+            ],
+            'Page Layout' => [
+                'group' => 'op_bill_print',
+                'code' => 'PL',
+                'value' => 'A5',
+                'notes' => 'Change OP bill page layout',
             ]
         );
     }
