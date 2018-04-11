@@ -359,6 +359,14 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
         }
 
         $scope.opBillPrint = function (printData) {
+            $scope.op_print = {};
+            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=op_bill_print&addtfields=pres_configuration')
+                    .success(function (response) {
+                        angular.forEach(response, function (row) {
+                            var listName = row.code;
+                            $scope.op_print[listName] = row.value;
+                        });
+                    })
             $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
             var print_content = $scope.printContent(printData);
             if ($scope.duplicate_copy) {
@@ -379,8 +387,8 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                         },
                         //pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 50 : 50),
                         pageMargins: [20, 20, 20, 48],
-                        pageSize: 'A5',
-                        pageOrientation: 'landscape',
+                        pageSize: $scope.op_print.PS,
+                        pageOrientation: $scope.op_print.PL,
                     };
                     var pdf_document = pdfMake.createPdf(docDefinition);
                     var doc_content_length = Object.keys(pdf_document).length;

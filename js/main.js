@@ -1047,6 +1047,14 @@ angular.module('app')
                     return dataURL;
                 }
                 $scope.opBillPrint = function (printData) {
+                    $scope.op_print = {};
+                    $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=op_bill_print&addtfields=pres_configuration')
+                            .success(function (response) {
+                                angular.forEach(response, function (row) {
+                                    var listName = row.code;
+                                    $scope.op_print[listName] = row.value;
+                                });
+                            })
                     $timeout(function () {
                         $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
                         var print_content = $scope.printContent(printData);
@@ -1067,8 +1075,8 @@ angular.module('app')
                                 },
                                 //pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 50 : 50),
                                 pageMargins: [20, 20, 20, 48],
-                                pageSize: 'A5',
-                                pageOrientation: 'landscape',
+                                pageSize: $scope.op_print.PS,
+                                pageOrientation: $scope.op_print.PL,
                             };
                             var pdf_document = pdfMake.createPdf(docDefinition);
                             var doc_content_length = Object.keys(pdf_document).length;
@@ -1649,7 +1657,7 @@ angular.module('app')
                                 }
                             } else if ($(this).text() == 'Informant') {
                                 var header_class = $(this).next('div').text();
-                                if(header_class.length == 0) {
+                                if (header_class.length == 0) {
                                     $(this).remove();
                                 }
                             }
