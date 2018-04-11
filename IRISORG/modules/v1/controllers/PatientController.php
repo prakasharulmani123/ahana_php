@@ -148,6 +148,7 @@ class PatientController extends ActiveController {
             $lists = PatPatient::find()
                     ->andWhere([
                         'pat_patient.tenant_id' => $tenant_id,
+                        'pat_patient.status' => '1'
 //                        'pat_patient.deleted_at' => '0000-00-00 00:00:00',
 //                        'pat_global_patient.parent_id' => NULL
                     ])
