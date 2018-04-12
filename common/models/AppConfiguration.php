@@ -267,6 +267,12 @@ class AppConfiguration extends RActiveRecord {
                 'code' => 'PL',
                 'value' => 'A5',
                 'notes' => 'Change OP bill page layout',
+            ],
+            'Prescription top margin' => [
+                'group' => 'prescription_print',
+                'code' => 'PMT',
+                'value' => '46',
+                'notes' => 'MM',
             ]
         );
     }
