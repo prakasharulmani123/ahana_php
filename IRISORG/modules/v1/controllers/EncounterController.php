@@ -383,6 +383,14 @@ class EncounterController extends ActiveController {
                 $filterQuery1 = "";
             }
         }
+        if (is_numeric(@$params['cid']) && @$params['cid'] > 0) {
+            $groupQuery = "";
+            $consultant_id = @$params['cid'];
+            $consultantQuery = "AND a.consultant_id = '$consultant_id'";
+        } else {
+            $groupQuery = 'GROUP BY a.consultant_id';
+            $consultantQuery = '';
+        }
 
 
         $command = $connection->createCommand("SELECT a.consultant_id, CONCAT(c.title_code,c.name) as consultant_name,
@@ -429,10 +437,10 @@ class EncounterController extends ActiveController {
                 JOIN co_user c ON c.user_id = a.consultant_id
                 WHERE a.tenant_id = :tid
                 AND b.encounter_type = :ptype
-                $filterQuery1
+                $filterQuery1 $consultantQuery
                 AND b.status IN ($eStatus)
                 AND DATE(b.encounter_date) {$dtop} :enc_date
-                GROUP BY a.consultant_id", [':enc_date' => $params['date'], ':tid' => $params['tenant_id'], ':ptype' => 'OP']);
+                $groupQuery", [':enc_date' => $params['date'], ':tid' => $params['tenant_id'], ':ptype' => 'OP']);
 
         $counts = $command->queryAll(\PDO::FETCH_OBJ);
         if ($counts) {
