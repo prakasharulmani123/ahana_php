@@ -335,7 +335,7 @@ angular.module('app')
                     if (user.credentials.user_timeout) {
                         Idle.setIdle(user.credentials.user_timeout * 60);
                     } else {
-                        Idle.setIdle(3600);
+                        Idle.unwatch();
                     }
                 };
 

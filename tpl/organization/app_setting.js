@@ -710,7 +710,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             $scope.session_timeout = time_sess.toString();
         }
 
-        $scope.updateTimeout = function () {
+        $scope.updateTimeout = function (a) {
             var data = {};
             //$localStorage.user.credentials.user_timeout = $scope.session_timeout;
             $scope.errorData = "";
@@ -718,7 +718,9 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 
             $scope.loadbar('show');
             data.user_session_timeout = $scope.session_timeout;
-
+            if (a) {
+                data.user_session_timeout = $scope.session_timeout = '';
+            }
             $http({
                 method: 'POST',
                 url: $rootScope.IRISOrgServiceUrl + '/user/changeusertimeout',
