@@ -47,6 +47,7 @@
         function ClearCredentials(state_name, state_params) {
             $localStorage.$reset({
                 system_tenant: $localStorage.system_tenant,
+                system_tenant_id: $localStorage.system_tenant_id,
                 system_username: $localStorage.system_username,
                 system_stay_logged_in: $localStorage.system_stay_logged_in,
                 system_state_name: state_name,

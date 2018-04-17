@@ -58,7 +58,9 @@ function SignInForm($scope, $state, AuthenticationService, $http, $rootScope, $l
             if (response.success) {
                 Idle.watch();
                 AuthenticationService.setCurrentUser(response, $scope.user.stay_logged_in);
-                $localStorage.system_tenant = $scope.user.tenant_id;
+//                $localStorage.system_tenant = $scope.user.tenant_id; //Hide by Nad. Bc-187 Cache Login
+                $localStorage.system_tenant = $scope.tenants[$scope.user.tenant_id];
+                $localStorage.system_tenant_id = $scope.user.tenant_id;
                 $localStorage.system_stay_logged_in = $scope.user.stay_logged_in;
                 
                 var previous_login_username = $localStorage.system_username;
