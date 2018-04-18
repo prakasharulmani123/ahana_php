@@ -412,7 +412,7 @@ class PharmacyproductController extends ActiveController {
                     LEFT OUTER JOIN pha_drug_class c
                     ON c.drug_class_id = a.drug_class_id
                     WHERE a.tenant_id = :tenant_id
-                    AND a.product_id = :product_id AND a.status='1'
+                    AND a.product_id = :product_id AND a.status='1' AND a.drug_class_id IS NOT NULL
                     $filter_query
                     ORDER BY a.product_name
                     LIMIT 0,:limit", [':limit' => $limit, ':tenant_id' => $tenant_id, ':product_id' => $post['product_id']]
@@ -439,9 +439,9 @@ class PharmacyproductController extends ActiveController {
                     ON b.generic_id = a.generic_id
                     LEFT OUTER JOIN pha_drug_class c
                     ON c.drug_class_id = a.drug_class_id
-                    WHERE (a.tenant_id = :tenant_id AND a.status='1' AND CONCAT_WS(' ', TRIM(a.product_name), TRIM(a.product_unit_count), TRIM(a.product_unit)) LIKE :search_text)
-                    OR (b.tenant_id = :tenant_id AND b.generic_name LIKE :search_text)
-                    OR (c.tenant_id = :tenant_id AND c.drug_name LIKE :search_text)
+                    WHERE (a.tenant_id = :tenant_id AND a.status='1' AND a.drug_class_id IS NOT NULL AND CONCAT_WS(' ', TRIM(a.product_name), TRIM(a.product_unit_count), TRIM(a.product_unit)) LIKE :search_text)
+                    OR (b.tenant_id = :tenant_id AND a.drug_class_id IS NOT NULL AND b.generic_name LIKE :search_text)
+                    OR (c.tenant_id = :tenant_id AND a.drug_class_id IS NOT NULL AND c.drug_name LIKE :search_text)
                     $filter_query
                     ORDER BY a.product_name
                     LIMIT 0,:limit", [':search_text' => $like_text_search, ':limit' => $limit, ':tenant_id' => $tenant_id]
@@ -467,7 +467,7 @@ class PharmacyproductController extends ActiveController {
                     ON b.generic_id = a.generic_id
                     LEFT OUTER JOIN pha_drug_class c
                     ON c.drug_class_id = a.drug_class_id
-                    WHERE (a.tenant_id = :tenant_id AND a.status='1' AND SOUNDEX(a.product_name) LIKE SOUNDEX(:search_text))
+                    WHERE (a.tenant_id = :tenant_id AND a.drug_class_id IS NOT NULL AND a.status='1' AND SOUNDEX(a.product_name) LIKE SOUNDEX(:search_text))
                     $filter_query
                     ORDER BY a.product_name
                     LIMIT 0,:limit", [':search_text' => $like_text_search, ':limit' => $limit, ':tenant_id' => $tenant_id]
