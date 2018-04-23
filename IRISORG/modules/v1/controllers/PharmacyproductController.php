@@ -404,7 +404,7 @@ class PharmacyproductController extends ActiveController {
                         SELECT IF(SUM(d.available_qty) IS NOT NULL, SUM(d.available_qty), 0)
                         FROM pha_product_batch d
                         WHERE d.tenant_id = a.tenant_id
-                        AND d.product_id = a.product_id
+                        AND d.product_id = a.product_id AND d.expiry_date >= '" . date('Y-m-d') . "'
                     ) as available_quantity
                     FROM pha_product a
                     LEFT OUTER JOIN pha_generic b
@@ -432,7 +432,7 @@ class PharmacyproductController extends ActiveController {
                         SELECT IF(SUM(d.available_qty) IS NOT NULL, SUM(d.available_qty), 0)
                         FROM pha_product_batch d
                         WHERE d.tenant_id = a.tenant_id
-                        AND d.product_id = a.product_id
+                        AND d.product_id = a.product_id AND d.expiry_date >= '" . date('Y-m-d') . "' 
                     ) as available_quantity
                     FROM pha_product a
                     LEFT OUTER JOIN pha_generic b
@@ -460,7 +460,7 @@ class PharmacyproductController extends ActiveController {
                         SELECT IF(SUM(d.available_qty) IS NOT NULL, SUM(d.available_qty), 0)
                         FROM pha_product_batch d
                         WHERE d.tenant_id = a.tenant_id
-                        AND d.product_id = a.product_id
+                        AND d.product_id = a.product_id AND d.expiry_date >= '" . date('Y-m-d') . "'
                     ) as available_quantity
                     FROM pha_product a
                     LEFT OUTER JOIN pha_generic b
