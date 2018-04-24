@@ -127,7 +127,7 @@ class PharmacyproductController extends ActiveController {
         $id = $get['generic_id'];
         $available = [];
         $outofstock = [];
-        $products = PhaProduct::find()->tenant()->status()->andWhere(['generic_id' => $id])->active()->orderBy(['product_name' => SORT_ASC])->all();
+        $products = PhaProduct::find()->tenant()->status()->andWhere(['generic_id' => $id])->active()->orderBy("product_name ASC, ABS(product_unit_count) ASC")->all();
         foreach ($products as $produ) {
             if ($produ->phaProductBatchesAvailableQty == 0) {
                 $outofstock[] = $produ;
