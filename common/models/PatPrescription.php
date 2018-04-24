@@ -5,6 +5,7 @@ namespace common\models;
 use common\models\query\PatPrescriptionQuery;
 use Yii;
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "pat_prescription".
@@ -119,7 +120,7 @@ class PatPrescription extends RActiveRecord {
      * @return ActiveQuery
      */
     public function getPatPrescriptionItems() {
-        return $this->hasMany(PatPrescriptionItems::className(), ['pres_id' => 'pres_id']);
+        return $this->hasMany(PatPrescriptionItems::className(), ['pres_id' => 'pres_id'])->andWhere("pat_prescription_items.deleted_at = '0000-00-00 00:00:00'");
     }
 
     /**
@@ -199,6 +200,10 @@ class PatPrescription extends RActiveRecord {
             $activity = 'Prescription Updated Successfully (#' . $this->encounter_id . ' )';
         CoAuditLog::insertAuditLog(PhaBrand::tableName(), $this->pres_id, $activity);
         return parent::afterSave($insert, $changedAttributes);
+    }
+    
+    public function getPrescriptionItemIds() {
+        return ArrayHelper::map($this->patPrescriptionItems, 'pres_item_id', 'pres_item_id');
     }
 
 }

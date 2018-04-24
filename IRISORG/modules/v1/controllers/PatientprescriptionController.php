@@ -82,9 +82,14 @@ class PatientprescriptionController extends ActiveController {
 
     public function actionSaveprescription() {
         $post = Yii::$app->getRequest()->post();
-
         if (!empty($post) && !empty($post['prescriptionItems'])) {
             $model = new PatPrescription;
+            if (isset($post['pres_id'])) {
+                $prescription = PatPrescription::find()->tenant()->andWhere(['pres_id' => $post['pres_id']])->one();
+                if (!empty($prescription))
+                    $model = $prescription;
+            }
+
             $model->attributes = $post;
             if (!empty($post['diag_text']) && empty($model->diag_id)) {
                 $diag_model = new PatDiagnosis();
@@ -106,16 +111,34 @@ class PatientprescriptionController extends ActiveController {
             if ($valid) {
                 $model->save(false);
 
+                $item_ids = [];
                 foreach ($post['prescriptionItems'] as $key => $item) {
                     $item_model = new PatPrescriptionItems();
+                    //Edit Mode
+                    if (isset($item['pat_prescription_item'])) {
+                        $presc_item = PatPrescriptionItems::find()->tenant()->andWhere(['pres_item_id' => $item['pat_prescription_item']])->one();
+                        if (!empty($presc_item))
+                            $item_model = $presc_item;
+                    }
                     $item_model->pres_id = $model->pres_id;
                     $item_model->consultant_id = $model->consultant_id;
                     $item_model->attributes = $item;
                     $item_model->setFrequencyId($item);
                     $item_model->setRouteId();
                     $item_model->save(false);
+                    $item_ids[$item_model->pres_item_id] = $item_model->pres_item_id;
                 }
 
+                //Delete Prescription Items
+                if (!empty($item_ids)) {
+                    $delete_ids = array_diff($model->getPrescriptionItemIds(), $item_ids);
+
+                    foreach ($delete_ids as $delete_id) {
+                        $item = PatPrescriptionItems::find()->tenant()->andWhere(['pres_item_id' => $delete_id])->one();
+                        $item->remove();
+                    }
+                }
+                
                 $consult_name = '';
                 if (isset($model->consultant)) {
                     $consult_name = $model->consultant->title_code . $model->consultant->name;
