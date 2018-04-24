@@ -271,6 +271,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
 //For Form
         $scope.initForm = function () {
+            $scope.pres_id = '';
             $scope.loadPrevPrescriptionsList();
             $scope.getFav();
             if (localStorage.getItem("Show_available_medicine") === null) {
@@ -806,6 +807,82 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
         }
 
+        $scope.prescriptionEdit = function () {
+            PrescriptionService.deleteAllPrescriptionItem();
+            if ($scope.represcribeSelected > 0) {
+                var loop_total = $scope.represcribeSelectedItems.length;
+                var loop_start = 0;
+                angular.forEach($scope.represcribeSelectedItems, function (value, key) {
+                    $scope.addToPrescriptionEditList(value);
+                    loop_start = parseFloat(loop_start) + parseFloat(1);
+                    if (loop_total == loop_start) {
+                        $timeout(function () {
+                            $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+                        }, 1000);
+                        $timeout(function () {
+                            $scope.showOrhideFrequency();
+                            $scope.commonCheckAvailable();
+                        }, 2000);
+                    }
+                });
+                $scope.pres_status = 'current';
+                $("#current_prescription").focus();
+                //$scope.msg.successMessage = "Medicine has been added to the represcribe";
+            }
+        }
+
+        $scope.addToPrescriptionEditList = function (value) {
+            $scope.pres_id = value.pres_id;
+            $scope.getRelatedProducts(value.generic_id).then(function () {
+
+                if (value.food_type) {
+                    var food_type = value.food_type;
+                } else {
+                    var food_type = 'NA';
+                }
+                items = {
+                    'product_id': value.product_id,
+                    'product_name': value.product.full_name,
+                    'generic_id': value.generic_id,
+                    'generic_name': value.generic_name,
+                    'drug_class_id': value.drug_class_id,
+                    'drug_name': value.drug_name,
+                    'manual_textbox': false,
+                    'route': value.route_name,
+                    'frequency': value.frequency_name,
+                    'number_of_days': value.number_of_days,
+                    'is_favourite': 0,
+                    'food_type': food_type,
+                    'route_id': value.route_id,
+                    'description_routes': value.product.description_routes,
+                    //'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
+                    'price': value.product.latest_price,
+                    'total': $scope.calculate_price(value.quantity, value.product.latest_price),
+                    'freqMask': '9-9-9-9',
+                    'freqMaskCount': 4,
+                    'available_quantity': value.product.availableQuantity,
+                    'item_key': $scope.data.prescriptionItems.length,
+                    'all_products': $scope.products,
+                    'qty': value.quantity,
+                    'product_description_id': value.product.product_description_id,
+                    'description_name': value.product.description_name,
+                    'in_stock': (parseInt(value.product.availableQuantity) >= parseInt(qty_count)),
+                    'freqType': value.freqType,
+                    'remarks': value.remarks,
+                    'pat_prescription_item': value.pres_item_id,
+                };
+                var fav = $filter('filter')($scope.child.favourites, {product_id: value.product_id});
+                if (fav && fav.length > 0) {
+                    angular.extend(items, {is_favourite: 1});
+                }
+                //In Master table product, changed geneic and drug glass remove the product   
+                var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
+                if (chkProduct.length != 0) {
+                    PrescriptionService.addPrescriptionItem(items);
+                }
+            });
+        }
+
         $scope.addGlobalSearch = function (prescription) {
             var result = $filter('filter')($scope.data.prescriptionItems, {product_id: parseInt(prescription.product_id)}, true);
             if (result.length > 0) {
@@ -1004,14 +1081,21 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             post_url = $rootScope.IRISOrgServiceUrl + '/patientprescription/saveprescription';
             method = 'POST';
             succ_msg = 'Prescription saved successfully';
+            if ($scope.pres_id) {
+                angular.extend($scope.data, {
+                    pres_id: $scope.pres_id,
+                });
+            } else {
+                angular.extend($scope.data, {
+                    pres_date: _that.data.prescriptionItems[0].presc_date,
+                });
+            }
             if ($scope.data.next_visit)
                 $scope.data.next_visit = moment($scope.data.next_visit).format('YYYY-MM-DD');
             if (!$scope.data.diag_id)
                 $scope.data.diag_text = $scope.diagnosis;
             angular.extend($scope.data, {
-//                encounter_id: $scope.enc.selected.encounter_id,
                 patient_id: $scope.patientObj.patient_id,
-                pres_date: _that.data.prescriptionItems[0].presc_date,
             });
             angular.forEach(_that.data.prescriptionItems, function (prescriptionItem, key) {
                 if (angular.isObject(prescriptionItem.product_name)) {
@@ -1062,6 +1146,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             $scope.data.consultant_id = response.model.consultant_id;
                             $scope.consultant_name = response.model.consultant_name;
                             $('#diagnosis').val("");
+                            $scope.pres_id = '';
+                            $scope.represcribeSelected = [];
                             $timeout(function () {
                                 save_success(true, response);
                             });
