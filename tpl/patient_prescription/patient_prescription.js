@@ -807,12 +807,16 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
         }
 
-        $scope.prescriptionEdit = function () {
+        $scope.prescriptionEdit = function (value) {
+            $scope.editItems = [];
+            angular.forEach(value.items, function (item, key) {
+                $scope.editItems.push(item);
+            });
             PrescriptionService.deleteAllPrescriptionItem();
-            if ($scope.represcribeSelected > 0) {
-                var loop_total = $scope.represcribeSelectedItems.length;
+            if ($scope.editItems.length > 0) {
+                var loop_total = $scope.editItems.length;
                 var loop_start = 0;
-                angular.forEach($scope.represcribeSelectedItems, function (value, key) {
+                angular.forEach($scope.editItems, function (value, key) {
                     $scope.addToPrescriptionEditList(value);
                     loop_start = parseFloat(loop_start) + parseFloat(1);
                     if (loop_total == loop_start) {
@@ -1087,7 +1091,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 });
             } else {
                 angular.extend($scope.data, {
-                    pres_date: _that.data.prescriptionItems[0].presc_date,
+                    //pres_date: _that.data.prescriptionItems[0].presc_date,
+                    pres_date: moment().format('YYYY-MM-DD HH:mm:ss'),
                 });
             }
             if ($scope.data.next_visit)
