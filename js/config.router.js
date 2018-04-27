@@ -2286,6 +2286,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //PHARMACY NEW PURCHASE REPORT
+            .state('pharmacy.newPurchaseReport', {
+                url: '/newPurchaseReport',
+                templateUrl: 'tpl/pharmacy_report/newPurchaseReport.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_report/newPurchaseReport.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
 
             //Patient Pending REPORT
             .state('pharmacy.patientoutstandingReport', {
