@@ -296,6 +296,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.presc_stock_status = response.value;
                     })
 
+            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbycode?code=PB&addtfields=pres_configuration')
+                    .success(function (response) {
+                        $scope.pharmacy_tenant = response.value;
+                    })
+
             $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=prescription_tab&addtfields=pres_configuration')
                     .success(function (response) {
                         angular.forEach(response, function (row) {
@@ -531,7 +536,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     .success(function (products) {
                         $scope.all_products = products;
                     });
-            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getgenericlistbydrugclass?drug_class_id=' + drug.drug_class_id + '&addtfields=presc_search&page_action=branch_pharmacy&page_action=branch_pharmacy')
+            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getgenericlistbydrugclass?drug_class_id=' + drug.drug_class_id + '&addtfields=presc_search&page_action=branch_pharmacy')
                     .success(function (response) {
                         $scope.generics = response.genericList;
                         //Set generic_id in dropdown list
@@ -786,24 +791,28 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             if ($scope.represcribeSelected > 0) {
                 var loop_total = $scope.represcribeSelectedItems.length;
                 var loop_start = 0;
-                angular.forEach($scope.represcribeSelectedItems, function (value, key) {
-                    $scope.addToPrescriptionList(value);
-                    loop_start = parseFloat(loop_start) + parseFloat(1);
-                    if (loop_total == loop_start) {
-                        $timeout(function () {
-                            $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
-                        }, 1000);
-                        $timeout(function () {
-                            $scope.showOrhideFrequency();
-                            $scope.commonCheckAvailable();
-                        }, 2000);
-                    }
-                });
-                $scope.pres_status = 'current';
-                $("#current_prescription").focus();
-                //toaster.clear();
-                //toaster.pop('success', '', 'Medicine has been added to the represcribe');
-                $scope.msg.successMessage = "Medicine has been added to the represcribe";
+                if ($scope.pharmacy_tenant != $scope.represcribeSelectedItems[0].pharmacy_tenant_id) {
+                    $scope.msg.errorMessage = "Pharmacy branch mismatch";
+                } else {
+                    angular.forEach($scope.represcribeSelectedItems, function (value, key) {
+                        $scope.addToPrescriptionList(value);
+                        loop_start = parseFloat(loop_start) + parseFloat(1);
+                        if (loop_total == loop_start) {
+                            $timeout(function () {
+                                $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+                            }, 1000);
+                            $timeout(function () {
+                                $scope.showOrhideFrequency();
+                                $scope.commonCheckAvailable();
+                            }, 2000);
+                        }
+                    });
+                    $scope.pres_status = 'current';
+                    $("#current_prescription").focus();
+                    //toaster.clear();
+                    //toaster.pop('success', '', 'Medicine has been added to the represcribe');
+                    $scope.msg.successMessage = "Medicine has been added to the represcribe";
+                }
             }
         }
 
@@ -1456,61 +1465,18 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                     var loop_total = $scope.rowCollection[0].items.length;
                                                     var loop_start = 0;
                                                     angular.forEach($scope.rowCollection[0].items, function (item, k) {
-                                                        $scope.getRelatedProducts(item.generic_id).then(function () {
-                                                            qty_count = $scope.calculate_qty(item.frequency_name, item.number_of_days, item.product.product_description_id, item.product.description_name);
-                                                            items = {
-                                                                'product_id': item.product_id,
-                                                                'product_name': item.product.full_name,
-                                                                'generic_id': item.generic_id,
-                                                                'generic_name': item.generic_name,
-                                                                'drug_class_id': item.drug_class_id,
-                                                                'drug_name': item.drug_name,
-                                                                'manual_textbox': false,
-                                                                'route': item.route_name,
-                                                                'frequency': item.frequency_name,
-                                                                'number_of_days': 0,
-                                                                'food_type': item.food_type,
-                                                                'is_favourite': 0,
-                                                                'route_id': item.route_id,
-                                                                'description_routes': item.product.description_routes,
-                                                                'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
-                                                                'price': item.product.latest_price,
-                                                                'total': $scope.calculate_price(qty_count, item.product.latest_price),
-                                                                'freqMask': '9-9-9-9',
-                                                                'freqMaskCount': 4,
-                                                                'available_quantity': item.product.availableQuantity,
-                                                                'item_key': k,
-                                                                'all_products': $scope.products,
-                                                                'qty': qty_count,
-                                                                'product_description_id': item.product.product_description_id,
-                                                                'description_name': item.product.description_name,
-                                                                'in_stock': (parseInt(item.product.availableQuantity) >= parseInt(qty_count)),
-                                                                'freqType': item.freqType
-                                                            };
-                                                            var fav = $filter('filter')($scope.child.favourites, {product_id: item.product_id});
-                                                            if (fav && fav.length > 0) {
-                                                                angular.extend(items, {is_favourite: 1});
-                                                            }
-
-                                                            //Multiple entries created, Check duplicate once again 
-                                                            var chkDuplicate = $filter('filter')(PrescriptionService.getPrescriptionItems(), {product_id: items.product_id}, true);
-
-                                                            //In Master table product, changed geneic and drug glass remove the product   
-                                                            var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
-                                                            if (chkDuplicate.length == 0 && chkProduct.length != 0) {
-                                                                PrescriptionService.addPrescriptionItem(items);
-                                                            }
+                                                        if (item.product == '-') {
+                                                            var Fields = 'full_name,description_routes,latest_price,availableQuantity,product_description_id,description_name,product_id';
+                                                            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + item.product_id + '?page_action=branch_pharmacy&fields=' + Fields)
+                                                                    .success(function (product) {
+                                                                        item.product = product;
+                                                                        loop_start = parseFloat(loop_start) + parseFloat(1);
+                                                                        $scope.previousPrescontinue(item, k, loop_start, loop_total);
+                                                                    });
+                                                        } else {
                                                             loop_start = parseFloat(loop_start) + parseFloat(1);
-                                                            if (loop_total == loop_start) {
-                                                                $timeout(function () {
-                                                                    $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
-                                                                    $scope.commonCheckAvailable();
-                                                                }, 1000);
-                                                                $timeout(function () {
-                                                                    $scope.showOrhideFrequency();
-                                                                }, 2000);
-                                                            }
-                                                        });
+                                                            $scope.previousPrescontinue(item, k, loop_start, loop_total);
+                                                        }
                                                     });
                                                 }
                                             }
@@ -1558,6 +1524,63 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.errorData = "An Error has occured while loading brand!";
                     });
         }
+
+        $scope.previousPrescontinue = function (item, k, loop_start, loop_total) {
+            $scope.getRelatedProducts(item.generic_id).then(function () {
+                qty_count = $scope.calculate_qty(item.frequency_name, item.number_of_days, item.product.product_description_id, item.product.description_name);
+                items = {
+                    'product_id': item.product_id,
+                    'product_name': item.product.full_name,
+                    'generic_id': item.generic_id,
+                    'generic_name': item.generic_name,
+                    'drug_class_id': item.drug_class_id,
+                    'drug_name': item.drug_name,
+                    'manual_textbox': false,
+                    'route': item.route_name,
+                    'frequency': item.frequency_name,
+                    'number_of_days': 0,
+                    'food_type': item.food_type,
+                    'is_favourite': 0,
+                    'route_id': item.route_id,
+                    'description_routes': item.product.description_routes,
+                    'presc_date': moment().format('YYYY-MM-DD HH:mm:ss'),
+                    'price': item.product.latest_price,
+                    'total': $scope.calculate_price(qty_count, item.product.latest_price),
+                    'freqMask': '9-9-9-9',
+                    'freqMaskCount': 4,
+                    'available_quantity': item.product.availableQuantity,
+                    'item_key': k,
+                    'all_products': $scope.products,
+                    'qty': qty_count,
+                    'product_description_id': item.product.product_description_id,
+                    'description_name': item.product.description_name,
+                    'in_stock': (parseInt(item.product.availableQuantity) >= parseInt(qty_count)),
+                    'freqType': item.freqType
+                };
+                var fav = $filter('filter')($scope.child.favourites, {product_id: item.product_id});
+                if (fav && fav.length > 0) {
+                    angular.extend(items, {is_favourite: 1});
+                }
+
+                //Multiple entries created, Check duplicate once again 
+                var chkDuplicate = $filter('filter')(PrescriptionService.getPrescriptionItems(), {product_id: items.product_id}, true);
+
+                //In Master table product, changed geneic and drug glass remove the product   
+                var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
+                if (chkDuplicate.length == 0 && chkProduct.length != 0) {
+                    PrescriptionService.addPrescriptionItem(items);
+                }
+                if (loop_total == loop_start) {
+                    $timeout(function () {
+                        $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+                        $scope.commonCheckAvailable();
+                    }, 1000);
+                    $timeout(function () {
+                        $scope.showOrhideFrequency();
+                    }, 2000);
+                }
+            });
+        };
 
         $scope.pageChanged = function (ind) {
             $scope.pageIndex = ind;
@@ -2403,10 +2426,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.vitaldisplayedCollection = [].concat($scope.vitalCollection); // displayed collection
 
             if (typeof date == 'undefined') {
-                url = $rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?page_action=branch_pharmacy&addtfields=eprvitals&only=result,actenc&patient_id=' + $state.params.id;
+                url = $rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?addtfields=eprvitals&only=result,actenc&patient_id=' + $state.params.id;
             } else {
                 date = moment(date).format('YYYY-MM-DD');
-                url = $rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?page_action=branch_pharmacy&addtfields=eprvitals&only=result,actenc&patient_id=' + $state.params.id + '&date=' + date;
+                url = $rootScope.IRISOrgServiceUrl + '/patientvitals/getpatientvitals?addtfields=eprvitals&only=result,actenc&patient_id=' + $state.params.id + '&date=' + date;
             }
 
             $http.get(url)
@@ -2433,7 +2456,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
 //Set vitals graph value
         $scope.setvitalgraph = function () {
-            url = $rootScope.IRISOrgServiceUrl + '/patientvitals/getvitalsgraph?page_action=branch_pharmacy&addtfields=eprvitals&patient_id=' + $state.params.id;
+            url = $rootScope.IRISOrgServiceUrl + '/patientvitals/getvitalsgraph?addtfields=eprvitals&patient_id=' + $state.params.id;
             $http.get(url)
                     .success(function (vitals) {
 
