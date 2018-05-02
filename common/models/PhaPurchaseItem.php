@@ -196,7 +196,7 @@ class PhaPurchaseItem extends PActiveRecord {
             'gr_num' => function($model) {
                 return (isset($model->purchase) ? $model->purchase->gr_num : '-');
             },
-            'created_by' => function ($model) {
+            'purchase_created_by' => function ($model) {
                 return $model->createdUser->name;
             },
         ];
@@ -206,7 +206,7 @@ class PhaPurchaseItem extends PActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'new_purchasereport':
-                    $addt_keys = ['invoice_date','invoice_no','supplier_name','gr_num', 'product', 'created_by'];
+                    $addt_keys = ['invoice_date','invoice_no','supplier_name','gr_num', 'product', 'purchase_created_by'];
                     $parent_fields = [
                         'quantity' => 'quantity',
                         'free_quantity' => 'free_quantity',
