@@ -5,6 +5,7 @@ namespace common\models;
 use common\models\query\PatPrescriptionItemsQuery;
 use Yii;
 use yii\db\ActiveQuery;
+use common\models\AppConfiguration;
 
 /**
  * This is the model class for table "pat_prescription_items".
@@ -145,6 +146,22 @@ class PatPrescriptionItems extends RActiveRecord {
 
     public static function find() {
         return new PatPrescriptionItemsQuery(get_called_class());
+    }
+
+    public function beforeSave($insert) {
+        if ($insert) {
+            $appConfiguration = AppConfiguration::find()
+                    ->tenant()
+                    ->andWhere(['<>', 'value', '0'])
+                    ->andWhere(['code' => 'PB'])
+                    ->one();
+            if (!empty($appConfiguration)) {
+                $this->pharmacy_tenant_id = $appConfiguration['value'];
+            } else {
+                $this->pharmacy_tenant_id = Yii::$app->user->identity->logged_tenant_id;
+            }
+        }
+        return parent::beforeSave($insert);
     }
 
     public function setFrequencyId($item) {
