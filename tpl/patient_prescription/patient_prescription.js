@@ -299,7 +299,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbycode?code=PB&addtfields=pres_configuration')
                     .success(function (response) {
                         $scope.pharmacy_tenant = response.value;
-                        if ($scope.pharmacy_tenant == 0)
+                        if ($scope.pharmacy_tenant == 0 || !$scope.pharmacy_tenant)
                             $scope.pharmacy_tenant = $scope.app.logged_tenant_id;
                     })
 
