@@ -342,7 +342,7 @@ class PharmacyproductController extends ActiveController {
         $organization = '';
         $appConfiguration = AppConfiguration::find()
                 ->andWhere(['<>', 'value', '0'])
-                ->andWhere(['tenant_id'=> $tenant_id,'code' => 'PB'])
+                ->andWhere(['tenant_id' => $tenant_id, 'code' => 'PB'])
                 ->one();
         if (!empty($appConfiguration)) {
             $tenant_id = $appConfiguration['value'];
@@ -1848,9 +1848,9 @@ class PharmacyproductController extends ActiveController {
                         ->andWhere([
                             'code' => 'PB'
                         ])->one();
-        $tenant_details = CoTenant::find()->andWhere([
-                    'pharmacy_setup' => '1'
-                ])->all();
+        $tenant_details = CoTenant::find()->andWhere(['pharmacy_setup' => '1'])
+                ->andWhere(['<>', 'tenant_id', Yii::$app->user->identity->logged_tenant_id])
+                ->all();
         return ['appConfig' => $appConfig, 'tenant_details' => $tenant_details];
     }
 
