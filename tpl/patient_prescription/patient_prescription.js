@@ -299,6 +299,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbycode?code=PB&addtfields=pres_configuration')
                     .success(function (response) {
                         $scope.pharmacy_tenant = response.value;
+                        if ($scope.pharmacy_tenant == 0)
+                            $scope.pharmacy_tenant = $scope.app.logged_tenant_id;
                     })
 
             $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=prescription_tab&addtfields=pres_configuration')
@@ -761,28 +763,30 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             if ($scope.previousPresSelected > 0) {
                 var loop_total = $scope.previousPresSelectedItems.length;
                 var loop_start = 0;
-                angular.forEach($scope.previousPresSelectedItems, function (value, key) {
-                    var result = $filter('filter')($scope.data.prescriptionItems, {product_id: value.product_id, route_id: value.route_id});
-                    if (result.length == 0) {
-                        $scope.addToPrescriptionList(value);
-                    }
+                if ($scope.pharmacy_tenant != $scope.previousPresSelectedItems[0].pharmacy_tenant_id) {
+                    $scope.msg.errorMessage = "Pharmacy branch mismatch";
+                } else {
+                    angular.forEach($scope.previousPresSelectedItems, function (value, key) {
+                        var result = $filter('filter')($scope.data.prescriptionItems, {product_id: value.product_id, route_id: value.route_id});
+                        if (result.length == 0) {
+                            $scope.addToPrescriptionList(value);
+                        }
 
-                    loop_start = parseFloat(loop_start) + parseFloat(1);
-                    if (loop_total == loop_start) {
-                        $timeout(function () {
-                            $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
-                        }, 1000);
-                        $timeout(function () {
-                            $scope.showOrhideFrequency();
-                            $scope.commonCheckAvailable();
-                        }, 2000);
-                    }
-                });
-                $scope.pres_status = 'current';
-                $("#current_prescription").focus();
-                //toaster.clear();
-                //toaster.pop('success', '', 'Medicine has been added to the current prescription');
-                $scope.msg.successMessage = "Medicine has been added to the current prescription";
+                        loop_start = parseFloat(loop_start) + parseFloat(1);
+                        if (loop_total == loop_start) {
+                            $timeout(function () {
+                                $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+                            }, 1000);
+                            $timeout(function () {
+                                $scope.showOrhideFrequency();
+                                $scope.commonCheckAvailable();
+                            }, 2000);
+                        }
+                    });
+                    $scope.pres_status = 'current';
+                    $("#current_prescription").focus();
+                    $scope.msg.successMessage = "Medicine has been added to the current prescription";
+                }
             }
         }
 
@@ -825,22 +829,26 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             if ($scope.editItems.length > 0) {
                 var loop_total = $scope.editItems.length;
                 var loop_start = 0;
-                angular.forEach($scope.editItems, function (value, key) {
-                    $scope.addToPrescriptionEditList(value);
-                    loop_start = parseFloat(loop_start) + parseFloat(1);
-                    if (loop_total == loop_start) {
-                        $timeout(function () {
-                            $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
-                        }, 1000);
-                        $timeout(function () {
-                            $scope.showOrhideFrequency();
-                            $scope.commonCheckAvailable();
-                        }, 2000);
-                    }
-                });
-                $scope.pres_status = 'current';
-                $("#current_prescription").focus();
-                //$scope.msg.successMessage = "Medicine has been added to the represcribe";
+                if ($scope.pharmacy_tenant != $scope.editItems[0].pharmacy_tenant_id) {
+                    $scope.msg.errorMessage = "Pharmacy branch mismatch";
+                } else {
+                    angular.forEach($scope.editItems, function (value, key) {
+                        $scope.addToPrescriptionEditList(value);
+                        loop_start = parseFloat(loop_start) + parseFloat(1);
+                        if (loop_total == loop_start) {
+                            $timeout(function () {
+                                $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+                            }, 1000);
+                            $timeout(function () {
+                                $scope.showOrhideFrequency();
+                                $scope.commonCheckAvailable();
+                            }, 2000);
+                        }
+                    });
+                    $scope.pres_status = 'current';
+                    $("#current_prescription").focus();
+                    //$scope.msg.successMessage = "Medicine has been added to the represcribe";
+                }
             }
         }
 
