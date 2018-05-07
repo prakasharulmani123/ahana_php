@@ -885,7 +885,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     'qty': value.quantity,
                     'product_description_id': value.product.product_description_id,
                     'description_name': value.product.description_name,
-                    'in_stock': (parseInt(value.product.availableQuantity) >= parseInt(qty_count)),
+                    'in_stock': (parseInt(value.product.availableQuantity) >= parseInt(value.quantity)),
                     'freqType': value.freqType,
                     'remarks': value.remarks,
                     'pat_prescription_item': value.pres_item_id,
@@ -1473,7 +1473,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                 });
                                                 $scope.data.prescriptionItems = typed_prescription;
                                             } else {
-                                                if ($scope.rowCollection[0].tenant_id == $scope.app.logged_tenant_id) {
+                                                if ($scope.rowCollection[0].pharmacy_tenant_id == $scope.pharmacy_tenant) {
                                                     var loop_total = $scope.rowCollection[0].items.length;
                                                     var loop_start = 0;
                                                     angular.forEach($scope.rowCollection[0].items, function (item, k) {
