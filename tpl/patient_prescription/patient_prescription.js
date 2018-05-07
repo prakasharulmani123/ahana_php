@@ -299,8 +299,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbycode?code=PB&addtfields=pres_configuration')
                     .success(function (response) {
                         $scope.pharmacy_tenant = response.value;
-                        if ($scope.pharmacy_tenant == 0 || !$scope.pharmacy_tenant)
-                            $scope.pharmacy_tenant = $scope.app.logged_tenant_id;
                     })
 
             $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=prescription_tab&addtfields=pres_configuration')
@@ -1180,6 +1178,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             }, 1000)
                         } else {
                             $scope.errorData = response.message;
+                            if (response.page_refresh) {
+                                $timeout(function () {
+                                    PrescriptionService.deleteAllPrescriptionItem();
+                                    $state.go('patient.prescription', {id: $state.params.id}, {reload: true});
+                                }, 1000)
+                            }
                         }
                     }
             ).error(function (data, status) {
