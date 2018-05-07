@@ -237,9 +237,7 @@ class UserController extends ActiveController {
         return $resources;
     }
 
-    public static function GetuserCredentials($tenant_id) {
-        $tenant = CoTenant::findOne(['tenant_id' => $tenant_id]);
-
+    public static function Setuppharmacysession($tenant_id) {
         $appConfiguration = AppConfiguration::find()
                 ->andWhere(['<>', 'value', 0])
                 ->andWhere(['tenant_id' => $tenant_id, 'code' => 'PB'])
@@ -253,7 +251,11 @@ class UserController extends ActiveController {
             Yii::$app->session['pharmacy_setup_db_username'] = $pharmacy_tenant->coOrganization->org_db_username;
             Yii::$app->session['pharmacy_setup_db_password'] = $pharmacy_tenant->coOrganization->org_db_password;
         }
+    }
 
+    public static function GetuserCredentials($tenant_id) {
+        $tenant = CoTenant::findOne(['tenant_id' => $tenant_id]);
+        self::Setuppharmacysession($tenant_id);
         $credentials = [
             'logged_tenant_id' => Yii::$app->user->identity->logged_tenant_id,
             'org' => $tenant->tenant_name,

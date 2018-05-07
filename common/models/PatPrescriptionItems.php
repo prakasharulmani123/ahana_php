@@ -157,8 +157,6 @@ class PatPrescriptionItems extends RActiveRecord {
                     ->one();
             if (!empty($appConfiguration)) {
                 $this->pharmacy_tenant_id = $appConfiguration['value'];
-            } else {
-                $this->pharmacy_tenant_id = Yii::$app->user->identity->logged_tenant_id;
             }
         }
         return parent::beforeSave($insert);

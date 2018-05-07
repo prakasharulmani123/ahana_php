@@ -346,21 +346,9 @@ class DefaultController extends Controller {
             $tenant_id = $post['branch_id'];
             $tenant = CoTenant::findOne(['tenant_id' => $tenant_id]);
 
-            $appConfiguration = AppConfiguration::find()
-                    ->andWhere(['<>', 'value', 0])
-                    ->andWhere(['tenant_id' => $tenant_id, 'code' => 'PB'])
-                    ->one();
             UserController::Clearpharmacysetupsession();
-            if (!empty($appConfiguration)) {
-                $pharmacy_tenant = CoTenant::findOne(['tenant_id' => $appConfiguration['value']]);
-                Yii::$app->session['pharmacy_setup_tenant_id'] = $appConfiguration['value'];
-                Yii::$app->session['pharmacy_setup_org_id'] = $pharmacy_tenant->coOrganization->org_id;
-                Yii::$app->session['pharmacy_setup_host_name'] = $pharmacy_tenant->coOrganization->org_db_host;
-                Yii::$app->session['pharmacy_setup_db_name'] = $pharmacy_tenant->coOrganization->org_db_pharmacy;
-                Yii::$app->session['pharmacy_setup_db_username'] = $pharmacy_tenant->coOrganization->org_db_username;
-                Yii::$app->session['pharmacy_setup_db_password'] = $pharmacy_tenant->coOrganization->org_db_password;
-            }
-
+            UserController::Setuppharmacysession($tenant_id);
+            
             if (Yii::$app->user->identity->user->tenant_id == 0) {
                 $login_details = CoLogin::findOne(['login_id' => Yii::$app->user->identity->login_id]);
                 $login_details->logged_tenant_id = $tenant_id;

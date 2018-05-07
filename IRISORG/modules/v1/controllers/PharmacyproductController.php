@@ -340,18 +340,14 @@ class PharmacyproductController extends ActiveController {
         $post = Yii::$app->getRequest()->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
         $organization = '';
-        $appConfiguration = AppConfiguration::find()
-                ->andWhere(['<>', 'value', '0'])
-                ->andWhere(['tenant_id' => $tenant_id, 'code' => 'PB'])
-                ->one();
-        if (!empty($appConfiguration)) {
-            $tenant_id = $appConfiguration['value'];
+
+        if (!empty(Yii::$app->session['pharmacy_setup_tenant_id'])) {
+            $tenant_id = Yii::$app->session['pharmacy_setup_tenant_id'];
             $organization = CoTenant::find()
                     ->joinWith(['coOrganization'])
                     ->andWhere(['tenant_id' => $tenant_id])
                     ->one();
         }
-
         $products = [];
         if (isset($post['search']) && !empty($post['search']) && strlen($post['search']) > 1) {
             $text = rtrim($post['search'], '-');

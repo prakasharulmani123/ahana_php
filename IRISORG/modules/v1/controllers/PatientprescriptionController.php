@@ -83,6 +83,21 @@ class PatientprescriptionController extends ActiveController {
     public function actionSaveprescription() {
         $post = Yii::$app->getRequest()->post();
         if (!empty($post) && !empty($post['prescriptionItems'])) {
+
+            $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+            $appConfiguration = AppConfiguration::find()
+                    ->andWhere(['<>', 'value', 0])
+                    ->andWhere(['tenant_id' => $tenant_id, 'code' => 'PB'])
+                    ->one();
+            
+            if (!empty($appConfiguration) && !empty(Yii::$app->session['pharmacy_setup_tenant_id'])) {
+                if ($appConfiguration['value'] != Yii::$app->session['pharmacy_setup_tenant_id']) {
+                    UserController::Clearpharmacysetupsession();
+                    UserController::Setuppharmacysession($tenant_id);
+                    return ['success' => false, 'message' => 'Pharmacy Branch mismatch, Kindly check application settings.', 'page_refresh' => true];
+                }
+            }
+            
             $model = new PatPrescription;
             if (isset($post['pres_id'])) {
                 $prescription = PatPrescription::find()->tenant()->andWhere(['pres_id' => $post['pres_id']])->one();
@@ -138,7 +153,7 @@ class PatientprescriptionController extends ActiveController {
                         $item->remove();
                     }
                 }
-                
+
                 $consult_name = '';
                 if (isset($model->consultant)) {
                     $consult_name = $model->consultant->title_code . $model->consultant->name;
