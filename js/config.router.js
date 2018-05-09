@@ -2553,7 +2553,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
 
             //Patient Billing Add Extra Amount
             .state('patient.addExtraAmount', {
-                url: '/addExtraAmount/{id}/{ec_type}/{link_id}/{enc_id}',
+                url: '/addExtraAmount/{id}/{ec_type}/{link_id}/{enc_id}/{tenant}',
                 params: {
                     mode: 'E',
                 },
@@ -2567,7 +2567,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
             //Patient Billing Edit Extra Amount
             .state('patient.editExtraAmount', {
-                url: '/editExtraAmount/{id}/{ec_id}/{enc_id}',
+                url: '/editExtraAmount/{id}/{ec_id}/{enc_id}/{tenant}',
                 params: {
                     mode: 'E',
                 },
@@ -2582,7 +2582,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
 
             //Patient Billing Add Concession Amount
             .state('patient.addConcessionAmount', {
-                url: '/addConcessionAmount/{id}/{ec_type}/{link_id}/{enc_id}',
+                url: '/addConcessionAmount/{id}/{ec_type}/{link_id}/{enc_id}/{tenant}',
                 params: {
                     mode: 'C',
                 },
@@ -2596,7 +2596,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
             })
             //Patient Billing Edit Concession Amount
             .state('patient.editConcessionAmount', {
-                url: '/editConcessionAmount/{id}/{ec_id}/{enc_id}',
+                url: '/editConcessionAmount/{id}/{ec_id}/{enc_id}/{tenant}',
                 params: {
                     mode: 'C',
                 },
