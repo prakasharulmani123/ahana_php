@@ -174,16 +174,16 @@ class PatBillingExtraConcession extends RActiveRecord {
             $amount = number_format($this->extra_amount, 2);
             $activity = "Extra Amount {$amount}";
             if($changedAttributes['extra_amount'] == '0.00' || $changedAttributes['extra_amount'] == '')
-                $activity .= ' ( Add )';
+                $activity .= ' ( Add ) ( '.$this->tenant->tenant_name.' )';
             else 
-                $activity .= ' ( Edit )';
+                $activity .= ' ( Edit ) ( '.$this->tenant->tenant_name.' )';
         } else {
             $amount = number_format($this->concession_amount, 2);
             $activity = "Concession Amount {$amount}";
             if($changedAttributes['concession_amount'] == '0.00' || $changedAttributes['concession_amount'] == '')
-                $activity .= ' ( Add )';
+                $activity .= ' ( Add ) ( '.$this->tenant->tenant_name.' )';
             else 
-                $activity .= ' ( Edit )';
+                $activity .= ' ( Edit ) ( '.$this->tenant->tenant_name.' )';
         }
         
         PatBillingLog::insertBillingLog($this->patient_id, $this->encounter_id, $this->modified_at, 'N', $header, $activity);
