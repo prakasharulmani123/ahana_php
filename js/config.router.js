@@ -17,7 +17,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
         twistieCollapsedTpl: '<i class="fa fa-caret-down"></i>',
         twistieLeafTpl: '',
     });
-    IdleProvider.idle(5);
+    IdleProvider.idle(300);
     IdleProvider.timeout(10);
     KeepaliveProvider.interval(10);
 //    var newBaseUrl = "";
