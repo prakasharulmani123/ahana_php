@@ -20,7 +20,26 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     });
         }
 
-
+        $scope.loadOtherPharmacylist = function (a) {
+            $http.get($rootScope.IRISAdminServiceUrl + '/organization/getpharmacylist')
+                    .success(function (response) {
+                        $scope.pharmacy_list = response.tenant_details;
+                        $scope.availablePharmacy = [];
+                        angular.forEach($scope.pharmacy_list, function (value) {
+                            var obj = {
+                                value: value.tenant_id,
+                                label: value.tenant_name,
+                            };
+                            if (a != value.tenant_id)
+                                $scope.availablePharmacy.push(obj);
+                            else if (!a)
+                                $scope.availablePharmacy.push(obj);
+                        });
+                    })
+                    .error(function () {
+                        $scope.error = "An Error has occured while loading Pharmacy list!";
+                    });
+        }
         // Form Page
         $scope.initForm = function () {
             $scope.loadbar('show');
@@ -471,6 +490,8 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                                         _that.data.Tenant = response;
                                         $scope.updateState();
                                         $scope.updateCity();
+                                        _that.data.Tenant.pharmacy_tenant_id = response.pharmacy_tenant;
+                                        $scope.loadOtherPharmacylist(response.tenant_id);
                                     }
                             ).error(function (data, status) {
                                 $scope.loadbar('hide');
@@ -479,6 +500,8 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                                 else
                                     $scope.errorData = data.message;
                             });
+                        } else {
+                            $scope.loadOtherPharmacylist();
                         }
                     }
             ).error(function (data, status) {
