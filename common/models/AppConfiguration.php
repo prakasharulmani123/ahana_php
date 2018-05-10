@@ -273,6 +273,12 @@ class AppConfiguration extends RActiveRecord {
                 'code' => 'PMT',
                 'value' => '46',
                 'notes' => 'MM',
+            ],
+            '' => [
+                'group' => '',
+                'code' => 'PB',
+                'value' => '',
+                'notes' => '',
             ]
         );
     }

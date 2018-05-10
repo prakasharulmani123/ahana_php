@@ -1844,9 +1844,7 @@ class PharmacyproductController extends ActiveController {
                         ->andWhere([
                             'code' => 'PB'
                         ])->one();
-        $tenant_details = CoTenant::find()->andWhere(['pharmacy_setup' => '1'])
-                ->andWhere(['<>', 'tenant_id', Yii::$app->user->identity->logged_tenant_id])
-                ->all();
+        $tenant_details = CoTenant::find()->andWhere(['tenant_id' => $appConfig['value']])->one();
         return ['appConfig' => $appConfig, 'tenant_details' => $tenant_details];
     }
 

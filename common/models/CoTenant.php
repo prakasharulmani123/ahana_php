@@ -37,6 +37,8 @@ use yii\helpers\ArrayHelper;
  */
 class CoTenant extends GActiveRecord {
 
+    public $pharmacy_tenant_id;
+
     /**
      * @inheritdoc
      */
@@ -54,7 +56,7 @@ class CoTenant extends GActiveRecord {
                 [['status'], 'string'],
                 [['tenant_email'], 'email', 'message' => 'Invalid Email Format'],
                 [['tenant_url'], 'url', 'message' => 'Invalid Website Format'],
-                [['created_at', 'modified_at', 'org_id'], 'safe'],
+                [['created_at', 'modified_at', 'org_id', 'pharmacy_tenant_id'], 'safe'],
                 [['tenant_guid', 'tenant_name', 'tenant_fax', 'tenant_email', 'tenant_url', 'slug'], 'string', 'max' => 50],
                 [['tenant_address'], 'string', 'max' => 100],
                 [['tenant_contact1', 'tenant_contact2', 'tenant_mobile'], 'string', 'max' => 20],
@@ -104,6 +106,10 @@ class CoTenant extends GActiveRecord {
         return $this->hasMany(CoUser::className(), ['tenant_id' => 'tenant_id']);
     }
 
+    public function getAppConfiguration() {
+        return $this->hasOne(AppConfiguration::className(), ['tenant_id' => 'tenant_id'])->andWhere("code ='PB'");
+    }
+
     public function getCoMasterCity() {
         return $this->hasOne(CoCity::className(), ['city_id' => 'tenant_city_id']);
     }
@@ -136,6 +142,9 @@ class CoTenant extends GActiveRecord {
             },
             'branch_name' => function ($model) {
                 return $model->tenant_name;
+            },
+            'pharmacy_tenant' => function ($model) {
+                return (isset($model->appConfiguration) ? (int) $model->appConfiguration->value : '-');
             }
         ];
         $fields = array_merge(parent::fields(), $extend);
@@ -151,6 +160,9 @@ class CoTenant extends GActiveRecord {
     }
 
     public function afterSave($insert, $changedAttributes) {
+        if ($this->pharmacy_setup == '1') {
+            $this->pharmacy_tenant_id = $this->tenant_id;
+        }
         $conn_dsn = "mysql:host={$this->coOrganization->org_db_host};dbname={$this->coOrganization->org_database}";
         $conn_username = $this->coOrganization->org_db_username;
         $conn_password = $this->coOrganization->org_db_password;
@@ -169,11 +181,11 @@ class CoTenant extends GActiveRecord {
         $command = $connection->createCommand($sql);
         $command->execute();
         $connection->close();
-        
+
         Yii::$app->client->dsn = $conn_dsn;
         Yii::$app->client->username = $conn_username;
         Yii::$app->client->password = $conn_password;
-        
+
         if ($insert) {
             //Internal code.
             $code_types = CoInternalCode::getCodeTypes();
@@ -196,6 +208,12 @@ class CoTenant extends GActiveRecord {
                 $configuration->key = $key;
                 $configuration->code = $app_configuration['code'];
                 $configuration->value = $app_configuration['value'];
+                if ($configuration->code == 'PB') {
+                    if (empty($this->pharmacy_tenant_id))
+                        $configuration->value = $this->tenant_id;
+                    else
+                        $configuration->value = $this->pharmacy_tenant_id;
+                }
                 $configuration->notes = $app_configuration['notes'];
                 if (isset($app_configuration['group'])) {
                     $configuration->group = $app_configuration['group'];
@@ -230,6 +248,12 @@ class CoTenant extends GActiveRecord {
                 $tenant_doc_types->document_out_print_xslt = $tenant_doc_type['document_out_print_xslt'];
                 $tenant_doc_types->save(false);
             }
+        } else {
+            $app_configurations = AppConfiguration::find()
+                    ->andWhere(['code' => 'PB', 'tenant_id' => $this->tenant_id])
+                    ->one();
+            $app_configurations->value = $this->pharmacy_tenant_id;
+            $app_configurations->save(false);
         }
 
         return parent::afterSave($insert, $changedAttributes);
