@@ -468,6 +468,8 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         $scope.loadOrg = function () {
             $scope.loadbar('show');
             _that = this;
+            _that.data.Tenant = {};
+            _that.data.Tenant.pharmacy_tenant_id = '';
             $scope.errorData = "";
             $http({
                 url: $rootScope.IRISAdminServiceUrl + "/organizations/getorganization?id=" + $state.params.org_id,
@@ -503,6 +505,11 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                         } else {
                             $scope.loadOtherPharmacylist();
                         }
+                        $timeout(function () {
+                            if ((_that.data.Tenant.pharmacy_tenant_id = '') || (_that.data.Tenant.pharmacy_tenant_id != response.tenant_id)) {
+                                _that.data.Tenant.pharmacy_tenant_id = $scope.availablePharmacy[0].value;
+                            }
+                        }, 1000)
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
