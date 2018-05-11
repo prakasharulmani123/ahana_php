@@ -51,7 +51,7 @@ class CoTenant extends GActiveRecord {
      */
     public function rules() {
         return [
-                [['tenant_name', 'tenant_address', 'tenant_country_id', 'tenant_state_id', 'tenant_city_id', 'tenant_contact1', 'tenant_email'], 'required'],
+                [['tenant_name', 'tenant_address', 'tenant_country_id', 'tenant_state_id', 'tenant_city_id', 'tenant_contact1', 'tenant_email', 'pharmacy_setup'], 'required'],
                 [['tenant_city_id', 'tenant_state_id', 'tenant_country_id', 'created_by', 'modified_by', 'org_id', 'pharmacy_setup'], 'integer'],
                 [['status'], 'string'],
                 [['tenant_email'], 'email', 'message' => 'Invalid Email Format'],
@@ -71,8 +71,8 @@ class CoTenant extends GActiveRecord {
         return [
             'tenant_id' => 'ID',
             'tenant_guid' => 'Guid',
-            'tenant_name' => 'Organization Name',
-            'tenant_address' => 'Organization Address',
+            'tenant_name' => 'Branch Name',
+            'tenant_address' => 'Branch Address',
             'tenant_city_id' => 'City',
             'tenant_state_id' => 'State',
             'tenant_country_id' => 'Country',
@@ -84,7 +84,7 @@ class CoTenant extends GActiveRecord {
             'tenant_url' => 'Url',
             'slug' => 'Slug',
             'status' => 'Status',
-            'pharmacy_setup' => 'Pharmacy Setup',
+            'pharmacy_setup' => 'Pharmacy',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
             'modified_by' => 'Modified By',
