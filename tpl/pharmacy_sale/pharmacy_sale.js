@@ -153,6 +153,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.ctrl.expandAll = function (expanded) {
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
+        
+        $scope.printReceipt = {};
 
         //Create page height
         $scope.css = {'style': ''};

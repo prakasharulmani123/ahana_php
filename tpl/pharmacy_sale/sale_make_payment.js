@@ -133,11 +133,11 @@ app.controller('SaleMakePaymentController', ['scope', '$scope', '$modalInstance'
                             scope.msg.successMessage = succ_msg;
                             $scope.data = {};
                             $timeout(function () {
-                                //scope.updateDisplayCollection($scope.encounter_id, response.sales[0]);
+                                if ($scope.btnid == "print") {
+                                    $scope.printsaleReceipt(response.bill_receipt);
+                                }
                                 scope.loadSaleItemList('CR');
                                 $modalInstance.dismiss('cancel');
-
-//                                $state.go('pharmacy.sales');
                             }, 1000)
                         }
                     }
@@ -150,8 +150,22 @@ app.controller('SaleMakePaymentController', ['scope', '$scope', '$modalInstance'
             });
         };
 
+        $scope.printsaleReceipt = function (bill_content) {
+            scope.printReceipt = bill_content;
+            $timeout(function () {
+                var innerContents = document.getElementById("make_payment_receipt_content").innerHTML;
+                var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+                popupWinindow.document.open();
+                popupWinindow.document.write('<html><head><link href="css/print.css" rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>');
+                popupWinindow.document.close();
+            }, 1000)
+        }
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
+
+        $scope.getBtnId = function (btnid) {
+            $scope.btnid = btnid;
+        }
     }]);
   
