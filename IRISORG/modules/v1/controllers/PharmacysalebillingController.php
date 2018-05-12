@@ -73,7 +73,7 @@ class PharmacysalebillingController extends ActiveController {
                 return ['success' => false, 'message' => 'Kindly check amount'];
 
             if ($valid) {
-                PhaSale::billpayment($post['sale_ids'], $post['paid_amount'], $post['paid_date'], $post);
+                $bill_receipt = PhaSale::billpayment($post['sale_ids'], $post['paid_amount'], $post['paid_date'], $post);
 
                 //$search = ['encounter_id' => $post['encounter_id'], 'payment_type' => $post['payment_type'], 'patient_id' => $sales[0]->patient_id];
 
@@ -93,7 +93,7 @@ class PharmacysalebillingController extends ActiveController {
 //                    $data[$key]['sum_balance_amount'] = $data[$key]['sum_bill_amount'] - $sum_paid_amount;
 //                }
 
-                return ['success' => true, 'sales' => $data];
+                return ['success' => true, 'sales' => $data, 'bill_receipt' => $bill_receipt];
             } else {
                 return ['success' => false, 'message' => Html::errorSummary([$model])];
             }
@@ -162,7 +162,7 @@ class PharmacysalebillingController extends ActiveController {
                     ->andWhere("consult_date between '{$post['from']}' AND '{$post['to']}'")
                     ->andWhere(['pat_consultant.tenant_id' => $post['tenant_id']])
                     ->all();
-            return ['sale' => $sale, 'ip_income' => $ip_income,'op_income'=> $op_income,'success' => true];
+            return ['sale' => $sale, 'ip_income' => $ip_income, 'op_income' => $op_income, 'success' => true];
         } else {
             return ['success' => false];
         }

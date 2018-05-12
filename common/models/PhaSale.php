@@ -478,6 +478,7 @@ class PhaSale extends PActiveRecord {
     public static function billpayment($sale_id, $paid, $date, $data = null) {
         $sales = PhaSale::find()->andWhere(['sale_id' => $sale_id])->all();
         $paid_amount = $paid;
+        $print_receipt = [];
 
         foreach ($sales as $key => $sale) {
             if ($paid_amount > 0) {
@@ -500,10 +501,11 @@ class PhaSale extends PActiveRecord {
                     'paid_amount' => $paid,
                 ];
                 $paid_amount = $paid_amount - $paid;
-
                 $model->save(false);
+                $print_receipt[] = ['bill_no' => $sale->bill_no, 'patient_name' => $sale->patient_name.' ( '.$sale->patient->patient_global_int_code.' )', 'paid_amount' => $paid, 'bill_id' => $model->sale_billing_id, 'paid_date' => $date, 'payment_mode' => $model->payment_mode];
             }
         }
+        return $print_receipt;
     }
 
 }
