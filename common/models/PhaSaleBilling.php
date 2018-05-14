@@ -156,6 +156,17 @@ class PhaSaleBilling extends PActiveRecord {
             },
             'sale_return_bill_no' => function ($model) {
                 return (isset($model->saleReturn->bill_no) ? $model->saleReturn->bill_no : '');
+            },
+            'payment_mode_full' => function ($model) {
+                if ($model->payment_mode == 'CA') {
+                    return 'Cash';
+                } else if ($model->payment_mode == 'CD') {
+                    return 'Card';
+                } else if ($model->payment_mode == 'ON') {
+                    return 'Online';
+                } else if ($model->payment_mode == 'CH') {
+                    return 'Cheque';
+                }
             }
         ];
         $parent_fields = parent::fields();
