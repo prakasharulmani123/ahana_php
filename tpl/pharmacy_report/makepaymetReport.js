@@ -237,6 +237,7 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                     {text: 'Patient Name', style: 'header'},
                     {text: 'Patient Group', style: 'header'},
                     {text: 'Total Paid Amount', style: 'header'},
+                    {text: 'Payment Mode', style: 'header'},
                 ]);
                 var serial_no = 1;
                 var result_count = $scope.records.length;
@@ -253,7 +254,8 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                         detail[0].sale_details.patient_uhid,
                         patient_name,
                         detail[0].sale_details.patient_group_name,
-                        total
+                        total,
+                        detail[0].payment_mode_full
                     ]);
                     serial_no++;
                     if (serial_no == result_count) {
@@ -263,7 +265,7 @@ app.controller('PharmacymakepamentController', ['$rootScope', '$scope', '$timeou
                 content_info.push({
                     style: 'demoTable',
                     table: {
-                        widths: ['auto', '*', '*', '*','*'],
+                        widths: ['auto', '*', '*', '*','*','*'],
                         headerRows: 1,
                         body: items,
                     },

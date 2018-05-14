@@ -129,6 +129,7 @@
                                         <th>Patient Name</th>
                                         <th>Patient Group</th>
                                         <th>Total Paid Amount</th>
+                                        <th>Payment Mode</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -143,6 +144,7 @@
                                         <td>{{patientName}}</td>
                                         <td>{{record[0].sale_details.patient_group_name}}</td>
                                         <td>{{pending.pending_amount}}</td>
+                                        <td>{{record[0].payment_mode_full}}</td>
                                     </tr>
                                     <tr ng-repeat-end ng-show="expanded">
                                         <td colspan="5">
@@ -237,6 +239,7 @@
                                         <th>Patient Name</th>
                                         <th>Patient Group</th>
                                         <th>Total Paid Amount</th>
+                                        <th>Payment Mode</th>
                                     </tr>
                                     <tr ng-repeat="(patientName, details) in sales | orderBy:'patient_name' | groupBy:'patient_name'">
                                         <td>{{$index + 1}}</td>
@@ -244,11 +247,13 @@
                                         <td>{{patientName}}</td>
                                         <td>{{details[0].sale_details.patient_group_name}}</td>
                                         <td>{{pendingTotal.total_amount| number:2}}</td>
+                                        <td>{{details[0].payment_mode_full}}</td>
                                         <td ng-init="pendingTotal = {}">
                                             <div ng-repeat="(key, record) in details">
                                                 <span ng-init="pendingTotal.total_amount = pendingTotal.total_amount + parseFloatIgnoreCommas(record.paid_amount);"></span>
                                             </div>
                                         </td>
+                                        
                                     </tr>
                                 </table>
                             </div>
