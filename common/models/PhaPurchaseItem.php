@@ -206,7 +206,7 @@ class PhaPurchaseItem extends PActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'new_purchasereport':
-                    $addt_keys = ['invoice_date','invoice_no','supplier_name','gr_num', 'product', 'purchase_created_by'];
+                    $addt_keys = ['invoice_date','invoice_no','supplier_name','gr_num', 'product', 'purchase_created_by', 'batch'];
                     $parent_fields = [
                         'quantity' => 'quantity',
                         'free_quantity' => 'free_quantity',
