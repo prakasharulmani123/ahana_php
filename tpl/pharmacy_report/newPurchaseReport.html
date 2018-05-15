@@ -80,62 +80,65 @@
                         {{app.org_name}}
                     </div>
                     <div class="panel-body" ng-init="purchase = {}">
-                        <table class="table-responsive table-bordered">
-                            <thead>
-                                <tr>
-                                    <th rowspan='2' id="work-base-grid_c0">S.No</th>
-                                    <th rowspan='2' id="work-base-grid_c1">GR no.</th>
-                                    <th rowspan='2' id="work-base-grid_c2">Product Name</th>
-                                    <th rowspan='2' id="work-base-grid_c3">Batch No</th>
-                                    <th rowspan='2' id="work-base-grid_c4">Expiry Date</th>
-                                    <th rowspan='2' id="work-base-grid_c5">Supplier Name</th>
-                                    <th rowspan='2' id="work-base-grid_c6">Invoice Date</th>
-                                    <th rowspan='2' id="work-base-grid_c7">Invoice no.</th>
-                                    <th colspan = '2' id="work-base-grid_c8">Qty</th>
-                                    <th rowspan='2' id="work-base-grid_c9">Qty Pack.unit</th>
-                                    <th rowspan='2' id="work-base-grid_c10">Free Pack.unit</th>
-                                    <th rowspan='2' id="work-base-grid_c11">MRP</th>
-                                    <th rowspan='2' id="work-base-grid_c12">Rate</th>
-                                    <th rowspan='2' id="work-base-grid_c13">Disc %</th>
-                                    <th rowspan='2' id="work-base-grid_c14">Disc Amount</th>
-                                    <th rowspan='2' id="work-base-grid_c15">Vat Amount</th>
-                                    <th rowspan='2' id="work-base-grid_c16">Vat Percent</th>
-                                    <th rowspan='2' id="work-base-grid_c17">Total Amount</th>
-                                    <th rowspan='2' id="work-base-grid_c18">Created User</th>
-                                </tr>
-                                <tr>
-                                    <th>Qty</th>
-                                    <th>F.Qty</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="(key, record) in records">
-                                    <td>{{key + 1}}</td>
-                                    <td>{{record.gr_num}}</td>
-                                    <td>{{record.product.full_name}}</td>
-                                    <td>{{record.batch.batch_no}}</td>
-                                    <td>{{record.batch.expiry_date| date:'MMM-yyyy'}}</td>
-                                    <td>{{nameReplace(record.supplier_name)}}</td>
-                                    <td>{{record.invoice_date}}</td>
-                                    <td>{{record.invoice_no}}</td>
-                                    <!--                                        <td data-type="Number" ng-init="purchase.total_amount = purchase.total_amount + parseFloat(record.net_amount);">
-                                                                                {{record.net_amount}}
-                                                                            </td>-->
-                                    <td>{{record.quantity}}</td>
-                                    <td>{{record.free_quantity}}</td>
-                                    <td>{{record.package_unit}}</td>
-                                    <td>{{record.free_quantity_package_unit|| '-' }}</td>
-                                    <td>{{record.mrp}}</td>
-                                    <td>{{record.purchase_rate}}</td>
-                                    <td>{{record.discount_percent}}</td>
-                                    <td>{{record.discount_amount}}</td>
-                                    <td>{{record.vat_amount}}</td>
-                                    <td>{{record.vat_percent}}</td>
-                                    <td>{{record.total_amount}}</td>
-                                    <td>{{record.purchase_created_by}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="export-table print-table table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th rowspan='2' id="work-base-grid_c0">S.No</th>
+                                        <th rowspan='2' id="work-base-grid_c1">GR no.</th>
+                                        <th rowspan='2' id="work-base-grid_c2">Product Name</th>
+                                        <th rowspan='2' id="work-base-grid_c3">Batch No</th>
+                                        <th rowspan='2' id="work-base-grid_c4">Expiry Date</th>
+                                        <th rowspan='2' id="work-base-grid_c5">Supplier Name</th>
+                                        <th rowspan='2' id="work-base-grid_c6">Invoice Date</th>
+                                        <th rowspan='2' id="work-base-grid_c7">Invoice no.</th>
+                                        <th colspan = '2' id="work-base-grid_c8">Qty</th>
+                                        <th rowspan='2' id="work-base-grid_c9">Qty Pack.unit</th>
+                                        <th rowspan='2' id="work-base-grid_c10">Free Pack.unit</th>
+                                        <th rowspan='2' id="work-base-grid_c11">MRP</th>
+                                        <th rowspan='2' id="work-base-grid_c12">Rate</th>
+                                        <th rowspan='2' id="work-base-grid_c13">Disc %</th>
+                                        <th rowspan='2' id="work-base-grid_c14">Disc Amount</th>
+                                        <th rowspan='2' id="work-base-grid_c15">Vat Amount</th>
+                                        <th rowspan='2' id="work-base-grid_c16">Vat Percent</th>
+                                        <th rowspan='2' id="work-base-grid_c17">Total Amount</th>
+                                        <th rowspan='2' id="work-base-grid_c18">Created User</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Qty</th>
+                                        <th>F.Qty</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="(key, record) in records">
+                                        <td>{{key + 1}}</td>
+                                        <td>{{record.gr_num}}</td>
+                                        <td>{{record.product.full_name}}</td>
+                                        <td>{{record.batch.batch_no}}</td>
+                                        <td>{{record.batch.expiry_date| date:'MMM-yyyy'}}</td>
+                                        <td>{{nameReplace(record.supplier_name)}}</td>
+                                        <td>{{record.invoice_date}}</td>
+                                        <td>{{record.invoice_no}}</td>
+                                        <!--                                        <td data-type="Number" ng-init="purchase.total_amount = purchase.total_amount + parseFloat(record.net_amount);">
+                                                                                    {{record.net_amount}}
+                                                                                </td>-->
+                                        <td>{{record.quantity}}</td>
+                                        <td>{{record.free_quantity}}</td>
+                                        <td>{{record.package_unit}}</td>
+                                        <td>{{record.free_quantity_package_unit|| '-' }}</td>
+                                        <td>{{record.mrp}}</td>
+                                        <td>{{record.purchase_rate}}</td>
+                                        <td>{{record.discount_percent}}</td>
+                                        <td>{{record.discount_amount}}</td>
+                                        <td>{{record.vat_amount}}</td>
+                                        <td>{{record.vat_percent}}</td>
+                                        <td>{{record.total_amount}}</td>
+                                        <td>{{record.purchase_created_by}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                 </div>
                 <div id="purchase_report">
