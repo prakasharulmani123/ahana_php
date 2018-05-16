@@ -6,6 +6,7 @@ use Exception;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\Connection;
+use common\models\CoOrgSetting;
 
 /**
  * This is the model class for table "co_organization".
@@ -195,6 +196,22 @@ class CoOrganization extends GActiveRecord {
         $connection->open();
 
         if ($insert) {
+
+            //Insert Organization Configuration.
+            $org_settings = CoOrgSetting::getConfigurations();
+            foreach ($org_settings as $key => $org_setting) {
+                $org_configuration = new CoOrgSetting;
+                $org_configuration->org_id = $this->org_id;
+                $org_configuration->key = $key;
+                $org_configuration->code = $org_setting['code'];
+                $org_configuration->value = $org_setting['value'];
+                $org_configuration->notes = $org_setting['notes'];
+                if (isset($org_setting['group'])) {
+                    $org_configuration->group = $org_setting['group'];
+                }
+                $org_configuration->save(false);
+            }
+            
              //Global Internal code.
             $internal_code = new GlInternalCode;
             $internal_code->org_id = $this->org_id;
