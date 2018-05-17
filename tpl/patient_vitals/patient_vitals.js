@@ -14,6 +14,12 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
             date = moment(date).format('YYYY-MM-DD');
             return $.inArray(date, $scope.enabled_dates) === -1;
         };
+        //Accordation menu open and close method
+        $scope.oneAtATime = true;
+        $scope.status = {
+            isFirstOpen: true,
+            isFirstDisabled: false
+        };
         $scope.isPatientHaveActiveEncounter = function (callback) {
             $http.post($rootScope.IRISOrgServiceUrl + '/encounter/patienthaveactiveencounter', {patient_id: $state.params.id})
                     .success(function (response) {
@@ -72,6 +78,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
         $scope.enabled_dates = [];
         $scope.HaveActEnc = false;
         $scope.loadPatVitalsList = function (date) {
+            $scope.setvitalgraph();
             $rootScope.commonService.GetDay(function (response) {
                 $scope.days = response;
             });
