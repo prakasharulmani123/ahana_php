@@ -24,24 +24,15 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                     .success(function (response) {
                         $scope.patient_resources = response.resources;
                         $scope.resources = [];
-                        
+
                         angular.forEach(response.resources, function (resource) {
                             $scope.resources.push(resource.resource);
                         });
 
-                        $http.get($rootScope.IRISOrgServiceUrl + '/appconfigurations')
+                        $http.get($rootScope.IRISOrgServiceUrl + '/orgsettings')
                                 .success(function (configurations) {
                                     $scope.config_share_data = [];
-
-                                    angular.forEach(configurations, function (conf) {
-                                        var string = conf.key;
-                                        substring = "SHARE";
-
-                                        if (string.indexOf(substring) > -1 == true) {
-                                            $scope.config_share_data.push(conf);
-                                        }
-
-                                    });
+                                    $scope.config_share_data = configurations;
                                 })
                                 .error(function () {
                                     $scope.errorData = "An Error has occured while loading settings!";
@@ -61,22 +52,60 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
 
         $scope.toggleSelection = function (value) {
             result = $filter('filter')($scope.resources, value);
-            
-            if(result.length > 0){
+
+            if (result.length > 0) {
                 var index = $scope.resources.indexOf(result[0]);
                 $scope.resources.splice(index, 1);
-            }else{
+            } else {
+                if(value== 'ENCOUNTER') {
+                    $scope.InsertResource('BASIC');
+                    $('#BASIC').prop('checked', true);
+                }
                 $scope.resources.push(value);
             }
         }
 
+        $scope.InsertResource = function (value) {
+            result = $filter('filter')($scope.resources, value);
+
+            if (result.length == 0)
+                $scope.resources.push(value);
+        }
+
+        $scope.checkShare = function (a) {
+            var share_arr = ["NOTES", "CONSULTANT", "ALERT", "VITALS", "PRESCRIPTION", "BILLING", "PROCEDURE"];
+            var isChecked = $('#' + a).is(':checked');
+            if (jQuery.inArray(a, share_arr) != -1) {
+                if (isChecked) {
+                    $('#ENCOUNTER').prop('checked', true);
+                    $('#BASIC').prop('checked', true);
+                    $scope.InsertResource('ENCOUNTER');
+                    $scope.InsertResource('BASIC');
+                }
+            } else if ((!isChecked) && (a == 'ENCOUNTER')) {
+                angular.forEach(share_arr, function (value, key) {
+                    $('#' + value).prop('checked', false);
+                    result = $filter('filter')($scope.resources, value);
+                    if (result.length > 0) {
+                        var index = $scope.resources.indexOf(result[0]);
+                        $scope.resources.splice(index, 1);
+                    }
+                });
+            } else if ((!isChecked) && (a == 'BASIC')) {
+                $(".chk").each(function () {
+                    this.checked = false;
+                })
+                $scope.resources = [];
+            }
+            return false;
+        }
         //Save Both Add & Update Data
         $scope.saveForm = function () {
             _that = this;
 
             $scope.errorData = "";
             $scope.msg.successMessage = "";
-            
+
             angular.extend(_that.data, {
                 patient_id: $state.params.id,
                 share: $scope.resources
@@ -142,8 +171,7 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                                     $scope.displayedCollection.splice(index, 1);
                                     $scope.loadPatVitalsList();
                                     $scope.msg.successMessage = 'Patient Note Deleted Successfully';
-                                }
-                                else {
+                                } else {
                                     $scope.errorData = response.data.message;
                                 }
                             }
