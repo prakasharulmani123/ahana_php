@@ -494,14 +494,14 @@ class PatPatient extends RActiveRecord {
 
     public function insertPatientResource() {
         $pat_share_attr = [
-            'tenant_id' => $this->tenant_id,
+            //'tenant_id' => $this->tenant_id,
             'org_id' => $this->tenant->org_id,
             'patient_global_guid' => $this->patient_global_guid
         ];
 
         GlPatientShareResources::deleteAll($pat_share_attr);
 
-        $share_config = AppConfiguration::find()->tenant($this->tenant_id)->andWhere("`key` like '%SHARE_%' AND `value` = '1'")->all();
+        $share_config = CoOrgSetting::find()->andWhere("`key` like '%SHARE_%' AND `value` = '1' AND `org_id`=" . $this->tenant->org_id)->all();
         $share_resources = ArrayHelper::map($share_config, 'key', 'code');
 
         foreach ($share_resources as $key => $share_resource) {
