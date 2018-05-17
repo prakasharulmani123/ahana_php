@@ -121,7 +121,7 @@ class PatPrescription extends RActiveRecord {
      * @return ActiveQuery
      */
     public function getPatPrescriptionItems() {
-        return $this->hasMany(PatPrescriptionItems::className(), ['pres_id' => 'pres_id']);
+        return $this->hasMany(PatPrescriptionItems::className(), ['pres_id' => 'pres_id'])->andWhere("pat_prescription_items.deleted_at = '0000-00-00 00:00:00'");
     }
 
     /**
