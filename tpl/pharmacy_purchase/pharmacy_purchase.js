@@ -679,6 +679,15 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         $scope.getBtnId = function (btnid) {
             $scope.btnid = btnid;
         }
+        
+        $scope.checkTotalpercentage = function (data, key, index) {
+            item = $scope.purchaseitems[key];
+            if (typeof item != 'undefined') {
+                if (item.discount_percent > 100) {
+                    return "Discount percentage less than 100";
+                }
+            }
+        }
 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
