@@ -890,4 +890,26 @@ class UserController extends ActiveController {
         }
     }
 
+    public function actionSearchuser() {
+        $post = Yii::$app->request->post();
+        $user = [];
+        $limit = 20;
+        if (isset($post['search']) && !empty($post['search']) && strlen($post['search']) >= 2) {
+            $filters = [
+                'OR',
+                    ['like', 'name', $post['search']],
+                    ['like', 'mobile', $post['search']],
+                    ['like', 'email', $post['search']],
+            ];
+            $modelClass = $this->modelClass;
+            $user = $modelClass::find()
+                    ->active()
+                    ->exceptSuperUser()
+                    ->andFilterWhere($filters)
+                    ->limit($limit)
+                    ->all();
+            return ['user' => $user];
+        }
+    }
+
 }
