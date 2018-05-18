@@ -1,4 +1,4 @@
-app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', '$log', '$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log,$localStorage, DTOptionsBuilder, DTColumnBuilder, $compile) {
+app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$modal', '$log', '$localStorage', 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$q', function ($rootScope, $scope, $timeout, $http, $state, $modal, $log, $localStorage, DTOptionsBuilder, DTColumnBuilder, $compile, $q) {
 
         //Index Page
         $scope.loadList = function () {
@@ -7,7 +7,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
             var cp = $state.params.mode;
 
             // Get data's from service
-            $http.get($rootScope.IRISOrgServiceUrl + '/user/getuserdata?cp='+cp)
+            $http.get($rootScope.IRISOrgServiceUrl + '/user/getuserdata?cp=' + cp)
                     .success(function (users) {
                         $scope.isLoading = false;
                         $scope.rowCollection = users;
@@ -19,7 +19,10 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                         $scope.errorData = "An Error has occured while loading users!";
                     });
         };
-        
+
+        var canceler;
+        var changeTimer = false;
+        $scope.show_loader = false;
         var vm = this;
         var token = $localStorage.user.access_token;
         var cp = $state.params.mode;
@@ -27,7 +30,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                 .withOption('ajax', {
                     // Either you specify the AjaxDataProp here
                     // dataSrc: 'data',
-                    url: $rootScope.IRISOrgServiceUrl + '/user/getuserdata?cp='+cp+'&access-token=' + token,
+                    url: $rootScope.IRISOrgServiceUrl + '/user/getuserdata?cp=' + cp + '&access-token=' + token,
                     type: 'POST',
                     beforeSend: function (request) {
                         request.setRequestHeader("x-domain-path", $rootScope.clientUrl);
@@ -58,32 +61,33 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
             $compile(angular.element(row).contents())($scope);
         }
         function designationHtml(data, type, full, meta) {
-            return '<span class="label bg-success"> '+data+' </span>';
+            return '<span class="label bg-success"> ' + data + ' </span>';
         }
         function mobileHtml(data, type, full, meta) {
-            return '<span class="label bg-info"> '+data+' </span>';
+            return '<span class="label bg-info"> ' + data + ' </span>';
         }
         function loginHtml(data, type, full, meta) {
-                
-            return '<p> <b> Username : </b>'+data.username+'</p>'+
-                   '<p> <b>Activation Date : </b>'+data.activation_date+'</p>'+
-                   '<p> <b>Inactivation Date : </b>'+data.Inactivation_date+'</p>';
+
+            return '<p> <b> Username : </b>' + data.username + '</p>' +
+                    '<p> <b>Activation Date : </b>' + data.activation_date + '</p>' +
+                    '<p> <b>Inactivation Date : </b>' + data.Inactivation_date + '</p>';
         }
         function createHtml(data, type, full, meta) {
-            return  '<a title="'+data.login_link_text+'" class="'+data.login_link_btn+'" ui-sref="configuration.login_update({id: '+data.user_id+'})">'+
-                    '<i class="fa '+data.login_link_icon_class+'"></i> &nbsp;'+data.login_link_text+''+
+            return  '<a title="' + data.login_link_text + '" class="' + data.login_link_btn + '" ui-sref="configuration.login_update({id: ' + data.user_id + '})">' +
+                    '<i class="fa ' + data.login_link_icon_class + '"></i> &nbsp;' + data.login_link_text + '' +
                     '</a>';
         }
-        
+
         function actionsHtml(data, type, full, meta) {
-            return '<a class="btn btn-dark" title="Edit" check-access  ui-sref="configuration.user_update({id: '+data.user_id+'})">'+
-                   '<i class="fa fa-pencil"></i>'+
-                   '</a>';
+            return '<a class="btn btn-dark" title="Edit" check-access  ui-sref="configuration.user_update({id: ' + data.user_id + '})">' +
+                    '<i class="fa fa-pencil"></i>' +
+                    '</a>';
         }
 
         //For User Form
         $scope.initForm = function () {
             $scope.loadbar('show');
+            $scope.matchings = [];
             $rootScope.commonService.GetTitleCodes(function (response) {
                 $scope.title_codes = response;
 
@@ -110,7 +114,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
             });
 
         }
-        
+
         $scope.updateState2 = function () {
             $scope.availableStates2 = [];
             $scope.availableCities2 = [];
@@ -170,16 +174,14 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                                 $timeout(function () {
                                     $state.go('configuration.registration');
                                 }, 1000)
-                            }
-                            else {
+                            } else {
                                 $scope.msg.successMessage = "User saved successfully";
                                 $scope.data = {};
                                 $timeout(function () {
                                     $state.go('configuration.registration');
                                 }, 1000)
                             }
-                        }
-                        else {
+                        } else {
                             $scope.errorData = response.data.message;
                         }
                     }
@@ -201,8 +203,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                             $scope.data = response.data.return;
                             $scope.updateState2();
                             $scope.updateCity2();
-                        }
-                        else {
+                        } else {
                             $scope.errorData = response.data.message;
                         }
                     }
@@ -227,8 +228,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                                 $scope.data.form_type = 'add';
                                 $scope.data.activation_date = moment($scope.data.activation_date).format('YYYY-MM-DD');
                             }
-                        }
-                        else {
+                        } else {
                             $scope.errorData = response.data.message;
                         }
                     }
@@ -242,7 +242,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
             _that.data.user_id = {};
             _that.data.user_id = $state.params.id;
 
-            if(typeof _that.data.activation_date != 'undefined' && _that.data.activation_date != '' && _that.data.activation_date != null)
+            if (typeof _that.data.activation_date != 'undefined' && _that.data.activation_date != '' && _that.data.activation_date != null)
                 _that.data.activation_date = moment(_that.data.activation_date).format('YYYY-MM-DD');
 //            _that.data.Inactivation_date = moment(_that.data.Inactivation_date).format('YYYY-MM-DD');
 
@@ -263,8 +263,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                             $timeout(function () {
                                 $state.go('configuration.registration');
                             }, 1000)
-                        }
-                        else {
+                        } else {
                             $scope.errorData = response.data.message;
                         }
                     }
@@ -308,7 +307,7 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
         $scope.disabled = function (date, mode) {
             return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
         };
-        
+
         $scope.openModal = function (size, ctrlr, tmpl, update_col) {
             var modalInstance = $modal.open({
                 templateUrl: tmpl,
@@ -336,19 +335,59 @@ app.controller('UsersController', ['$rootScope', '$scope', '$timeout', '$http', 
                 $log.info('Modal dismissed at: ' + new Date());
             });
         };
-        
-        $scope.afterCountryAdded = function(country_id){
+
+        $scope.afterCountryAdded = function (country_id) {
             $scope.data.country_id = country_id;
             $scope.updateState2();
         }
-        
-        $scope.afterStateAdded = function(state_id){
+
+        $scope.afterStateAdded = function (state_id) {
             $scope.data.state_id = state_id;
             $scope.updateState2();
         }
 
-        $scope.afterCityAdded = function(city_id){
+        $scope.afterCityAdded = function (city_id) {
             $scope.data.city_id = city_id;
             $scope.updateCity2();
+        }
+
+        $scope.$watch('data.name', function (newValue, oldValue) {
+            $scope.search_user(newValue);
+        }, true);
+
+        $scope.$watch('data.mobile', function (newValue, oldValue) {
+            $scope.search_user(newValue);
+        }, true);
+
+        $scope.$watch('data.email', function (newValue, oldValue) {
+            $scope.search_user(newValue);
+        }, true);
+
+        $scope.search_user = function (newValue) {
+            if (newValue != '') {
+                if (canceler)
+                    canceler.resolve();
+                canceler = $q.defer();
+
+                if (changeTimer !== false)
+                    clearTimeout(changeTimer);
+
+                $scope.show_loader = true;
+
+                changeTimer = setTimeout(function () {
+                    $http({
+                        method: 'POST',
+                        url: $rootScope.IRISOrgServiceUrl + '/user/searchuser?addtfields=search',
+                        timeout: canceler.promise,
+                        data: {'search': newValue},
+                    }).success(
+                            function (response) {
+                                $scope.matchings = response.user;
+                                $scope.show_loader = false;
+                            }
+                    );
+                    changeTimer = false;
+                }, 300);
+            }
         }
     }]);
