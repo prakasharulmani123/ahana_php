@@ -43,7 +43,8 @@ class CoMasterCity extends RActiveRecord
             [['state_id', 'created_by', 'modified_by', 'tenant_id'], 'integer'],
             [['status'], 'string'],
             [['created_at', 'modified_at', 'tenant_id', 'deleted_at'], 'safe'],
-            [['city_name'], 'string', 'max' => 50]
+            [['city_name'], 'string', 'max' => 50],
+            [['tenant_id'], 'unique', 'targetAttribute' => ['tenant_id', 'city_name', 'state_id', 'deleted_at'], 'message' => 'The combination has already been taken.']
         ];
     }
 
