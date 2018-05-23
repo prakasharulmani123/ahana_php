@@ -192,7 +192,7 @@ class CoRolesResources extends ActiveRecord {
     }
 
     //Get Particular organization accessed modules tree
-    public static function getOrgModuletree($tenant_id, $super_roler_id) {
+    public static function getOrgModuletree($tenant_id, $super_roler_id, $org = null) {
         $tree = self::getModuleTree();
         $role_resources_ids = self::find()->select(['GROUP_CONCAT(resource_id) AS resource_ids'])->where(['role_id' => $super_roler_id, 'tenant_id' => $tenant_id, 'status' => '1'])->one();
         $role_resources_ids = explode(',', $role_resources_ids->resource_ids);
@@ -205,18 +205,21 @@ class CoRolesResources extends ActiveRecord {
                             if (isset($child['children'])) {
                                 foreach ($child['children'] as $ckey2 => $child2) {
                                     if (!in_array($child2['value'], $role_resources_ids)) {
+                                        if (!$org)
                                         unset($tree[$key]['children'][$ckey]['children'][$ckey2]);
                                     }
                                 }
                                 $tree[$key]['children'][$ckey]['children'] = array_values($tree[$key]['children'][$ckey]['children']);
                             }
                         } else {
+                            if (!$org)
                             unset($tree[$key]['children'][$ckey]);
                         }
                     }
                     $tree[$key]['children'] = array_values($tree[$key]['children']);
                 }
             } else {
+                if (!$org)
                 unset($tree[$key]);
             }
         }
@@ -234,8 +237,8 @@ class CoRolesResources extends ActiveRecord {
     }
 
     //Get Particular organization accessed modules tree with role wise
-    public static function getOrgModuletreeByRole($tenant_id, $tenant_super_role_id, $role_id, $resource_tenant_id) {
-        $tree = self::getOrgModuletree($tenant_id, $tenant_super_role_id);
+    public static function getOrgModuletreeByRole($tenant_id, $tenant_super_role_id, $role_id, $resource_tenant_id, $org = null) {
+        $tree = self::getOrgModuletree($tenant_id, $tenant_super_role_id, $org);
         
         $role_resources_ids = self::find()->select(['GROUP_CONCAT(resource_id) AS resource_ids'])->where(['role_id' => $role_id, 'tenant_id' => $resource_tenant_id, 'status' => '1'])->one();
         $role_resources_ids = explode(',', $role_resources_ids->resource_ids);
