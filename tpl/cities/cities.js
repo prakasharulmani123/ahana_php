@@ -62,28 +62,28 @@ app.controller('CitiesController', ['$rootScope', '$scope', '$timeout', '$http',
                 vm.selected[full.city_id] = false;
             }
             var model_name = "'" + "CoMasterCity" + "'";
-            if (full.tenant_id) {
+            //if (full.tenant_id) {
                 return  '<label class="i-checks ">' +
                         '<input type="checkbox" ng-model="city.selected[' + full.city_id + ']" ng-change="updateStatus(' + model_name + ', ' + full.city_id + ')">' +
                         '<i></i>' +
                         '</label>';
-            } else {
-                return '';
-            }
+            //} else {
+                //return '';
+            //}
         }
 
 
         function actionsHtml(data, type, full, meta) {
-            if (data.tenant_id) {
+            //if (data.tenant_id) {
                 return '<a class="label bg-dark" title="Edit" check-access  ui-sref="configuration.cityUpdate({id: ' + data.city_id + '})">' +
                         '   <i class="fa fa-pencil"></i>' +
                         '</a>&nbsp;&nbsp;&nbsp;' +
                         '<a class="hide" title="Delete" ng-click="removeRow(row)">' +
                         '   <i class="fa fa-trash"></i>' +
                         '</a>';
-            } else {
-                return '';
-            }
+            //} else {
+                //return '';
+            //}
         }
 
         //For Form
