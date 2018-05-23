@@ -45,7 +45,8 @@
                                     {{row.country_name}}
                                 </td>
                                 <td>
-                                    <div ng-if="row.tenant_id != null">
+                                    <!--                                    <div ng-if="row.tenant_id != null">-->
+                                    <div>
                                         <label class="i-checks "> 
                                             <input type="checkbox" checked="" ng-true-value="'1'" ng-false-value="'0'" name="status" ng-model="row.status" ng-change='updateStatus("CoMasterCountry", row.country_id)'> 
                                             <i></i>
@@ -53,7 +54,8 @@
                                     </div>
                                 </td>                    
                                 <td>
-                                    <div ng-if="row.tenant_id != null">
+                                    <!--                                    <div ng-if="row.tenant_id != null">-->
+                                    <div>
                                         <a class="btn btn-dark" title="Edit" check-access  ui-sref="configuration.countryUpdate({id: '{{row.country_id}}'})">
                                             <i class="fa fa-pencil"></i>
                                         </a>&nbsp;&nbsp;&nbsp;
