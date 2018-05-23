@@ -73,7 +73,7 @@ class RActiveRecord extends ActiveRecord {
                         return FALSE;
                     }
                 } else {
-                    $model_array = ["PatPatient", "CoUser", "CoPatientCategory", "PatBillingExtraConcession", "CoMasterCity"];
+                    $model_array = ["PatPatient", "CoUser", "CoPatientCategory", "PatBillingExtraConcession", "CoMasterCity", "CoMasterState", "CoMasterCountry"];
                     if (!in_array(\yii\helpers\StringHelper::basename(get_class($this)), $model_array)) {
                         if ($this->tenant_id != Yii::$app->user->identity->logged_tenant_id) {
                             $this->addError('tenant_id', 'Branch Mismatch');
