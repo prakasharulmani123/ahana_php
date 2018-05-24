@@ -40,6 +40,7 @@
                         </th>
                         <th>Patient Name</th>
                         <th>Mobile</th>
+                        <th>City Name</th>
                         <th>Date</th>
                     </tr>
                 </thead>
@@ -72,6 +73,7 @@
                             </a>
                         </td>
                         <td valign="middle"> {{appointment.patient_mobile}} </td>
+                        <td valign="middle"> {{appointment.city_name}} </td>
                         <td valign="middle"> {{appointment.status_datetime| moment:'DD/MM/YYYY HH:mm:ss'}} </td>
                     </tr>
                 </tbody>
@@ -105,11 +107,13 @@
                     <tr>
                         <th>Patient Name</th>
                         <th>Mobile</th>
+                        <th>City Name</th>
                         <th>Date</th>
                     </tr>
                     <tr ng-repeat="(appointment_key, appointment) in displayedCollection[0].all">
                         <td>{{appointment.patient_name}}</td>
                         <td>{{appointment.patient_mobile}}</td>
+                        <td>{{appointment.city_name}} </td>
                         <td>{{appointment.status_datetime| moment:'DD/MM/YYYY HH:mm:ss'}}</td>
                     </tr>
                 </table>
