@@ -258,7 +258,11 @@ class PatAppointment extends RActiveRecord {
             },
             'branch_name' => function ($model) {
                 return isset($model->tenant) ? $model->tenant->tenant_name : '-';
-            }
+            },
+            'city_name' => function ($model) {
+                return isset($model->patient->patPatientAddress) ? $model->patient->patPatientAddress->Cityname() : '-';
+            }        
+            
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
