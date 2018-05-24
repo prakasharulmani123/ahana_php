@@ -153,7 +153,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.ctrl.expandAll = function (expanded) {
             $scope.$broadcast('onExpandAll', {expanded: expanded});
         };
-        
+
         $scope.printReceipt = {};
 
         //Create page height
@@ -1282,6 +1282,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         ids = [];
 //                        angular.forEach(prescriptionList.prescriptions, function (prescription) {
                         if (prescriptionList.prescription) {
+                            $scope.data.consultant_id = prescriptionList.prescription.consultant_id;
+                            $scope.data.consultant_name = prescriptionList.prescription.consultant_name;
                             angular.forEach(prescriptionList.prescription.items, function (item) {
                                 $scope.inserted = {
                                     full_name: item.product.full_name,
