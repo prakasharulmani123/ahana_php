@@ -43,7 +43,7 @@
                         <span></span> <b class="caret"></b>
                     </div>
                 </div>
-                
+
                 <!-- hide by Nad -->
                 <!--            <div class="col-sm-3 pull-right text-right">
                                 <h4 class="badge bg-primary mt-10"> <b> Census: {{census}} </b></h4>
@@ -91,7 +91,7 @@
                                 <td colspan="9">
                                     <b>
                                         <button ng-click="value.expanded = !value.expanded;
-                                                                        setRowExpanded(value.consultant_id, value.expanded)" expand class="btn btn-sm btn-default hms-plus">
+                                                        setRowExpanded(value.consultant_id, value.expanded)" expand class="btn btn-sm btn-default hms-plus">
                                             <i ng-if="!value.expanded" class="fa fa-plus text"></i>
                                             <i ng-if="value.expanded" class="fa fa-minus text"></i>
                                         </button>&nbsp; &nbsp;
@@ -131,8 +131,24 @@
                                     {{row.apptPatientData.patient_global_int_code}}
                                 </td>
                                 <td valign="middle">
-                                    <div ng-if="row.apptPatientData.patient_category" style="background-color: {{row.apptPatientData.patient_category_color}}" class="category_badge" tooltip="{{row.apptPatientData.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top" style="background-color: {{row.apptPatientData.patient_category_color}}">
-                                        {{row.apptPatientData.patient_category| uppercase}}
+                                    <div ng-if="row.apptPatientData.patient_category">
+                                        <form editable-form name="rowform" onbeforesave="updatePatientCategory(row.apptPatientData.patient_id, $data, op_key, key )" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == row">
+                                            <span editable-select="row.apptPatientData.patient_category_id" e-name="patient_category_id" e-form="rowform" e-ng-options="s.patient_cat_id as s.patient_cat_name for s in categories">
+                                                {{row.sts_status|| 'empty' }}
+                                            </span>
+                                            <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary btn-sm">
+                                                <span class="glyphicon glyphicon-ok"></span>
+                                            </button>
+                                            <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel();" class="btn btn-default btn-sm">
+                                                <span class="glyphicon glyphicon-remove"></span>
+                                            </button>
+                                        </form>
+                                        <div class="buttons" ng-show="!rowform.$visible">
+                                            <div style="background-color: {{row.apptPatientData.patient_category_color}}" class="category_badge" tooltip="{{row.apptPatientData.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top" style="background-color: {{row.apptPatientData.patient_category_color}}">
+                                                {{row.apptPatientData.patient_category| uppercase}}
+                                            </div>
+                                            <a ng-click="rowform.$show();" class="ng-scope ng-binding editable editable-click category_edit">  </a><br />
+                                        </div>
                                     </div>
                                 </td>
                                 <td>
@@ -180,14 +196,14 @@
                                                 <span class="glyphicon glyphicon-ok"></span>
                                             </button>
                                             <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel();
-                                                                            setTimings(op_key, key, 'unset')" class="btn btn-default btn-sm">
+                                                            setTimings(op_key, key, 'unset')" class="btn btn-default btn-sm">
                                                 <span class="glyphicon glyphicon-remove"></span>
                                             </button>
                                         </form>
                                         <div class="buttons" ng-show="!rowform.$visible">
                                             <a ng-click="rowform.$show();
-                                                                            row.sts_status = 'A';
-                                                                            setTimings(op_key, key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a><br />
+                                                            row.sts_status = 'A';
+                                                            setTimings(op_key, key, 'set')" class="ng-scope ng-binding editable editable-click"> Booked </a><br />
                                         </div>
                                     </div>
 
@@ -224,7 +240,7 @@
                                 <td colspan="9">
                                     <b>
                                         <button ng-click="value.seenExpanded = !value.seenExpanded;
-                                                                    expandSeen(value.consultant_id, value.seenExpanded);" expand class="btn btn-sm btn-default hms-plus">
+                                                    expandSeen(value.consultant_id, value.seenExpanded);" expand class="btn btn-sm btn-default hms-plus">
                                             <i ng-if="!value.seenExpanded" class="fa fa-plus text"></i>
                                             <i ng-if="value.seenExpanded" class="fa fa-minus text"></i>
                                         </button>&nbsp; &nbsp;
@@ -309,13 +325,13 @@
 
 
 <script>
-                    $(function () {
-                        if ($.isFunction($.fn.photoZoom)) {
-                            profilePhoto(".patientImage");
-                        } else {
-                            $.getScript("js/photoZoom.js", function (data, textStatus, jqxhr) {
-                                profilePhoto(".patientImage");
-                            });
-                        }
-                    });
+    $(function () {
+        if ($.isFunction($.fn.photoZoom)) {
+            profilePhoto(".patientImage");
+        } else {
+            $.getScript("js/photoZoom.js", function (data, textStatus, jqxhr) {
+                profilePhoto(".patientImage");
+            });
+        }
+    });
 </script>

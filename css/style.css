@@ -621,6 +621,7 @@ button.label {
 }
 .category_badge {
 	margin-left:10px;
+        float: left;
 }
 .alert_badge {
 	width: 30px;
@@ -930,4 +931,10 @@ ul {
 }
 .report-inst ul li {
     padding-left: 4px;
+}
+
+.category_edit {
+    float: left;
+    margin-left: 2px;
+    line-height: 25px;
 }

@@ -46,6 +46,9 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
         }
 
         $scope.startDaterangepicker = function (type) {
+            $rootScope.commonService.GetPatientCateogryList('1', false, function (response) {
+                $scope.categories = response.patientcategoryList;
+            });
             //$(function () {
             $scope.range_filter_start = '';
             $scope.range_filter_end = '';
@@ -321,6 +324,28 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                     function (response) {
                         $scope.loadbar('hide');
                         $scope.msg.successMessage = 'Patient updated successfully';
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
+        $scope.updatePatientCategory = function (id, _data, op_key, key) {
+            $http({
+                method: 'PUT',
+                url: $rootScope.IRISOrgServiceUrl + '/patients/' + id,
+                data: _data,
+            }).success(
+                    function (patient) {
+                        $scope.loadbar('hide');
+                        $scope.msg.successMessage = 'Patient updated successfully';
+                        $scope.rowCollection[op_key]['act_enc'][key].apptPatientData = patient;
+                        $scope.displayedCollection[op_key]['act_enc'][key].apptPatientData = patient;
+                        $scope.updateCollection();
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
