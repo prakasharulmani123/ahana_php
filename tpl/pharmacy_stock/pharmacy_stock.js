@@ -181,7 +181,10 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
         $scope.pagebatchChanged = function () {
             $scope.loadBatch();
         };
-
+        $scope.pageBatchPageSize = function () {
+            $scope.pageIndex = 1;
+            $scope.loadBatch();
+        };
 
         $scope.editBatchDetails = function (batch_id) {
             $scope.batchDetails = batch_id;

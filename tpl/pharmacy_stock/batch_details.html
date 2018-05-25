@@ -15,19 +15,34 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-9">
+                        <div class="col-sm-10">
                             <input id="filter1" type="text" placeholder="Search" class="form-control input-sm w-sm inline m-r" ng-model="form_filter1"/>
-<!--                            <div class=" col-sm-3">
-                                <select id="filter" class="form-control selectpicker" data-live-search="true" ng-model="form_filter" ng-options="bat.batch_no as bat.batch_no for bat in batch| orderBy: batch_name">
-                                    <option value="">Select Batch</option>
-                                </select>
-                            </div>-->
+                            <!--                            <div class=" col-sm-3">
+                                                            <select id="filter" class="form-control selectpicker" data-live-search="true" ng-model="form_filter" ng-options="bat.batch_no as bat.batch_no for bat in batch| orderBy: batch_name">
+                                                                <option value="">Select Batch</option>
+                                                            </select>
+                                                        </div>-->
                             <button class="btn btn-sm btn-grey" ng-click="loadBatchList(sale_payment_type)">
                                 &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
                             </button>
                             <button class="btn btn-sm btn-dark" title="clear filter" ng-click="form_filter = '';form_filter1 = '';loadBatchList()">
                                 <i class="fa fa-times"></i>
                             </button>
+                        </div>
+                        <div class="col-sm-2 text-right">
+                            <div class="dataTables_length" style="margin: 0px;">
+                                <label>Show
+                                    <select id="ddlPageSize" class=" "  
+                                            ng-model="pageSizeSelected"  
+                                            ng-change="pageBatchPageSize()">  
+                                        <option value="100">100</option>  
+                                        <option value="250">250</option>  
+                                        <option value="500">500</option>
+                                        <option value="1000">1000</option>  
+                                    </select> entries
+                                </label>
+                            </div> 
+                            <button ng-click="tablesToExcel(['export_batch_details'], ['{{app.org_name}}'], 'Batch Details.xls', 'Excel');" class="btn btn-sm btn-danger"><i class="fa fa-file-excel-o"></i></button>
                         </div>
                     </div>
                 </div>
@@ -76,8 +91,8 @@
                                         {{ row.mrp || 'empty' }}
                                     </span>
                                 </td>
-<!--                                <td>{{row.product.salesPackageName}}</td>-->
-<td>{{row.package_name}}</td>
+                                <!--                                <td>{{row.product.salesPackageName}}</td>-->
+                                <td>{{row.package_name}}</td>
                                 <td>{{row.product.saleVatPercent}}</td>
                                 <td style="white-space: nowrap">
                                     <!--                                                         form -->
@@ -113,6 +128,34 @@
                             </tr>
                         </tfoot>
                     </table>
+                    <div ng-hide="true" id="export_batch_details">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th data-toggle="true">Description</th>
+                                    <th data-toggle="true">Product Name</th>
+                                    <th data-toggle="true">Batch No.</th>
+                                    <th data-toggle="true">Expiry Date</th>
+                                    <th data-toggle="true">Available Qty</th>
+                                    <th data-toggle="true">MRP</th>
+                                    <th data-toggle="true">Purchase Unit</th>
+                                    <th data-toggle="true">Sales VAT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(key, row) in rowCollection| orderBy: description">
+                                    <td>{{row.product.description_name}}</td>
+                                    <td>{{row.product.full_name}}</td>
+                                    <td>{{row.batch_no || '-' }}</td>
+                                    <td>{{row.expiry_date | moment:'MMM YYYY' || 'empty' }}</td>
+                                    <td>{{row.available_qty}}</td>
+                                    <td>{{row.mrp || 'empty' }}</td>
+                                    <td>{{row.package_name}}</td>
+                                    <td>{{row.product.saleVatPercent}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
