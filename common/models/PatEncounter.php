@@ -488,6 +488,7 @@ class PatEncounter extends RActiveRecord {
                                 'patient_age_ym',
                                 'patient_global_int_code',
                                 'patient_category',
+                                'patient_category_id',
                                 'patient_category_fullname',
                                 'patient_mobile',
                                 'patient_id',
