@@ -75,6 +75,7 @@ class PharmacypurchasebillingController extends ActiveController {
                 $purchase = PhaPurchase::find()->tenant()->andWhere(['purchase_id' => $post['purchase_id']])->one();
                 if (!empty($purchase)) {
                     $model = new PhaPurchaseBilling;
+                    $model->attributes = $post;
                     $model->attributes = [
                         'purchase_id' => $purchase->purchase_id,
                         'paid_date' => $post['paid_date'],

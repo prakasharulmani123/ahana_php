@@ -34,11 +34,20 @@ class PhaPurchaseBilling extends PActiveRecord {
      */
     public function rules() {
         return [
-            [['purchase_id', 'paid_date', 'paid_amount'], 'required'],
-            [['purchase_id', 'tenant_id', 'created_by', 'modified_by'], 'integer'],
-            [['paid_date', 'created_at', 'modified_at', 'deleted_at'], 'safe'],
-            [['paid_amount'], 'number'],
-            [['status'], 'string']
+                [['purchase_id', 'paid_date', 'paid_amount'], 'required'],
+                [['purchase_id', 'tenant_id', 'created_by', 'modified_by'], 'integer'],
+                [['paid_date', 'created_at', 'modified_at', 'deleted_at', 'payment_mode', 'card_type', 'card_number', 'bank_name', 'bank_date', 'cheque_no', 'ref_no'], 'safe'],
+                [['paid_amount'], 'number'],
+                [['status'], 'string'],
+                [['card_type', 'card_number'], 'required', 'when' => function($model) {
+                    return ($model->payment_mode == 'CD');
+                }],
+                [['bank_name', 'cheque_no', 'bank_date'], 'required', 'when' => function($model) {
+                    return ($model->payment_mode == 'CH');
+                }],
+                [['bank_name', 'ref_no', 'bank_date'], 'required', 'when' => function($model) {
+                    return ($model->payment_mode == 'ON');
+                }],
         ];
     }
 
@@ -74,11 +83,11 @@ class PhaPurchaseBilling extends PActiveRecord {
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
-    
+
     public static function find() {
         return new PhaPurchaseBillingQuery(get_called_class());
     }
-    
+
     public function afterSave($insert, $changedAttributes) {
         $bill_amount = $this->purchase->net_amount;
         $billings_total = $this->find()->where(['purchase_id' => $this->purchase_id])->sum('paid_amount');
