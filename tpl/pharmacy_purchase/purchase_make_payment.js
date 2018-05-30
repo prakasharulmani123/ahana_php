@@ -25,10 +25,32 @@ app.controller('PurchaseMakePaymentController', ['scope', '$scope', '$modalInsta
         $scope.data = {};
         $scope.data.purchase_id = purchase.purchase_id;
         $scope.data.paid_date = paid_date;
-        $scope.data.paid_amount = balance;        
+        $scope.data.paid_amount = balance;
+        $scope.data.payment_mode = 'CA';
+        
+        $rootScope.commonService.GetPaymentModes(function (response) {
+            $scope.paymentModes = response;
+        });
 
         $scope.saveForm = function () {
             _that = this;
+            if (_that.data.payment_mode != 'CD') {
+                _that.data.card_type = '';
+                _that.data.card_number = '';
+            }
+
+            if (_that.data.payment_mode != 'CH') {
+                _that.data.cheque_no = '';
+            }
+
+            if (_that.data.payment_mode != 'ON') {
+                _that.data.ref_no = '';
+            }
+
+            if ((_that.data.payment_mode != 'ON') && (_that.data.payment_mode != 'CH')) {
+                _that.data.bank_name = '';
+                _that.data.bank_date = '';
+            }
 
             $scope.errorData = "";
             scope.msg.successMessage = "";
