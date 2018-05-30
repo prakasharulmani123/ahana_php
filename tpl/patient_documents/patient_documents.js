@@ -1112,7 +1112,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
         $scope.ckeditorReplace = function () {
             CKEDITOR.replaceAll('classy-edit');
             CKEDITOR.config.disableNativeSpellChecker = true,
-                    CKEDITOR.config.scayt_autoStartup = true
+                    CKEDITOR.config.scayt_autoStartup = false
             CKEDITOR.config.toolbar = [
                 ['Styles', 'Format', 'Font', 'FontSize', 'spellchecker'],
 
