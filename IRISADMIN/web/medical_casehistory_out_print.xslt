@@ -513,6 +513,24 @@ or (@id='past_medical_TB') or (@id='past_medical_cancer') or (@id='past_medical_
                         </td>
                     </tr>
                     
+                    <tr>
+                        <td colspan="2" align="left" valign="top">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <xsl:for-each select="PANELBODY/FIELD[(@type='TextArea') and (@id='past_medical_notes')]">
+                                    <xsl:if test="VALUE and VALUE!=''">
+                                        <tr>
+                                            <xsl:apply-templates select = "@label" />
+                                            <td width="63%" align="left" valign="top">
+                                                <xsl:call-template name="LFsToBRs">
+                                                    <xsl:with-param name="input" select="VALUE"/>
+                                                </xsl:call-template> 
+                                            </td>
+                                        </tr>
+                                    </xsl:if>
+                                </xsl:for-each>
+                            </table>
+                        </td>
+                    </tr>
                     
                     <xsl:for-each select="PANELBODY/FIELD[@type='Header2' and @label='Current Medications']">
                         <tr>

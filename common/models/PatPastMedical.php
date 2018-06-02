@@ -77,7 +77,10 @@ class PatPastMedical extends RActiveRecord {
         $extend = [
             'created_by' => function ($model) {
                 return $model->createdUser->name;
-            }
+            },
+            'full_notes' => function ($model) {
+                return nl2br($model->past_medical);
+            },
         ];
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
