@@ -3422,7 +3422,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 method: 'POST',
                 url: $rootScope.IRISOrgServiceUrl + '/patientprescription/updatepastmedical',
                 data: $data,
-            });
+            }).then(
+                    function (response) {
+                        if (response.data.success === true) {
+                            $scope.getAllPastmedical();
+                        }
+                    }
+            );
         }
 
 // Prescription - Frequency Tab Navigation.

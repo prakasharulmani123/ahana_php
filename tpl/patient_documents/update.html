@@ -39,7 +39,7 @@
                                 <td>{{past.encounter_id}}</td>
                                 <td class="v-middle">
                                     <span editable-textarea="past.past_medical"  e-rows="3" e-cols="40" e-name="past_medical" e-form="pastmedicalform" onbeforesave="checkName($data)" e-required>
-                                        {{ past.past_medical || 'empty' }}
+                                        <span ng-bind-html="past.full_notes"></span>
                                     </span>
                                 </td>
 <!--                                <td>{{past.past_medical}}</td>-->

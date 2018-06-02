@@ -36,7 +36,7 @@
                             <tr ng-repeat="past in pastMedical">
                                 <td>{{past.created_at| moment:'DD/MM/YYYY - hh:mm A'}}</td>
                                 <td>{{past.encounter_id}}</td>
-                                <td>{{past.past_medical}}</td>
+                                <td><span ng-bind-html="past.full_notes"></span></td>
                                 <td>{{past.created_by}}</td>
                             </tr>
                         </tbody>
