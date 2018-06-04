@@ -760,10 +760,11 @@ class PatEncounter extends RActiveRecord {
                 ->one();
 
         if (!$deleted) {
-            $list = self::find()->where("patient_id IN ($all_patient_id->allpatient)")->status($status)->active()->encounterType($encounter_type);
+            $list = self::find()->where("patient_id IN ($all_patient_id->allpatient)")->active();
             if ($oldencounter != 'undefined') {
                 $list->andWhere(['<=', 'DATE(encounter_date)', date('Y-m-d')]);
             }
+            $list->andWhere("((encounter_type='IP') AND (`status` = '1')) OR (encounter_type='OP')");
             $list = $list->orderBy(['encounter_id' => SORT_DESC])->all();
         } else
             $list = self::find()->where("patient_id IN ($all_patient_id->allpatient)")->encounterType($encounter_type)->deleted()->orderBy(['encounter_id' => SORT_DESC])->all();
