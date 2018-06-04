@@ -232,6 +232,18 @@ angular.module('app').controller('PatientLeftSideNotificationCtrl', ['$rootScope
                                 bp--;
                             }
                         });
+                        
+                        //BMI chart data
+                        $scope.bmi_graph_data = [];
+                        $scope.bmi_graph_tick = [];
+                        var bmi = vitals.bmi.length;
+                        angular.forEach(vitals.bmi, function (row) {
+                            if (row.bmi) {
+                                $scope.bmi_graph_data.push([bmi, row.bmi]);
+                                $scope.bmi_graph_tick.push([bmi, moment(row.vital_time).format('DD-MM-YY')]);
+                                bmi--;
+                            }
+                        });
                     })
         }
     }]);

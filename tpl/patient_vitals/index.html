@@ -358,6 +358,37 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6 graph1 graph1" ng-show="(vitalcong.BMI == 1)">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading font-bold">BMI</div>
+                                    <div class="panel-body">
+                                        <div ng-if="bmi_graph_data" ui-jq="plot" ui-refresh="pain_graph_data" ui-options="
+                                             [
+                                             { data: {{bmi_graph_data}}, points: { show: true }, lines: { show: true, fillColor: { colors: [{ opacity: 0.1 }, { opacity: 0.1}] } } }
+                                             ],
+                                             {
+                                             colors: ['{{app.color.black}}'],
+                                             series: { shadowSize: 3 },
+                                             xaxis:{ 
+                                             tickLength: 0,
+                                             ticks: ticks,
+                                             min: 0.8, 
+                                             max: 5.3,
+                                             labelWidth: 10,
+                                             font: { color: '#444444' },
+                                             position: 'bottom',
+                                             ticks: {{bmi_graph_tick}}
+                                             },
+                                             yaxis:{ font: { color: '#444444' } },
+                                             grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#444444' },
+                                             tooltip: true,
+                                             tooltipOpts: { content: '%x is %y',  defaultTheme: false, shifts: { x: 0, y: 20 } }
+                                             }
+                                             " style="height:240px;width:100%" >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </accordion-group>
                 </accordion>
