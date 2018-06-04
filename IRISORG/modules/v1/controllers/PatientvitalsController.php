@@ -230,8 +230,13 @@ class PatientvitalsController extends ActiveController {
                 ->orderBy(['vital_id' => SORT_DESC])
                 ->limit(5)
                 ->all();
+        $bmi = PatVitals::find()->tenant()->active()->status()->andWhere(['patient_id' => $patient_id])
+                ->andWhere(['not', ['bmi' => null]])
+                ->orderBy(['vital_id' => SORT_DESC])
+                ->limit(5)
+                ->all();
         return ['success' => true, 'temperature' => $temperature, 'bp' => $bp, 'pulse' => $pulse,
-            'weight' => $weight, 'height' => $height, 'sp02' => $sp02, 'painScore' => $painScore];
+            'weight' => $weight, 'height' => $height, 'sp02' => $sp02, 'painScore' => $painScore, 'bmi' => $bmi];
     }
 
     public function actionGetvitalsbyencounter() {
