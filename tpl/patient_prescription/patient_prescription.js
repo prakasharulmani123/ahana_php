@@ -197,14 +197,25 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $scope.data.prescriptionItems[key].manual_textbox = false;
         }
 
+        $scope.checkQtyTextboxAction = function (days, item, key, tableform) {
+            if ((typeof days != '') && (days != 0)) {
+                $scope.data.prescriptionItems[key].manual_qty_textbox = true;
+            } else
+                $scope.data.prescriptionItems[key].manual_qty_textbox = false;
+        }
+
         $scope.numberDaysChange = function (days, item, key, tableform) {
             if (typeof days != 'undefined') {
 //                $scope.data.prescriptionItems[key].frequency = $('#freq_' + key + '_' + item.freqType + ' input').val();
-                $scope.data.prescriptionItems[key].frequency = item.frequency;
-                $scope.data.prescriptionItems[key].number_of_days = days;
-                $scope.data.prescriptionItems[key].qty = $scope.calculate_qty($scope.data.prescriptionItems[key].frequency, days, item.product_description_id, item.description_name);
-                $scope.data.prescriptionItems[key].total = $scope.calculate_price($scope.data.prescriptionItems[key].qty, item.price);
-                $scope.data.prescriptionItems[key].in_stock = (parseInt(item.available_quantity) >= parseInt($scope.data.prescriptionItems[key].qty));
+                if (!item.manual_qty_textbox) {
+                    $scope.data.prescriptionItems[key].frequency = item.frequency;
+                    $scope.data.prescriptionItems[key].number_of_days = days;
+                    $scope.data.prescriptionItems[key].qty = $scope.calculate_qty($scope.data.prescriptionItems[key].frequency, days, item.product_description_id, item.description_name);
+                    $scope.data.prescriptionItems[key].total = $scope.calculate_price($scope.data.prescriptionItems[key].qty, item.price);
+                    $scope.data.prescriptionItems[key].in_stock = (parseInt(item.available_quantity) >= parseInt($scope.data.prescriptionItems[key].qty));
+                } else {
+                    $scope.data.prescriptionItems[key].number_of_days = days;
+                }
             } else {
                 $scope.data.prescriptionItems[key].number_of_days = '';
             }
@@ -243,6 +254,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             if (typeof qty != 'undefined') {
                 $scope.data.prescriptionItems[key].total = $scope.calculate_price(qty, item.price);
                 $scope.data.prescriptionItems[key].in_stock = (parseInt(item.available_quantity) >= parseInt(qty));
+                $scope.data.prescriptionItems[key].qty = qty;
             }
 
             //Bc-179 Dropdown - Qty 
@@ -406,6 +418,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         'drug_class_id': item.drug_class_id,
                         'drug_name': item.drug_name,
                         'manual_textbox': false,
+                        'manual_qty_textbox': false,
                         'route': item.route,
                         'frequency': item.frequency,
                         'number_of_days': 0,
@@ -659,6 +672,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             'drug_class_id': $scope.addData.drug_class.drug_class_id,
                             'drug_name': $scope.addData.drug_class.drug_name,
                             'manual_textbox': false,
+                            'manual_qty_textbox': false,
                             'route_id': $scope.addData.route.route_id,
                             'route': $scope.addData.route.route_name,
                             'frequency': $scope.addData.frequency,
@@ -725,6 +739,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     'drug_class_id': value.drug_class_id,
                     'drug_name': value.drug_name,
                     'manual_textbox': false,
+                    'manual_qty_textbox': false,
                     'route': value.route_name,
                     'frequency': value.frequency_name,
                     'number_of_days': no_of_days,
@@ -867,6 +882,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     'drug_class_id': value.drug_class_id,
                     'drug_name': value.drug_name,
                     'manual_textbox': false,
+                    'manual_qty_textbox': false,
                     'route': value.route_name,
                     'frequency': value.frequency_name,
                     'number_of_days': value.number_of_days,
@@ -945,6 +961,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         'drug_class_id': prescription.drug_class_id,
                                         'drug_name': prescription.drug_name,
                                         'manual_textbox': false,
+                                        'manual_qty_textbox': false,
                                         'route': route,
                                         'frequency': prescription.frequency,
                                         'number_of_days': no_of_days,
@@ -1045,6 +1062,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         'drug_class_id': args.drug_class_id,
                         'drug_name': args.drug_name,
                         'manual_textbox': false,
+                        'manual_qty_textbox': false,
                         'route_id': '',
                         'route': '',
                         'frequency': '',
@@ -1548,6 +1566,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     'drug_class_id': item.drug_class_id,
                     'drug_name': item.drug_name,
                     'manual_textbox': false,
+                    'manual_qty_textbox': false,
                     'route': item.route_name,
                     'frequency': item.frequency_name,
                     'number_of_days': 0,
@@ -1995,9 +2014,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $('#freq_' + key + '_' + ftype).removeClass('hide');
                 $scope.data.prescriptionItems[key].frequency = freq;
                 $scope.data.prescriptionItems[key].freqType = ftype;
-                $scope.data.prescriptionItems[key].qty = $scope.calculate_qty(freq, item.number_of_days, item.product_description_id, item.description_name);
-                $scope.data.prescriptionItems[key].total = $scope.calculate_price($scope.data.prescriptionItems[key].qty, item.price);
-                $scope.data.prescriptionItems[key].in_stock = (parseInt(item.available_quantity) >= parseInt($scope.data.prescriptionItems[key].qty));
+                if (!item.manual_qty_textbox) {
+                    $scope.data.prescriptionItems[key].qty = $scope.calculate_qty(freq, item.number_of_days, item.product_description_id, item.description_name);
+                    $scope.data.prescriptionItems[key].total = $scope.calculate_price($scope.data.prescriptionItems[key].qty, item.price);
+                    $scope.data.prescriptionItems[key].in_stock = (parseInt(item.available_quantity) >= parseInt($scope.data.prescriptionItems[key].qty));
+                }
             }
 
             angular.forEach($scope.tableform.$editables, function (editableValue, editableKey) {
@@ -2330,6 +2351,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         'drug_class_id': globalPrescription.drug_class_id,
                                         'drug_name': globalPrescription.drug_name,
                                         'manual_textbox': manual,
+                                        'manual_qty_textbox': manual,
                                         'route': route,
                                         'frequency': globalPrescription.frequency,
                                         'number_of_days': no_of_days,
