@@ -46,11 +46,17 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                     } else {
                         var consultant_id = '';
                         if (actEnc[0].liveAppointmentArrival.hasOwnProperty('appt_id')) {
-                            $scope.data = {'PatAppointment': {'appt_status': 'A', 'dummy_status': 'A', 'status_date': moment().format('YYYY-MM-DD HH:mm:ss'), 'payment_mode': 'CA', 'bank_date': moment().format('YYYY-MM-DD HH:mm:ss')}};
+                            $scope.data = {'PatAppointment': {'appt_status': 'A', 'dummy_status': 'A', 'status_date': moment().format('YYYY-MM-DD HH:mm:ss'), 'payment_mode': 'CA', 'bank_date': moment().format('YYYY-MM-DD HH:mm:ss'), 'proc_date' : moment().format('YYYY-MM-DD HH:mm:ss')}};
                             consultant_id = actEnc[0].liveAppointmentArrival.consultant_id;
                             $scope.data.PatAppointment.future_consultant_id = consultant_id;
                             $scope.data.PatAppointment.future_status_date = moment().format('YYYY-MM-DD');
                             $scope.getTimeSlots($scope.data.PatAppointment.future_consultant_id, $scope.data.PatAppointment.future_status_date);
+                            
+                            //Set Add Procedure form fields
+                            $rootScope.commonService.GetChargeCategoryList('', '1', false, 'PRC', function (response) {
+                                $scope.procedures = response.categoryList;
+                            });
+                            
                         } else if (actEnc[0].liveAppointmentBooking.hasOwnProperty('appt_id')) {
                             $scope.data = {'PatAppointment': {'appt_status': 'B', 'dummy_status': 'B', 'status_date': moment().format('YYYY-MM-DD HH:mm:ss'), 'payment_mode': 'CA', 'bank_date': moment().format('YYYY-MM-DD HH:mm:ss')}};
                             consultant_id = actEnc[0].liveAppointmentArrival.consultant_id;

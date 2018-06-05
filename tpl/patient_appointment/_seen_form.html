@@ -1,5 +1,48 @@
 <form name ="patientAppointmentChangeStatusForm" class="form-horizontal form-validation" novalidate="">
+
+    <!-- Procedure section START-->
     <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">Add Procedure</h4>
+        </div>
+        <div class="panel-body">
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Procedure Date </label>
+                <div class="col-sm-9">
+                    <div class="input-group w-md">
+                        <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0)">
+                            <div class="input-group">
+                                <input type="text" class="form-control" data-ng-model="data.PatAppointment.proc_date" data-date-time-input="YYYY-MM-DD hh:mm A" />
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <datetimepicker data-ng-model="data.PatAppointment.proc_date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" data-on-set-time="onTimeSet(newDate, oldDate)"/>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="line line-dashed b-b line-lg "></div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Procedure </label>
+                <div class="col-sm-9">
+                    <select class="selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true" ng-model="data.PatAppointment.charge_subcat_id" ng-options="procedure.charge_subcat_id as procedure.charge_subcat_name for procedure in procedures| orderBy: charge_subcat_name" multiple>
+                        <option value="">Select Procedure</option>
+                    </select>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Procedure section END-->
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">Appointment change status</h4>
+        </div>
         <div class="panel-body">
             <div class="form-group">
                 <label class="col-sm-3 control-label">Status</label>
@@ -172,7 +215,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">Consultant </label>
                 <div class="col-sm-9">
-                    <select class="form-control" ng-model="data.PatAppointment.future_consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors | orderBy: name" ng-change="getTimeOfFutureAppointment();">
+                    <select class="form-control" ng-model="data.PatAppointment.future_consultant_id" ng-options="doctor.user_id as doctor.fullname for doctor in doctors| orderBy: name" ng-change="getTimeOfFutureAppointment();">
                         <option value="">Select Consultant</option>
                     </select>
                 </div>
@@ -213,7 +256,7 @@
                             </button>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
             <div class="line line-dashed b-b line-lg "></div>
