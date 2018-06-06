@@ -21,6 +21,12 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
         $scope.enc = scope.enc;
         $scope.logged_tenant_id = scope.logged_tenant_id;
 
+        if ($scope.recurr_billing.total_pharmacy) {
+            $scope.pharmacy_total_concession = $scope.recurr_billing.total_pharmacy.recurring_total_concession;
+        } else {
+            $scope.pharmacy_total_concession = 0;
+        }
+
         $scope.detailed_billing = {};
         $scope.detailed_recurr_billing = {};
 
@@ -345,7 +351,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
             }
             bill.push([
                 {
-                    text: 'Net Total : ' + ((parseFloat(price) + parseFloat($scope.recurr_billing.total.recurring_total) + parseFloat(pharmacy)) - parseFloat(advance_charge) - parseFloat($scope.enc.selected.concession_amount) - parseFloat(pharmacy_paid) - parseFloat($scope.recurr_billing.total_pharmacy.recurring_total_concession)).toFixed(2).toString(),
+                    text: 'Net Total : ' + ((parseFloat(price) + parseFloat($scope.recurr_billing.total.recurring_total) + parseFloat(pharmacy)) - parseFloat(advance_charge) - parseFloat($scope.enc.selected.concession_amount) - parseFloat(pharmacy_paid) - parseFloat($scope.pharmacy_total_concession)).toFixed(2).toString(),
                     fillColor: '#eeeeee',
                     bold: true,
                     margin: [0, 10, 2, 0],
@@ -858,7 +864,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
             ]);
             bill.push([
                 {
-                    text: 'Discount : ' + (parseFloat((typeof $scope.enc.selected.concession_amount == 'undefined') ? '0.00' : $scope.enc.selected.concession_amount) + parseFloat(disconcession) + parseFloat($scope.recurr_billing.total_pharmacy.recurring_total_concession)).toString(),
+                    text: 'Discount : ' + (parseFloat((typeof $scope.enc.selected.concession_amount == 'undefined') ? '0.00' : $scope.enc.selected.concession_amount) + parseFloat(disconcession) + parseFloat($scope.pharmacy_total_concession)).toString(),
                     fillColor: '#eeeeee',
                     bold: true,
                     margin: [0, 10, 2, 0],
@@ -903,7 +909,7 @@ app.controller('PrintBillController', ['scope', '$scope', '$modalInstance', '$ro
 //            ]);
             bill.push([
                 {
-                    text: 'Net Total : ' + ((parseFloat(price) + parseFloat($scope.recurr_billing.total.recurring_total) + parseFloat(pharmacy)) - parseFloat(advance_charge) - parseFloat($scope.enc.selected.concession_amount) - parseFloat(pharmacy_paid) - parseFloat($scope.recurr_billing.total_pharmacy.recurring_total_concession)).toString(),
+                    text: 'Net Total : ' + ((parseFloat(price) + parseFloat($scope.recurr_billing.total.recurring_total) + parseFloat(pharmacy)) - parseFloat(advance_charge) - parseFloat($scope.enc.selected.concession_amount) - parseFloat(pharmacy_paid) - parseFloat($scope.pharmacy_total_concession)).toString(),
                     fillColor: '#eeeeee',
                     bold: true,
                     margin: [0, 10, 2, 0],
