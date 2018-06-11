@@ -780,7 +780,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                     });
                             $scope.msg.successMessage = "Medicine has been added to the current prescription";
                         } else {
-                            $scope.msg.errorMessage = "Some Product is not available for this branch";
+                            $scope.errorProduct.push(value.product_name);
+                            $scope.msg.errorMessage = $scope.errorProduct + " Product is not available for this branch";
                         }
                     })
                     .error(function () {
@@ -844,6 +845,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
         $scope.addToCurrentPrescription = function () {
             if ($scope.previousPresSelected > 0) {
+                $scope.errorProduct = [];
                 var loop_total = $scope.previousPresSelectedItems.length;
                 var loop_start = 0;
                 //if ($scope.pharmacy_tenant != $scope.previousPresSelectedItems[0].pharmacy_tenant_id) {
@@ -878,6 +880,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.addToReprescribe = function () {
+            $scope.errorProduct = [];
             PrescriptionService.deleteAllPrescriptionItem();
             if ($scope.represcribeSelected > 0) {
                 var loop_total = $scope.represcribeSelectedItems.length;
