@@ -1243,6 +1243,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             } else {
                 $scope.duplicateErrormessage = '';
             }
+            if ($scope.globalData.globalprescription) {
+                $scope.errorData = "Selected product not added to prescription. Add selected product before saving prescription?";
+                return false;
+            }
 
 
             /* For print bill */
@@ -2389,7 +2393,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 if (fav && fav.length > 0) {
                     angular.extend(globalPrescription, {is_favourite: 1});
                 }
-
                 var fiter = $filter('filter')($scope.all_products, {product_id: parseInt(globalPrescription.product_id)}, true);
                 var product = fiter[0];
                 var Fields = 'full_name,description_routes,latest_price,availableQuantity,product_description_id,description_name,product_id';
