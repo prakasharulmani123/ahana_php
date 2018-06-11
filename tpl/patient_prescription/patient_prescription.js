@@ -2061,7 +2061,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.presDetail(pres_id).then(function () {
                 delete $scope.data2.items;
                 $timeout(function () {
-                    $("#print_previous_pres").prints({
+                    $("#print_previous_pres").print({
                         globalStyles: false,
                         mediaPrint: false,
                         stylesheet: $rootScope.IRISOrgUrl + "/css/prescription_print.css",
