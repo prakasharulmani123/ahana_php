@@ -176,15 +176,15 @@ class PharmacyproductController extends ActiveController {
         if (isset($get['text'])) {
             $filters = [
                 'OR',
-                ['like', 'pha_product_batch.batch_no', $get['text']],
-                ['like', 'pha_product_description.description_name', $get['text']],
-                ['like', 'pha_product.product_name', $get['text']],
-                ['like', 'pha_product.product_unit_count', $get['text']],
-                ['like', 'pha_product_batch.package_name', $get['text']],
-                ['like', 'pha_product.product_unit', $get['text']],
-                ['like', 'pha_product_batch_rate.mrp', $get['text']],
-                ['like', 'pha_package_unit.package_name', $get['text']],
-                ['like', 'pha_vat.vat', $get['text']],
+                    ['like', 'pha_product_batch.batch_no', $get['text']],
+                    ['like', 'pha_product_description.description_name', $get['text']],
+                    ['like', 'pha_product.product_name', $get['text']],
+                    ['like', 'pha_product.product_unit_count', $get['text']],
+                    ['like', 'pha_product_batch.package_name', $get['text']],
+                    ['like', 'pha_product.product_unit', $get['text']],
+                    ['like', 'pha_product_batch_rate.mrp', $get['text']],
+                    ['like', 'pha_package_unit.package_name', $get['text']],
+                    ['like', 'pha_vat.vat', $get['text']],
             ];
         }
 
@@ -216,6 +216,54 @@ class PharmacyproductController extends ActiveController {
         $productLists = $result->all();
 
         return ['success' => true, 'productLists' => $productLists, 'totalCount' => $totalCount];
+    }
+
+    public function actionGetproductbytenant() {
+        $get = Yii::$app->getRequest()->get();
+        $tenant_product = PhaProduct::find()
+                        ->where(['tenant_id' => $get['pharmacy_tenant'], 'status' => '1'])
+                        ->andFilterWhere([
+                            'and',
+                                ['like', 'product_name', $get['product_name']],
+                                ['like', 'product_unit', $get['product_unit']],
+                                ['like', 'product_unit_count', $get['product_unit_count']],
+                        ])->one();
+        if (!empty($tenant_product)) {
+            $connection = Yii::$app->client_pharmacy;
+            $connection->open();
+            $command = $connection->createCommand("
+                    SELECT a.product_id, a.product_name, b.generic_id, b.generic_name, c.drug_class_id, c.drug_name,
+                    CONCAT(
+                        IF(b.generic_name IS NOT NULL, b.generic_name, ''),
+                        IF(a.product_name IS NOT NULL, CONCAT(' // ', a.product_name), ''),
+                        IF(a.product_unit_count IS NOT NULL, CONCAT(' ', a.product_unit_count), ''),
+                        IF(a.product_unit IS NOT NULL, CONCAT('', a.product_unit), '')
+                    ) AS prescription, '' as selected, a.product_description_id,
+                    (
+                        SELECT IF(SUM(d.available_qty) IS NOT NULL, SUM(d.available_qty), 0)
+                        FROM pha_product_batch d
+                        WHERE d.tenant_id = a.tenant_id
+                        AND d.product_id = a.product_id AND d.expiry_date >= '" . date('Y-m-d') . "'
+                    ) as available_quantity
+                    FROM pha_product a
+                    LEFT OUTER JOIN pha_generic b
+                    ON b.generic_id = a.generic_id
+                    LEFT OUTER JOIN pha_drug_class c
+                    ON c.drug_class_id = a.drug_class_id
+                    WHERE a.tenant_id = :tenant_id
+                    AND a.product_id = :product_id AND a.status='1' AND a.drug_class_id IS NOT NULL
+                    ORDER BY a.product_name
+                    LIMIT 0,:limit", [':limit' => 1, ':tenant_id' => $get['pharmacy_tenant'], ':product_id' => $tenant_product['product_id']]
+            );
+            $product = $command->queryAll();
+            if (!empty($product)) {
+                return ['success' => true, 'product' => $product['0']];
+            } else {
+                return ['success' => false];
+            }
+        } else {
+            return ['success' => false];
+        }
     }
 
     public function actionSearchbycriteria() {
@@ -801,10 +849,10 @@ class PharmacyproductController extends ActiveController {
                     ])
                     ->andFilterWhere([
                         'OR',
-                        ['like', 'pha_product.product_name', $requestData['search']['value']],
-                        ['like', 'pha_product_description.description_name', $requestData['search']['value']],
-                        ['like', 'pha_brand.brand_name', $requestData['search']['value']],
-                        ['like', 'pha_generic.generic_name', $requestData['search']['value']],
+                            ['like', 'pha_product.product_name', $requestData['search']['value']],
+                            ['like', 'pha_product_description.description_name', $requestData['search']['value']],
+                            ['like', 'pha_brand.brand_name', $requestData['search']['value']],
+                            ['like', 'pha_generic.generic_name', $requestData['search']['value']],
                     ])
                     ->count();
 
@@ -816,10 +864,10 @@ class PharmacyproductController extends ActiveController {
                     ])
                     ->andFilterWhere([
                         'OR',
-                        ['like', 'pha_product.product_name', $requestData['search']['value']],
-                        ['like', 'pha_product_description.description_name', $requestData['search']['value']],
-                        ['like', 'pha_brand.brand_name', $requestData['search']['value']],
-                        ['like', 'pha_generic.generic_name', $requestData['search']['value']],
+                            ['like', 'pha_product.product_name', $requestData['search']['value']],
+                            ['like', 'pha_product_description.description_name', $requestData['search']['value']],
+                            ['like', 'pha_brand.brand_name', $requestData['search']['value']],
+                            ['like', 'pha_generic.generic_name', $requestData['search']['value']],
                     ])
                     ->limit($requestData['length'])
                     ->offset($requestData['start'])

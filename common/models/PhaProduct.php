@@ -438,6 +438,9 @@ class PhaProduct extends PActiveRecord {
                     $parent_fields = [
                         'product_id' => 'product_id',
                         'product_description_id' => 'product_description_id',
+                        'product_name' => 'product_name',
+                        'product_unit' => 'product_unit',
+                        'product_unit_count' => 'product_unit_count',
                     ];
                     break;
                 case 'presc_search':
