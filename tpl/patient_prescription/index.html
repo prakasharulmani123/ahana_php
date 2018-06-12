@@ -38,7 +38,7 @@
                                     </a>
                                 </li>
                                 <li ng-show="(prescription_tab.PTV == 1)" ng-class="{active:tab == 3}">
-                                    <a href ng-click="Setempty_tab(); loadVitals(); seen_vitals_left_notification(); tab = 3">
+                                    <a href ng-click="Setempty_tab(); loadVitals(); checkVitalaccess(); seen_vitals_left_notification(); tab = 3">
                                         <tab-heading> 
                                             <i class="fa fa-heartbeat" aria-hidden="true"></i> 
                                             Vitals <span class="badge bg-success badge-sm m-l-xs" ng-show="app.patientDetail.patientUnseenVitalsCount > 0">
@@ -1281,8 +1281,8 @@
                                 </div>
 
                                 <div ng-show="tab == 3" class="vitals-tab">
-                                    <div class="row" ng-init="vitaldata                                         =                                         {}; 
-                                        vitaldata.formtype                     =                     'add'">
+                                    <div class="row" ng-init="vitaldata = {}; 
+                                        vitaldata.formtype = 'add'">
                                         <div class="col-lg-12" ng-hide="isLoading"> 
                                             <!-- accordion -->
                                             <accordion close-others="oneAtATime">

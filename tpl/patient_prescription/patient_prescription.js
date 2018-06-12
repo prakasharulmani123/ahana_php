@@ -112,8 +112,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.spinnerbar('hide')
                     }
                     //$scope.loadPrevPrescriptionsList();
-                    $scope.getConsultantFreq();
-                    $scope.checkVitalaccess();
+                    //$scope.getConsultantFreq();
+                    //$scope.checkVitalaccess();
                 }, 'prescription', '', '', '1');
             }
         }, true);
@@ -121,6 +121,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             $scope.spinnerbar('show');
             if (newValue != '' && typeof newValue != 'undefined') {
                 //$scope.spinnerbar('hide');
+                $scope.getConsultantFreq();
                 PrescriptionService.setPatientId($scope.patientObj.patient_id);
 //                $scope.loadPrevPrescriptionsList();
 //                $scope.getConsultantFreq();
@@ -318,14 +319,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         angular.forEach(response, function (row) {
                             var listName = row.code;
                             $scope.prescription_tab[listName] = row.value;
-                        });
-                    })
-
-            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=prescription_print&addtfields=pres_configuration')
-                    .success(function (response) {
-                        angular.forEach(response, function (row) {
-                            var listName = row.code;
-                            $scope.prescription_print[listName] = row.value;
                         });
                     })
 
@@ -2058,6 +2051,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.printPres = function (pres_id) {
+            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=prescription_print&addtfields=pres_configuration')
+                    .success(function (response) {
+                        angular.forEach(response, function (row) {
+                            var listName = row.code;
+                            $scope.prescription_print[listName] = row.value;
+                        });
+                    })
             $scope.presDetail(pres_id).then(function () {
                 delete $scope.data2.items;
                 $timeout(function () {
