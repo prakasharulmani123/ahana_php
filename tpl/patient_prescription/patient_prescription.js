@@ -321,7 +321,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             $scope.prescription_tab[listName] = row.value;
                         });
                     })
-
+            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=prescription_print&addtfields=pres_configuration')
+                    .success(function (response) {
+                        angular.forEach(response, function (row) {
+                            var listName = row.code;
+                            $scope.prescription_print[listName] = row.value;
+                        });
+                    })        
 //            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatus?key=ALLERGIES')
 //                    .success(function (response) {
 //                        $scope.print_allergies = response.value;
@@ -2051,13 +2057,6 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.printPres = function (pres_id) {
-            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=prescription_print&addtfields=pres_configuration')
-                    .success(function (response) {
-                        angular.forEach(response, function (row) {
-                            var listName = row.code;
-                            $scope.prescription_print[listName] = row.value;
-                        });
-                    })
             $scope.presDetail(pres_id).then(function () {
                 delete $scope.data2.items;
                 $timeout(function () {
