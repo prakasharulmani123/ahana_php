@@ -111,6 +111,12 @@
             @page  {
                 margin-top: ' + prescription_print.PMT + 'mm;
             }
+
+            #spacer {height: 4em;} /* height of footer + a little extra */
+            #footer {
+                position: fixed;
+                bottom: 0;
+            }
         }
     </style>
     <table class="invoice" align="center">
@@ -247,6 +253,11 @@
                     </td>
                 </tr>
             </tbody>
+            <tfoot>
+                <tr>
+                    <td id="spacer"></td>
+                </tr>
+            </tfoot>
         </table>
     </td>
 </tr> 
@@ -257,8 +268,8 @@
     </tr>
 </tfoot>-->
 </table>
-<div>
-    <table style="position: absolute; bottom: 30px;">
+<div id="footer" style="width: 100%;">
+    <table width="100%">
         <tr>
             <td>
                 <div>
@@ -268,8 +279,8 @@
                 </div>
                 <p style="font-size: 25px;"><b>* Next Visit : {{(data2.next_visit| date: "dd-MMMM-y") || "-" }}</b></p>
             </td>
-            <td>
-                <p style="font-size: 25px; float: right;"><b>{{data2.consultant_name}}</b></p>
+            <td style="font-size: 25px;" align="right">
+                <b>{{data2.consultant_name}}</b>
             </td>
         </tr>
     </table>
