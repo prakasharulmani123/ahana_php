@@ -122,6 +122,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             if (newValue != '' && typeof newValue != 'undefined') {
                 //$scope.spinnerbar('hide');
                 $scope.getConsultantFreq();
+                $scope.checkVitalaccess();
                 PrescriptionService.setPatientId($scope.patientObj.patient_id);
 //                $scope.loadPrevPrescriptionsList();
 //                $scope.getConsultantFreq();
