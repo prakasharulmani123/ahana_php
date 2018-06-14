@@ -67,17 +67,18 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
 //        }, true);
 
 
-        $scope.$watch('patientObj.encounter_type', function (newValue, oldValue) {
-            if (newValue != '') {
-                if (newValue) {
-                    $scope.checkVitalaccess();
-                }
-            }
-        }, true);
+//        $scope.$watch('patientObj.encounter_type', function (newValue, oldValue) {
+//            if (newValue != '') {
+//                if (newValue) {
+//                    $scope.checkVitalaccess();
+//                }
+//            }
+//        }, true);
         //Index Page
         $scope.enabled_dates = [];
         $scope.HaveActEnc = false;
         $scope.loadPatVitalsList = function (date) {
+            $scope.checkVitalaccess();
             $scope.setvitalgraph();
             $rootScope.commonService.GetDay(function (response) {
                 $scope.days = response;
