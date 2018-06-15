@@ -223,6 +223,12 @@ class PatientdocumentsController extends ActiveController {
             $patient_document->document_xml = $result;
 
             $patient_document->save(false);
+            if(!empty($post['history_presenting_illness'])) {
+                $presenting_illness = new \common\models\PatHistoryOfPresentingLog();
+                $presenting_illness->doc_id = $patient_document->doc_id;
+                $presenting_illness->history_of_presenting = $post['history_presenting_illness'];
+                $presenting_illness->save(false);
+            }
             return ['success' => true, 'xml' => $result, 'doc_id' => $patient_document->doc_id];
         } else {
             return ['success' => false, 'message' => Html::errorSummary([$patient_document])];
