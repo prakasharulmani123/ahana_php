@@ -139,9 +139,9 @@ class PharmacysaleController extends ActiveController {
                 $data[$key] = $sale->attributes;
 
                 if (!empty($sale->encounter_id))
-                    $sale_item = PhaSale::find()->tenant()->active()->andWhere(['encounter_id' => $sale->encounter_id, 'payment_type' => $get['payment_type']]);
+                    $sale_item = PhaSale::find()->tenant()->active()->andWhere(['encounter_id' => $sale->encounter_id, 'patient_id' => $sale->patient_id, 'payment_type' => $get['payment_type']]);
                 else if (!empty($sale->patient_id))
-                    $sale_item = PhaSale::find()->tenant()->active()->andWhere(['patient_id' => $sale->patient_id, 'payment_type' => $get['payment_type']]);
+                    $sale_item = PhaSale::find()->tenant()->active()->andWhere(['patient_id' => $sale->patient_id, 'encounter_id' => $sale->encounter_id, 'payment_type' => $get['payment_type']]);
                 else
                     $sale_item = PhaSale::find()->tenant()->active()->andWhere(['patient_name' => $sale->patient_name, 'payment_type' => $get['payment_type']]);
 
