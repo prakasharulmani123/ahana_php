@@ -598,4 +598,23 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                 $log.info('Modal dismissed at: ' + new Date());
             });
         }
+        
+        $scope.beforeSeenDateRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+            var d = new Date();
+            var n = d.getDate();
+            var m = d.getMonth();
+            var y = d.getFullYear();
+            var today_date = (new Date(y, m, n)).valueOf();
+
+            angular.forEach($dates, function (date, key) {
+                var calender = new Date(date.localDateValue());
+                var calender_n = calender.getDate();
+                var calender_m = calender.getMonth();
+                var calender_y = calender.getFullYear();
+                var calender_date = (new Date(calender_y, calender_m, calender_n)).valueOf();
+                if (today_date < calender_date) {
+                    $dates[key].selectable = false;
+                }
+            });
+        }
     }]);
