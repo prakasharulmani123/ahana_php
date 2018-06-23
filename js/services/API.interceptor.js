@@ -35,7 +35,8 @@ angular.module('app').factory('APIInterceptor', function ($localStorage, $rootSc
             if (rejection.status === 401) {
                 $rootScope.$broadcast('unauthorized');
             } else if (rejection.status === 500) {
-                $rootScope.$broadcast('internalerror');
+                var rejecion_data = rejection.data.file + ' '+ rejection.data.line;
+                $rootScope.$broadcast('internalerror', rejecion_data);
             }
             return $q.reject(rejection);
         }

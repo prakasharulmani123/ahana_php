@@ -746,9 +746,9 @@ angular.module('app')
                     $scope.logout();
                 });
 
-                $rootScope.$on('internalerror', function () {
+                $rootScope.$on('internalerror', function (event, data) {
                     toaster.clear();
-                    toaster.pop('error', 'Internal Error', 'NetworkError: 500 Internal Server Error');
+                    toaster.pop('error', 'Internal Error', 'NetworkError: 500 Internal Server Error. Error details :'+ data);
                     $scope.loadbar('hide');
                 });
 
