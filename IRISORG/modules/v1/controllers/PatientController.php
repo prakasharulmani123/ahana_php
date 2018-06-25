@@ -223,7 +223,7 @@ class PatientController extends ActiveController {
 
                 //Search from HMS Database but need to check, org have a rights to share basic information.
                 $basic_share_enable = \common\models\AppConfiguration::getConfigurationByCode('BASIC');
-                if (empty($patients) && $basic_share_enable->value == 1) {
+                if (empty($patients) && isset($basic_share_enable) && $basic_share_enable->value == 1) {
 
                     $lists = GlPatient::find()
                             ->andWhere("status = '1' AND tenant_id != {$tenant_id} AND (parent_id IS NULL OR parent_id = '')")
