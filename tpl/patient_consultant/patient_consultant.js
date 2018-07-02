@@ -107,6 +107,9 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                     if (response != null) {
                         $scope.enc.selected = $scope.encounters[0];
                         var actEnc = $filter('filter')($scope.encounters, {status: '1'});
+                        if(($scope.enc.selected.status == '0') && (actEnc.length != 0)) {
+                            $scope.enc.selected = actEnc[0]
+                        }
                     }
                 }, 'encounter_details');
             }
