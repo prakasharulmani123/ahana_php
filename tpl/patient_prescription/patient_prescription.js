@@ -3426,7 +3426,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.ckeditorReplace = function () {
             CKEDITOR.replaceAll('classy-edit');
             CKEDITOR.config.disableNativeSpellChecker = true,
-                    CKEDITOR.config.scayt_autoStartup = true
+                    CKEDITOR.config.scayt_autoStartup = false
             CKEDITOR.config.toolbar = [
                 ['Styles', 'Format', 'Font', 'FontSize', 'spellchecker'],
                 ['Bold', 'Italic', 'Underline', 'StrikeThrough', '-', 'Undo', 'Redo', '-', 'Cut', 'Copy', 'Paste', 'Find', 'Replace', '-', 'Outdent', 'Indent', '-', 'Print'],
