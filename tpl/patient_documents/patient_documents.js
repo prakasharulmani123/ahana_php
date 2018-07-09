@@ -716,7 +716,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                 $('#created_date').html(create_output);
                 $('#date_name').html(output);
                 $('#time').html(time);
-            }, 100);
+            }, 10);
         }
 
         $scope.checkTablerow = function () {
