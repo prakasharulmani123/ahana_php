@@ -123,6 +123,7 @@
                                         <th id="work-base-grid_c7">CGST</th>
                                         <th id="work-base-grid_c8">SGST</th>
                                         <th id="work-base-grid_c9">Round Off</th>
+                                        <th id="work-base-grid_c10">Sale Value</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -147,6 +148,9 @@
                                         <td data-type="Number" ng-init="sale.roundoff_amount = sale.roundoff_amount + checkNextrecord(record.bill_no, records[$index + 1].bill_no, record.roundoff_amount);">
                                             {{checkNextrecord(record.bill_no, records[$index + 1].bill_no, record.roundoff_amount)}}
                                         </td>
+                                        <td data-type="Number" ng-init="sale.total_item_amount = sale.total_item_amount + checkNextrecord(record.bill_no, records[$index + 1].bill_no, record.bill_amount);">
+                                            {{checkNextrecord(record.bill_no, records[$index + 1].bill_no, record.bill_amount)| number:2}}
+                                        </td>
                                     </tr>
                                 </tbody>
                                 <tfoot>
@@ -161,6 +165,7 @@
                                         <th data-type="Number">{{sale.cgst_amount| number:2}}</th>
                                         <th data-type="Number">{{sale.sgst_amount| number:2}}</th>
                                         <th data-type="Number">{{sale.roundoff_amount| number:2}}</th>
+                                        <th data-type="Number">{{sale.total_item_amount| number:2}}</th>
                                     </tr>
                                 </tfoot>
                             </table>
