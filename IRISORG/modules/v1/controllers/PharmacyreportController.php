@@ -70,7 +70,7 @@ class PharmacyreportController extends ActiveController {
     public function actionSalereport() {
         $post = Yii::$app->getRequest()->post();
 
-        $model = PhaSale::find()
+        $model = PhaSale::find()->active()
                 ->tenant()
                 ->andWhere("pha_sale.sale_date between '{$post['from']}' AND '{$post['to']}'");
 
@@ -124,7 +124,7 @@ class PharmacyreportController extends ActiveController {
     public function actionSalereturnreport() {
         $post = Yii::$app->getRequest()->post();
 
-        $model = PhaSaleReturn::find()
+        $model = PhaSaleReturn::find()->active()
                 ->tenant()
                 ->joinWith('sale')
                 ->andWhere("pha_sale_return.sale_return_date between '{$post['from']}' AND '{$post['to']}'");
