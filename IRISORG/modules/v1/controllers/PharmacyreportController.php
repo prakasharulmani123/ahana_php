@@ -100,7 +100,8 @@ class PharmacyreportController extends ActiveController {
                     SUM(b.taxable_value) AS taxable_value,  
                     SUM(b.cgst_amount) AS cgst_amount,
                     SUM(b.sgst_amount) AS sgst_amount,
-                    a.roundoff_amount
+                    a.roundoff_amount,
+                    a.bill_amount
                 FROM `pha_sale` `a`
                     LEFT JOIN `pha_sale_item` `b`
                     ON `a`.`sale_id` = `b`.`sale_id`
