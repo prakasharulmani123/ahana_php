@@ -292,6 +292,9 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
         }
         
         $scope.nameReplace = function (a) {
-            return a.replace('&', '');
+            if(a)
+                return a.replace('&', '');
+            else
+                return '-';
         }
     }]);
