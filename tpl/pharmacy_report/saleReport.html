@@ -136,7 +136,7 @@
                                     <tr ng-repeat="(key, record) in records">
                                         <td>{{key + 1}}</td>
                                         <td>{{record.bill_no}}</td>
-                                        <td>{{record.patient_name}}</td>
+                                        <td>{{nameReplace(record.patient_name)}}</td>
                                         <td>{{record.patient_uhid}}</td>
                                         <td>{{record.patient_group_name|| '-'}}</td>
                                         <td>{{record.sale_date| date:'dd-MM-yyyy'}}</td>

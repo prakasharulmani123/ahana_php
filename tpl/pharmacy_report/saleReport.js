@@ -344,4 +344,10 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
                 }
             }, 1000);
         }
+        $scope.nameReplace = function (a) {
+            if(a)
+                return a.replace('&', '');
+            else
+                return '-';
+        }
     }]);

@@ -307,7 +307,7 @@
                                         <span
                                             editable-text="saleitem.discount_percentage"
                                             e-name="discount_percentage"
-                                            e-index ="{{saleitem.key}}"
+                                            e-index ="{{key}}"
                                             e-number-mask=""
                                             e-form="tableform"
                                             onbeforesave="checkInput($data, key, $index); checkTotalpercentage($data, key, $index);"
@@ -323,7 +323,7 @@
                                         <span
                                             editable-text="saleitem.discount_amount"
                                             e-name="discount_amount"
-                                            e-index ="{{saleitem.key}}"
+                                            e-index ="{{key}}"
                                             e-number-mask=""
                                             e-form="tableform"
                                             e-ng-keydown="updateColumn($data, key, 'discount_amount',tableform)"
