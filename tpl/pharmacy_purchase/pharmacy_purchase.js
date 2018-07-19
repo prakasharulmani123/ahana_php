@@ -460,7 +460,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         $scope.productDetail = function (product_id, product_obj) {
             var deferred = $q.defer();
             deferred.notify();
-            var Fields = 'product_name,purchaseVat,product_batches';
+            var Fields = 'product_name,purchaseVat,gst,product_batches';
 
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + product_id + '?fields=' + Fields + '&addtfields=pharm_purchase_prod_json')
                     .success(function (product) {
@@ -484,7 +484,13 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 $scope.purchaseitems[key].product_id = item.product_id;
                 $scope.purchaseitems[key].vat_percent = selectedObj.purchaseVat.vat;
                 $scope.purchaseitems[key].batches = selectedObj.product_batches;
-
+                if (selectedObj.gst != '-') {
+                    $scope.purchaseitems[key].sgst_percent = (parseFloat(selectedObj.gst) / 2).toFixed(2);
+                    $scope.purchaseitems[key].cgst_percent = (parseFloat(selectedObj.gst) / 2).toFixed(2);
+                } else {
+                    $scope.purchaseitems[key].sgst_percent = 2.5;
+                    $scope.purchaseitems[key].cgst_percent = 2.5;
+                }
                 $scope.purchaseitems[key].batch_no = '0';
                 $scope.purchaseitems[key].batch_details = '';
                 $scope.purchaseitems[key].expiry_date = '';
@@ -584,14 +590,24 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             var rate = parseFloat($scope.purchaseitems[key].purchase_rate);
             var disc_perc = parseFloat($scope.purchaseitems[key].discount_percent);
             var vat_perc = parseFloat($scope.purchaseitems[key].vat_percent);
-
+            var cgst_perc = parseFloat($scope.purchaseitems[key].cgst_percent);
+            var sgst_perc = parseFloat($scope.purchaseitems[key].sgst_percent);
+            
             //Validate isNumer
             qty = !isNaN(qty) ? qty : 0;
             rate = !isNaN(rate) ? rate : 0;
             disc_perc = !isNaN(disc_perc) ? disc_perc : 0;
             vat_perc = !isNaN(vat_perc) ? vat_perc : 0;
+            
+            var taxable_value = (((rate / (100 + sgst_perc + cgst_perc)) * 100).toFixed(2) * qty).toFixed(2);
+            //var cgst_amount = ((total_amount * cgst_perc) / (100 + cgst_perc)).toFixed(2); // Including vat
+            //var sgst_amount = ((total_amount * sgst_perc) / (100 + sgst_perc)).toFixed(2); // Including vat
+            var cgst_amount = (((taxable_value * cgst_perc) / 100)).toFixed(2); // Including vat
+            var sgst_amount = (((taxable_value * sgst_perc) / 100)).toFixed(2); // Including vat
 
-            var purchase_amount = (qty * rate).toFixed(2);
+            var purchase_amount = (parseFloat(taxable_value) + parseFloat(cgst_amount) + parseFloat(sgst_amount)).toFixed(2);
+
+            //var purchase_amount = (qty * rate).toFixed(2);
             var disc_amount = disc_perc > 0 ? (purchase_amount * (disc_perc / 100)).toFixed(2) : 0;
             var total_amount = (purchase_amount - disc_amount).toFixed(2);
             var vat_amount = (total_amount * (vat_perc / 100)).toFixed(2); // Excluding vat
@@ -601,12 +617,15 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             $scope.purchaseitems[key].discount_amount = disc_amount;
             $scope.purchaseitems[key].total_amount = total_amount;
             $scope.purchaseitems[key].vat_amount = vat_amount;
-
+            
+            $scope.purchaseitems[key].cgst_amount = cgst_amount;
+            $scope.purchaseitems[key].sgst_amount = sgst_amount;
+            $scope.purchaseitems[key].taxable_value = taxable_value;
             $scope.updatePurchaseRate();
         }
 
         $scope.updatePurchaseRate = function () {
-            var total_purchase_amount = total_discount_amount = total_vat_amount = 0;
+            var total_purchase_amount = total_discount_amount = total_vat_amount = total_gst_amount = 0;
             var before_disc_amount = after_disc_amount = roundoff_amount = net_amount = 0;
 
             //Get Total Purchase, VAT, Discount Amount
@@ -614,15 +633,19 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 total_purchase_amount = total_purchase_amount + parseFloat(item.total_amount);
                 total_discount_amount = total_discount_amount + parseFloat(item.discount_amount);
                 total_vat_amount = total_vat_amount + parseFloat(item.vat_amount);
+                total_gst_amount = total_gst_amount + parseFloat(item.cgst_amount) + parseFloat(item.sgst_amount);
             });
 
             $scope.data.total_item_purchase_amount = total_purchase_amount.toFixed(2);
             $scope.data.total_item_discount_amount = total_discount_amount.toFixed(2);
             $scope.data.total_item_vat_amount = total_vat_amount.toFixed(2);
+            $scope.data.total_item_gst_amount = total_gst_amount.toFixed(2);
 
             //Get Before Discount Amount (Total Purchase Amount + Total VAT)
-            before_disc_amount = (total_purchase_amount + total_vat_amount).toFixed(2); // Excluding vat
+            //before_disc_amount = (total_purchase_amount + total_vat_amount).toFixed(2); // Excluding vat
 //            before_disc_amount = (total_purchase_amount).toFixed(2); // Including vat
+            //Including GST concept
+            before_disc_amount = (total_purchase_amount).toFixed(2);
             $scope.data.before_disc_amount = before_disc_amount;
 
             //Get Discount Amount
@@ -852,7 +875,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             var result_count = Object.keys($scope.purchaseitems2).length;
             var index = 1;
             var loop_count = 0;
-
+            
             var purchase = $scope.data2;
             purchaseItems.push([
                 {text: 'S.No', style: 'header'},
@@ -868,8 +891,12 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 {text: 'Amt', style: 'header'},
                 {text: 'Dis %', style: 'header'},
                 {text: 'Dis Amt', style: 'header'},
-                {text: 'P.Vat%', style: 'header'},
-                {text: 'Vat Amt', style: 'header'},
+//                {text: 'P.Vat%', style: 'header'},
+//                {text: 'Vat Amt', style: 'header'},
+                {text: 'Cgst Amt', style: 'header'},
+                {text: 'Cgst %', style: 'header'},
+                {text: 'Sgst Amt', style: 'header'},
+                {text: 'Sgst %', style: 'header'},
                 {text: 'Total Amt', style: 'header'},
             ]);
 
@@ -885,11 +912,15 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                     (row.free_quantity_package_unit ? row.free_quantity_package_unit : '-'),
                     row.mrp,
                     row.purchase_rate,
-                    row.purchase_amount,
+                    row.taxable_value,
                     (row.discount_percent ? row.discount_percent : '-'),
                     row.discount_amount,
-                    row.vat_percent,
-                    row.vat_amount,
+                    //row.vat_percent,
+                    //row.vat_amount,
+                    row.cgst_amount,
+                    row.cgst_percent,
+                    row.sgst_amount,
+                    row.sgst_percent,
                     row.total_amount,
                 ]);
                 index++;
@@ -946,7 +977,7 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                 margin: [0, 0, 0, 20],
                 table: {
                     headerRows: 1,
-                    widths: [30, '*', '*', 40, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', '*', 'auto', '*', 'auto', '*', '*'],
+                    widths: [30, '*', '*', 40, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', '*'],
                     body: purchaseItems,
                 },
 //                pageBreak: (loop_count === result_count ? '' : 'after'),
@@ -957,8 +988,10 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
                         text: [
                             {text: 'Total Disc. Amount: ', bold: true},
                             purchase.total_item_discount_amount + '\n\n',
-                            {text: 'Total Vat Amount: ', bold: true},
-                            purchase.total_item_vat_amount + '\n\n',
+                            {text: 'Total Gst Amount: ', bold: true},
+                            purchase.total_item_gst_amount + '\n\n',
+                            //{text: 'Total Vat Amount: ', bold: true},
+                            //purchase.total_item_vat_amount + '\n\n',
                             {text: 'Total Amount: ', bold: true},
                             purchase.total_item_purchase_amount + '\n\n',
                             {text: 'Disc(' + purchase.discount_percent + ') %: ', bold: true},

@@ -878,7 +878,12 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 var disc_perc = disc_amount > 0 ? ((disc_amount / item_amount) * 100).toFixed(2) : 0;
             if (column && column == 'discount_percentage')
                 var disc_amount = disc_perc > 0 ? (item_amount * (disc_perc / 100)).toFixed(2) : 0;
-
+            
+            if(disc_perc > 0) {
+                var new_taxable_value = ((disc_perc / 100) * taxable_value).toFixed(2);
+                var taxable_value = (parseFloat(taxable_value) - parseFloat(new_taxable_value)).toFixed(2);
+            }
+                
             var total_amount = (item_amount - disc_amount).toFixed(2);
             var vat_amount = ((total_amount * vat_perc) / (100 + vat_perc)).toFixed(2);
 

@@ -89,24 +89,35 @@
                     <div class="col-sm-12">
                         <div style="{{css.style}}">
                             <table class="table table-bordered table-hover table-condensed bg-white-only" id="item_table">
-                                <tr style="font-weight: bold">
-                                    <td><span>Product Name</span></td>
-                                    <td><span>Batch No</span></td>
-                                    <td><span>Exp Date</span></td>
-                                    <td><span>Qty</span></td>
-                                    <td><span>PurchaseUnit</span></td>
-                                    <td><span>Free</span></td>
-                                    <td><span>FreeUnit</span></td>
-                                    <td><span>MRP</span></td>
-                                    <td><span>P.Price</span></td>
-                                    <td><span>Amt</span></td>
-                                    <td><span>Dis %</span></td>
-                                    <td><span>Dis Amt</span></td>
-                                    <td><span>P.Vat%</span></td>
-                                    <td><span>Vat Amt</span></td>
-                                    <td><span>Total Amt</span></td>
-                                    <td><span>Action</span></td>
-                                </tr>
+                                <thead class="sales-table-heading">
+                                    <tr style="font-weight: bold">
+                                        <th rowspan="2"><span>Product Name</span></th>
+                                        <th rowspan="2"><span>Batch No</span></th>
+                                        <th rowspan="2"><span>Exp Date</span></th>
+                                        <th rowspan="2"><span>Qty</span></th>
+                                        <th rowspan="2"><span>PurchaseUnit</span></th>
+                                        <th rowspan="2"><span>Free</span></th>
+                                        <th rowspan="2"><span>FreeUnit</span></th>
+                                        <th rowspan="2"><span>MRP</span></th>
+                                        <th rowspan="2"><span>P.Price</span></th>
+                                        <th rowspan="2"><span>Taxable value</span></th>
+                                        <th rowspan="2"><span>Dis %</span></th>
+                                        <th rowspan="2"><span>Dis Amt</span></th>
+<!--                                        <td><span>P.Vat%</span></td>
+                                        <td><span>Vat Amt</span></td>-->
+                                        <th colspan="2"><span>CGST</span></th>
+                                        <th colspan="2"><span>SGST</span></th>
+                                        <th rowspan="2"><span>Total Amt</span></th>
+                                        <th rowspan="2"><span>Action</span></th>
+                                    </tr>
+                                    <tr>
+                                        <th> Rate %</th>
+                                        <th> Amt</th>
+                                        <th> Rate %</th>
+                                        <th> Amt</th>
+                                    </tr>
+                                </thead>
+
                                 <tr ng-repeat="(key, purchaseitem) in purchaseitems">
                                     <td>
                                         <div id="i_full_name_{{key}}">
@@ -261,7 +272,7 @@
                                     </td>
                                     <td>
                                         <span>
-                                            {{purchaseitem.purchase_amount}}
+                                            {{purchaseitem.taxable_value}}
                                         </span>
                                     </td>
                                     <td>
@@ -280,7 +291,27 @@
                                         </span>
                                     </td>
                                     <td><span>{{purchaseitem.discount_amount}}</span></td>
-                                    <td ng-if="formtype == 'add'">
+                                    <td>
+                                        <span>
+                                            {{purchaseitem.cgst_percent}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            {{purchaseitem.cgst_amount}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            {{purchaseitem.sgst_percent}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            {{purchaseitem.sgst_amount}}
+                                        </span>
+                                    </td>
+<!--                                    <td ng-if="formtype == 'add'">
                                         <span
                                             editable-select="purchaseitem.vat_percent"
                                             e-form="tableform"
@@ -292,8 +323,7 @@
                                         </span>
                                     </td>
                                     <td ng-if="formtype == 'update'"><span>{{purchaseitem.vat_percent}}</span></td>
-                                    <!--                                    <td><span>{{purchaseitem.vat_percent}}</span></td>-->
-                                    <td><span>{{purchaseitem.vat_amount}}</span></td>
+                                    <td><span>{{purchaseitem.vat_amount}}</span></td>-->
                                     <td><span>{{purchaseitem.total_amount}}</span></td>
                                     <td align="center">
                                         <a ng-if="formtype == 'add'" ng-click="removeSubcat($index, purchaseitem.full_name)" title="Delete">
@@ -328,10 +358,16 @@
                         <input type="text" class="form-control text-right" ng-value="data.total_item_discount_amount" readonly="">
                     </div>
                 </div>
-                <div class="form-group">
+<!--                <div class="form-group">
                     <label class="col-lg-5 control-label">Total Vat Amount</label>
                     <div class="col-lg-7">
                         <input type="text" class="form-control text-right" ng-value="data.total_item_vat_amount" readonly="">
+                    </div>
+                </div>-->
+                <div class="form-group">
+                    <label class="col-lg-5 control-label">Total Gst Amount</label>
+                    <div class="col-lg-7">
+                        <input type="text" class="form-control text-right" ng-value="data.total_item_gst_amount" readonly="">
                     </div>
                 </div>
                 <div class="form-group">
