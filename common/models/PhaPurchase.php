@@ -59,7 +59,7 @@ class PhaPurchase extends PActiveRecord {
                 [['tenant_id', 'supplier_id', 'created_by', 'modified_by'], 'integer'],
                 [['invoice_date', 'created_at', 'modified_at', 'deleted_at', 'gr_num'], 'safe'],
                 [['payment_type', 'payment_status', 'status'], 'string'],
-                [['total_item_purchase_amount', 'total_item_vat_amount', 'total_item_discount_amount', 'discount_percent', 'discount_amount', 'roundoff_amount', 'net_amount', 'before_disc_amount', 'after_disc_amount'], 'number'],
+                [['total_item_purchase_amount', 'total_item_vat_amount', 'total_item_discount_amount', 'discount_percent', 'discount_amount', 'roundoff_amount', 'net_amount', 'before_disc_amount', 'after_disc_amount', 'total_item_gst_amount'], 'number'],
                 [['purchase_code', 'invoice_no'], 'string', 'max' => 50],
                 [['invoice_no'], 'unique', 'targetAttribute' => ['invoice_no', 'tenant_id', 'gr_num'], 'message' => 'Invoice No / GR No has already been taken.']
         ];
@@ -80,6 +80,7 @@ class PhaPurchase extends PActiveRecord {
             'total_item_purchase_amount' => 'Total Item Purchase Amount',
             'total_item_vat_amount' => 'Total Item Vat Amount',
             'total_item_discount_amount' => 'Total Item Discount Amount',
+            'total_item_gst_amount' => 'Total Item Gst Amount',
             'discount_percent' => 'Discount Percent',
             'discount_amount' => 'Discount Amount',
             'roundoff_amount' => 'Roundoff Amount',
@@ -213,7 +214,7 @@ class PhaPurchase extends PActiveRecord {
                     break;
                 case 'purchase_update':
                     $addt_keys = ['supplier_name', 'items'];
-                    $pFields = ['invoice_no', 'supplier_id', 'invoice_date', 'purchase_id','payment_type'];
+                    $pFields = ['invoice_no', 'supplier_id', 'invoice_date', 'purchase_id','payment_type', 'discount_percent'];
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
                 case 'purchase_bill_search':
