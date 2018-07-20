@@ -204,6 +204,21 @@ class PhaPurchaseItem extends PActiveRecord {
             'purchase_created_by' => function ($model) {
                 return $model->createdUser->name;
             },
+            'cgst_percent' => function ($model) {
+                return (isset($model->cgst_percent) ? $model->cgst_percent : '2.5');
+            },
+            'sgst_percent' => function ($model) {
+                return (isset($model->sgst_percent) ? $model->sgst_percent : '2.5');
+            },
+            'cgst_amount' => function ($model) {
+                return (isset($model->cgst_amount) ? $model->cgst_amount : '0');
+            },
+            'sgst_amount' => function ($model) {
+                return (isset($model->sgst_amount) ? $model->sgst_amount : '0');
+            },
+            'taxable_value' => function ($model) {
+                return (isset($model->taxable_value) ? $model->taxable_value : $model->purchase_amount);
+            },
         ];
 
         $parent_fields = parent::fields();
@@ -291,10 +306,10 @@ class PhaPurchaseItem extends PActiveRecord {
         $batch = $this->_getBatchData();
         if (empty($batch)) {
             $batch = new PhaProductBatch;
-            $batch->total_qty = $batch->available_qty = (($this->quantity * $this->package_unit) + ($this->free_quantity * $this->free_quantity_package_unit));
+            $batch->total_qty = $batch->available_qty = (($this->quantity * (int) $this->package_unit) + ($this->free_quantity * (int) $this->free_quantity_package_unit));
         } else {
             $old_qty = (($this->getOldAttribute('quantity') * $this->getOldAttribute('package_unit')) + ($this->getOldAttribute('free_quantity') * $this->getOldAttribute('free_quantity_package_unit')));
-            $new_qty = (($this->quantity * $this->package_unit) + ($this->free_quantity * $this->free_quantity_package_unit));
+            $new_qty = (($this->quantity * (int) $this->package_unit) + ($this->free_quantity * (int) $this->free_quantity_package_unit));
 
             //Add New Quantity
             if ($old_qty < $new_qty) {
