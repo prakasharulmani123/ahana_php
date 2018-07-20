@@ -599,7 +599,8 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             disc_perc = !isNaN(disc_perc) ? disc_perc : 0;
             vat_perc = !isNaN(vat_perc) ? vat_perc : 0;
             
-            var taxable_value = (((rate / (100 + sgst_perc + cgst_perc)) * 100).toFixed(2) * qty).toFixed(2);
+            //var taxable_value = (((rate / (100 + sgst_perc + cgst_perc)) * 100).toFixed(2) * qty).toFixed(2);
+            var taxable_value = (qty * rate).toFixed(2);
             //var cgst_amount = ((total_amount * cgst_perc) / (100 + cgst_perc)).toFixed(2); // Including vat
             //var sgst_amount = ((total_amount * sgst_perc) / (100 + sgst_perc)).toFixed(2); // Including vat
             var cgst_amount = (((taxable_value * cgst_perc) / 100)).toFixed(2); // Including vat
