@@ -1402,16 +1402,22 @@ class PharmacyproductController extends ActiveController {
                 $product_unit = $data[1];
                 $product_unit_count = $data[2];
                 $product_desc = $data[3];
-                $brand = $data[4];
-                $generic = $data[5];
-                $drug = $data[6];
-                $route = $data[7];
-                $purchase_unit = $data[8];
-                $sale_unit = $data[9];
-                $sale_tax = $data[10];
-                $purchase_tax = $data[11];
-
-                $sql = "INSERT INTO test_product_import(tenant_id, product_name, product_unit, product_unit_count, group_name, brand, generic_name, drug_class, route, purchase_unit, sale_unit, purchase_tax, sale_tax, import_log) VALUES('{$tenant_id}','{$product_name}', '{$product_unit}', '{$product_unit_count}', '{$product_desc}', '{$brand}', '{$generic}', '{$drug}', '{$route}', '{$purchase_unit}', '{$sale_unit}', '{$purchase_tax}', '{$sale_tax}', '{$log}')";
+                $product_reorder_max = $data[4];
+                $product_reorder_min = $data[5];
+                $product_price = $data[6];
+                $brand = $data[7];
+                $division = $data[8];
+                $generic = $data[9];
+                $drug = $data[10];
+                $route = $data[11];
+                $purchase_tax = $data[12];
+                $purchase_unit = $data[13];
+                $sale_tax = $data[14];
+                $gst = $data[15];
+                $hsn = $data[16];
+                $sale_unit = $data[17];
+                
+                $sql = "INSERT INTO test_product_import(tenant_id, product_name, product_unit, product_unit_count, group_name, product_reorder_max, product_reorder_min, product_price, brand, generic_name, division_name, drug_class, route, purchase_unit, sale_unit, purchase_tax, sale_tax, gst, hsn, sale_package_unit, import_log) VALUES('{$tenant_id}','{$product_name}', '{$product_unit}', '{$product_unit_count}', '{$product_desc}', '{$product_reorder_max}', '{$product_reorder_min}', '{$product_price}', '{$brand}', '{$generic}', '{$division}','{$drug}', '{$route}', '{$purchase_unit}', '{$sale_unit}', '{$purchase_tax}', '{$sale_tax}', '{$gst}', '{$hsn}', '{$sale_unit}','{$log}')";
                 $command = $connection->createCommand($sql);
                 $command->execute();
             }
@@ -1442,7 +1448,7 @@ class PharmacyproductController extends ActiveController {
             $result = $command->queryAll(PDO::FETCH_OBJ);
             if ($result) {
                 $result = $result[0];
-                if ($result->product_name != '') {
+                if (($result->brand != 'N') && ($result->generic_name != 'N')) {
                     $post_data = [];
                     $post_data['formtype'] = 'add';
                     $post_data['tenant_id'] = $result->tenant_id;
@@ -1450,6 +1456,9 @@ class PharmacyproductController extends ActiveController {
                     $post_data['product_unit'] = $result->product_unit;
                     $post_data['product_unit_count'] = $result->product_unit_count;
                     $post_data['description_name'] = $result->group_name;
+                    $post_data['product_reorder_max'] = $result->product_reorder_max;
+                    $post_data['product_reorder_min'] = $result->product_reorder_min;
+                    $post_data['product_price'] = $result->product_price;
                     $post_data['brand_name'] = $result->brand;
                     $post_data['generic_name'] = $result->generic_name;
                     $post_data['drug_name'] = $result->drug_class;
@@ -1458,9 +1467,14 @@ class PharmacyproductController extends ActiveController {
                     $post_data['sales_package'] = $result->sale_unit;
                     $post_data['purchase_vat'] = $result->purchase_tax;
                     $post_data['sales_vat'] = $result->sale_tax;
-                    $post_data['product_reorder'] = 50;
-                    $post_data['product_reorder_max'] = 50;
-                    $post_data['product_reorder_min'] = 0;
+                    $post_data['gst'] = $result->gst;
+                    $post_data['hsn'] = $result->hsn;
+                    $post_data['sale_package_unit'] = $result->sale_package_unit;
+                    $post_data['division_name'] = $result->division_name;
+                    
+//                    $post_data['product_reorder'] = 50;
+//                    $post_data['product_reorder_max'] = 50;
+//                    $post_data['product_reorder_min'] = 0;
 
                     //Check & Get Brand
                     $brand_id = $this->getBrand($post_data['tenant_id'], $post_data['brand_name']);
@@ -1478,6 +1492,9 @@ class PharmacyproductController extends ActiveController {
                             $sales_package_id = $this->getPackageUnit($post_data['tenant_id'], $post_data['sales_package']);
                             $purchase_vat_id = $this->getVat($post_data['tenant_id'], $post_data['purchase_vat']);
                             $sales_vat_id = $this->getVat($post_data['tenant_id'], $post_data['sales_vat']);
+                            $gst_id = $this->getGst($post_data['tenant_id'], $post_data['gst']);
+                            $hsn_id = $this->getHsn($post_data['tenant_id'], $post_data['hsn']);
+                            $division_id = $this->getBrandDivision($post_data['tenant_id'], $post_data['division_name']);
 
                             $new_product = new PhaProduct();
                             $new_product->product_name = $post_data['product_name'];
@@ -1493,6 +1510,9 @@ class PharmacyproductController extends ActiveController {
                             $new_product->purchase_package_id = $purchase_package_id;
                             $new_product->sales_vat_id = $sales_vat_id;
                             $new_product->sales_package_id = $sales_package_id;
+                            $new_product->sales_gst_id = $gst_id;
+                            $new_product->hsn_id = $hsn_id;
+                            $new_product->division_id = $division_id;
                             $new_product->save(false);
 
                             $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
@@ -1560,7 +1580,58 @@ class PharmacyproductController extends ActiveController {
         }
         return $vat_id;
     }
+    
+    private function getGst($tenant_id, $gst) {
+        $phagst = \common\models\PhaGst::find()
+                ->tenant($tenant_id)
+                ->andWhere(['gst' => $gst])
+                ->one();
 
+        if (!empty($phagst)) {
+            $gst_id = $phagst->gst_id;
+        } else {
+            $new_gst = new \common\models\PhaGst();
+            $new_gst->gst = $gst;
+            $new_gst->save(false);
+            $gst_id = $new_gst->gst_id;
+        }
+        return $gst_id;
+    }
+    
+    private function getHsn($tenant_id, $hsn) {
+        $phahsn = \common\models\PhaHsn::find()
+                //->tenant($tenant_id)
+                ->andWhere(['hsn_no' => $hsn])
+                ->one();
+
+        if (!empty($phahsn)) {
+            $hsn_id = $phahsn->hsn_id;
+        } else {
+            $new_hsn = new \common\models\PhaHsn();
+            $new_hsn->hsn_no = $hsn;
+            $new_hsn->save(false);
+            $hsn_id = $new_hsn->hsn_id;
+        }
+        return $hsn_id;
+    }
+    
+    private function getBrandDivision($tenant_id, $division_name) {
+        $phadivisionname = \common\models\PhaBrandDivision::find()
+                ->tenant($tenant_id)
+                ->andWhere(['division_name' => $division_name])
+                ->one();
+
+        if (!empty($phadivisionname)) {
+            $division_id = $phadivisionname->division_id;
+        } else {
+            $new_brand_division = new \common\models\PhaBrandDivision();
+            $new_brand_division->division_name = $division_name;
+            $new_brand_division->save(false);
+            $division_id = $new_brand_division->division_id;
+        }
+        return $division_id;
+    }
+        
     private function getPackageUnit($tenant_id, $package_name) {
         $package_unit = \common\models\PhaPackageUnit::find()
                 ->tenant($tenant_id)
