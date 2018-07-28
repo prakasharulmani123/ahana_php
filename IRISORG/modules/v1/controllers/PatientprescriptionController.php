@@ -232,7 +232,8 @@ class PatientprescriptionController extends ActiveController {
                             ->count();
                 }
             }
-            return ['success' => true, 'prescriptions' => $data, 'totalCount' => $totalCount];
+            return ['success' => true, 'prescriptions' => $data, 'totalCount' => $totalCount,
+                'org_prescription' => \yii\helpers\Url::to("@web/organization_prescription/" . Yii::$app->user->identity->user->organization->org_prescription . "", true),];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
