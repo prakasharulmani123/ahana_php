@@ -1555,6 +1555,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                     //$scope.spinnerbar('hide');
                                     $scope.rowCollection = prescriptionList.prescriptions;
                                     $scope.totalCount = prescriptionList.totalCount;
+                                    $scope.prescription_layout = prescriptionList.org_prescription;
                                     if ($scope.rowCollection.length > 0) {
                                         angular.forEach($scope.rowCollection, function (row) {
 
@@ -2058,20 +2059,29 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.printPres = function (pres_id) {
-            $scope.presDetail(pres_id).then(function () {
-                delete $scope.data2.items;
-                $timeout(function () {
-                    $("#print_previous_pres").print({
-                        globalStyles: false,
-                        mediaPrint: false,
-                        stylesheet: $rootScope.IRISOrgUrl + "/css/prescription_print.css",
-                        noPrintSelector: ".no-print",
-                        iframe: false,
-                        append: '',
-                        prepend: '',
-                        title: $scope.app.org_name,
+            $scope.prescription_print_content = true;
+            $.get($scope.prescription_layout, function (my_var) {
+                var $newDiv = $(my_var);
+                $("#prescription_print_content_div").html($newDiv);
+                angular.element(document).injector().invoke(function ($compile, $rootScope) {
+                    $rootScope.$apply(function () {
+                        $compile(angular.element($newDiv).contents())($scope);
                     });
-                }, 500);
+                });
+                $scope.presDetail(pres_id).then(function () {
+                    delete $scope.data2.items;
+                    $timeout(function () {
+                        $("#print_previous_pres").print({
+                            globalStyles: false,
+                            mediaPrint: false,
+                            stylesheet: $rootScope.IRISOrgUrl + "/css/prescription_print.css",
+                            noPrintSelector: ".no-print",
+                            iframe: false,
+                            append: '',
+                            prepend: '',
+                            title: $scope.app.org_name,
+                        });
+                    }, 500);
 //                $('#print_previous_pres').printThis({
 //                    pageTitle: $scope.app.org_name,
 //                    debug: false,
@@ -2079,6 +2089,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 //                    importStyle: false,
 //                    loadCSS: [$rootScope.IRISOrgUrl + "/css/prescription_print.css"],
 //                });
+                });
             });
         }
 
