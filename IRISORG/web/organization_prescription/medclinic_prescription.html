@@ -70,7 +70,7 @@
                                 </tr>
                                 <tr>
                                     <td ng-if="((vitalcong.SP02 == 1) && (vital.sp02))">Sp02 : <span class="lightColor">{{vital.sp02|| '-'}}</span></td>
-                                    <td ng-if="(vitalcong.Pain_Score == 1 && vital.pain_score)">Pain : <span class="lightColor">{{vital.pain_score|| '-'}}</td>
+                                    <td colspan="2" ng-if="(vitalcong.Pain_Score == 1 && vital.pain_score)">Pain : <span class="lightColor">{{vital.pain_score|| '-'}}</td>
                                 </tr>
 
                             </tbody>
