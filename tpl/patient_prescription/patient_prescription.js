@@ -328,7 +328,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             var listName = row.code;
                             $scope.prescription_print[listName] = row.value;
                         });
-                    })        
+                    })
 //            $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatus?key=ALLERGIES')
 //                    .success(function (response) {
 //                        $scope.print_allergies = response.value;
@@ -2019,7 +2019,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             var dataURL = canvas.toDataURL("image/png");
             return dataURL;
         }
-
+        
         $scope.presDetail = function (pres_id) {
             $scope.prescription_print_content = true;
             $scope.data2 = {};
@@ -2028,7 +2028,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             var total_qty = [];
             var deferred = $q.defer();
             deferred.notify();
-            $http.get($rootScope.IRISOrgServiceUrl + "/patientprescriptions/" + pres_id + "?addtfields=presc_print")
+            $http.get($rootScope.IRISOrgServiceUrl + "/patientprescriptions/" + pres_id + "?addtfields=presc_print&allergies_show_by=" + $scope.prescription_print.PPA)
                     .success(function (response) {
                         $scope.loadbar('hide');
                         $scope.data2 = response;
