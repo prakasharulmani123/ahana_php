@@ -47,10 +47,10 @@ class PatPrescription extends RActiveRecord {
      */
     public function rules() {
         return [
-                [['encounter_id', 'patient_id', 'pres_date', 'consultant_id'], 'required'],
-                [['tenant_id', 'encounter_id', 'patient_id', 'consultant_id', 'number_of_days', 'created_by', 'modified_by'], 'integer'],
-                [['pres_date', 'next_visit', 'created_at', 'modified_at', 'deleted_at', 'diag_id'], 'safe'],
-                [['notes', 'status'], 'string']
+            [['encounter_id', 'patient_id', 'pres_date', 'consultant_id'], 'required'],
+            [['tenant_id', 'encounter_id', 'patient_id', 'consultant_id', 'number_of_days', 'created_by', 'modified_by'], 'integer'],
+            [['pres_date', 'next_visit', 'created_at', 'modified_at', 'deleted_at', 'diag_id'], 'safe'],
+            [['notes', 'status'], 'string']
         ];
     }
 
@@ -87,6 +87,10 @@ class PatPrescription extends RActiveRecord {
 
     public function getAllergies() {
         return $this->hasOne(PatAllergies::className(), ['encounter_id' => 'encounter_id'])->status()->active()->orderBy(['created_at' => SORT_DESC])->limit(1);
+    }
+
+    public function getAllAllergies() {
+        return $this->hasMany(PatAllergies::className(), ['patient_id' => 'patient_id'])->status()->active()->orderBy(['created_at' => SORT_ASC]);
     }
 
     /**
@@ -134,14 +138,14 @@ class PatPrescription extends RActiveRecord {
     public function beforeSave($insert) {
         if ($insert) {
             if (!empty($this->number_of_days)) {
-            $this->next_visit = $this->patient->getPatientNextvisitDate($this->number_of_days);
-        }
+                $this->next_visit = $this->patient->getPatientNextvisitDate($this->number_of_days);
+            }
             $appConfiguration = AppConfiguration::find()
                     ->tenant()
                     ->andWhere(['<>', 'value', '0'])
                     ->andWhere(['code' => 'PB'])
                     ->one();
-            if(!empty($appConfiguration)) {
+            if (!empty($appConfiguration)) {
                 $this->pharmacy_tenant_id = $appConfiguration['value'];
             }
         }
@@ -177,7 +181,19 @@ class PatPrescription extends RActiveRecord {
                 }
             },
             'allergies' => function ($model) {
-                return (isset($model->allergies) ? $model->allergies->notes : '');
+                if (Yii::$app->request->get('allergies_show_by') == 'patient') {
+                    if (isset($model->allAllergies)) {
+                        $allerge = array();
+                        foreach ($model->allAllergies as $value) {
+                            array_push($allerge, "$value->notes");
+                        }
+                        return implode(' | ', $allerge);
+                    } else {
+                        return '';
+                    }
+                } else {
+                    return (isset($model->allergies) ? $model->allergies->notes : '');
+                }
             },
             'branch_name' => function ($model) {
                 return (isset($model->tenant) ? $model->tenant->tenant_name : '-');
@@ -213,7 +229,7 @@ class PatPrescription extends RActiveRecord {
         CoAuditLog::insertAuditLog(PhaBrand::tableName(), $this->pres_id, $activity);
         return parent::afterSave($insert, $changedAttributes);
     }
-    
+
     public function getPrescriptionItemIds() {
         return ArrayHelper::map($this->patPrescriptionItems, 'pres_item_id', 'pres_item_id');
     }

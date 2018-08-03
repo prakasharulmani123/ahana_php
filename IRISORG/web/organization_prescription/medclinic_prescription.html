@@ -1,92 +1,102 @@
 <table class="invoice" align="center">
     <thead>
         <tr>
-            <th>
+            <th colspan="2">
                 <table>
                     <tbody>
                         <tr>
-                            <td width="48%"></td>
-                            <td width="4%" align="center" class="logoTxt">
-                                <img ng-src="{{IRISOrgUrl}}/img/rx.jpg" alt="Morning" width="15px" height="18px" />
-                                <!--                                <span style="font-weight: bold">R</span>
-                                                                <span style="font-weight: bold" class="absoluteTxt">X</span>-->
-                            </td>
-                            <td width="48%" align="right">
-                                <table>
+                            <td width="48%">
+                                <table cellpadding="0" cellspacing="0">
                                     <tbody>
-                                        <tr align="right">
-                                            <td><span style="font-size: 17px; margin-right: 5px;padding-bottom: 5px">{{today| date: "dd-MMMM-y" }}</span></td>
+                                        <tr>
+                                            <td class="patient_pres"><h2>{{patientObj.fullname}} / {{patientObj.patient_age_ym}}</h2></td>
                                         </tr>
-                                        <tr align="right">
-                                            <td><io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" width="185px" height="50px"></io-barcode></td>
-                        </tr>
-                    </tbody>
-                </table>
-                </td>
+                                        <tr>
+                                            <td style="padding-bottom: 5px;" class="patient_pres">{{patientObj.patient_global_int_code}} 
+                                                <span ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="greenBg">
+                                                    {{patientObj.patient_category| uppercase}}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <!--                                        <tr>
+                                                                                    <td class="patient_pres">Consultant : <span class="lightColor">Dr.R.M.Manikandan</span></td>
+                                                                                </tr>-->
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td width="20%" align="center" class="logoTxt">
+                                <!--                                <img ng-src="{{IRISOrgUrl}}/img/rx.jpg" alt="Morning" width="15px" height="18px" />-->
+                    <io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" width="185px" height="50px"></io-barcode>
+                    </td>
+                    <td width="32%" align="right">
+                        <span style="font-size: 18px; margin-right: 5px; line-height:16px;">{{today| date: "dd-MMMM-y" }}</span>
+                        <!--                        <table>
+                                                    <tbody>
+                                                        <tr align="right">
+                                                            <td><span style="font-size: 16px; margin-right: 5px; line-height:16px;">{{today| date: "dd-MMMM-y" }}</span></td>
+                                                        </tr>
+                                                        <tr align="right">
+                                                            <td><io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" width="185px" height="50px"></io-barcode></td>
+                                </tr>
+                                </tbody>
+                        </table>-->
+                    </td>
         </tr>
         </tbody>
 </table>
 </th>
 </tr>
 <tr>
-    <th>
-        <table>
+    <th colspan="2"> <table class="patientInfo">
             <tbody>
-                <tr class="patientInfo">
-                    <td width="5%" rowspan="4"></td>
-                    <td width="50%"><table cellpadding="0" cellspacing="0">
-                            <tbody>
-                                <tr>
-                                    <td class="patient_pres"><h2>{{patientObj.fullname}} / {{patientObj.patient_age_ym}}</h2></td>
-                                </tr>
-                                <tr>
-                                    <td class="patient_pres">{{patientObj.patient_global_int_code}} 
-                                        <span ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="greenBg">
-                                            {{patientObj.patient_category| uppercase}}
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="patient_pres">Consultant : <span class="lightColor">{{data2.consultant_name}}</span></td>
-                                </tr>
-
-                            </tbody>
-                        </table></td>
-                    <td width="45%" class="borderLeft">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td colspan="2" ng-if="((vitalcong.BP == 1) && ((vital.blood_pressure_systolic) || (vital.blood_pressure_diastolic)))">
-                                        BP : <span class="lightColor">{{vital.blood_pressure_systolic|| '-'}} / {{vital.blood_pressure_diastolic|| '-'}} mmHg</span>
-                                    </td>
-                                    <td ng-if="((vitalcong.Temperature == 1) && (vital.temperature))">
-                                        Temp : <span class="lightColor">{{vital.temperature|| '-'}} °C
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td ng-if="((vitalcong.Pulse == 1) && (vital.pulse_rate))">Pulse : <span class="lightColor">{{vital.pulse_rate|| '-'}} Beats</span></td>
-                                    <td ng-if="((vitalcong.Weight == 1) && (vital.weight))">Weight : <span class="lightColor">{{vital.weight|| '-'}} Kg</span></td>
-                                    <td ng-if="((vitalcong.Height == 1) && (vital.height))">Height  : <span class="lightColor">{{vital.height|| '-'}} CM</span></td>
-                                </tr>
-                                <tr>
-                                    <td ng-if="((vitalcong.SP02 == 1) && (vital.sp02))">Sp02 : <span class="lightColor">{{vital.sp02|| '-'}}</span></td>
-                                    <td colspan="2" ng-if="(vitalcong.Pain_Score == 1 && vital.pain_score)">Pain : <span class="lightColor">{{vital.pain_score|| '-'}}</td>
-                                </tr>
-
-                            </tbody>
-                        </table>
+                <tr>
+                    <td>
+                        <ul> 
+                            <li ng-if="((vitalcong.BP == 1) && ((vital.blood_pressure_systolic) || (vital.blood_pressure_diastolic)))"><strong> BP :</strong> {{vital.blood_pressure_systolic|| '-'}} / {{vital.blood_pressure_diastolic|| '-'}} mmHg</li>
+                            <li ng-if="((vitalcong.Pulse == 1) && (vital.pulse_rate))"><strong> Pulse :</strong> {{vital.pulse_rate|| '-'}} Beats</li>
+                            <li ng-if="((vitalcong.Weight == 1) && (vital.weight))"><strong> Weight : </strong>{{vital.weight|| '-'}} Kg</li>
+                            <li ng-if="((vitalcong.SP02 == 1) && (vital.sp02))"><strong> Sp02 :</strong> {{vital.sp02|| '-'}} </li>
+                            <li ng-if="(vitalcong.Pain_Score == 1 && vital.pain_score)"><strong> Pain :</strong> {{vital.pain_score|| '-'}} </li>
+                            <li ng-if="((vitalcong.Temperature == 1) && (vital.temperature))"><strong> Temp :</strong> {{vital.temperature|| '-'}} °C </li>
+                            <li ng-if="((vitalcong.Height == 1) && (vital.height))"> <strong>Height : </strong>{{vital.height|| '-'}} CM </li>
+                            <li ng-if="((vitalcong.BMI == 1) && (vital.bmi))"><strong> BMI :</strong>{{vital.bmi|| '-'}} </li>
+                        </ul>
                     </td>
                 </tr>
             </tbody>
+        </table></th>
+</tr>
+<!--<tr ng-if="prescription_print.SA == 1" style="padding: 4px;">
+    <td width="89" align="left" valign="top" class="extra"> <strong>Allergies : </strong></td>
+    <td width="899" align="left" valign="top" class="extra">{{data2.allergies||'-'}}</td>
+</tr>
+<tr ng-if="prescription_print.SD == 1" style="padding: 4px;">
+    <td width="89" align="left" valign="top" class="extra"> <strong>Allergies : </strong></td>
+    <td width="899" align="left" valign="top" class="extra">{{data2.diag_name||'-'}}</td>
+</tr>-->
+<tr ng-if="prescription_print.SA == 1" align="left" style="padding: 8px 0px;" valign="top">
+    <td>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td width="10%" align="left" valign="top" class="extra"><b>Allergies :</b></td>
+                <td width="90%" align="left" valign="top" class="extra">{{data2.allergies||'-'}}</td>
+            </tr>
         </table>
-    </th>
+    </td>
 </tr>
-<tr>
-    <th ng-if="prescription_print.SA == 1" align="left" valign="top"><b>Allergies :</b> {{data2.allergies||'-'}}</th>
+<tr ng-if="prescription_print.SD == 1" align="left" style="padding: 8px 0px;" valign="top">
+    <td>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td width="10%" align="left" valign="top" class="extra"><b>Diagnosis :</b></td>
+                <td width="90%" align="left" valign="top" class="extra">{{data2.diag_name||'-'}}</td>
+            </tr>
+        </table>
+    </td>
 </tr>
-<tr>
-    <th ng-if="prescription_print.SD == 1" align="left" valign="top"><b>Diagnosis :</b> {{data2.diag_name}}</th>
-</tr>
+<!--<tr>
+    <td ng-if="prescription_print.SD == 1" align="left" style="padding: 4px;" valign="top"><b>Diagnosis :</b> {{data2.diag_name}}</td>
+</tr>-->
 </thead>
 <tfoot>
 </tfoot>
