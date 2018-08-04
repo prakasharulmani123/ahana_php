@@ -32,6 +32,7 @@ angular.module('app')
                     version: '',
                     username: '',
                     logged_tenant_id: '',
+                    logged_org_id: '',
                     org_logo: '',
                     org_small_logo: '',
                     org_document_logo: '',
@@ -908,6 +909,7 @@ angular.module('app')
                                         $scope.app.org_logo = response.data.org_logo;
                                         $scope.app.org_small_logo = response.data.org_small_logo;
                                         $scope.app.org_document_logo = response.data.org_document_logo;
+                                        $scope.app.logged_org_id = response.data.org_id;
                                     }
                                 }
                         );

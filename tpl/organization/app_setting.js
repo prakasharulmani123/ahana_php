@@ -1,4 +1,4 @@
-app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$http', '$state', 'editableOptions', 'editableThemes', 'transformRequestAsFormPost', 'fileUpload', 'AuthenticationService', '$modal', '$localStorage', function ($rootScope, $scope, $timeout, $http, $state, editableOptions, editableThemes, transformRequestAsFormPost, fileUpload, AuthenticationService, $modal, $localStorage) {
+app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', 'editableOptions', 'editableThemes', 'transformRequestAsFormPost', 'fileUpload', 'AuthenticationService', '$modal', '$localStorage', function ($rootScope, $scope, $timeout, $http, $state, $filter, editableOptions, editableThemes, transformRequestAsFormPost, fileUpload, AuthenticationService, $modal, $localStorage) {
 
         editableThemes.bs3.inputClass = 'input-sm';
         editableThemes.bs3.buttonsClass = 'btn-sm';
@@ -82,6 +82,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                         $scope.config_share_data = [];
                         $scope.config_print_data = [];
                         $scope.config_opbill_data = [];
+                        $scope.config_opvital_data = [];
 
                         angular.forEach(configurations, function (conf) {
                             var string = conf.key;
@@ -99,6 +100,8 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                                     if (string.indexOf(substring) > -1 == false) {
                                         if ((string.indexOf(op_substring) > -1 == false) && (string.indexOf(ip_substring) > -1 == false)) {
                                             $scope.config_data.push(conf);
+                                        } else if(string.indexOf(ip_substring) > -1 == false) {
+                                            $scope.config_opvital_data.push(conf);
                                         }
                                     } else {
                                         $scope.config_share_data.push(conf);
@@ -106,7 +109,6 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                                 }
 
                             }
-
 //                            if (code == 'SA' || code == 'SD' || code == 'SPF')
 //                            {
 //                                $scope.config_print_data.push(conf);
@@ -121,7 +123,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
 //                                }
 //                            }
                         });
-
+                        $scope.config_opvital_data = $filter('filter')($scope.config_opvital_data, {value: 1});
                         $scope.isLoading = false;
                         $scope.rowCollection = $scope.config_data;
                         $scope.displayedCollection = [].concat($scope.rowCollection);
