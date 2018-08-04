@@ -617,6 +617,7 @@ class UserController extends ActiveController {
         }
 
         return ['success' => true, 'branches' => $branches, 'default_branch' => strval(Yii::$app->user->identity->logged_tenant_id),
+            'org_id' => strval(Yii::$app->user->identity->user->organization->org_id),
             'org_logo' => \yii\helpers\Url::to("@web/images/organization_logo/" . Yii::$app->user->identity->user->organization->org_logo . "", true),
             'org_small_logo' => \yii\helpers\Url::to("@web/images/organization_logo/" . Yii::$app->user->identity->user->organization->org_small_logo . "", true),
             'org_document_logo' => \yii\helpers\Url::to("@web/images/organization_logo/" . Yii::$app->user->identity->user->organization->org_document_logo . "", true)];
