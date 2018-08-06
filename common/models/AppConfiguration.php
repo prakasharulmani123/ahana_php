@@ -279,7 +279,67 @@ class AppConfiguration extends RActiveRecord {
                 'code' => 'PB',
                 'value' => '',
                 'notes' => '',
-            ]
+            ],
+            'Temperature' => [
+                'group' => 'prescription_print',
+                'code' => 'PPT',
+                'value' => '1',
+                'notes' => 'show Temperature field in print',
+            ],
+            'BP' => [
+                'group' => 'prescription_print',
+                'code' => 'PPBP',
+                'value' => '1',
+                'notes' => 'show Bp field in print',
+            ],
+            'Pulse' => [
+                'group' => 'prescription_print',
+                'code' => 'PPP',
+                'value' => '1',
+                'notes' => 'show Pulse field in print',
+            ],
+            'Weight' => [
+                'group' => 'prescription_print',
+                'code' => 'PPW',
+                'value' => '1',
+                'notes' => 'show Weight field in print',
+            ],
+            'Height' => [
+                'group' => 'prescription_print',
+                'code' => 'PPH',
+                'value' => '1',
+                'notes' => 'show Height field in print',
+            ],
+            'sp02' => [
+                'group' => 'prescription_print',
+                'code' => 'PPS',
+                'value' => '1',
+                'notes' => 'show Sp02 field in print',
+            ],
+            'Pain score' => [
+                'group' => 'prescription_print',
+                'code' => 'PPPS',
+                'value' => '1',
+                'notes' => 'show Pain Score field in print',
+            ],
+            'BMI' => [
+                'group' => 'prescription_print',
+                'code' => 'PPBMI',
+                'value' => '1',
+                'notes' => 'show BMI field in print',
+            ],
+            'BMI' => [
+                'group' => 'prescription_print',
+                'code' => 'PPBMI',
+                'value' => '1',
+                'notes' => 'show BMI field in print',
+            ],
+            'Allergies show by' => [
+                'group' => 'prescription_print',
+                'code' => 'PPA',
+                'value' => 'patient',
+                'notes' => 'Change allergies patient wise or encounter wise',
+            ],
         );
     }
 
