@@ -5,6 +5,9 @@
                 <table>
                     <tbody>
                         <tr>
+                            <td width="8%">
+                                
+                            </td>
                             <td width="48%">
                                 <table cellpadding="0" cellspacing="0">
                                     <tbody>
@@ -24,22 +27,12 @@
                                     </tbody>
                                 </table>
                             </td>
-                            <td width="20%" align="center" class="logoTxt">
+                            <td width="18%" align="center" class="logoTxt">
                                 <!--                                <img ng-src="{{IRISOrgUrl}}/img/rx.jpg" alt="Morning" width="15px" height="18px" />-->
                     <io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" width="185px" height="50px"></io-barcode>
                     </td>
-                    <td width="32%" align="right">
+                    <td width="26%" align="right">
                         <span style="font-size: 18px; margin-right: 5px; line-height:16px;">{{today| date: "dd-MMMM-y" }}</span>
-                        <!--                        <table>
-                                                    <tbody>
-                                                        <tr align="right">
-                                                            <td><span style="font-size: 16px; margin-right: 5px; line-height:16px;">{{today| date: "dd-MMMM-y" }}</span></td>
-                                                        </tr>
-                                                        <tr align="right">
-                                                            <td><io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" width="185px" height="50px"></io-barcode></td>
-                                </tr>
-                                </tbody>
-                        </table>-->
                     </td>
         </tr>
         </tbody>
@@ -103,7 +96,7 @@
 <tbody>
     <tr>
         <td>
-            <table  class="prescriptionInfo">
+            <table  class="prescriptionInfo medclinic_thead">
                 <thead>
                     <tr>
                         <th><span>Medicine Name</span></th>
