@@ -124,6 +124,50 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="panel panel-default" ng-init="initPharmacyBranch()">
+                        <div class="panel-heading">
+                            <b>OP Bill Setting</b> 
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Page Size</label>
+                                <div class="col-sm-9">
+                                    <div>
+                                        <label class="i-checks">
+                                            <input type="radio" checked="" value="A4" name="OpBill.PS" ng-model="OpBill.PS" ng-change="updateOpBill('PS', 'A4')">
+                                            <i></i>
+                                            A4&nbsp; &nbsp;
+                                        </label>
+                                        <label class="i-checks">
+                                            <input type="radio" checked="" value="A5" name="OpBill.PS" ng-model="OpBill.PS" ng-change="updateOpBill('PS', 'A5')">
+                                            <i></i>
+                                            A5&nbsp; &nbsp;
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Page Layout</label>
+                                <div class="col-sm-9">
+                                    <div>
+                                        <label class="i-checks">
+                                            <input type="radio" checked="" value="Portrait" name="OpBill.PL" ng-model="OpBill.PL" ng-change="updateOpBill('PL', 'Portrait')">
+                                            <i></i>
+                                            Portrait&nbsp; &nbsp;
+                                        </label>
+                                        <label class="i-checks">
+                                            <input type="radio" checked="" value="landscape" name="OpBill.PL" ng-model="OpBill.PL" ng-change="updateOpBill('PL', 'landscape')">
+                                            <i></i>
+                                            Landscape&nbsp; &nbsp;
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <!--                    <div class="panel panel-default col-sm-12">
                                             <br />
                                             <form name="Purchase" class="form-horizontal" novalidate="" enctype="multipart/form-data">
@@ -447,52 +491,36 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-sm-12">
-            <div class="col-sm-6">
-                <div class="row">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <b>OP Bill Setting</b> 
-                        </div>
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Page Size</label>
-                                <div class="col-sm-9">
-                                    <div>
-                                        <label class="i-checks">
-                                            <input type="radio" checked="" value="A4" name="OpBill.PS" ng-model="OpBill.PS" ng-change="updateOpBill('PS', 'A4')">
-                                            <i></i>
-                                            A4&nbsp; &nbsp;
-                                        </label>
-                                        <label class="i-checks">
-                                            <input type="radio" checked="" value="A5" name="OpBill.PS" ng-model="OpBill.PS" ng-change="updateOpBill('PS', 'A5')">
-                                            <i></i>
-                                            A5&nbsp; &nbsp;
-                                        </label>
-                                    </div>
-                                </div>
+                        <div class="panel panel-default" ng-init="initPharmacyBranch()">
+                            <div class="panel-heading">
+                                <b>Allergy Print Setting</b> 
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Page Layout</label>
-                                <div class="col-sm-9">
-                                    <div>
-                                        <label class="i-checks">
-                                            <input type="radio" checked="" value="Portrait" name="OpBill.PL" ng-model="OpBill.PL" ng-change="updateOpBill('PL', 'Portrait')">
-                                            <i></i>
-                                            Portrait&nbsp; &nbsp;
-                                        </label>
-                                        <label class="i-checks">
-                                            <input type="radio" checked="" value="landscape" name="OpBill.PL" ng-model="OpBill.PL" ng-change="updateOpBill('PL', 'landscape')">
-                                            <i></i>
-                                            Landscape&nbsp; &nbsp;
-                                        </label>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">View By</label>
+                                    <div class="col-sm-9">
+                                        <div>
+                                            <div ng-repeat="print_data in config_print_data| orderBy: key">
+                                                <div ng-if="(print_data.code == 'PPA')">
+<!--                                                    <label class="i-checks "> 
+                                                        <input type="radio" checked="" name="show_allergies" ng-model="print_data.value" ng-change='updateSetting(print_data.value, print_data.config_id)'> 
+                                                        <i></i>
+                                                        {{print_data.value}}&nbsp; &nbsp;
+                                                    </label>-->
+                                                    <label class="i-checks">
+                                                        <input type="radio" checked="" value="encounter" name="print_data.value" ng-model="print_data.value" ng-change="updateOpBill('PPA', 'encounter')">
+                                                        <i></i>
+                                                        Encounter&nbsp; &nbsp;
+                                                    </label>
+                                                    <label class="i-checks">
+                                                        <input type="radio" checked="" value="patient" name="print_data.value" ng-model="print_data.value" ng-change="updateOpBill('PPA', 'patient')">
+                                                        <i></i>
+                                                        Patient&nbsp; &nbsp;
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -501,6 +529,7 @@
 
                 </div>
             </div>
+
         </div>
 
     </div>
