@@ -65,6 +65,7 @@ table td { vertical-align:middle }
 .patientInfo .borderLeft { border-left:1px solid #b0b0b0; padding-left:2em }
 .prescriptionInfo { padding-top:0.5em }
 .prescriptionInfo th { border-bottom:1px solid #222222; line-height: 38px; font-size:15px  }
+.medclinic_thead th { border-bottom:none; }
 .prescriptionInfo th, .prescriptionInfo td { text-align:left }  
 
 .prescriptionInfo th span {
@@ -101,13 +102,13 @@ table td { vertical-align:middle }
 
 .prescriptionInfo .txtCenter, .txtCenter { text-align:center }
 /*.prescriptionInfo tbody tr:nth-child(even) { background:#ebebeb }*/
-.prescriptionInfo tr td { padding:5px 0; font-size:16px }
-.prescriptionInfo tr td  p { font-weight:bold; font-size:16px  }
+.prescriptionInfo tr td { padding:5px 0; font-size:17px }
+.prescriptionInfo tr td  p { font-weight:bold; font-size:17px  }
 /*.prescriptionInfo tr td:first-child { padding-left:10px }
 .prescriptionInfo tr:first-child td { padding-top :30px }*/
-.prescriptionInfo td i { text-transform:uppercase; color:#7d7d7d; font-size:16px }
+.prescriptionInfo td i { text-transform:uppercase; color:#7d7d7d; font-size:17px }
 .txtUpper { text-transform:uppercase }
-.prescriptionInfo p { margin: 0;     font-size: 16px; }
+.prescriptionInfo p { margin: 0;     font-size: 17px; }
 /*.nextVisit td { padding-top:5em; margin-top: 50px; }*/
 .printBtn { background:#3ebb95; color:#fff; border:none; padding:5px 20px; border-radius:2px; font-weight:bold; letter-spacing:0.5px; font-size:15px; cursor:pointer }
 .logoTxt { position:relative }
