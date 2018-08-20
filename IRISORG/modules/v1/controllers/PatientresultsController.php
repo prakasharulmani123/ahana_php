@@ -66,8 +66,7 @@ class PatientresultsController extends ActiveController {
             $result = [];
             $data = PatResult::find()
                     ->active()
-                    ->status()
-                    ->where("patient_id IN ($all_patient_id->allpatient)")
+                    ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                     ->groupBy('encounter_id')
                     ->orderBy(['encounter_id' => SORT_DESC])
                     ->all();
@@ -75,8 +74,7 @@ class PatientresultsController extends ActiveController {
             foreach ($data as $key => $value) {
                 $details = PatResult::find()
                         ->active()
-                        ->status()
-                        ->where("patient_id IN ($all_patient_id->allpatient)")
+                        ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                         ->andWhere(['encounter_id' => $value->encounter_id])
                         ->orderBy(['pat_result_id' => SORT_DESC])
                         ->all();
