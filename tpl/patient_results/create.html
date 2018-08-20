@@ -1,0 +1,19 @@
+<div ng-controller="ResultsController" ng-init="initCanCreateResult(); initForm();">
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n h3">Create Result</h1>
+    </div>
+    <div class="wrapper-md">
+        <div ng-include="'tpl/blocks/alert.html'">
+            {% include 'tpl/blocks/alert.html' %}
+        </div>
+        <div class="row">
+            <div class="col-sm-6" ng-init="data = {}; data.formtype = 'add';">
+                <form name="noteForm" class="form-horizontal form-validation" novalidate="">
+                    <div ng-include="'tpl/patient_results/_form.html'">
+                        {% include 'tpl/patient_results/_form.html' %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

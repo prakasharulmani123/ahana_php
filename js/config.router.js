@@ -1455,6 +1455,60 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            
+            //Patient Results
+            .state('patient.results', {
+                url: '/results/{id}',
+                templateUrl: 'tpl/patient_results/index.html',
+                controller: 'PatientLeftSideNotificationCtrl',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/patient_results/patient_results.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
+
+            //Patient Result Create
+            .state('patient.resultCreate', {
+                url: '/resultCreate/{id}',
+                templateUrl: 'tpl/patient_results/create.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_results/patient_results.js?v=' + APP_VERSION]);
+                        }]
+                }
+            })
+
+            //Patient Result Update
+            .state('patient.resultUpdate', {
+                url: '/resultUpdate/{id}/{result_id}',
+                templateUrl: 'tpl/patient_results/update.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_results/patient_results.js?v=' + APP_VERSION]);
+                        }]
+                }
+            })
+
+            //Patient Result View
+            .state('patient.resultView', {
+                url: '/resultView/{id}/{result_id}',
+                templateUrl: 'tpl/patient_results/view.html',
+                resolve: {
+                    deps: ['uiLoad',
+                        function (uiLoad) {
+                            return uiLoad.load(['tpl/patient_results/patient_results.js?v=' + APP_VERSION]);
+                        }]
+                }
+            })
 
             //Patient Consultant
             .state('patient.consultant', {

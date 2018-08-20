@@ -28,6 +28,7 @@
             <br/> Notes 
         </a>  
     </li>
+    <li ui-sref-active="active"> <a check-access ui-sref="patient.results({id: $state.params.id})">  <img src="img/icon4.png"  alt="" /> <br/> Results </a>  </li>
     <li ui-sref-active="active"> <a check-access ui-sref="patient.view({id: $state.params.id})">  <img src="img/icon1.png"  alt="" /> <br/> Details </a>  </li>
     <li id='view_billing' ui-sref-active="active"> <a check-access ui-sref="patient.allbilling({id: $state.params.id})" ng-class="{'linkDisabled': !patientObj.have_atleast_encounter}">  <img src="img/icon11.png"  alt="" /> <br/> Billing </a>  </li>
     <li ui-sref-active="active"> <a check-access ui-sref="patient.alert({id: $state.params.id,type:'alert'})" ng-class="{'linkDisabled': !patientObj.have_atleast_encounter}">  <img src="img/icon9.png"  alt="" /> <br/> alerts & allergies </a>   </li>
