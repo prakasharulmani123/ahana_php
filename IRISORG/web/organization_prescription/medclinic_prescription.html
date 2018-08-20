@@ -1,4 +1,4 @@
-<table class="invoice" align="center">
+<table class="" align="center">
     <thead>
         <tr>
             <th colspan="2">
@@ -166,9 +166,9 @@
                     <p ng-if="prescription_print.PIB == 1" style="font-size: 15px;">Issued by : <span class="lightColor">{{app.username}}</span></p>
                     <p ng-if="prescription_print.PIA == 1" style="font-size: 15px;">Issued at : <span class="lightColor">{{app.org_name}}</span></p>
                 </div>
-                <p style="font-size: 25px;"><b>* Next Visit : {{(data2.next_visit| date: "dd-MMMM-y") || "-" }}</b></p>
+                <p style="font-size: 20px;"><b>* Next Visit : {{(data2.next_visit| date: "dd-MMMM-y") || "-" }}</b></p>
             </td>
-            <td style="font-size: 25px;" align="right">
+            <td style="font-size: 20px;" align="right">
                 <b>{{data2.consultant_name}}</b>
             </td>
         </tr>
