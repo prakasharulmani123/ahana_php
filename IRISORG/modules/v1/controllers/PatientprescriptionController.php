@@ -288,13 +288,58 @@ class PatientprescriptionController extends ActiveController {
     public function actionGetconsultantfreq() {
         $get = Yii::$app->request->get();
         if (!empty($get)) {
-            $freq = PatPrescriptionFrequency::find()
+            $freq_3_syrup = PatPrescriptionFrequency::find()
                     ->tenant()
                     ->status()
                     ->active()
-                    ->andWhere(['consultant_id' => $get['consultant_id']])
+                    ->andWhere(['consultant_id' => $get['consultant_id'], 'product_type' => 'SYRUP', 'freq_type' => '3'])
                     ->orderBy(['modified_at' => SORT_DESC])
+                    ->limit(5)
                     ->all();
+            $freq_4_syrup = PatPrescriptionFrequency::find()
+                    ->tenant()
+                    ->status()
+                    ->active()
+                    ->andWhere(['consultant_id' => $get['consultant_id'], 'product_type' => 'SYRUP', 'freq_type' => '4'])
+                    ->orderBy(['modified_at' => SORT_DESC])
+                    ->limit(5)
+                    ->all();
+            $freq_txt_syrup = PatPrescriptionFrequency::find()
+                    ->tenant()
+                    ->status()
+                    ->active()
+                    ->andWhere(['consultant_id' => $get['consultant_id'], 'product_type' => 'SYRUP', 'freq_type' => 'txt'])
+                    ->orderBy(['modified_at' => SORT_DESC])
+                    ->limit(5)
+                    ->all();
+            $freq_3 = PatPrescriptionFrequency::find()
+                    ->tenant()
+                    ->status()
+                    ->active()
+                    ->andWhere(['consultant_id' => $get['consultant_id'], 'freq_type' => '3'])
+                    ->andWhere(['<>','product_type', 'SYRUP'])
+                    ->orderBy(['modified_at' => SORT_DESC])
+                    ->limit(5)
+                    ->all();
+            $freq_4 = PatPrescriptionFrequency::find()
+                    ->tenant()
+                    ->status()
+                    ->active()
+                    ->andWhere(['consultant_id' => $get['consultant_id'], 'freq_type' => '4'])
+                    ->andWhere(['<>','product_type', 'SYRUP'])
+                    ->orderBy(['modified_at' => SORT_DESC])
+                    ->limit(5)
+                    ->all();
+            $freq_txt = PatPrescriptionFrequency::find()
+                    ->tenant()
+                    ->status()
+                    ->active()
+                    ->andWhere(['consultant_id' => $get['consultant_id'], 'freq_type' => 'txt'])
+                    ->andWhere(['<>','product_type', 'SYRUP'])
+                    ->orderBy(['modified_at' => SORT_DESC])
+                    ->limit(5)
+                    ->all();
+            $freq = array_merge_recursive($freq_3_syrup,$freq_4_syrup,$freq_txt_syrup,$freq_3,$freq_4,$freq_txt); 
             return ['success' => true, 'freq' => $freq];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];

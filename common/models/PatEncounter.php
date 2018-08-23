@@ -554,7 +554,7 @@ class PatEncounter extends RActiveRecord {
                     $parent_fields = ['encounter_id' => 'encounter_id', 'encounter_type' => 'encounter_type'];
                     break;
                 case 'encounter_details':
-                    $addt_keys = false;
+                    $addt_keys = ['consultant_id'];
                     $parent_fields = ['encounter_id' => 'encounter_id',
                         'status' => 'status',
                         'encounter_type' => 'encounter_type'];
