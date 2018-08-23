@@ -104,9 +104,26 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         //Get all active encounter
                         $scope.data.encounter_id = $scope.enc.selected.encounter_id;
                         $scope.default_encounter_id = $scope.data.encounter_id;
+                        $scope.all_encounters = [];
                         $rootScope.commonService.GetEncounterListByPatient('', '1', false, $scope.patientObj.patient_id, function (response) {
                             $scope.all_encounters = response;
                         }, 'encounter_details');
+
+                        $scope.$watch('all_encounters', function (newValue, oldValue) {
+                            $scope.spinnerbar('show');
+                            if (newValue != '' && typeof newValue != 'undefined') {
+                                if ($scope.all_encounters.length > 1) {
+                                    var actEnc = $filter('filter')($scope.all_encounters, {consultant_id: $scope.app.user_id});
+                                    if (actEnc.length > 0) {
+                                        $scope.data.consultant_id = actEnc[0].consultant_id;
+                                        $scope.data.encounter_id = actEnc[0].encounter_id;
+                                    } else {
+                                        $scope.data.encounter_id = '';
+                                    }
+                                }
+                            }
+                        }, true);
+
                         //var actEnc = $filter('filter')($scope.encounters, {status: '1'});
                         //$scope.all_encounters = actEnc;
                         $scope.spinnerbar('hide')
@@ -2019,7 +2036,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             var dataURL = canvas.toDataURL("image/png");
             return dataURL;
         }
-        
+
         $scope.presDetail = function (pres_id) {
             $scope.prescription_print_content = true;
             $scope.data2 = {};

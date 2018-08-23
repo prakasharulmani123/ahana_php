@@ -332,6 +332,7 @@ angular.module('app')
                     $scope.app.org_mobile = user.credentials.org_mobile;
                     $scope.app.org_full_address = user.credentials.org_address + ', ' + user.credentials.org_city;
                     $scope.app.username = user.credentials.username;
+                    $scope.app.user_id = user.credentials.user_id;
                     $scope.app.page_title = $scope.app.name + '(' + $scope.app.org_name + ')';
                     if (user.credentials.user_timeout) {
                         Idle.setIdle(user.credentials.user_timeout * 60);
