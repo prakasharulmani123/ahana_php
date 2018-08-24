@@ -975,3 +975,9 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 .ng-camera-overlay {
     width: 100%;
 }
+.op-alert-icon {
+    float:left;
+    width:15px;
+    height: 15px;
+    margin-right: 3px;
+}
