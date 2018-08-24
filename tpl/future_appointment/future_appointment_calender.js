@@ -20,6 +20,7 @@ app.controller('FutureAppointmentCalenderController', ['$rootScope', '$scope', '
         $scope.consultant_colors = ["bg-light dk b-l b-2x b-danger", "bg-light dk b-l b-2x b-info", "bg-light dk b-l b-2x b-warning", "bg-light dk b-l b-2x b-primary"];
 
         $scope.events = [];
+        $scope.show_prescription_loader = true;
         $http.get($rootScope.IRISOrgServiceUrl + '/appointment/getfutureappointments')
                 .success(function (data) {
                     angular.forEach(data, function (item) {
@@ -36,6 +37,7 @@ app.controller('FutureAppointmentCalenderController', ['$rootScope', '$scope', '
                             })
                         });
                     });
+                    $scope.show_prescription_loader = false;
                 });
 
         $scope.consultants = [];

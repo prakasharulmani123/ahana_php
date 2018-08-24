@@ -64,7 +64,7 @@
                 </div>
                 <div class="col-sm-4"></div>
                 <div class="col-sm-3 pull-right text-right">
-<!--                    <h4 class="label bg-primary"> <b> Census: {{census}} </b></h4>-->
+                    <!--                    <h4 class="label bg-primary"> <b> Census: {{census}} </b></h4>-->
                 </div>
             </div>
 
@@ -101,7 +101,7 @@
                             </td>
                             <td colspan="7">
                                 <button ng-click="value.expanded = !value.expanded;
-                                                    setRowExpanded(value.consultant_id, value.expanded)" expand class="btn btn-sm btn-default hms-plus">
+                                    setRowExpanded(value.consultant_id, value.expanded)" expand class="btn btn-sm btn-default hms-plus">
                                     <i ng-if="!value.expanded" class="fa fa-plus text"></i>
                                     <i ng-if="value.expanded" class="fa fa-minus text"></i>
                                 </button>
@@ -177,7 +177,7 @@
     <div id="calendar_view" class="wrapper-md view_div" ng-controller="FutureAppointmentCalenderController" ng-init="loadEvents()">
         <div class="panel panel-default">
             <div class="hbox hbox-auto-xs hbox-auto-sm">
-                <div class="col wrapper-md">
+                <div ng-if="!show_prescription_loader" class="col wrapper-md">
                     <div class="clearfix mb-10">
                         <!--                <button type="button" tooltip="Double click on calendar day to create event" class="btn btn-sm btn-primary btn-addon" ng-click="add_appointment()">
                                             <i class="fa fa-plus"></i>Add
@@ -205,6 +205,12 @@
                             </div>
                         </div>
                         <div class="calendar" ng-model="eventSources" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
+                    </div>
+                </div>
+                
+                <div ng-if="show_prescription_loader" class="col wrapper-md">&nbsp;&nbsp;
+                    <div class="clearfix mb-10 text-center">
+                        <i class="fa fa-spin fa-refresh"></i>
                     </div>
                 </div>
 
