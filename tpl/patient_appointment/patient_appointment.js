@@ -279,7 +279,39 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                 }
             }
         }
-
+        
+        $scope.getDays = function () {
+            var newValue = moment(this.data.PatAppointment.future_status_date).format('YYYY-MM-DD');
+            if (newValue != '') {
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + '/patient/getnextvisitdaysfromdate',
+                    data: {'date': newValue},
+                }).success(
+                        function (response) {
+                            $scope.data.number_of_days = response.days;
+                            
+                        }
+                );
+            }
+        }
+        
+        $scope.getVisit = function () {
+            var newValue = this.data.number_of_days;
+            if (parseInt(newValue) >= 0 && !isNaN(newValue)) {
+                $http({
+                    method: 'POST',
+                    url: $rootScope.IRISOrgServiceUrl + '/patient/getdatefromdays',
+                    data: {'days': newValue},
+                }).success(
+                        function (response) {
+                            $('#future_date_appointment').datepicker('setDate', response.date);
+                            $scope.data.PatAppointment.future_status_date = response.date;
+                        }
+                );
+            }
+        }
+        
         $scope.$watch('data.appt_status', function (newValue, oldValue) {
             $scope.setCurrentArrivalTime();
         });

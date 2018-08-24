@@ -32,7 +32,7 @@
                     <select class="selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true" ng-model="data.PatAppointment.charge_subcat_id" ng-options="procedure.charge_subcat_id as procedure.charge_subcat_name for procedure in procedures| orderBy: charge_subcat_name" multiple>
                         <option value="">Select Procedure</option>
                     </select>
-                    
+
                 </div>
             </div>
         </div>
@@ -224,13 +224,17 @@
 
             <div class="form-group">
                 <label class="col-sm-3 control-label">Date of Appointment </label>
-                <div class="col-sm-9">
-                    <div class="input-group w-md">
-                        <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.PatAppointment.future_status_date" is-open="future.opened" close-text="Close"  min-date="minDate" ng-change="getTimeOfFutureAppointment();" prevent-enter="true"/>
+                <div class="col-sm-3">
+                    <div class="input-group">
+                        <input type="text" id="future_date_appointment" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.PatAppointment.future_status_date" is-open="future.opened" close-text="Close"  min-date="minDate" ng-change="getTimeOfFutureAppointment(); getDays();" prevent-enter="true"/>
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="futureOpen($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>
                     </div>
+                </div>
+                <label class="col-sm-1 control-label">No.of.Days </label>
+                <div class="col-sm-3">
+                    <input type="number" ng-model="data.number_of_days" maxlength="3" class="form-control" placeholder="No.of.Days" ng-change="getVisit();">
                 </div>
             </div>
             <div class="line line-dashed b-b line-lg "></div>
