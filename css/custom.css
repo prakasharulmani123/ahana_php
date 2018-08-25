@@ -981,3 +981,6 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
     height: 15px;
     margin-right: 3px;
 }
+.row-link {
+    cursor: pointer;
+}

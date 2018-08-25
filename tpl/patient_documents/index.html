@@ -95,17 +95,39 @@
                         </td>
                     </tr>
                     <tr ng-repeat-end ng-show="expanded" ng-repeat="(doc_key, doc) in value.all">
-                        <td align="center" valign="middle"></td>
-                        <td valign="middle"> {{doc.date_time| moment:'DD/MM/YYYY - hh:mm A'}}</td>
-                        <td>{{doc.tenant_name}}</td>
-                        <td valign="middle"> 
+                        
+                        <!-- Medical case histoey & case history table row start-->
+                        <td ng-if= "((doc.doc_type == 'CH') || (doc.doc_type == 'MCH'))" class= "row-link" ui-sref="patient.viewDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}', document: '{{doc.doc_type}}'})" align="center" valign="middle"></td>
+                        <td ng-if= "((doc.doc_type == 'CH') || (doc.doc_type == 'MCH'))" class= "row-link" ui-sref="patient.viewDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}', document: '{{doc.doc_type}}'})" valign="middle"> {{doc.date_time| moment:'DD/MM/YYYY - hh:mm A'}}</td>
+                        <td ng-if= "((doc.doc_type == 'CH') || (doc.doc_type == 'MCH'))" class= "row-link" ui-sref="patient.viewDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}', document: '{{doc.doc_type}}'})" >{{doc.tenant_name}}</td>
+                        <td ng-if= "((doc.doc_type == 'CH') || (doc.doc_type == 'MCH'))" class= "row-link" ui-sref="patient.viewDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}', document: '{{doc.doc_type}}'})" valign="middle"> 
                             <span ng-if="doc.doc_type == 'CH' && doc.status == '0'">
                                 <img ng-src="img/incomplete.gif" title="InComplete"  alt="InComplete" width="" height="" />
                             </span>
                             {{doc.doc_type_name}} 
                         </td>
-                        <td valign="middle"> {{doc.doc_name}} </td>
-                        <td valign="middle"> {{doc.created_by}} </td>
+                        <td ng-if= "((doc.doc_type == 'CH') || (doc.doc_type == 'MCH'))" class= "row-link" ui-sref="patient.viewDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}', document: '{{doc.doc_type}}'})" valign="middle"> {{doc.doc_name}} </td>
+                        <td ng-if= "((doc.doc_type == 'CH') || (doc.doc_type == 'MCH'))" class= "row-link" ui-sref="patient.viewDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}', document: '{{doc.doc_type}}'})" valign="middle"> {{doc.created_by}} </td>
+                        <!-- Medical case histoey & case history table row end-->
+                        
+                        <!-- Other document & psychological assessment & psychological assessment table row start-->
+                        <td ng-if= "((doc.doc_type == 'OD') || (doc.doc_type == 'PT') || (doc.doc_type == 'PA'))" class= "row-link" ui-sref="patient.viewOtherDocument({id: '{{$state.params.id}}', other_doc_id: '{{doc.doc_id}}'})" align="center" valign="middle"></td>
+                        <td ng-if= "((doc.doc_type == 'OD') || (doc.doc_type == 'PT') || (doc.doc_type == 'PA'))" class= "row-link" ui-sref="patient.viewOtherDocument({id: '{{$state.params.id}}', other_doc_id: '{{doc.doc_id}}'})" valign="middle"> {{doc.date_time| moment:'DD/MM/YYYY - hh:mm A'}}</td>
+                        <td ng-if= "((doc.doc_type == 'OD') || (doc.doc_type == 'PT') || (doc.doc_type == 'PA'))" class= "row-link" ui-sref="patient.viewOtherDocument({id: '{{$state.params.id}}', other_doc_id: '{{doc.doc_id}}'})" >{{doc.tenant_name}}</td>
+                        <td ng-if= "((doc.doc_type == 'OD') || (doc.doc_type == 'PT') || (doc.doc_type == 'PA'))" class= "row-link" ui-sref="patient.viewOtherDocument({id: '{{$state.params.id}}', other_doc_id: '{{doc.doc_id}}'})" valign="middle"> {{doc.doc_type_name}} </td>
+                        <td ng-if= "((doc.doc_type == 'OD') || (doc.doc_type == 'PT') || (doc.doc_type == 'PA'))" class= "row-link" ui-sref="patient.viewOtherDocument({id: '{{$state.params.id}}', other_doc_id: '{{doc.doc_id}}'})" valign="middle"> {{doc.doc_name}} </td>
+                        <td ng-if= "((doc.doc_type == 'OD') || (doc.doc_type == 'PT') || (doc.doc_type == 'PA'))" class= "row-link" ui-sref="patient.viewOtherDocument({id: '{{$state.params.id}}', other_doc_id: '{{doc.doc_id}}'})" valign="middle"> {{doc.created_by}} </td>
+                        <!-- Other document & psychological assessment & psychological assessment table row end-->
+                        
+                        <!-- Scan document table row start-->
+                        <td ng-if="doc.doc_type == 'SD'" class= "row-link" ng-click="openModel('lg', 'ScandocumentModalInstanceCtrl', 'ScanDocumentModalContent.html', '', doc.doc_id, doc.doc_name, doc.encounter_id, doc.date_time)" align="center" valign="middle"></td>
+                        <td ng-if="doc.doc_type == 'SD'" class= "row-link" ng-click="openModel('lg', 'ScandocumentModalInstanceCtrl', 'ScanDocumentModalContent.html', '', doc.doc_id, doc.doc_name, doc.encounter_id, doc.date_time)" valign="middle"> {{doc.date_time| moment:'DD/MM/YYYY - hh:mm A'}}</td>
+                        <td ng-if="doc.doc_type == 'SD'" class= "row-link" ng-click="openModel('lg', 'ScandocumentModalInstanceCtrl', 'ScanDocumentModalContent.html', '', doc.doc_id, doc.doc_name, doc.encounter_id, doc.date_time)" >{{doc.tenant_name}}</td>
+                        <td ng-if="doc.doc_type == 'SD'" class= "row-link" ng-click="openModel('lg', 'ScandocumentModalInstanceCtrl', 'ScanDocumentModalContent.html', '', doc.doc_id, doc.doc_name, doc.encounter_id, doc.date_time)" valign="middle"> {{doc.doc_type_name}} </td>
+                        <td ng-if="doc.doc_type == 'SD'" class= "row-link" ng-click="openModel('lg', 'ScandocumentModalInstanceCtrl', 'ScanDocumentModalContent.html', '', doc.doc_id, doc.doc_name, doc.encounter_id, doc.date_time)" valign="middle"> {{doc.doc_name}} </td>
+                        <td ng-if="doc.doc_type == 'SD'" class= "row-link" ng-click="openModel('lg', 'ScandocumentModalInstanceCtrl', 'ScanDocumentModalContent.html', '', doc.doc_id, doc.doc_name, doc.encounter_id, doc.date_time)" valign="middle"> {{doc.created_by}} </td>
+                        <!-- Scan document table row end-->
+                        
                         <td valign="middle">
                             <span ng-if="((doc.doc_type == 'CH') || (doc.doc_type == 'MCH'))">
                                 <a class="label bg-dark" title="View" check-access  ui-sref="patient.viewDocument({id: '{{$state.params.id}}', doc_id: '{{doc.doc_id}}', document: '{{doc.doc_type}}'})">
