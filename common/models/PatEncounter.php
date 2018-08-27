@@ -527,6 +527,9 @@ class PatEncounter extends RActiveRecord {
                     return '-';
                 }
             },
+            'prescription_status' => function ($model) {
+                return (empty($model->patPrescriptions)) ? false : true;
+            }        
         ];
 
         $parent_fields = parent::fields();
@@ -550,7 +553,7 @@ class PatEncounter extends RActiveRecord {
                     $parent_fields = ['encounter_id' => 'encounter_id'];
                     break;
                 case 'sale_encounter_id':
-                    $addt_keys = ['cancel_appoitment', 'cancel_admission', 'encounter_full_details'];
+                    $addt_keys = ['cancel_appoitment', 'cancel_admission', 'encounter_full_details', 'prescription_status'];
                     $parent_fields = ['encounter_id' => 'encounter_id', 'encounter_type' => 'encounter_type'];
                     break;
                 case 'encounter_details':
