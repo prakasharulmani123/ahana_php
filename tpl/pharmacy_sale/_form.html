@@ -81,10 +81,9 @@
                                     <div class="col-lg-8">
                                         <select class="form-control selectpicker" data-live-search="true"
                                                 ng-model="data.encounter_id"
-                                                ng-options="encounter.encounter_id as encounter.encounter_full_details for encounter in encounters| orderBy: 'encounter_id'"
-                                                ng-change="getPrescription()"
-                                                >
+                                                ng-change="getPrescription()" >
                                             <option value="">Select Encounter</option>
+                                            <option ng-repeat="encounter in encounters| orderBy: encounter_id" value="{{encounter.encounter_id}}" class="{{encounter.prescription_status ? 'text-success' : 'text-light'}}">{{encounter.encounter_full_details}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -386,7 +385,7 @@
         </div>
     </div>
     <div class="col-sm-6">
-        <div ng-if="data.payment_type== 'CA'" class="panel panel-default">
+        <div ng-if="data.payment_type == 'CA'" class="panel panel-default">
             <div class="panel-heading">
                 <b>Payment Details</b>
             </div>
