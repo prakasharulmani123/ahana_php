@@ -252,7 +252,8 @@ angular.module('app')
                                     if (patient.success == false) {
                                         $scope.spinnerbar('hide');
                                         $state.go('myworks.dashboard');
-                                        $scope.msg.errorMessage = "An Error has occured while loading patient!";
+                                        //Disable Error message Refer :Bc-T155 Error Message Disable
+                                        //$scope.msg.errorMessage = "An Error has occured while loading patient!";
                                     } else {
                                         $scope.patientObj = patient;
                                         if ($scope.patientObj.have_encounter) {
