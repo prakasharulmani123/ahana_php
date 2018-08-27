@@ -170,7 +170,7 @@ class PatientprescriptionController extends ActiveController {
     public function actionGetpreviousprescription() {
         $get = Yii::$app->getRequest()->get();
 
-        if (isset($get['patient_id'])) {
+        if (isset($get['patient_id']) && $get['patient_id'] != 'undefined') {
             $offset = abs($get['pageIndex'] - 1) * $get['pageSize'];
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
 
