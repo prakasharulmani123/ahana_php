@@ -152,7 +152,7 @@ class MyworkreportsController extends ActiveController {
                     ->status()
                     ->encounterType("IP")
                     ->andWhere("pat_admission.consultant_id IN ( '$consultant_ids' )")
-                    ->andWhere("pat_encounter.tenant_id IN ( '$tenant_ids' )")
+                    ->andWhere("pat_encounter.current_tenant_id IN ( '$tenant_ids' )")
                     ->orderBy([
                         'encounter_date' => SORT_DESC,
                     ])
