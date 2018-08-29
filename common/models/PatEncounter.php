@@ -573,6 +573,12 @@ class PatEncounter extends RActiveRecord {
                         'status' => 'status',
                         'encounter_type' => 'encounter_type'];
                     break;
+                case 'other_branch_patient_details':
+                    $addt_keys = ['currentAdmission'];
+                    $parent_fields = [
+                        'encounter_id' => 'encounter_id',
+                    ];
+                    break;
             endswitch;
         }
 

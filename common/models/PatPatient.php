@@ -619,6 +619,9 @@ class PatPatient extends RActiveRecord {
             'current_room' => function ($model) {
                 return $model->current_room;
             },
+            'otherbranchCurrent_room' => function ($model) {
+                return $model->otherbranchCurrent_room;
+            },        
             'current_room_type_id' => function ($model) {
                 return $model->current_room_Type;
             },
@@ -771,6 +774,31 @@ class PatPatient extends RActiveRecord {
             $admission = $this->patActiveIp->patCurrentAdmission;
             return "{$admission->floor->floor_name} > {$admission->ward->ward_name} > {$admission->room->bed_name} ({$admission->roomType->room_type_name})";
         } else {
+            return '-';
+        }
+    }
+    
+    public function getOtherbranchCurrent_room() {
+        if (isset($this->patActiveIp)) {
+            $admission = $this->patActiveIp->patCurrentAdmission;
+            return "{$admission->floor->floor_name} > {$admission->ward->ward_name} > {$admission->room->bed_name} ({$admission->roomType->room_type_name})";
+        } else {
+            $list_all_patient = PatPatient::find()
+                    ->select('patient_id  AS allpatient')
+                    ->where(['patient_global_guid' => $this->patient_global_guid])
+                    ->andWhere(['<>', 'tenant_id', $this->tenant_id])
+                    ->all();
+            foreach ($list_all_patient as $patient) {
+                $list_encounter = PatEncounter::find()
+                        ->status()
+                        ->encounterType()
+                        ->andWhere(['patient_id' => $patient['allpatient']])
+                        ->orderBy(['encounter_date' => SORT_DESC])
+                        ->one();
+                if ($list_encounter) {
+                    return "{$list_encounter->tenant->tenant_name} > {$list_encounter->patCurrentAdmission->getRoomdetails()}";
+                }
+            }
             return '-';
         }
     }
