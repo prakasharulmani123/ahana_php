@@ -247,7 +247,7 @@ angular.module('app')
                 $scope.loadPatientDetail = function () {
                     // Get data's from service
                     if (typeof $state.params.id != 'undefined') {
-                        $http.post($rootScope.IRISOrgServiceUrl + '/patient/getpatientbyguid', {guid: $state.params.id})
+                        $http.post($rootScope.IRISOrgServiceUrl + '/patient/getpatientbyguid?addtfields=other_branch_patient_details', {guid: $state.params.id})
                                 .success(function (patient) {
                                     if (patient.success == false) {
                                         $scope.spinnerbar('hide');

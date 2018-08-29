@@ -55,8 +55,8 @@
                     <div class="patient-details-part patinet-id" ng-if="patientObj.patActiveIp">
                         <b> D.O.A : </b> {{patientObj.doa}}
                     </div>
-                    <div class="patient-details-part" ng-if="patientObj.current_room != '-'">
-                        <i class="fa fa-bed"></i> {{patientObj.current_room}}
+                    <div class="patient-details-part" ng-if="patientObj.otherbranchCurrent_room != '-'">
+                        <i class="fa fa-bed"></i> {{patientObj.otherbranchCurrent_room}}
                     </div>
                     <div class="patient-details-part" ng-if="patientObj.active_op_current_status != '-'">
                         <i class="fa fa-bed"></i> <b> Status : </b> {{patientObj.active_op_current_status}}
