@@ -987,6 +987,3 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 .text-success {
     color: #27c24c !important;
 }
-.dropdown-menu>li>a:hover {
-    color: #fff !important;
-}
