@@ -1271,10 +1271,10 @@ class PharmacyproductController extends ActiveController {
                 $result = $result[0];
                 $product_exists = \common\models\PhaProduct::find()->where([
                             'tenant_id' => $result->tenant_id,
-                            'product_name' => $result->product_name,
-                            'product_unit' => $result->product_unit,
-                            'product_unit_count' => $result->product_unit_count
-                                //'product_id' => $result->product_id
+                            //'product_name' => $result->product_name,
+                            //'product_unit' => $result->product_unit,
+                            //'product_unit_count' => $result->product_unit_count
+                                'product_id' => $result->product_id
                         ])
                         ->one();
                 if (!empty($product_exists)) {
