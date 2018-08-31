@@ -118,7 +118,7 @@
                                 <td>{{record.stock}}</td>
                                 <td>{{record.purchase_rate}}</td>
                                 <td>{{record.self_value}}</td>
-                                <td ng-init="stock.total_amount = stock.total_amount + parseFloat(record.total_rate);">{{record.total_rate}}</td>
+                                <td ng-init="stock.total_amount = stock.total_amount + parseFloatIgnoreCommas(record.total_rate);">{{record.total_rate}}</td>
                             </tr>
                             <tr>
                                 <td></td>

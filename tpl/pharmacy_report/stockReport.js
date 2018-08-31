@@ -82,5 +82,12 @@ app.controller('stockReportController', ['$rootScope', '$scope', '$timeout', '$h
             else
                 return parseFloat(0);
         }
+        $scope.parseFloatIgnoreCommas = function (amount) {
+            if (amount) {
+                var numberNoCommas = amount.replace(/,/g, '');
+                return parseFloat(numberNoCommas);
+            } else
+                return parseFloat(0);
+        }
 
     }]);
