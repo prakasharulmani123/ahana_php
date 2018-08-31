@@ -1203,8 +1203,8 @@ class PharmacyproductController extends ActiveController {
                     continue;
                 }
 
-                $sql = "INSERT INTO test_os_batch_wise(tenant_id, Name, Add_Spec1, Batch, ExpiryMy, Total, SelfValCost, SelfValue, mrp, import_log) VALUES('{$tenant_id}', '{$data[0]}','{$data[1]}', '{$data[2]}', '{$data[3]}','{$data[4]}', '{$data[5]}', '{$data[6]}', '{$data[7]}', '{$log}')";
-
+                //$sql = "INSERT INTO test_os_batch_wise(tenant_id, Name, Add_Spec1, Batch, ExpiryMy, Total, SelfValCost, SelfValue, mrp, import_log) VALUES('{$tenant_id}', '{$data[0]}','{$data[1]}', '{$data[2]}', '{$data[3]}','{$data[4]}', '{$data[5]}', '{$data[6]}', '{$data[7]}', '{$log}')";
+                $sql = "INSERT INTO test_os_batch_wise(tenant_id, product_id, product_name, product_unit, product_unit_count, Add_Spec1, Batch, ExpiryMy, Total, mrp, import_log) VALUES('{$tenant_id}','{$data[0]}', '{$data[1]}','{$data[2]}', '{$data[3]}', '{$data[5]}','{$data[4]}', '{$data[6]}', '{$data[7]}', '{$data[8]}', '{$log}')";
                 $command = $connection->createCommand($sql);
                 $command->execute();
             }
@@ -1271,7 +1271,10 @@ class PharmacyproductController extends ActiveController {
                 $result = $result[0];
                 $product_exists = \common\models\PhaProduct::find()->where([
                             'tenant_id' => $result->tenant_id,
-                            'product_name' => $result->Name
+                            'product_name' => $result->product_name,
+                            'product_unit' => $result->product_unit,
+                            'product_unit_count' => $result->product_unit_count
+                                //'product_id' => $result->product_id
                         ])
                         ->one();
                 if (!empty($product_exists)) {
@@ -1448,7 +1451,8 @@ class PharmacyproductController extends ActiveController {
             $result = $command->queryAll(PDO::FETCH_OBJ);
             if ($result) {
                 $result = $result[0];
-                if (($result->brand != 'N') && ($result->generic_name != 'N')) {
+                //if (($result->brand != 'N') && ($result->generic_name != 'N')) {
+                if (($result->brand) && ($result->generic_name)) {
                     $post_data = [];
                     $post_data['formtype'] = 'add';
                     $post_data['tenant_id'] = $result->tenant_id;
