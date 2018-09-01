@@ -1,18 +1,18 @@
-<table class="" align="center">
+<table class="invoice" align="center">
     <thead>
         <tr>
             <th colspan="2">
                 <table>
                     <tbody>
                         <tr>
-                            <td width="6%">
+                            <td width="1%">
                                 
                             </td>
-                            <td width="48%">
+                            <td width="50%">
                                 <table cellpadding="0" cellspacing="0">
                                     <tbody>
                                         <tr>
-                                            <td class="patient_pres"><h2>{{patientObj.fullname}} / {{patientObj.patient_age_ym}}</h2></td>
+                                            <td class="patient_pres medclinic_header"><h2>{{patientObj.fullname}} / {{patientObj.patient_age_ym}}</h2></td>
                                         </tr>
                                         <tr>
                                             <td style="padding-bottom: 5px;" class="patient_pres">{{patientObj.patient_global_int_code}} 
@@ -27,12 +27,12 @@
                                     </tbody>
                                 </table>
                             </td>
-                            <td width="18%" align="center" class="logoTxt">
+                            <td width="23%" align="center" class="logoTxt">
                                 <!--                                <img ng-src="{{IRISOrgUrl}}/img/rx.jpg" alt="Morning" width="15px" height="18px" />-->
                     <io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" width="185px" height="50px"></io-barcode>
                     </td>
-                    <td width="28%" align="right">
-                        <span style="font-size: 18px; margin-right: 5px; line-height:16px;">{{today| date: "dd-MMMM-y" }}</span>
+                    <td width="26%" align="right">
+                        <span style="font-size: 18px; margin-right: 5px; line-height:16px;">{{today| date: "dd-MMM-y" }}</span>
                     </td>
         </tr>
         </tbody>
@@ -71,8 +71,8 @@
     <td>
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tr>
-                <td width="10%" align="left" valign="top" class="extra"><b>Allergies :</b></td>
-                <td width="90%" align="left" valign="top" class="extra">{{data2.allergies||'-'}}</td>
+                <td width="13%" align="left" valign="top" class="extra"><b>Allergies :</b></td>
+                <td width="87%" align="left" valign="top" class="extra">{{data2.allergies||'-'}}</td>
             </tr>
         </table>
     </td>
@@ -81,8 +81,8 @@
     <td>
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tr>
-                <td width="10%" align="left" valign="top" class="extra"><b>Diagnosis :</b></td>
-                <td width="90%" align="left" valign="top" class="extra">{{data2.diag_name||'-'}}</td>
+                <td width="13%" align="left" valign="top" class="extra"><b>Diagnosis :</b></td>
+                <td width="87%" align="left" valign="top" class="extra">{{data2.diag_name||'-'}}</td>
             </tr>
         </table>
     </td>
@@ -166,9 +166,9 @@
                     <p ng-if="prescription_print.PIB == 1" style="font-size: 15px;">Issued by : <span class="lightColor">{{app.username}}</span></p>
                     <p ng-if="prescription_print.PIA == 1" style="font-size: 15px;">Issued at : <span class="lightColor">{{app.org_name}}</span></p>
                 </div>
-                <p style="font-size: 20px;"><b>* Next Visit : {{(data2.next_visit| date: "dd-MMMM-y") || "-" }}</b></p>
+                <p style="font-size: 25px;"><b>* Next Visit : {{(data2.next_visit| date: "dd-MMMM-y") || "-" }}</b></p>
             </td>
-            <td style="font-size: 20px;" align="right">
+            <td style="font-size: 25px;" align="right">
                 <b>{{data2.consultant_name}}</b>
             </td>
         </tr>
