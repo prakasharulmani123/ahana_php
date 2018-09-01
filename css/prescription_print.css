@@ -4,6 +4,114 @@
         size: auto;
         margin-bottom: 20mm;
     }
+
+    * { margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; -ms-box-sizing:border-box; }
+    .invoice { width:1000px; margin:0 auto }
+    table { width:100%; border-collapse:collapse }
+    table td { vertical-align:middle }
+
+    /* Invoice Style */
+    .referenceId { padding:8px 0 }
+    .patientInfo { padding:10px 0; border-top:1px solid #b0b0b0; border-bottom:1px solid #b0b0b0; /*height:75px;*/ text-align:left; margin-bottom:0px; }
+    .patientInfo h2 { font-size:22px;      margin-top: 0px; font-weight: bold;
+                      margin-bottom: 0px;  }
+    .patientInfo td { padding:5px 0 }
+    .greenBg { background:#595959; padding:5px; border-radius:50%; color:#fff; width: 40px; height: 40px; -webkit-print-color-adjust: exact; -moz-box-sizing:border-box; -ms-box-sizing:border-box; text-transform:uppercase; font-size:11px; letter-spacing:1px }
+    .patientInfo .borderLeft { border-left:1px solid #b0b0b0; padding-left:2em }
+    .prescriptionInfo { padding-top:0.5em }
+    .prescriptionInfo th { border-bottom:1px solid #222222; line-height: 38px; font-size:15px  }
+    .medclinic_thead th { border-bottom:none; }
+    .prescriptionInfo th, .prescriptionInfo td { text-align:left }  
+
+    .prescriptionInfo th span {
+        border-bottom: 3px solid #222222;
+        display: inline-block;
+        /* padding-bottom: 1px; */
+        line-height: 40px;
+    }
+
+    .patientInfo ul
+    {
+        margin:0px;
+        padding:0px;
+        font-weight:normal;
+    }
+
+    .patientInfo ul li
+    {
+        display:inline-block;
+        width:17%;
+        margin-right:2%;
+        padding-bottom:5px;
+        font-size:16px;
+    }
+
+
+    .extra
+    {
+        padding-top:5px;
+        font-size:20px;
+        vertical-align:top;
+    }
+
+
+    .prescriptionInfo .txtCenter, .txtCenter { text-align:center }
+    /*.prescriptionInfo tbody tr:nth-child(even) { background:#ebebeb }*/
+    .prescriptionInfo tr td { padding:5px 0; font-size:17px }
+    .prescriptionInfo tr td  p { font-weight:bold; font-size:17px  }
+    /*.prescriptionInfo tr td:first-child { padding-left:10px }
+    .prescriptionInfo tr:first-child td { padding-top :30px }*/
+    .prescriptionInfo td i { text-transform:uppercase; color:#7d7d7d; font-size:15px }
+    .txtUpper { text-transform:uppercase }
+    .prescriptionInfo p { margin: 0;     font-size: 17px; }
+    /*.nextVisit td { padding-top:5em; margin-top: 50px; }*/
+    .printBtn { background:#3ebb95; color:#fff; border:none; padding:5px 20px; border-radius:2px; font-weight:bold; letter-spacing:0.5px; font-size:15px; cursor:pointer }
+    .logoTxt { position:relative }
+    .logoTxt span { color:#b1b1b1 }
+    .absoluteTxt {
+        position: absolute;
+        top: 37px;
+        left: 22px;
+    }
+
+    .medclinic_thead tr td { padding:5px 0; font-size:19px }
+    .medclinic_thead tr td  p { font-weight:bold; font-size:19px  }
+    .medclinic_thead td i { text-transform:uppercase; color:#7d7d7d; font-size:17px }
+    .medclinic_thead p { margin: 0;     font-size: 19px; }
+
+    /*.lightColor { color:#6b6b6b }*/
+    .nextVisit {font-size:15px; bottom: 5px;}
+    .patient_pres {
+        padding-top: 2px !important;
+        text-align:left;
+    }
+
+    .patient_pres h2 {
+        font-size: 20px;
+    }
+    .medclinic_header h2 {
+        font-size: 22px;
+    }
+
+    .pres-icon1 img
+    {
+        position: relative;
+        top: 5px;
+    }
+    /*prescription part End*/
+    .icon-food, .icon-morning, .icon-afternoon, .icon-evening
+    {
+        font-size:22px;
+        line-height:40px;
+        height:40px;
+    }
+
+    .icon-night
+    {
+        height:40px;
+        line-height:40px;
+        font-size:15px;
+    }
 }
 
 
@@ -50,7 +158,7 @@
 }
 
 
-   * { margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; -ms-box-sizing:border-box; }
+* { margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; -ms-box-sizing:border-box; }
 .invoice { width:1000px; margin:0 auto }
 table { width:100%; border-collapse:collapse }
 table td { vertical-align:middle }
@@ -77,26 +185,26 @@ table td { vertical-align:middle }
 
 .patientInfo ul
 {
-	margin:0px;
-	padding:0px;
-	font-weight:normal;
+    margin:0px;
+    padding:0px;
+    font-weight:normal;
 }
 
 .patientInfo ul li
 {
-	display:inline-block;
-	width:17%;
-	margin-right:2%;
-	padding-bottom:5px;
-	font-size:13px;
+    display:inline-block;
+    width:17%;
+    margin-right:2%;
+    padding-bottom:5px;
+    font-size:16px;
 }
 
 
 .extra
 {
-	padding-top:5px;
-	font-size:13px;
-	vertical-align:top;
+    padding-top:5px;
+    font-size:20px;
+    vertical-align:top;
 }
 
 
@@ -106,7 +214,7 @@ table td { vertical-align:middle }
 .prescriptionInfo tr td  p { font-weight:bold; font-size:17px  }
 /*.prescriptionInfo tr td:first-child { padding-left:10px }
 .prescriptionInfo tr:first-child td { padding-top :30px }*/
-.prescriptionInfo td i { text-transform:uppercase; color:#7d7d7d; font-size:17px }
+.prescriptionInfo td i { text-transform:uppercase; color:#7d7d7d; font-size:15px }
 .txtUpper { text-transform:uppercase }
 .prescriptionInfo p { margin: 0;     font-size: 17px; }
 /*.nextVisit td { padding-top:5em; margin-top: 50px; }*/
@@ -118,15 +226,24 @@ table td { vertical-align:middle }
     top: 37px;
     left: 22px;
 }
+
+.medclinic_thead tr td { padding:5px 0; font-size:19px }
+.medclinic_thead tr td  p { font-weight:bold; font-size:19px  }
+.medclinic_thead td i { text-transform:uppercase; color:#7d7d7d; font-size:17px }
+.medclinic_thead p { margin: 0;     font-size: 19px; }
+
 /*.lightColor { color:#6b6b6b }*/
 .nextVisit {font-size:15px; bottom: 5px;}
 .patient_pres {
     padding-top: 2px !important;
-	text-align:left;
+    text-align:left;
 }
 
 .patient_pres h2 {
     font-size: 20px;
+}
+.medclinic_header h2 {
+    font-size: 22px;
 }
 
 .pres-icon1 img
@@ -137,14 +254,14 @@ table td { vertical-align:middle }
 /*prescription part End*/
 .icon-food, .icon-morning, .icon-afternoon, .icon-evening
 {
-	font-size:22px;
-	line-height:40px;
-	height:40px;
+    font-size:22px;
+    line-height:40px;
+    height:40px;
 }
 
 .icon-night
 {
-	height:40px;
-	line-height:40px;
-	font-size:15px;
+    height:40px;
+    line-height:40px;
+    font-size:15px;
 }
