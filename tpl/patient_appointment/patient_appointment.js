@@ -55,6 +55,15 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                             //Set Add Procedure form fields
                             $rootScope.commonService.GetChargeCategoryList('', '1', false, 'PRC', function (response) {
                                 $scope.procedures = response.categoryList;
+                                    angular.forEach($scope.procedures, function (procedure, key) {
+                                        $http.post($rootScope.IRISOrgServiceUrl + '/procedure/getprocedureamount', {charge_sub_cat_id: procedure.charge_subcat_id, encounter_type: 'OP', patient_category: $scope.patientObj.patient_category_id})
+                                            .success(
+                                                    function (response) {
+                                                        procedure.charge_amount = response;
+                                                        procedure.sub_cat_name_with_amount = procedure.charge_subcat_name + ' (' + response + ')';
+                                                    }
+                                            );
+                                    });
                             });
                             
                         } else if (actEnc[0].liveAppointmentBooking.hasOwnProperty('appt_id')) {
