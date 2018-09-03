@@ -6,6 +6,7 @@ use common\models\CoUser;
 use common\models\PatPatient;
 use common\models\PatProcedure;
 use common\models\CoAuditLog;
+use common\models\CoChargePerCategory;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\BaseActiveRecord;
@@ -170,6 +171,13 @@ class ProcedureController extends ActiveController {
                     ->orderBy(['proc_date' => SORT_DESC])
                     ->all();
             return ['procedure' => $procedure];
+        }
+    }
+
+    public function actionGetprocedureamount() {
+        $post = Yii::$app->getRequest()->post();
+        if (!empty($post)) {
+            return CoChargePerCategory::getChargeAmount(1, 'C', $post['charge_sub_cat_id'], $post['encounter_type'], $post['patient_category']);
         }
     }
 
