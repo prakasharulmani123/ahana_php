@@ -29,10 +29,10 @@
                             </td>
                             <td width="23%" align="center" class="logoTxt">
                                 <!--                                <img ng-src="{{IRISOrgUrl}}/img/rx.jpg" alt="Morning" width="15px" height="18px" />-->
-                    <io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" width="185px" height="50px"></io-barcode>
+                    <io-barcode code="{{patientObj.patient_global_int_code}}" type="CODE128B" options="barcodeOptions" width="190px" height="55px"></io-barcode>
                     </td>
                     <td width="26%" align="right">
-                        <span style="font-size: 18px; margin-right: 5px; line-height:16px;">{{today| date: "dd-MMM-y" }}</span>
+                        <span style="font-size: 19px; margin-right: 5px; line-height:17px;">{{today| date: "dd-MMM-y" }}</span>
                     </td>
         </tr>
         </tbody>
@@ -112,7 +112,7 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat-start="(gKey, row) in prescriptionItems2">
-                        <td><p><span style="font-weight: normal">{{gKey + 1}}.</span> {{row.product_name}}</p><i>(<b>{{row.generic_name}}</b>)</i></td>
+                        <td><p><span style="font-weight: normal">{{gKey + 1}}.</span> {{row.product_name}}</p><i>({{row.generic_name}})</i></td>
                         <td class="txtCenter txtUpper" colspan="4" ng-if="row.freqType == 'txt'">{{ getFrequencyExists(row.frequency_name, 0, row.freqType)}}</td>
 
                         <td class="txtCenter" ng-if="row.freqType != 'txt'">
