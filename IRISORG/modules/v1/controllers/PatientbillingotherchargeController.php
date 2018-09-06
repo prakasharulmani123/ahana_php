@@ -128,7 +128,7 @@ class PatientbillingotherchargeController extends ActiveController {
             $valid = $model->validate();
             if ($valid) {
                 foreach ($post['sub_data'] as $data) {
-                    $otherchargeItem = PatBillingOtherCharges::find()->tenant()->andWhere(['other_charge_id' => $data['other_charge_id']])->one();
+                    $otherchargeItem = PatBillingOtherCharges::find()->andWhere(['other_charge_id' => $data['other_charge_id']])->one();
                     $otherchargeItem->charge_amount = $data['charge_amount'];
                     $otherchargeItem->charge_cat_id = $post['data']['charge_cat_id'];
                     $otherchargeItem->charge_subcat_id = $post['data']['charge_subcat_id'];
