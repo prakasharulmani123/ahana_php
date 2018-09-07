@@ -22,6 +22,7 @@ angular.module('app')
                 $scope.app = {
                     name: 'IRIS',
                     page_title: 'IRIS',
+                    powered_by: 'Powered By: Sumanas Technologies Pvt Ltd',
                     org_name: '',
                     org_address: '',
                     org_country: '',

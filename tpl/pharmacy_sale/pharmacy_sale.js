@@ -1347,7 +1347,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
         $scope.printFooter = function () {
             return {
-                text: [{text: 'PHARMACY SERVICE - 24 HOURS \n DEVELOPED BY : SUMANAS TECHNOLOGIES'}],
+                text: [{text: 'PHARMACY SERVICE - 24 HOURS \n Powered By: Sumanas Technologies Pvt Ltd'}],
                 fontSize: 7,
                 margin: 0,
                 alignment: 'center'
