@@ -221,10 +221,11 @@ app.controller('VitalsController', ['$rootScope', '$scope', '$timeout', '$http',
                 method: "GET"
             }).success(
                     function (response) {
+                        $scope.checkVitalaccess();
                         $scope.loadbar('hide');
                         $scope.data = response;
                         $scope.encounter = {encounter_id: response.encounter_id};
-                        $scope.initCanCreateVital();
+                        //$scope.initCanCreateVital();
                     }
             ).error(function (data, status) {
                 $scope.loadbar('hide');
