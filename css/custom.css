@@ -987,3 +987,6 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 .text-success {
     color: #27c24c !important;
 }
+.presc_vital_no_padding {
+    margin-bottom: 10px !important;
+}
