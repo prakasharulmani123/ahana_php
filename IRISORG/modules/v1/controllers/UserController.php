@@ -268,6 +268,7 @@ class UserController extends ActiveController {
             'user_id' => Yii::$app->user->identity->user->user_id,
             'tenant_id' => Yii::$app->user->identity->user->tenant_id,
             'user_timeout' => Yii::$app->user->identity->user_timeout,
+            'user_care_provider' => Yii::$app->user->identity->user->care_provider,
         ];
         return $credentials;
     }
