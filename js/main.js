@@ -37,6 +37,7 @@ angular.module('app')
                     org_logo: '',
                     org_small_logo: '',
                     org_document_logo: '',
+                    user_care_provider :'',
                     // for chart colors
                     color: {
                         primary: '#7266ba',
@@ -335,6 +336,7 @@ angular.module('app')
                     $scope.app.org_full_address = user.credentials.org_address + ', ' + user.credentials.org_city;
                     $scope.app.username = user.credentials.username;
                     $scope.app.user_id = user.credentials.user_id;
+                    $scope.app.user_care_provider = user.credentials.user_care_provider; 
                     $scope.app.page_title = $scope.app.name + '(' + $scope.app.org_name + ')';
                     if (user.credentials.user_timeout) {
                         Idle.setIdle(user.credentials.user_timeout * 60);

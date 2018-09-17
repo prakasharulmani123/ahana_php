@@ -122,6 +122,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                     }
                                 }
                             }
+                            $timeout(function () {
+                                if ($scope.app.user_care_provider == '1') {
+                                    $scope.data.consultant_id = $scope.app.user_id;
+                                }
+                            }, 1000);
                         }, true);
 
                         //var actEnc = $filter('filter')($scope.encounters, {status: '1'});
