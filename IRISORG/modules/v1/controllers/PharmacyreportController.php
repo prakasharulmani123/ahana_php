@@ -54,7 +54,7 @@ class PharmacyreportController extends ActiveController {
     public function actionNewpurchasereport() {
         $post = Yii::$app->getRequest()->post();
 
-        $model = PhaPurchaseItem::find()
+        $model = PhaPurchaseItem::find()->active()
                 ->tenant()
                 ->joinWith(['purchase'])
                 ->andWhere("pha_purchase.invoice_date between '{$post['from']}' AND '{$post['to']}'");
