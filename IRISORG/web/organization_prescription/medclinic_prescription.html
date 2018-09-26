@@ -39,8 +39,28 @@
 </table>
 </th>
 </tr>
+<tr ng-if="prescription_print.SA == 1" align="left" style="border-top:2px solid #222222;padding: 8px 0px;" valign="top">
+    <td>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td width="13%" align="left" valign="top" class="extra"><b>Allergies :</b></td>
+                <td width="87%" align="left" valign="top" class="extra">{{data2.allergies||'-'}}</td>
+            </tr>
+        </table>
+    </td>
+</tr>
+<tr ng-if="prescription_print.SD == 1" align="left" valign="top">
+    <td>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td width="13%" align="left" valign="top" style="padding: 8px 0px 8px 0px;" class="extra"><b>Diagnosis :</b></td>
+                <td width="87%" align="left" valign="top" style="padding: 8px 0px 8px 0px;" class="extra">{{data2.diag_name||'-'}}</td>
+            </tr>
+        </table>
+    </td>
+</tr>
 <tr>
-    <th colspan="2"> <table class="patientInfo">
+    <th colspan="2"> <table class="patientInfo medclinic_vital_info">
             <tbody>
                 <tr>
                     <td>
@@ -67,26 +87,6 @@
     <td width="89" align="left" valign="top" class="extra"> <strong>Allergies : </strong></td>
     <td width="899" align="left" valign="top" class="extra">{{data2.diag_name||'-'}}</td>
 </tr>-->
-<tr ng-if="prescription_print.SA == 1" align="left" style="padding: 8px 0px;" valign="top">
-    <td>
-        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-            <tr>
-                <td width="13%" align="left" valign="top" class="extra"><b>Allergies :</b></td>
-                <td width="87%" align="left" valign="top" class="extra">{{data2.allergies||'-'}}</td>
-            </tr>
-        </table>
-    </td>
-</tr>
-<tr ng-if="prescription_print.SD == 1" align="left"  style="border-bottom:1px solid #b0b0b0;" valign="top">
-    <td>
-        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-            <tr>
-                <td width="13%" align="left" valign="top" style="padding: 8px 0px 8px 0px;" class="extra"><b>Diagnosis :</b></td>
-                <td width="87%" align="left" valign="top" style="padding: 8px 0px 8px 0px;" class="extra">{{data2.diag_name||'-'}}</td>
-            </tr>
-        </table>
-    </td>
-</tr>
 <!--<tr>
     <td ng-if="prescription_print.SD == 1" align="left" style="padding: 4px;" valign="top"><b>Diagnosis :</b> {{data2.diag_name}}</td>
 </tr>-->
