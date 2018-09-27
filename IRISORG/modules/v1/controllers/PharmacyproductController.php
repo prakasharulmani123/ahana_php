@@ -838,6 +838,24 @@ class PharmacyproductController extends ActiveController {
         $modelClass = $this->modelClass;
         $totalData = $modelClass::find()->tenant()->active()->count();
         $totalFiltered = $totalData;
+        
+        if (isset($requestData['order'])) {
+            if ($requestData['order'][0]['dir'] == 'asc') {
+                $sort_dir = SORT_ASC;
+            } elseif ($requestData['order'][0]['dir'] == 'desc') {
+                $sort_dir = SORT_DESC;
+            }
+            $sort_column = $requestData['columns'][$requestData['order'][0]['column']]['data'];
+            if($sort_column == 'product_generic') {
+                $sort_column = 'pha_generic.generic_name';
+            } else if($sort_column == 'product_brand') {
+                $sort_column = 'pha_brand.brand_name';
+            } else if($sort_column == 'product_type') {
+                $sort_column = 'pha_product_description.description_name';
+            }
+            $order_array = [$sort_column => $sort_dir];
+        }
+        
 
         if (!empty($requestData['search']['value'])) {
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
@@ -871,15 +889,16 @@ class PharmacyproductController extends ActiveController {
                     ])
                     ->limit($requestData['length'])
                     ->offset($requestData['start'])
-                    ->orderBy(['created_at' => SORT_DESC])
+                    ->orderBy($order_array)
                     ->all();
         } else {
             $products = $modelClass::find()
+                    ->joinWith(['productDescription', 'brand', 'generic'])
                     ->tenant()
                     ->active()
                     ->limit($requestData['length'])
                     ->offset($requestData['start'])
-                    ->orderBy(['created_at' => SORT_DESC])
+                    ->orderBy($order_array)
                     ->all();
         }
 
