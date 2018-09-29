@@ -452,6 +452,9 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                     post_url = $rootScope.IRISOrgServiceUrl + '/appointments/changestatus';
                 }
                 _that.data.PatAppointment.appt_status = "S";
+            } else if (mode == 'edit-fees') {
+                post_url = $rootScope.IRISOrgServiceUrl + '/appointments/' + _that.data.PatAppointment.appt_id;
+                method = 'PUT';
             }
 
             $scope.loadbar('show');
@@ -468,6 +471,8 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                                 $scope.add_appointment();
                             } else if (mode == 'seen_print') {
                                 $scope.save_success(_that.data.PatAppointment.status_date, _that.data.PatAppointment.amount, response.amount_in_words, response.bill_no, $state.params.enc_id, _that.data.PatAppointment.payment_mode);
+                            } else if (mode == 'edit-fees' ) {
+                                $state.go("patient.encounter", {id: $state.params.id});
                             } else {
                                 $scope.data = {};
                                 $timeout(function () {
