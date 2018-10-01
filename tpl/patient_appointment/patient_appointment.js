@@ -484,6 +484,8 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
                                 }, 1000)
                             }
 
+                        } else if(mode == 'edit-fees') {
+                            $state.go("patient.encounter", {id: $state.params.id});
                         } else {
                             $scope.errorData = response.message;
                         }
