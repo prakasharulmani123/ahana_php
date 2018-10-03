@@ -2388,6 +2388,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //Short Expire Drug
+            .state('pharmacy.nonMovingDrugs', {
+                url: '/nonMovingDrugs',
+                templateUrl: 'tpl/pharmacy_report/nonMovingDrug.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_report/nonMovingDrug.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
 
             //PHARMACY PURCHASE VAT REPORT
             .state('pharmacy.purchaseVatReport', {
