@@ -79,7 +79,7 @@ class PharmacysaleController extends ActiveController {
 //                ->leftJoin('pat_global_patient', 'pat_global_patient.patient_global_guid=pat_patient.patient_global_guid')
                 ->andFilterWhere([
                     'or',
-                        ['like', 'bill_no', $text],
+                    ['like', 'bill_no', $text],
 //                        ['like', 'pat_global_patient.patient_global_int_code', $text],
                     ['like', 'gl_patient.patient_global_int_code', $text],
                 ])
@@ -106,9 +106,9 @@ class PharmacysaleController extends ActiveController {
                 $text = $get['s'];
                 $searchCondition = [
                     'or',
-                        ['like', 'patient_name', $text],
-                        ['like', 'encounter_id', $text],
-                        ['like', 'gl_patient.patient_global_int_code', $text],
+                    ['like', 'patient_name', $text],
+                    ['like', 'encounter_id', $text],
+                    ['like', 'gl_patient.patient_global_int_code', $text],
                 ];
             }
 
@@ -313,6 +313,41 @@ class PharmacysaleController extends ActiveController {
                 ->orderBy(['sale_id' => SORT_DESC])
                 ->all();
         return ['sale' => $sale];
+    }
+
+    public function actionNonmovingdrug() {
+        $get = Yii::$app->getRequest()->get();
+
+        //$dbname = Yii::$app->client->createCommand("SELECT DATABASE()")->queryScalar();
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        $previous_date = date("Y-m-d", strtotime("-3 months"));
+        $current_date = date("Y-m-d");
+        $sql = "SELECT 
+                    CONCAT_WS(' ', c.product_name, c.product_unit_count, c.product_unit) AS 'ProductName',
+                    d.generic_name,
+                    e.drug_name,
+                    f.division_name
+                    FROM pha_product c 
+                    LEFT JOIN pha_generic d
+                    ON c.generic_id = d.generic_id
+                    LEFT JOIN pha_drug_class e
+                    ON e.drug_class_id = c.drug_class_id
+                    LEFT JOIN pha_brand_division f
+                    ON f.division_id = c.division_id
+                    WHERE product_id 
+                    NOT IN 
+                    (SELECT 
+                    product_id 
+                    FROM pha_sale_item a 
+                    LEFT JOIN pha_sale b 
+                    ON a.sale_id = b.sale_id 
+                    WHERE b.sale_date BETWEEN '" . $previous_date . "' AND '" . $current_date . "'
+                    AND a.tenant_id = '" . $tenant_id . "'
+                    GROUP BY a.product_id) 
+                    AND c.tenant_id = '1'";
+        $command = Yii::$app->client_pharmacy->createCommand($sql);
+        $reports = $command->queryAll();
+        return ['report' => $reports];
     }
 
 }
