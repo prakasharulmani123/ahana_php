@@ -344,7 +344,7 @@ class PharmacysaleController extends ActiveController {
                     WHERE b.sale_date BETWEEN '" . $previous_date . "' AND '" . $current_date . "'
                     AND a.tenant_id = '" . $tenant_id . "'
                     GROUP BY a.product_id) 
-                    AND c.tenant_id = '1'";
+                    AND c.tenant_id = '" . $tenant_id . "'";
         $command = Yii::$app->client_pharmacy->createCommand($sql);
         $reports = $command->queryAll();
         return ['report' => $reports];
