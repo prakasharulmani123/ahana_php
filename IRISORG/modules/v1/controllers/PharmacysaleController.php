@@ -350,4 +350,35 @@ class PharmacysaleController extends ActiveController {
         return ['report' => $reports];
     }
 
+    public function actionMinmaxquantity() {
+        $post = Yii::$app->getRequest()->post();
+        $report = [];
+        if (!empty($post['month']) && !empty($post['year'])) {
+            $saleItem = PhaSaleItem::find()
+                    ->tenant()
+                    ->active()
+                    ->joinWith('product')
+                    ->joinWith('sale')
+                    ->joinWith('product.brand')
+                    ->select('min(quantity) AS min_qty')
+                    ->addSelect('max(quantity) AS max_qty')
+                    ->addSelect('pha_product.product_name AS product_name')
+                    ->addSelect('pha_brand.brand_name AS brand_name')
+                    ->addSelect('count(pha_sale.sale_id) AS sale_count')
+                    ->andWhere(["DATE_FORMAT(pha_sale.sale_date,'%Y')" => $post['year'],
+                        "DATE_FORMAT(pha_sale.sale_date,'%m')" => $post['month']])
+                    ->groupBy(['pha_sale_item.product_id'])
+                    ->all();
+            
+            foreach ($saleItem as $key => $sale) {
+                $report[$key]['min_qty'] = $sale['min_qty'];
+                $report[$key]['max_qty'] = $sale['max_qty'];
+                $report[$key]['product_name'] = $sale['product_name'];
+                $report[$key]['brand_name'] = $sale['brand_name'];
+                $report[$key]['sale_count'] = $sale['sale_count'];
+            }
+        }
+        return ['report' => $report];
+    }
+
 }
