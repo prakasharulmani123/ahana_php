@@ -195,6 +195,8 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
         serviceUrl = 'http://hms.ark/api/IRISADMIN/web/v1';
     } else if ($location.host() == 'medizura.ark') {
         serviceUrl = 'http://medizura.ark/api/IRISADMIN/web/v1';
+    } else if ($location.host() == 'medizura.com') {
+        serviceUrl = 'https://medizura.com/api/IRISADMIN/web/v1';
     } else {
         productOwner = false; // Organizations
         serviceUrl = 'http://hms.ark/api/IRISADMIN/web/v1';
@@ -209,7 +211,7 @@ function run($rootScope, $state, $stateParams, $location, $cookieStore, $http, $
 
     $rootScope.$on('$locationChangeStart', function (event, next, current) {
         if (!productOwner) {
-            var url = "http://" + $location.host();
+            var url = "https://" + $location.host();
             $window.location.href = url;
         }
         
