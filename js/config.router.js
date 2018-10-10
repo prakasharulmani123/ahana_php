@@ -2389,7 +2389,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                 }
             })
             
-            //Short Expire Drug
+            //Non Moving Drug
             .state('pharmacy.nonMovingDrugs', {
                 url: '/nonMovingDrugs',
                 templateUrl: 'tpl/pharmacy_report/nonMovingDrug.html',
@@ -2399,6 +2399,22 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                             return $ocLazyLoad.load(['smart-table']).then(
                                     function () {
                                         return $ocLazyLoad.load('tpl/pharmacy_report/nonMovingDrug.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
+            
+            //Min Max sold quantity & no of bills
+            .state('pharmacy.minMaxSoldQuantity', {
+                url: '/minMaxSoldQuantity',
+                templateUrl: 'tpl/pharmacy_report/minMaxSoldQuantity.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy_report/minMaxSoldQuantity.js?v=' + APP_VERSION);
                                     }
                             );
                         }]
