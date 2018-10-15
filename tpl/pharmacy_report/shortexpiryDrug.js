@@ -1,6 +1,13 @@
 app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', '$filter', '$timeout', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll, $filter, $timeout) {
 
         
+        $scope.initReport = function () {
+            $scope.showTable = false;
+            $scope.data = {};
+            $scope.short_expiry_list = [{value: '1 WEEK', label: '1 Week'}, {value: '1 MONTH', label: '1 Month'}, {value: '2 MONTH', label: '2 Month'}, {value: '3 MONTH', label: '3 Month'},
+            {value: '4 MONTH', label: '4 Month'}, {value: '5 MONTH', label: '5 Month'}, {value: '6 MONTH', label: '6 Month'} ];
+        };
+        
         //Index Page
         $scope.loadReport = function () {
             $scope.records = [];
@@ -10,6 +17,9 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
             $scope.msg.successMessage = "";
 
             var data = {};
+            
+            if (typeof $scope.data.short_expiry !== 'undefined' && $scope.data.short_expiry != '')
+                angular.extend(data, {short_expiry: $scope.data.short_expiry});
             
             // Get data's from service
             $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyproductbatch/shortexpiry?addtfields=expiry_report', data)
@@ -22,6 +32,11 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
                         $scope.errorData = "An Error has occured";
                     });
         };
+        
+        $scope.clearReport = function () {
+            $scope.showTable = false;
+            $scope.data = {};
+        }
 
         $scope.parseFloat = function (row) {
             return parseFloat(row);

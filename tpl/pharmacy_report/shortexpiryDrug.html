@@ -1,4 +1,4 @@
-<div ng-controller="purchaseReportController" ng-init="loadReport();">
+<div ng-controller="purchaseReportController" ng-init="initReport();">
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n h3">Short Expiry Drug</h1>
     </div>
@@ -7,6 +7,29 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
+
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-body p-b form-horizontal">
+                        <form class="form-horizontal form-validation" name="searchForm">
+                            <div class="col-md-3 col-lg-3">
+                                <label><b>List by short expiry drug : </b> &nbsp; </label>
+                                <select class="form-control search-dropdown" ng-model="data.short_expiry" ng-options="expiry.value as expiry.label for expiry in short_expiry_list">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+
+<!--                            <div class="col-md-1 col-lg-1">
+                                <button class="btn btn-grey" ng-click="loadReport()">
+                                    &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
+                                </button>
+                            </div>-->
+                            <button class="btn btn-success get-report" ng-disabled="!data.short_expiry" ng-click="loadReport()">Get Report</button>
+                            <button class="btn btn-dark" ng-click="clearReport()">Clear</button>
+                        </form>
+                    </div>    
+                </div>
+            </div>
 
             <div class="col-sm-12" ng-if='showTable && records.length > 0'>
                 <div class="panel panel-default">
@@ -80,11 +103,11 @@
             <div class="col-sm-12" ng-show='records.length == 0'>
                 <div class="panel panel-default">
                     <div class="panel-body">
-                      No Drugs are available  
+                        No Drugs are available  
                     </div>
                 </div>
             </div>
-            
+
 
         </div>
     </div>
