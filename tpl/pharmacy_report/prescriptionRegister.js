@@ -178,7 +178,7 @@ app.controller('prescriptionRegisterController', ['$rootScope', '$scope', '$time
 
                 angular.forEach(sales, function (sale, sale_key) {
                     var items = [];
-                    var sale_header = sale.sale_date + ' ' + sale.bill_no + ' ' + sale.consultant_name + ' ' + sale.patient_name;
+                    var sale_header = sale.pres_date + ' ' + sale.consultant_name + ' ' + sale.patient.fullname + ' ' + sale.patient.patient_int_code;
                     items.push([
                         {text: sale_header, style: 'header', colSpan: 6}, "", "", "", "", ""
                     ]);
@@ -186,8 +186,8 @@ app.controller('prescriptionRegisterController', ['$rootScope', '$scope', '$time
                         {text: 'Product Name', style: 'header'},
                         {text: 'Qty', style: 'header'},
                         {text: 'Brand', style: 'header'},
-                        {text: 'Batch', style: 'header'},
-                        {text: 'Expiry', style: 'header'},
+                        {text: 'Generic', style: 'header'},
+                        {text: 'Drug', style: 'header'},
                         {text: 'Pharmacist Signature', style: 'header'}
                     ]);
                     angular.forEach(sale.items, function (item, item_key) {
@@ -195,8 +195,8 @@ app.controller('prescriptionRegisterController', ['$rootScope', '$scope', '$time
                             item.product.full_name,
                             item.quantity.toString(),
                             item.product.brand_code,
-                            item.batch.batch_no,
-                            moment(item.batch.expiry_date).format('MM/YYYY'),
+                            item.generic_name,
+                            item.drug_name,
                             ''
                         ]);
                     });
