@@ -67,8 +67,10 @@ class PharmacyproductbatchController extends ActiveController {
     }
     
     public function actionShortexpiry() {
+        $post = Yii::$app->getRequest()->post();
+        $expiry = $post['short_expiry'];
         $reports = PhaProductBatch::find()->tenant()
-                ->andWhere("pha_product_batch.expiry_date between CURDATE() AND CURDATE()+ INTERVAL 6 MONTH")
+                ->andWhere("pha_product_batch.expiry_date between CURDATE() AND CURDATE()+ INTERVAL $expiry")
                 ->orderBy(['expiry_date' => SORT_ASC])
                 ->all();
         return ['report' => $reports];        
