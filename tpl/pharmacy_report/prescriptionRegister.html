@@ -107,16 +107,18 @@
                         <div ng-repeat="(key, sale) in sales">
                             <table style="display: none;" class="table table-bordered">
                                 <tr>
-                                    <th>Sale Date</th>
-                                    <th>Bill No</th>
+                                    <th>Prescription Date</th>
+<!--                                    <th>Bill No</th>-->
                                     <th>Consultant Name</th>
                                     <th>Patient Name</th>
+                                    <th>Patient UHID</th>
                                 </tr>
                                 <tr>
-                                    <td>{{sale.sale_date}}</td> 
-                                    <td>{{sale.bill_no}}</td>
+                                    <td>{{sale.pres_date | date:'dd-MM-yyyy'}}</td> 
+<!--                                    <td>{{sale.bill_no}}</td>-->
                                     <td>{{sale.consultant_name}}</td> 
-                                    <td>{{sale.patient_name}}</td>
+                                    <td>{{sale.patient.fullname}}</td>
+                                    <td>{{sale.patient.patient_int_code}}</td>
                                 </tr>
                             </table>
                             <div class="panel-heading">
@@ -125,10 +127,11 @@
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <b>
-                                                    {{sale.sale_date}} 
-                                                    {{sale.bill_no}} 
+                                                    {{sale.pres_date | date:'dd-MM-yyyy'}} 
+<!--                                                    {{sale.bill_no}} -->
                                                     {{sale.consultant_name}} 
-                                                    {{sale.patient_name}} 
+                                                    {{sale.patient.fullname}}
+                                                    {{sale.patient.patient_int_code}}
                                                 </b>
                                             </div>
                                         </div>
@@ -143,8 +146,8 @@
                                                 <th id="work-base-grid_c0">Product Name</th>
                                                 <th id="work-base-grid_c0">Qty</th>
                                                 <th id="work-base-grid_c0">Brand</th>
-                                                <th id="work-base-grid_c0">Batch</th>
-                                                <th id="work-base-grid_c0">Expiry</th>
+                                                <th id="work-base-grid_c0">Generic Name</th>
+                                                <th id="work-base-grid_c0">Drug Name</th>
                                                 <th id="work-base-grid_c1">Pharmacist Signature</th>
                                             </tr>
                                         </thead>
@@ -153,8 +156,8 @@
                                                 <td>{{item.product.full_name}}</td>
                                                 <td>{{item.quantity}}</td>
                                                 <td>{{item.product.brand_code}}</td>
-                                                <td>{{item.batch.batch_no}}</td>
-                                                <td>{{item.batch.expiry_date| moment:'MM/YYYY'}}</td>
+                                                <td>{{item.generic_name}}</td>
+                                                <td>{{item.drug_name}}</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr style="display: none;"></tr>
