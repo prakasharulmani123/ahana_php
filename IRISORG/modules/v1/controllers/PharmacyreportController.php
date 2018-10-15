@@ -146,19 +146,28 @@ class PharmacyreportController extends ActiveController {
     public function actionPrescriptionregisterreport() {
         $post = Yii::$app->getRequest()->post();
 
-        $model = PhaSale::find()
-                ->andWhere(['not', ['pha_sale.patient_id' => null]]);
-
+//        $model = PhaSale::find()
+//                ->andWhere(['not', ['pha_sale.patient_id' => null]]);
+//
+//        if (isset($post['from']) && isset($post['consultant_id']) && isset($post['tenant_id'])) {
+//            $consultant_ids = join("','", $post['consultant_id']);
+//            $tenant_ids = join("','", $post['tenant_id']);
+//            $model->andWhere(["pha_sale.sale_date" => $post['from']]);
+//            $model->andWhere("pha_sale.consultant_id IN ( '$consultant_ids' )");
+//            $model->andWhere("pha_sale.tenant_id IN ( '$tenant_ids' )");
+//        }
+//
+//        $reports = $model->all();
+        //Valli requirement, report depends on prescription not sales
+        $model = \common\models\PatPrescription::find();
         if (isset($post['from']) && isset($post['consultant_id']) && isset($post['tenant_id'])) {
             $consultant_ids = join("','", $post['consultant_id']);
             $tenant_ids = join("','", $post['tenant_id']);
-            $model->andWhere(["pha_sale.sale_date" => $post['from']]);
-            $model->andWhere("pha_sale.consultant_id IN ( '$consultant_ids' )");
-            $model->andWhere("pha_sale.tenant_id IN ( '$tenant_ids' )");
+            $model->andWhere(["date(pres_date)" => $post['from']]);
+            $model->andWhere("pat_prescription.consultant_id IN ( '$consultant_ids' )");
+            $model->andWhere("pat_prescription.tenant_id IN ( '$tenant_ids' )");
         }
-
         $reports = $model->all();
-
         return ['report' => $reports];
     }
 

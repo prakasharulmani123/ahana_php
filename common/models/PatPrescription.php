@@ -168,6 +168,9 @@ class PatPrescription extends RActiveRecord {
             'encounter' => function ($model) {
                 return (isset($model->encounter) ? $model->encounter->patVitals : '-');
             },
+            'patient' => function ($model) {
+                return (isset($model->patient) ? $model->patient : '-');
+            },
             'diag_name' => function ($model) {
                 if (isset($model->diagnosis)) {
                     $result = '';
@@ -212,6 +215,14 @@ class PatPrescription extends RActiveRecord {
                         'next_visit' => 'next_visit',
                     ];
                     break;
+                case 'prescregister':
+                    $addt_keys = ['items', 'patient', 'consultant_name', 'branch_name'];
+                    $parent_fields = [
+                        'tenant_id' => 'tenant_id',
+                        'pres_date' => 'pres_date',
+                    ];
+                    break;
+
             endswitch;
         }
 
