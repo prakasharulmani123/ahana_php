@@ -178,7 +178,7 @@ app.controller('prescriptionRegisterController', ['$rootScope', '$scope', '$time
 
                 angular.forEach(sales, function (sale, sale_key) {
                     var items = [];
-                    var sale_header = sale.pres_date + ' ' + sale.consultant_name + ' ' + sale.patient.fullname + ' ' + sale.patient.patient_int_code;
+                    var sale_header = sale.pres_date + ' ' + sale.consultant_name + ' ' + sale.patient.fullname + ' ' + sale.patient.patient_global_int_code;
                     items.push([
                         {text: sale_header, style: 'header', colSpan: 6}, "", "", "", "", ""
                     ]);

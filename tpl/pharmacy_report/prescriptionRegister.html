@@ -27,7 +27,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <select id="branch_wise" class="selectpicker" data-actions-box="true" data-selected-text-format="count" data-live-search="true"  ng-model="data.tenant_id" ng-options="key as value for (key , value) in tenants | orderBy: label" multiple required>
+                                <select id="branch_wise" class="selectpicker"  ng-model="data.tenant_id" ng-options="key as value for (key , value) in tenants | orderBy: 'name'"  required>
                                 </select>
                             </div>
                             <button id="get_report" class="btn btn-success get-report" ng-disabled="searchForm.$invalid" ng-click="loadReport()">Get Report</button>
@@ -118,7 +118,7 @@
 <!--                                    <td>{{sale.bill_no}}</td>-->
                                     <td>{{sale.consultant_name}}</td> 
                                     <td>{{sale.patient.fullname}}</td>
-                                    <td>{{sale.patient.patient_int_code}}</td>
+                                    <td>{{sale.patient.patient_global_int_code}}</td>
                                 </tr>
                             </table>
                             <div class="panel-heading">
@@ -131,7 +131,7 @@
 <!--                                                    {{sale.bill_no}} -->
                                                     {{sale.consultant_name}} 
                                                     {{sale.patient.fullname}}
-                                                    {{sale.patient.patient_int_code}}
+                                                    {{sale.patient.patient_global_int_code}}
                                                 </b>
                                             </div>
                                         </div>
