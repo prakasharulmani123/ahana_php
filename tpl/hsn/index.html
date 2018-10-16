@@ -14,7 +14,7 @@
                 </div>
                 <div class="panel-body b-b b-light">
                     <input id="filter" type="text" class="form-control input-sm w-sm inline m-r" placeholder="Search"/>
-                    <button check-access-button hot-key-create ng-click="$state.go('pharmacy.hsn_create')" class="btn btn-sm btn-info pull-right">
+                    <button check-access-button hot-key-create ng-click="$state.go('configuration.hsn_create')" class="btn btn-sm btn-info pull-right">
                         <i class="fa fa-plus"></i> &nbsp; Add New Hsn
                     </button>
                 </div>
@@ -39,7 +39,7 @@
                                     {{row.hsn_no}}
                                 </td>
                                 <td>
-                                    <a class="btn btn-dark" title="Edit" check-access  ui-sref="pharmacy.hsn_update({id: '{{row.hsn_id}}'})">
+                                    <a ng-if="row.tenant_id == app.logged_tenant_id" class="btn btn-dark" title="Edit" check-access  ui-sref="configuration.hsn_update({id: '{{row.hsn_id}}'})">
                                         <i class="fa fa-pencil"></i>
                                     </a>
                                 </td>
