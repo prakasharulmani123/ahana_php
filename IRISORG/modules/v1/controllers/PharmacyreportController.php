@@ -162,7 +162,7 @@ class PharmacyreportController extends ActiveController {
         $model = \common\models\PatPrescription::find();
         if (isset($post['from']) && isset($post['consultant_id']) && isset($post['tenant_id'])) {
             $consultant_ids = join("','", $post['consultant_id']);
-            $tenant_ids = join("','", $post['tenant_id']);
+            $tenant_ids = $post['tenant_id'];
             $model->andWhere(["date(pres_date)" => $post['from']]);
             $model->andWhere("pat_prescription.consultant_id IN ( '$consultant_ids' )");
             $model->andWhere("pat_prescription.tenant_id IN ( '$tenant_ids' )");
