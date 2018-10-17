@@ -102,18 +102,20 @@
                         <th><span>Medicine Name</span></th>
                         <th width="5%" class="txtCenter pres-icon1"><span><img ng-src="{{IRISOrgUrl}}/img/weather1.png" alt="Morning" /></span></th>
                         <th width="5%" class="txtCenter pres-icon1"><span><img ng-src="{{IRISOrgUrl}}/img/weather2.png" alt="Afternoon" /></span></th>
-                        <th width="5%" class="txtCenter pres-icon1"><span><img ng-src="{{IRISOrgUrl}}/img/weather3.png" alt="Evening" /></span></th>
+<!--                        <th width="5%" class="txtCenter pres-icon1"><span><img ng-src="{{IRISOrgUrl}}/img/weather3.png" alt="Evening" /></span></th>-->
                         <th width="5%" class="txtCenter pres-icon1"><span><img ng-src="{{IRISOrgUrl}}/img/weather4.png" alt="Night" /></span></th>
                         <th></th>
+                        <th width="5%" class="txtCenter pres-icon1"><span><img ng-src="{{IRISOrgUrl}}/img/food.png" alt="Night" /></span></th>
+                        <th width="3%"></th>
                         <th width="8%" class="txtCenter"><span>Days</span></th>
                         <th width="8%" class="txtCenter"><span>Qty</span></th>
-                        <th width="5%" class="txtCenter pres-icon1"><span><img ng-src="{{IRISOrgUrl}}/img/food.png" alt="Night" /></span></th>
+                        
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat-start="(gKey, row) in prescriptionItems2">
                         <td><p><span style="font-weight: normal">{{gKey + 1}}.</span> {{row.product_name}}</p><i>({{row.generic_name}})</i></td>
-                        <td class="txtCenter txtUpper" colspan="4" ng-if="row.freqType == 'txt'">{{ getFrequencyExists(row.frequency_name, 0, row.freqType)}}</td>
+                        <td class="txtCenter txtUpper" colspan="3" ng-if="row.freqType == 'txt'">{{ getFrequencyExists(row.frequency_name, 0, row.freqType)}}</td>
 
                         <td class="txtCenter" ng-if="row.freqType != 'txt'">
                             <span ng-bind-html="getFrequencyExists(row.frequency_name, 0, row.freqType)"></span>
@@ -122,10 +124,10 @@
                             <span ng-bind-html="getFrequencyExists(row.frequency_name, 1, row.freqType)"></span>
                         </td>
 
-                        <td class="txtCenter" ng-if="((row.freqType == 3) && (row.freqType != 'txt'))">-</td>
+<!--                        <td class="txtCenter" ng-if="((row.freqType == 3) && (row.freqType != 'txt'))">-</td>
                         <td class="txtCenter" ng-if="((row.freqType != 3) && (row.freqType != 'txt'))">
                             <span ng-bind-html="getFrequencyExists(row.frequency_name, 2, row.freqType)"></span>
-                        </td>
+                        </td>-->
 
                         <td class="txtCenter" ng-if="((row.freqType == 3) && (row.freqType != 'txt'))">
                             <span ng-bind-html="getFrequencyExists(row.frequency_name, 2, row.freqType)"></span>
@@ -136,10 +138,11 @@
                         <td>
                             {{(row.product.description_name| uppercase) == 'SYRUP' ? "ml" : "" }}
                         </td>
-
+                        <td class="txtCenter">{{ row.food_type == 'NA' ? '-' : row.food_type}}</td>
+                        <td></td>
                         <td class="txtCenter">{{row.number_of_days}}</td>
                         <td class="txtCenter">{{row.total_qty}}</td>
-                        <td class="txtCenter">{{ row.food_type == 'NA' ? '-' : row.food_type}}</td>
+                        
                     </tr>
                     <tr ng-repeat-end="rows in row">
                         <td ng-if="row.remarks" colspan="6">
