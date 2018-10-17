@@ -2,11 +2,11 @@
                                 <img src="img/small-icon1.png"  alt="" tooltip="Details" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
                             </a>-->
 
-<a check-access ui-sref="patient.procedure({id: row.apptPatientData.patient_guid})">
+<a check-access ui-sref="patient.procedure({id: row.apptPatientData.patient_guid})" ng-if="app.logged_org_id != '3'">
     <img src="img/medi-icon1.png"  alt="" tooltip="Procedures" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
 </a>
 
-<a check-access ui-sref="patient.encounter({id: row.apptPatientData.patient_guid})">
+<a check-access ui-sref="patient.encounter({id: row.apptPatientData.patient_guid})" ng-if="app.logged_org_id != '3'">
     <img src="img/medi-icon2.png"  alt="" tooltip="Encounters " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
 </a>
 
@@ -22,7 +22,7 @@
     <img src="img/medi-icon4.png"  alt="" tooltip="Prescriptions " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
 </a>
 
-<a check-access ui-sref="patient.consultant({id: row.apptPatientData.patient_guid})">
+<a check-access ui-sref="patient.consultant({id: row.apptPatientData.patient_guid})" ng-if="app.logged_org_id != '3'">
     <img src="img/medi-icon5.png"  alt="" tooltip="Consultation " tooltip-trigger tooltip-animation="false" tooltip-placement="bottom" />
 </a>
 
