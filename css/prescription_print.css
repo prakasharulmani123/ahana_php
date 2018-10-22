@@ -23,7 +23,7 @@
     .medclinic_thead th { border-bottom:none; }
     .prescriptionInfo th, .prescriptionInfo td { text-align:left }
     
-    .medclinic_vital_info { border-bottom:2px solid #222222 !important; margin-bottom: 25px;}
+    .medclinic_vital_info { border-bottom:2px solid #222222 !important; margin-bottom: 10px;}
 
     .prescriptionInfo th span {
         border-bottom: 3px solid #222222;
@@ -178,7 +178,7 @@ table td { vertical-align:middle }
 .medclinic_thead th { border-bottom:none; }
 .prescriptionInfo th, .prescriptionInfo td { text-align:left }  
 
-.medclinic_vital_info { border-bottom:2px solid #222222 !important; margin-bottom: 25px; }
+.medclinic_vital_info { border-bottom:2px solid #222222 !important; margin-bottom: 10px; }
 
 .prescriptionInfo th span {
     border-bottom: 3px solid #222222;
