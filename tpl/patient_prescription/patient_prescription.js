@@ -3085,7 +3085,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     } else {
                         $scope.viewxslt = doc_type_response.result.document_out_xslt;
                         $scope.getDocument($scope.data.current_mch_id, function (pat_doc_response) {
-                            $scope.encounter = {encounter_id: pat_doc_response.result.encounter_id};
+                            //$scope.encounter = {encounter_id: pat_doc_response.result.encounter_id};
                             $scope.test_view_xml = pat_doc_response.result.document_xml;
                             $scope.loadResultFromDatabase($scope.test_view_xml, function (resultxml) {
                                 $scope.loadVitalsFromDatabase(resultxml, false, function (newxml) {
