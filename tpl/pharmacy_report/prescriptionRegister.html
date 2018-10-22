@@ -144,18 +144,18 @@
                                         <thead>
                                             <tr>
                                                 <th id="work-base-grid_c0">Product Name</th>
-                                                <th id="work-base-grid_c0">Qty</th>
-                                                <th id="work-base-grid_c0">Brand</th>
-                                                <th id="work-base-grid_c0">Generic Name</th>
-                                                <th id="work-base-grid_c0">Drug Name</th>
-                                                <th id="work-base-grid_c1">Pharmacist Signature</th>
+                                                <th id="work-base-grid_c1">Qty</th>
+                                                <th id="work-base-grid_c2">Brand Name</th>
+                                                <th id="work-base-grid_c3">Generic Name</th>
+                                                <th id="work-base-grid_c4">Drug Name</th>
+                                                <th id="work-base-grid_c5">Pharmacist Signature</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr ng-repeat="(item_key, item) in sale.items">
                                                 <td>{{item.product.full_name}}</td>
                                                 <td>{{item.quantity}}</td>
-                                                <td>{{item.product.brand_code}}</td>
+                                                <td>{{item.product.brand_name}}</td>
                                                 <td>{{item.generic_name}}</td>
                                                 <td>{{item.drug_name}}</td>
                                                 <td>&nbsp;</td>

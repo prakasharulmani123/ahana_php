@@ -194,7 +194,7 @@ app.controller('prescriptionRegisterController', ['$rootScope', '$scope', '$time
                         items.push([
                             item.product.full_name,
                             item.quantity.toString(),
-                            item.product.brand_code,
+                            item.product.brand_name,
                             item.generic_name,
                             item.drug_name,
                             ''
