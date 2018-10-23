@@ -15,7 +15,7 @@
                 <div class="paitent-details2-newleft">
                     <div class="paitent-details2-newleft-row1"> 
                         <i aria-hidden="true" class="fa fa-user"></i>
-                        <b class="patient-name">{{patientObj.fullname | uppercase}}</b>
+                        <b class="patient-name">{{patientObj.fullname| uppercase}}</b>
                         ({{patientObj.patient_global_int_code}})
                     </div>
 
@@ -35,12 +35,14 @@
                     <i aria-hidden="true" class="fa fa-ban" ng-show="false"></i>
                     <!--                    <div class="pati-cate" ng-show="patientObj.have_encounter">{{patientObj.encounter_type}}</div>-->
 
-                    <br/> <span ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}" class="category_badge header-badge category_icon" tooltip="{{patientObj.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="bottom">
-                        {{patientObj.patient_category| uppercase}}
-                    </span> 
+                    <br/> 
+                    <span ng-if="patientObj.patient_category" style="background-color: {{patientObj.patient_category_color}}; float: left" class="category_badge header-badge category_icon" tooltip="{{patientObj.patient_category_fullname}}" tooltip-trigger tooltip-animation="false" tooltip-placement="top">
+                        {{patientObj.patient_category| uppercase}} 
+                    </span>
+                    <a style="float: left;" class="label" ng-click="openCategoryEditFrom()"><i style="margin-top: 5px;margin-left: 5px;color:#000000;" class="fa fa-pencil"></i></a>
 
                     <span class="paitent-details2-CD" ng-if="patientObj.clinical_discharge_date != '-'">
-                        <b> Clinical Discharge : </b> {{patientObj.clinical_discharge_date | moment:'DD/MM/YYYY - hh:mm A'}}
+                        <b> Clinical Discharge : </b> {{patientObj.clinical_discharge_date| moment:'DD/MM/YYYY - hh:mm A'}}
                     </span>
                 </div>
                 <br/>

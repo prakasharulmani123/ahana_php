@@ -37,7 +37,7 @@ angular.module('app')
                     org_logo: '',
                     org_small_logo: '',
                     org_document_logo: '',
-                    user_care_provider :'',
+                    user_care_provider: '',
                     // for chart colors
                     color: {
                         primary: '#7266ba',
@@ -336,7 +336,7 @@ angular.module('app')
                     $scope.app.org_full_address = user.credentials.org_address + ', ' + user.credentials.org_city;
                     $scope.app.username = user.credentials.username;
                     $scope.app.user_id = user.credentials.user_id;
-                    $scope.app.user_care_provider = user.credentials.user_care_provider; 
+                    $scope.app.user_care_provider = user.credentials.user_care_provider;
                     $scope.app.page_title = $scope.app.name + '(' + $scope.app.org_name + ')';
                     if (user.credentials.user_timeout) {
                         Idle.setIdle(user.credentials.user_timeout * 60);
@@ -754,7 +754,7 @@ angular.module('app')
 
                 $rootScope.$on('internalerror', function (event, data) {
                     toaster.clear();
-                    toaster.pop('error', 'Internal Error', 'NetworkError: 500 Internal Server Error. Error details :'+ data);
+                    toaster.pop('error', 'Internal Error', 'NetworkError: 500 Internal Server Error. Error details :' + data);
                     $scope.loadbar('hide');
                 });
 
@@ -789,6 +789,22 @@ angular.module('app')
                             },
                             block: function () {
                                 return block;
+                            },
+                        }
+                    });
+                }
+
+                $scope.openCategoryEditFrom = function (a) {
+                    var modalInstance = $modal.open({
+                        templateUrl: 'tpl/modal_form/modal.patient_category.html',
+                        controller: "PatientCategoryController",
+                        size: 'lg',
+                        resolve: {
+                            scope: function () {
+                                return $scope;
+                            },
+                            block: function () {
+                                return a;
                             },
                         }
                     });
@@ -1961,6 +1977,46 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
                     $scope.errorData = data.message;
             });
         }
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+
+    }]);
+
+//Patient image upload
+angular.module('app').controller('PatientCategoryController', ['scope', '$scope', '$modalInstance', '$rootScope', '$timeout', 'fileUpload', '$state', '$http', 'block', function (scope, $scope, $modalInstance, $rootScope, $timeout, fileUpload, $state, $http, block) {
+
+        $scope.data = scope;
+        $scope.data.patient_category_id = $scope.data.patientObj.patient_category_id;
+        $scope.data.patient_id = $scope.data.patientObj.patient_id;
+
+        $scope.savePatientCategory = function (id, _data) {
+            _data = {patient_category_id: _data}
+            $http({
+                method: 'PUT',
+                url: $rootScope.IRISOrgServiceUrl + '/patients/' + id,
+                data: _data,
+            }).success(
+                    function (patient) {
+                        scope.patientObj.patient_category = patient.patient_category;
+                        scope.patientObj.patient_category_color = patient.patient_category_color;
+                        scope.patientObj.patient_category_fullname = patient.patient_category_fullname;
+                        scope.patientObj.patient_category_id = patient.patient_category_id;
+                        $modalInstance.dismiss('cancel');
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
+        $rootScope.commonService.GetPatientCateogryList('1', false, function (response) {
+            $scope.categories = response.patientcategoryList;
+        });
 
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
