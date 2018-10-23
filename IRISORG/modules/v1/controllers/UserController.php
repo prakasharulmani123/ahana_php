@@ -200,8 +200,8 @@ class UserController extends ActiveController {
                 $data['login_link_text'] = 'Update';
                 $data['login_link_icon_class'] = 'fa-pencil';
                 $data['username'] = $user->login->username;
-                $data['activation_date'] = $user->login->activation_date;
-                $data['Inactivation_date'] = $user->login->Inactivation_date;
+                $data['activation_date'] = date("d-m-Y", strtotime($user->login->activation_date));
+                $data['Inactivation_date'] = date("d-m-Y", strtotime($user->login->Inactivation_date));
             }
             //$nestedData = array();
             $data['name'] = $user->name;
