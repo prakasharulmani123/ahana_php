@@ -195,7 +195,7 @@
                             </button>
                         </td>
                         <td>{{row.supplier.supplier_name}}</td>
-                        <td>{{row.reorder_date}}</td>
+                        <td>{{row.reorder_date | date:'dd-MM-yyyy'}}</td>
                         <td>{{row.user.fullname}}</td>
                         <td><label class="label label-{{row.status == '1' ? 'danger' : 'success'}}">{{row.status == '1' ? 'Reorder Success' : 'Updated Stock'}}</label></td>
                         <td>

@@ -87,7 +87,7 @@
                             </button>
                         </td>
                         <td><span class="badge bg-primary ng-binding">{{row.gr_num}}</span></td>
-                        <td>{{row.invoice_date}}</td>
+                        <td>{{row.invoice_date | date:'dd-MM-yyyy'}}</td>
                         <td><span class="badge bg-success ng-binding">{{row.invoice_no}}</span></td>
                         <td>{{row.supplier_name}}</td>
                         <td><span class="badge bg-info ng-binding">{{row.total_item_purchase_amount}}</span></td>

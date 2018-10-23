@@ -141,7 +141,7 @@
                             </button>&nbsp; &nbsp;
                         </td>
                         <td>{{saleitem.bill_no}}</td>
-                        <td>{{saleitem.sale_date}}</td>
+                        <td>{{saleitem.sale_date | date:'dd-MM-yyyy'}}</td>
                         <td>{{saleitem.bill_amount| number:2}}</td>
                         <td>{{saleitem.billings_total_paid_amount| number:2}}</td>
                         <td ng-class="{hide : activeMenu === 'CA'}">{{saleitem.billings_total_balance_amount| number:2}}</td>
@@ -172,7 +172,7 @@
                     <tr ng-show="value.seenExpanded" ng-repeat-end ng-repeat-start="(gKey, saleReturn) in saleitem.sale_return_details">
                         <td></td>
                         <td>{{saleReturn.bill_no}}</td>
-                        <td>{{saleReturn.sale_return_date}}</td>
+                        <td>{{saleReturn.sale_return_date | date:'dd-MM-yyyy'}}</td>
                         <td colspan="3">{{saleReturn.bill_amount}}</td>
                     </tr>
                     <tr ng-repeat-end ng-hide="true"></tr>
