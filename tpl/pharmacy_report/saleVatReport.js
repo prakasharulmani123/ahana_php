@@ -156,7 +156,7 @@ app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '
                 reports.push([
                     s_no_string,
                     record.bill_no,
-                    record.sale_date,
+                    moment(record.sale_date).format('DD-MM-YYYY'),
                     record.patient_global_int_code,
                     record.patient_name,
                     record.tax_rate,

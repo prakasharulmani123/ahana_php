@@ -117,9 +117,9 @@ app.controller('patientReportController', ['$rootScope', '$scope', '$timeout', '
 
         $scope.printloader = '';
         $scope.printContent = function () {
-            var generated_on = $scope.generated_on;
+            var generated_on = moment($scope.generated_on).format('DD-MM-YYYY');
             var generated_by = $scope.app.username;
-            var date_rage = "Upto " + moment($scope.data.to).format('YYYY-MM-DD');
+            var date_rage = "Upto " + moment($scope.data.to).format('DD-MM-YYYY');
             var branch_name = $scope.records[0].branch_name;
 
             var reports = [];

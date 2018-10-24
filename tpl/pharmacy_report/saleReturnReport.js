@@ -160,7 +160,7 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 var s_no_string = serial_no.toString();
                 reports.push([
                     s_no_string,
-                    record.sale_return_date,
+                    moment(record.sale_return_date).format('DD-MM-YYYY'),
                     record.bill_no,
                     record.patient_name,
                     record.patient_uhid,
@@ -269,7 +269,7 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 });
                 var date_total = date_wise_total.toString();
                 branch_item.push([
-                    {text: sale_date},
+                    {text: moment(sale_date).format('DD-MM-YYYY')},
                     {text: date_total, alignment: 'right'}
                 ]);
             });

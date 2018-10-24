@@ -115,7 +115,7 @@
                                     <tr ng-repeat="(key, record) in records">
                                         <td>{{key + 1}}</td>
                                         <td>{{record.invoice_no}}</td>
-                                        <td>{{record.invoice_date}}</td>
+                                        <td>{{record.invoice_date | date:'dd-MM-yyyy'}}</td>
                                         <td>{{nameReplace(record.supplier_name)}}</td>
                                         <td>{{record.payment_type == "CA" ? "Cash" : "Credit"}}</td>
                                         <td data-type="Number" ng-init="purchase.purchase_amount = purchase.purchase_amount + parseFloat(record.total_item_purchase_amount);">

@@ -140,7 +140,7 @@ app.controller('purchaseVatReportController', ['$rootScope', '$scope', '$timeout
                 reports.push([
                     s_no_string,
                     record.invoice_no,
-                    record.invoice_date,
+                    moment(record.invoice_date).format('DD-MM-YYYY'),
                     record.supplier_name,
                     payment,
                     record.total_item_purchase_amount,
