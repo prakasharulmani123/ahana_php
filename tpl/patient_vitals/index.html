@@ -87,7 +87,7 @@
                                     <tr ng-repeat-end ng-show="expanded" ng-repeat="(vital_key, vital) in value.all">
                                         <td>&nbsp;  </td>
                                         <td>{{vital.branch_name}}</td>
-                                        <td> {{vital.vital_time| moment:'DD/MM/YYYY'}}
+                                        <td> {{vital.vital_time| moment:'DD-MM-YYYY'}}
                                             <span class="label bg-light dk">{{vital.vital_time| moment:'hh:mm A'}}</span>
                                         </td>
                                         <td> {{vital.temperature|| '-'}} </td>

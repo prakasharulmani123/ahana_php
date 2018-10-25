@@ -32,10 +32,10 @@
                     <i></i> 
                 </label>&nbsp; &nbsp;
             </td>
-            <td>{{value.pres_date}}</td>
+            <td>{{value.pres_date | moment:'DD-MM-YYYY hh:mm A'}}</td>
             <td>{{value.branch_name}}</td>
             <td>{{value.consultant_name}}</td>
-            <td>{{value.next_visit| date: "dd-MMMM-y"}}</td>
+            <td>{{value.next_visit| date: "dd-MM-y"}}</td>
             <td>{{value.diag_name}}</td>
             <td>{{value.number_of_days}}</td>
             <td>

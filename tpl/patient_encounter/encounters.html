@@ -105,7 +105,7 @@
                                 <b>
                                     <!--<span class="badge bg-success">Branch: {{encounter.tenant}}</span>-->
                                     <span class="badge bg-primary">Encounter: {{encounter.encounter_id}}</span>&nbsp; &nbsp;
-                                    <span class="badge bg-black">Date: {{encounter.date| moment:'DD/MM/YYYY'}}</span>&nbsp; &nbsp;
+                                    <span class="badge bg-black">Date: {{encounter.date| moment:'DD-MM-YYYY'}}</span>&nbsp; &nbsp;
                                     <span class="badge bg-success">{{encounter.encounter_type}}</span>&nbsp; &nbsp;
                                     <span class="badge bg-info">Doctor: {{encounter.doctor}}</span>
                                 </b>
@@ -139,7 +139,7 @@
                                                                     <span class="label bg-light dk">{{item.date| moment:'hh:mm A'}}</span>
                                                                 </div>-->
                                 <div>
-                                    {{item.date| moment:'DD/MM/YYYY'}} &nbsp;
+                                    {{item.date| moment:'DD-MM-YYYY'}} &nbsp;
                                     <span class="label bg-light dk">{{item.date| moment:'hh:mm A'}}</span>
                                 </div>
                             </td>

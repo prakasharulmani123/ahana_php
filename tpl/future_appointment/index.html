@@ -146,7 +146,7 @@
                                     {{row.apptPatientData.patient_mobile}}
                                 </a>
                             </td>
-                            <td>{{row.apptBookingData.status_datetime| moment:'hh:mm A'}}<br/>  <span class="text-muted"> {{row.apptBookingData.status_date}}</span></td>
+                            <td>{{row.apptBookingData.status_datetime| moment:'hh:mm A'}}<br/>  <span class="text-muted"> {{row.apptBookingData.status_date | moment:'DD-MM-YYYY'}}</span></td>
                             <td align="left">
                                 <div ng-include="'tpl/patient/patient_table_nav_bar.html'">
                                     {% include 'tpl/patient/patient_table_nav_bar.html' %}

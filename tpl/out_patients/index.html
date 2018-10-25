@@ -166,24 +166,24 @@
                                 </td>
                                 <td>
                                     {{row.created_at| moment:'hh:mm A'}}<br/>
-                                    <span class="text-muted"> {{row.created_at| moment:'YYYY-MM-DD'}}</span>
+                                    <span class="text-muted"> {{row.created_at | moment:'DD-MM-YYYY'}}</span>
                                 </td>
                                 <td>
                                     {{row.apptBookingData.status_datetime| moment:'hh:mm A'}}<br/>
-                                    <span class="text-muted"> {{row.apptBookingData.status_date}}</span>
+                                    <span class="text-muted"> {{row.apptBookingData.status_date | moment:'DD-MM-YYYY'}}</span>
                                 </td>
                                 <td>
                                     <div class="input-group" ng-if="row.apptArrivalData == '-'">
                                         <div>
                                             <span>
                                                 {{row.sts_time}} <br/>
-                                                <span class="text-muted"> {{row.sts_date}} </span>
+                                                <span class="text-muted"> {{row.sts_date | moment:'DD-MM-YYYY'}} </span>
                                             </span>
                                         </div>
                                     </div>
                                     <div ng-if="row.apptArrivalData != '-'">
                                         {{row.apptArrivalData.status_datetime| moment:'hh:mm A'}} <br/>
-                                        <span class="text-muted"> {{row.apptArrivalData.status_date}} </span>
+                                        <span class="text-muted"> {{row.apptArrivalData.status_date | moment:'DD-MM-YYYY'}} </span>
                                     </div>
                                 </td>
                                 <td>
@@ -289,16 +289,16 @@
                                 </td>
                                 <td>
                                     {{row.created_at| moment:'hh:mm A'}}<br/>
-                                    <span class="text-muted"> {{row.created_at| moment:'YYYY-MM-DD'}}</span>
+                                    <span class="text-muted"> {{row.created_at | moment:'DD-MM-YYYY'}}</span>
                                 </td>
                                 <td>
                                     {{row.apptBookingData.status_datetime| moment:'hh:mm A'}}<br/>
-                                    <span class="text-muted"> {{row.apptBookingData.status_date}}</span>
+                                    <span class="text-muted"> {{row.apptBookingData.status_date | moment:'DD-MM-YYYY'}}</span>
                                 </td>
                                 <td>
                                     <div ng-if="row.apptArrivalData != '-'">
                                         {{row.apptArrivalData.status_datetime| moment:'hh:mm A'}} <br/>
-                                        <span class="text-muted"> {{row.apptArrivalData.status_date}} </span>
+                                        <span class="text-muted"> {{row.apptArrivalData.status_date | moment:'DD-MM-YYYY'}} </span>
                                     </div>
                                 </td>
                                 <td> Seen </td>

@@ -55,7 +55,7 @@
                         <td colspan="3">
                             <b> 
                                 <span class="badge bg-primary">Consultant: {{value.data.consultant_name}}</span>&nbsp; &nbsp; 
-                                <span class="badge bg-info">Date: {{value.data.status_date}}</span>&nbsp; &nbsp; 
+                                <span class="badge bg-info">Date: {{value.data.status_date | moment:'DD-MM-YYYY'}}</span>&nbsp; &nbsp; 
                             </b>
                         </td>
                     </tr>
@@ -74,7 +74,7 @@
                         </td>
                         <td valign="middle"> {{appointment.patient_mobile}} </td>
                         <td valign="middle"> {{appointment.city_name}} </td>
-                        <td valign="middle"> {{appointment.status_datetime| moment:'DD/MM/YYYY HH:mm:ss'}} </td>
+                        <td valign="middle"> {{appointment.status_datetime| moment:'DD-MM-YYYY hh:mm A'}} </td>
                     </tr>
                 </tbody>
 
@@ -114,7 +114,7 @@
                         <td>{{appointment.patient_name}}</td>
                         <td>{{appointment.patient_mobile}}</td>
                         <td>{{appointment.city_name}} </td>
-                        <td>{{appointment.status_datetime| moment:'DD/MM/YYYY HH:mm:ss'}}</td>
+                        <td>{{appointment.status_datetime | moment:'DD-MM-YYYY hh:mm A'}}</td>
                     </tr>
                 </table>
             </div>

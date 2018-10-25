@@ -78,7 +78,7 @@
                         <td valign="middle">
                             {{note.branch_name}}
                         </td>
-                        <td valign="middle"> {{note.created_at| moment:'DD/MM/YYYY'}} </td>
+                        <td valign="middle"> {{note.created_at| moment:'DD-MM-YYYY'}} </td>
                         <td valign="middle"> 
 <!--                            <div tooltip-placement="left" data-tooltip-html-unsafe="{{note.concatenate_notes ? note.full_notes : ''}}"> <span ng-bind-html="note.short_notes"></span> </div>-->
                             <span ng-bind-html="note.full_notes"></span>

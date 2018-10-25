@@ -80,7 +80,7 @@
                         <tr ng-repeat-end ng-show="expanded" ng-repeat="(patprocedure_key, patProcedure) in value.all">
                             <td>&nbsp;</td>
                             <td> 
-                                {{patProcedure.proc_date| moment:'DD/MM/YYYY'}} &nbsp;
+                                {{patProcedure.proc_date| moment:'DD-MM-YYYY'}} &nbsp;
                                 <span class="label bg-light dk">{{patProcedure.proc_date| moment:'hh:mm A'}}</span> 
                             </td>
                             <td>{{patProcedure.branch_name}}</td>

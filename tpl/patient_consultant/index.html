@@ -74,7 +74,7 @@
                     </tr>
                     <tr ng-repeat-end ng-show="expanded" ng-repeat="(patconsultant_key, patConsultant) in value.all">
                         <td>&nbsp;</td>
-                        <td> {{patConsultant.consult_date| moment:'DD/MM/YYYY'}} &nbsp;
+                        <td> {{patConsultant.consult_date| moment:'DD-MM-YYYY'}} &nbsp;
                             <span class="label bg-light dk">{{patConsultant.consult_date| moment:'hh:mm A'}}</span> 
                         </td>
                         <td>{{patConsultant.branch_name}}</td>

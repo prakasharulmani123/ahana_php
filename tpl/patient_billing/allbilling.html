@@ -51,18 +51,18 @@
                             <td class="logindeatils">
                                 <p ng-if="encounter.encounter_type == 'OP'"> 
                                     <b> OP: </b>
-                                    {{encounter.date| moment:'DD/MM/YYYY'}} 
+                                    {{encounter.date| moment:'DD-MM-YYYY'}} 
                                     {{encounter.date| moment:'hh:mm A'}}
                                 </p>
                                 <p ng-if="encounter.encounter_type == 'IP'"> 
                                     <b> Admission: </b>
-                                    {{encounter.date| moment:'DD/MM/YYYY'}} 
+                                    {{encounter.date| moment:'DD-MM-YYYY'}} 
                                     {{encounter.date| moment:'hh:mm A'}}
                                 </p>
                                 <p ng-if="encounter.encounter_type == 'IP'"> 
                                     <b>Discharge: </b>
                                     <span ng-if="encounter.discharge_date != '-'">
-                                        {{encounter.discharge_date| moment:'DD/MM/YYYY'}}
+                                        {{encounter.discharge_date| moment:'DD-MM-YYYY'}}
                                         {{encounter.discharge_date| moment:'hh:mm A'}}
                                     </span>
                                     <span ng-if="encounter.discharge_date == '-'">

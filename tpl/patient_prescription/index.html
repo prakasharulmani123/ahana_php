@@ -8,7 +8,7 @@
                 </div>
                 <div class="col-sm-3 m-b-xs pull-right right" ng-if="all_encounters.length == 1">
                     <b> Encounter ID : </b> {{enc.selected.encounter_id}}
-                    <b> Date : </b> {{enc.selected.encounter_date}}
+                    <b> Date : </b> {{enc.selected.encounter_date | moment:'DD-MM-YYYY hh:mm A'}}
                 </div>
                 <div class="col-sm-4 m-b-xs pull-right right" ng-if="all_encounters.length > 1">
                     <b style="float: left;"> Encounter ID : </b>
@@ -18,7 +18,7 @@
                         <option value=""></option>
                         <option ng-repeat="all_encounter in all_encounters" ng-selected="data.encounter_id == all_encounter.encounter_id" value="{{all_encounter.encounter_id}}">{{all_encounter.encounter_id}}</option>
                     </select>
-                    <b> Date : </b> {{enc.selected.encounter_date}}
+                    <b> Date : </b> {{enc.selected.encounter_date | moment:'DD-MM-YYYY hh:mm A'}}
                 </div>
             </div>
             <div class="wrapper-md p-b prescription-new">
@@ -1959,7 +1959,7 @@
                                                             <tr ng-repeat-end ng-show="expanded" ng-repeat="(patconsultant_key, patConsultant) in value.all">
                                                                 <td>&nbsp;</td>
                                                                 <td>{{patConsultant.branch_name}}</td>
-                                                                <td> {{patConsultant.consult_date| moment:'DD/MM/YYYY'}} &nbsp;
+                                                                <td> {{patConsultant.consult_date| moment:'DD-MM-YYYY'}} &nbsp;
                                                                     <span class="label bg-light dk">{{patConsultant.consult_date| moment:'hh:mm A'}}</span> 
                                                                 </td>
                                                                 <td> {{patConsultant.consultant_name}} </td>
