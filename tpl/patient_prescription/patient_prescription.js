@@ -858,10 +858,13 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     angular.extend(items, {is_favourite: 1});
                 }
                 //In Master table product, changed geneic and drug glass remove the product   
-                var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
-                if (chkProduct.length != 0) {
-                    PrescriptionService.addPrescriptionItem(items);
-                }
+                //Bc-221 Status inactive products Start
+                //var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
+                //if (chkProduct.length != 0) {
+                    //PrescriptionService.addPrescriptionItem(items);
+                //}
+                //Bc-221 Status inactive products End
+                PrescriptionService.addPrescriptionItem(items);
                 $scope.msg.successMessage = "Medicine has been added to the current prescription";
             });
         }
@@ -1705,8 +1708,14 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 var chkDuplicate = $filter('filter')(PrescriptionService.getPrescriptionItems(), {product_id: items.product_id}, true);
 
                 //In Master table product, changed geneic and drug glass remove the product   
-                var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
-                if (chkDuplicate.length == 0 && chkProduct.length != 0) {
+                //Bc-221 Status inactive products   start
+                //var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
+                //if (chkDuplicate.length == 0 && chkProduct.length != 0) {
+                    //PrescriptionService.addPrescriptionItem(items);
+                //}
+                //Bc-221 Status inactive products   end
+                //var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
+                if (chkDuplicate.length == 0) {
                     PrescriptionService.addPrescriptionItem(items);
                 }
                 if (loop_total == loop_start) {
