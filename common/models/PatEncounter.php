@@ -314,7 +314,7 @@ class PatEncounter extends RActiveRecord {
             },
             'doe' => function ($model) {
                 if (isset($model->encounter_date))
-                    return date('d-M-Y', strtotime($model->encounter_date));
+                    return date('d-m-Y', strtotime($model->encounter_date));
             },
             'doeTimeago' => function ($model) {
                 if (isset($model->encounter_date))
