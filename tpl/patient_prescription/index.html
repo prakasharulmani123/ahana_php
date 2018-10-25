@@ -1044,7 +1044,7 @@
                                                                     </thead>
                                                                     <tbody>
                                                                         <tr ng-repeat="past in pastMedical">
-                                                                            <td>{{past.created_at| moment:'DD/MM/YYYY - hh:mm A'}}</td>
+                                                                            <td>{{past.created_at| moment:'DD-MM-YYYY - hh:mm A'}}</td>
                                                                             <td>{{past.encounter_id}}</td>
                                                                             <td class="v-middle">
                                                                                 <span editable-textarea="past.past_medical"  e-rows="3" e-cols="40" e-name="past_medical" e-form="pastmedicalform" onbeforesave="checkName($data)" e-required>
@@ -1161,7 +1161,7 @@
                                                                     </thead>
                                                                     <tbody>
                                                                         <tr ng-repeat="past in pastMedical">
-                                                                            <td>{{past.created_at| moment:'DD/MM/YYYY - hh:mm A'}}</td>
+                                                                            <td>{{past.created_at| moment:'DD-MM-YYYY - hh:mm A'}}</td>
                                                                             <td>{{past.encounter_id}}</td>
                                                                             <td><span ng-bind-html="past.full_notes"></span></td>
                                                                             <td>{{past.created_by}}</td>
@@ -1250,7 +1250,7 @@
                                                             <tr ng-repeat-end ng-show="expanded" ng-repeat="(doc_key, doc) in value.all">
                                                                 <td align="center" valign="middle"></td>
                                                                 <td valign="middle">{{doc.tenant_name}}</td>
-                                                                <td valign="middle"> {{doc.date_time| moment:'DD/MM/YYYY - hh:mm A'}} </td>
+                                                                <td valign="middle"> {{doc.date_time| moment:'DD-MM-YYYY - hh:mm A'}} </td>
                                                                 <td valign="middle"> 
                                                                     <span ng-if="doc.doc_type == 'CH' && doc.status == '0'">
                                                                         <img ng-src="img/incomplete.gif" title="InComplete"  alt="InComplete" width="" height="" />
@@ -1307,7 +1307,7 @@
                                                                     {{enc.selected.encounter_id}} </div>
                                                                 <div class="col-sm-3">
                                                                     <label>Date: </label>
-                                                                    {{enc.selected.encounter_date}} </div>
+                                                                    {{enc.selected.encounter_date | moment:'DD-MM-YYYY hh:mm A'}} </div>
                                                                 <div class="col-sm-7">
                                                                     <label>&nbsp; </label>
                                                                     &nbsp;</div> 
@@ -1427,7 +1427,7 @@
                                                                     <tr ng-repeat-end ng-show="expanded" ng-repeat="(vital_key, vital) in value.all">
                                                                         <td>&nbsp;  </td>
                                                                         <td>{{vital.branch_name}}</td>
-                                                                        <td> {{vital.vital_time| moment:'DD/MM/YYYY'}} &nbsp;
+                                                                        <td> {{vital.vital_time| moment:'DD-MM-YYYY'}} &nbsp;
                                                                             <span class="label bg-light dk">{{vital.vital_time| moment:'hh:mm A'}}</span>
                                                                         </td>
                                                                         <td> {{vital.temperature|| '-'}} </td>
@@ -1815,7 +1815,7 @@
                                                                 <td valign="middle">
                                                                     <span class="label bg-info">  {{result.created_by}} </span>
                                                                 </td>
-                                                                <td valign="middle"> {{result.created_at| moment:'DD/MM/YYYY'}} </td>
+                                                                <td valign="middle"> {{result.created_at| moment:'DD-MM-YYYY'}} </td>
                                                                 <td>
                                                                     <!--                                                                    <div tooltip-placement="left" data-tooltip-html-unsafe="{{result.concatenate_results ? result.full_results : ''}}"> <span ng-bind-html="result.short_results"></span> </div>-->
                                                                     <span ng-bind-html="result.full_results"></span>
