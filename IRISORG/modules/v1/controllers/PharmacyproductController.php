@@ -176,15 +176,15 @@ class PharmacyproductController extends ActiveController {
         if (isset($get['text'])) {
             $filters = [
                 'OR',
-                    ['like', 'pha_product_batch.batch_no', $get['text']],
-                    ['like', 'pha_product_description.description_name', $get['text']],
-                    ['like', 'pha_product.product_name', $get['text']],
-                    ['like', 'pha_product.product_unit_count', $get['text']],
-                    ['like', 'pha_product_batch.package_name', $get['text']],
-                    ['like', 'pha_product.product_unit', $get['text']],
-                    ['like', 'pha_product_batch_rate.mrp', $get['text']],
-                    ['like', 'pha_package_unit.package_name', $get['text']],
-                    ['like', 'pha_vat.vat', $get['text']],
+                ['like', 'pha_product_batch.batch_no', $get['text']],
+                ['like', 'pha_product_description.description_name', $get['text']],
+                ['like', 'pha_product.product_name', $get['text']],
+                ['like', 'pha_product.product_unit_count', $get['text']],
+                ['like', 'pha_product_batch.package_name', $get['text']],
+                ['like', 'pha_product.product_unit', $get['text']],
+                ['like', 'pha_product_batch_rate.mrp', $get['text']],
+                ['like', 'pha_package_unit.package_name', $get['text']],
+                ['like', 'pha_vat.vat', $get['text']],
             ];
         }
 
@@ -224,9 +224,9 @@ class PharmacyproductController extends ActiveController {
                         ->where(['tenant_id' => $get['pharmacy_tenant'], 'status' => '1'])
                         ->andFilterWhere([
                             'and',
-                                ['like', 'product_name', $get['product_name']],
-                                ['like', 'product_unit', $get['product_unit']],
-                                ['like', 'product_unit_count', $get['product_unit_count']],
+                            ['like', 'product_name', $get['product_name']],
+                            ['like', 'product_unit', $get['product_unit']],
+                            ['like', 'product_unit_count', $get['product_unit_count']],
                         ])->one();
         if (!empty($tenant_product)) {
             $connection = Yii::$app->client_pharmacy;
@@ -838,7 +838,7 @@ class PharmacyproductController extends ActiveController {
         $modelClass = $this->modelClass;
         $totalData = $modelClass::find()->tenant()->active()->count();
         $totalFiltered = $totalData;
-        
+
         if (isset($requestData['order'])) {
             if ($requestData['order'][0]['dir'] == 'asc') {
                 $sort_dir = SORT_ASC;
@@ -846,16 +846,16 @@ class PharmacyproductController extends ActiveController {
                 $sort_dir = SORT_DESC;
             }
             $sort_column = $requestData['columns'][$requestData['order'][0]['column']]['data'];
-            if($sort_column == 'product_generic') {
+            if ($sort_column == 'product_generic') {
                 $sort_column = 'pha_generic.generic_name';
-            } else if($sort_column == 'product_brand') {
+            } else if ($sort_column == 'product_brand') {
                 $sort_column = 'pha_brand.brand_name';
-            } else if($sort_column == 'product_type') {
+            } else if ($sort_column == 'product_type') {
                 $sort_column = 'pha_product_description.description_name';
             }
             $order_array = [$sort_column => $sort_dir];
         }
-        
+
 
         if (!empty($requestData['search']['value'])) {
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
@@ -867,10 +867,10 @@ class PharmacyproductController extends ActiveController {
                     ])
                     ->andFilterWhere([
                         'OR',
-                            ['like', 'pha_product.product_name', $requestData['search']['value']],
-                            ['like', 'pha_product_description.description_name', $requestData['search']['value']],
-                            ['like', 'pha_brand.brand_name', $requestData['search']['value']],
-                            ['like', 'pha_generic.generic_name', $requestData['search']['value']],
+                        ['like', 'pha_product.product_name', $requestData['search']['value']],
+                        ['like', 'pha_product_description.description_name', $requestData['search']['value']],
+                        ['like', 'pha_brand.brand_name', $requestData['search']['value']],
+                        ['like', 'pha_generic.generic_name', $requestData['search']['value']],
                     ])
                     ->count();
 
@@ -882,10 +882,10 @@ class PharmacyproductController extends ActiveController {
                     ])
                     ->andFilterWhere([
                         'OR',
-                            ['like', 'pha_product.product_name', $requestData['search']['value']],
-                            ['like', 'pha_product_description.description_name', $requestData['search']['value']],
-                            ['like', 'pha_brand.brand_name', $requestData['search']['value']],
-                            ['like', 'pha_generic.generic_name', $requestData['search']['value']],
+                        ['like', 'pha_product.product_name', $requestData['search']['value']],
+                        ['like', 'pha_product_description.description_name', $requestData['search']['value']],
+                        ['like', 'pha_brand.brand_name', $requestData['search']['value']],
+                        ['like', 'pha_generic.generic_name', $requestData['search']['value']],
                     ])
                     ->limit($requestData['length'])
                     ->offset($requestData['start'])
@@ -1293,7 +1293,7 @@ class PharmacyproductController extends ActiveController {
                             //'product_name' => $result->product_name,
                             //'product_unit' => $result->product_unit,
                             //'product_unit_count' => $result->product_unit_count
-                                'product_id' => $result->product_id
+                            'product_id' => $result->product_id
                         ])
                         ->one();
                 if (!empty($product_exists)) {
@@ -1438,7 +1438,7 @@ class PharmacyproductController extends ActiveController {
                 $gst = $data[15];
                 $hsn = $data[16];
                 $sale_unit = $data[17];
-                
+
                 $sql = "INSERT INTO test_product_import(tenant_id, product_name, product_unit, product_unit_count, group_name, product_reorder_max, product_reorder_min, product_price, brand, generic_name, division_name, drug_class, route, purchase_unit, sale_unit, purchase_tax, sale_tax, gst, hsn, sale_package_unit, import_log) VALUES('{$tenant_id}','{$product_name}', '{$product_unit}', '{$product_unit_count}', '{$product_desc}', '{$product_reorder_max}', '{$product_reorder_min}', '{$product_price}', '{$brand}', '{$generic}', '{$division}','{$drug}', '{$route}', '{$purchase_unit}', '{$sale_unit}', '{$purchase_tax}', '{$sale_tax}', '{$gst}', '{$hsn}', '{$sale_unit}','{$log}')";
                 $command = $connection->createCommand($sql);
                 $command->execute();
@@ -1494,11 +1494,10 @@ class PharmacyproductController extends ActiveController {
                     $post_data['hsn'] = $result->hsn;
                     $post_data['sale_package_unit'] = $result->sale_package_unit;
                     $post_data['division_name'] = $result->division_name;
-                    
+
 //                    $post_data['product_reorder'] = 50;
 //                    $post_data['product_reorder_max'] = 50;
 //                    $post_data['product_reorder_min'] = 0;
-
                     //Check & Get Brand
                     $brand_id = $this->getBrand($post_data['tenant_id'], $post_data['brand_name']);
                     if ($brand_id) {
@@ -1603,7 +1602,7 @@ class PharmacyproductController extends ActiveController {
         }
         return $vat_id;
     }
-    
+
     private function getGst($tenant_id, $gst) {
         $phagst = \common\models\PhaGst::find()
                 ->tenant($tenant_id)
@@ -1620,7 +1619,7 @@ class PharmacyproductController extends ActiveController {
         }
         return $gst_id;
     }
-    
+
     private function getHsn($tenant_id, $hsn) {
         $phahsn = \common\models\PhaHsn::find()
                 //->tenant($tenant_id)
@@ -1637,7 +1636,7 @@ class PharmacyproductController extends ActiveController {
         }
         return $hsn_id;
     }
-    
+
     private function getBrandDivision($tenant_id, $division_name) {
         $phadivisionname = \common\models\PhaBrandDivision::find()
                 ->tenant($tenant_id)
@@ -1654,7 +1653,7 @@ class PharmacyproductController extends ActiveController {
         }
         return $division_id;
     }
-        
+
     private function getPackageUnit($tenant_id, $package_name) {
         $package_unit = \common\models\PhaPackageUnit::find()
                 ->tenant($tenant_id)
@@ -2040,6 +2039,115 @@ class PharmacyproductController extends ActiveController {
         }
         return $return;
     }
+
+    //Product Description Route Start
+    public function actionProductdescriptionupdate() {
+        //return ['success' => true, 'message' => ['total_rows' => '1990', 'id' => '817', 'max_id' => '1990']];
+        $get = Yii::$app->getRequest()->get();
+        $allowed = array('csv');
+        $filename = $_FILES['file']['name'];
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        if (!in_array($ext, $allowed)) {
+            return ['success' => false, 'message' => 'Unsupported File Format. CSV Files only accepted'];
+        }
+        $uploadPath = 'uploads/';
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+        $uploadFile = $uploadPath . $filename;
+        if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
+            $file = Url::to($uploadFile);
+            $result = $this->productdescriptionupdateimport($file, $get['tenant_id'], $get['import_log']);
+            if (!empty($result)) {
+                return ['success' => true, 'message' => $result];
+            } else {
+                return ['success' => false, 'message' => 'Failed to import. Try again later'];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Failed to import. Try again later'];
+        }
+    }
+
+    public function productdescriptionupdateimport($filename, $tenant_id, $log) {
+        $connection = Yii::$app->client_pharmacy;
+        $connection->open();
+
+        $row = 1;
+        if (($handle = fopen($filename, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle)) !== FALSE) {
+                //skip header row 
+                if ($row++ == 1) {
+                    continue;
+                }
+                $sql = "INSERT INTO test_product_description(tenant_id, product_id, product_name, product_unit, product_unit_count, description_name, status, response,  import_log) VALUES('{$tenant_id}', '{$data[0]}','{$data[1]}', '{$data[2]}', '{$data[3]}', '{$data[4]}', '', '' ,'{$log}')";
+
+                $command = $connection->createCommand($sql);
+                $command->execute();
+            }
+            // close the file
+            fclose($handle);
+            // return the messages
+            @unlink($filename);
+            $command = $connection->createCommand("SELECT COUNT(*) AS 'total_rows', (SELECT MIN(id) FROM test_product_description WHERE import_log = $log) AS id, (SELECT MAX(id) FROM test_product_description WHERE import_log = $log) AS max_id FROM test_product_description WHERE import_log = $log");
+            $result = $command->queryAll(PDO::FETCH_OBJ);
+            $connection->close();
+            return $result[0];
+        }
+    }
+
+    public function actionProductdescriptionupdatestart() {
+        $post = Yii::$app->getRequest()->post();
+        $id = $post['id'];
+        $import_log = $post['import_log'];
+        $max_id = $post['max_id'];
+
+        if ($id <= $max_id) {
+            $next_id = $id + 1;
+            $connection = Yii::$app->client_pharmacy;
+            $connection->open();
+            $command = $connection->createCommand("SELECT * FROM test_product_description WHERE id = {$id} AND import_log = $import_log");
+            $result = $command->queryAll(PDO::FETCH_OBJ);
+            if ($result) {
+                $result = $result[0];
+                //Product Update
+                $product_exists = \common\models\PhaProduct::find()->where([
+                            'tenant_id' => $result->tenant_id,
+                            'product_id' => $result->product_id
+                        ])
+                        ->one();
+                if (!empty($product_exists)) {
+                    if ($result->description_name) {
+                        $product_description_id = $this->getDescription($result->tenant_id, $result->description_name);
+
+                        $product_exists->product_description_id = $product_description_id;
+                        $product_exists->save(false);
+                        $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
+                    } else {
+                        $return = ['success' => false, 'continue' => $next_id, 'message' => 'Product Description is empty'];
+                    }
+                } else {
+                    $return = ['success' => false, 'continue' => $next_id, 'message' => 'Product Not exists'];
+                }
+            } else {
+                $return = ['success' => false, 'continue' => $next_id, 'message' => 'Import data not found'];
+            }
+        } else {
+            $return = ['success' => false, 'continue' => 0];
+        }
+
+        if ($return['continue']) {
+            $status = $return['success'] ? 1 : 0;
+            $message = $return['message'];
+//            $message = str_replace('<p>Please fix the following errors:</p>', '', $return['message']);
+            $sql = "UPDATE test_product_description SET `status` = '{$status}', response = '{$message}' WHERE id={$id}";
+            $command = $connection->createCommand($sql);
+            $command->execute();
+            $connection->close();
+        }
+        return $return;
+    }
+
+    //Product Description Route End
 
     public function actionPharmacybranch() {
         $appConfig = AppConfiguration::find()
