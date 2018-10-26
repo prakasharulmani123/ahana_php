@@ -691,6 +691,78 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
+        
+        
+        //Product Description Route Start
+        $scope.initProductdescriptionParams = function () {
+            $scope.product_description_import_process_text = '';
+            $scope.progress_product_description_imported_rows = $scope.success_product_description_import_rows = $scope.failed_product_description_import_rows = $scope.total_product_description_import_rows = $scope.import_product_description_percent = 0;
+            $scope.product_description_import_error_log = false;
+        }
+
+        $scope.importProductdescription = function () {
+            $scope.initProductdescriptionParams();
+            $scope.loadbar('show');
+            $scope.product_description_import_process_text = 'Fetching the Excel Data. Please wait until the importing begins. This might take few mins';
+            $scope.import_log = Date.parse(moment().format());
+            //$scope.import_log = '1510558655000';
+            var currentUser = AuthenticationService.getCurrentUser();
+
+            fileUpload.uploadFileToUrl($scope.productdescriptionImport, $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/productdescriptionupdate?tenant_id=' + currentUser.credentials.logged_tenant_id + '&import_log=' + $scope.import_log).success(function (response) {
+                if (response.success) {
+                    $scope.total_product_description_import_rows = response.message.total_rows;
+                    $scope.product_description_import_process_text = 'Importing started';
+                    $scope.productdescriptionUpdateStart(response.message.id, response.message.max_id);
+                } else {
+                    $scope.loadbar('hide');
+                    $scope.product_description_import_process_text = '';
+                    $scope.errorData = response.message;
+                }
+            }).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
+        $scope.productdescriptionUpdateStart = function (id, max) {
+            $scope.loadbar('show');
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/productdescriptionupdatestart',
+                data: {id: id, max_id: max, import_log: $scope.import_log},
+            }).success(
+                    function (response) {
+                        if (response.success) {
+                            $scope.success_product_description_import_rows++;
+                            $scope.progress_product_description_imported_rows++;
+                        } else if (response.continue) {
+                            $scope.failed_product_description_import_rows++;
+                            $scope.progress_product_description_imported_rows++;
+                        }
+
+                        $scope.product_description_import_process_text = 'Import progressing (' + $scope.progress_product_description_imported_rows + '/' + $scope.total_product_description_import_rows + ')';
+                        $scope.import_product_description_percent = ($scope.progress_product_description_imported_rows / $scope.total_product_description_import_rows) * 100;
+
+                        if (response.continue) {
+                            $scope.productdescriptionUpdateStart(response.continue, max);
+                        } else {
+                            $scope.product_description_import_process_text = 'Import completed (' + $scope.progress_product_description_imported_rows + '/' + $scope.total_product_description_import_rows + ')';
+                            $scope.product_description_import_error_log = true;
+                        }
+                        $scope.loadbar('hide');
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+        //Product Description Route End
 
         $scope.initPharmacyBranch = function () {
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/pharmacybranch?addtfields=app_setting_pharmacy')
