@@ -1431,8 +1431,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     data: {'days': newValue},
                 }).success(
                         function (response) {
-                            $('#next_visit_date_picker').datepicker('setDate', response.date);
-                            $scope.data.next_visit = response.date;
+                            var ch_date = moment(response.date).format('DD-MM-YYYY')
+                            $('#next_visit_date_picker').datepicker('setDate', ch_date);
+                            $scope.data.next_visit = ch_date;
                         }
                 );
                 //Update all the No.of Days column in prescription form 
