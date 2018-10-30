@@ -147,6 +147,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         $scope.show_consultant_loader = false;
         $scope.show_encounter_loader = false;
         $scope.show_group_loader = false;
+        $scope.active_ip_encounter = '';
 
         //Expand table in Index page
         $scope.ctrl = {};
@@ -345,11 +346,15 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         }
 
         $scope.getEncounter = function (patient_id, mode, encounter_id) {
+            $scope.active_ip_encounter = '';
             if (patient_id) {
                 $scope.show_encounter_loader = true;
                 $rootScope.commonService.GetEncounterListByTenantSamePatient('', '0,1', false, patient_id, function (response) {
                     //$rootScope.commonService.GetEncounterListByPatient('', '0,1', false, patient_id, function (response) {
                     angular.forEach(response, function (resp) {
+                        if (resp.encounter_type == 'IP') {
+                            $scope.active_ip_encounter = resp.encounter_id;
+                        }
                         resp.encounter_id = resp.encounter_id.toString();
                     });
                     $scope.encounters = response;
@@ -878,12 +883,12 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 var disc_perc = disc_amount > 0 ? ((disc_amount / item_amount) * 100).toFixed(2) : 0;
             if (column && column == 'discount_percentage')
                 var disc_amount = disc_perc > 0 ? (item_amount * (disc_perc / 100)).toFixed(2) : 0;
-            
-            if(disc_perc > 0) {
+
+            if (disc_perc > 0) {
                 var new_taxable_value = ((disc_perc / 100) * taxable_value).toFixed(2);
                 var taxable_value = (parseFloat(taxable_value) - parseFloat(new_taxable_value)).toFixed(2);
             }
-                
+
             var total_amount = (item_amount - disc_amount).toFixed(2);
             var vat_amount = ((total_amount * vat_perc) / (100 + vat_perc)).toFixed(2);
 
@@ -1277,7 +1282,31 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             );
         };
 
+        $scope.openConfirmbox = function () {
+            var modalInstance = $modal.open({
+                templateUrl: 'tpl/modal_form/modal.sale_confirm.html',
+                controller: "SaleConfirmController",
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    },
+                }
+            });
+           
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+        };
+
         $scope.getPrescription = function () {
+            if ($scope.active_ip_encounter) {
+                if ($scope.data.encounter_id != $scope.active_ip_encounter) {
+                    //alert('Check active encounter');
+                    $scope.openConfirmbox();
+                }
+            }
             $scope.loadbar('show');
             $http.get($rootScope.IRISOrgServiceUrl + '/patientprescription/getsaleprescription?patient_id=' + $scope.data.patient_guid + '&encounter_id=' + $scope.data.encounter_id + '&addtfields=prev_presc')
                     .success(function (prescriptionList) {

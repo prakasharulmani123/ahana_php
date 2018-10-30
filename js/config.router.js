@@ -2219,7 +2219,10 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load('xeditable').then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/pharmacy_sale/pharmacy_sale.js?v=' + APP_VERSION);
+                                        return $ocLazyLoad.load([
+                                            'tpl/pharmacy_sale/pharmacy_sale.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.sale_confirm.js?v=' + APP_VERSION,
+                                        ]);
                                     }
                             );
                         }]

@@ -83,7 +83,7 @@
                                                 ng-model="data.encounter_id"
                                                 ng-change="getPrescription()" >
                                             <option value="">Select Encounter</option>
-                                            <option ng-repeat="encounter in encounters| orderBy: encounter_id" value="{{encounter.encounter_id}}" class="{{encounter.prescription_status ? 'text-success' : 'text-light'}}">{{encounter.encounter_full_details}}</option>
+                                            <option ng-repeat="encounter in encounters| orderBy: encounter_id" value="{{encounter.encounter_id}}" ng-selected="data.encounter_id == encounter.encounter_id" class="{{encounter.prescription_status ? 'text-success' : 'text-light'}}">{{encounter.encounter_full_details}}</option>
                                         </select>
                                     </div>
                                 </div>
