@@ -68,7 +68,7 @@ class PatScheduleCharge extends RActiveRecord {
      * @return ActiveQuery
      */
     public function getEncounter() {
-        return $this->hasOne(PatEncounter::className(), ['encounter_id' => 'encounter_id'])->andWhere('status = "1"');
+        return $this->hasOne(PatEncounter::className(), ['encounter_id' => 'encounter_id'])->andWhere('status = "1"')->andWhere('finalize = "0"');
     }
     
     public static function find() {
