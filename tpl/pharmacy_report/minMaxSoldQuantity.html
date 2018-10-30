@@ -7,29 +7,68 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
-
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-body p-b">
+                        <div class="form-group report-inst">
+                            <ul>
+                                <li>This report will be generated only for a 30 days.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-body p-b form-horizontal">
-                        <form class="form-horizontal form-validation" name="searchForm">
-                            <div class="col-md-1 col-lg-1">
-                                <label><b>Month</b> &nbsp; </label> <br/>
-                                <select class="form-control search-dropdown" ng-model="data.month" ng-options="month.value as month.label for month in months">
-                                    <option value="">MM</option>
+                        <form role="form" class="form-inline" name="searchForm" novalidate>
+                            <div class="form-group">
+                                <label>From  :</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.from" is-open="opened1" datepicker-options="dateOptions" close-text="Close" max-date="fromMaxDate" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="open($event, 'opened1')">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>To :</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.to" is-open="opened2" datepicker-options="dateOptions" close-text="Close" min-date="toMinDate" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="open($event, 'opened2')">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <select id="branch_wise" class="selectpicker" ng-model="data.tenant_id" ng-options="key as value for (key , value) in tenants | orderBy: label" required>
+                                    <option value="">Select Branch</option>
                                 </select>
                             </div>
-                            <div class="col-md-1 col-lg-1">
-                                <label><b>Year</b> &nbsp; </label> <br/>
-                                <select class="form-control search-dropdown" ng-model="data.year" ng-options="year.value as year.label for year in years">
-                                    <option value="">YYYY</option>
-                                </select>
-                            </div>
-                            <div class="col-md-1 col-lg-1">
-                                <label>&nbsp;</label> <br/>
-                                <button class="btn btn-grey" ng-click="loadReport()">
-                                    &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
-                                </button>
-                            </div>
+                            <button id="get_report" class="btn btn-success get-report" ng-disabled="searchForm.$invalid" ng-click="loadReport()">Get Report</button>
+                            <button class="btn btn-dark" ng-click="clearReport()">Clear</button>
+                            <!--                            <div class="col-md-1 col-lg-1">
+                                                            <label><b>Month</b> &nbsp; </label> <br/>
+                                                            <select class="form-control search-dropdown" ng-model="data.month" ng-options="month.value as month.label for month in months">
+                                                                <option value="">MM</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-1 col-lg-1">
+                                                            <label><b>Year</b> &nbsp; </label> <br/>
+                                                            <select class="form-control search-dropdown" ng-model="data.year" ng-options="year.value as year.label for year in years">
+                                                                <option value="">YYYY</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-1 col-lg-1">
+                                                            <label>&nbsp;</label> <br/>
+                                                            <button class="btn btn-grey" ng-click="loadReport()">
+                                                                &nbsp; &nbsp; <i class="fa fa-search"></i> &nbsp; &nbsp;
+                                                            </button>
+                                                        </div>-->
                         </form>
                     </div>    
                 </div>
@@ -48,7 +87,7 @@
                         </div>
                         <div class="col-sm-4 m-b-xs">
                             <span ng-show="generated_on != ''">
-                                <b>Generated On : </b> {{generated_on | moment:'DD-MM-YYYY hh:mm A'}} <br>
+                                <b>Generated On : </b> {{generated_on| moment:'DD-MM-YYYY hh:mm A'}} <br>
                             </span>
                         </div>
                         <div class="col-sm-4 text-right"> 
@@ -71,7 +110,7 @@
                         </tr>
                         <tr>
                             <td>Non Moving Drug</td>
-                            <td>{{generated_on | moment:'DD-MM-YYYY hh:mm A'}}</td>
+                            <td>{{generated_on| moment:'DD-MM-YYYY hh:mm A'}}</td>
                             <td>{{app.username}}</td>
                         </tr>
                         <tr>

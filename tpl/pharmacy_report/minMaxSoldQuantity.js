@@ -1,17 +1,89 @@
 app.controller('minMaxSoldQuantityController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', '$filter', '$timeout', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll, $filter, $timeout) {
 
+        //For Datepicker
+        $scope.open = function ($event, mode) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.opened1 = $scope.opened2 = false;
+            switch (mode) {
+                case 'opened1':
+                    $scope.opened1 = true;
+                    break;
+                case 'opened2':
+                    $scope.opened2 = true;
+                    break;
+            }
+        };
 
-        $scope.initReport = function () {
+        $scope.clearReport = function () {
             $scope.showTable = false;
             $scope.data = {};
-            $rootScope.commonService.GetMonth(function (response) {
-                $scope.months = response;
+            $scope.data.tenant_id = '';
+            $scope.data.to = moment().format('YYYY-MM-DD');
+            $scope.data.from = moment($scope.data.to).add(-30, 'days').format('YYYY-MM-DD');
+            $scope.deselectAll('branch_wise');
+            $scope.fromMaxDate = new Date($scope.data.to);
+            $scope.toMinDate = new Date($scope.data.from);
+        }
+
+        $scope.$watch('data.from', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.toMinDate = new Date($scope.data.from);
+                var from = moment($scope.data.from);
+                var to = moment($scope.data.to);
+                var difference = to.diff(from, 'days') + 1;
+
+                if (difference > 31) {
+                    $scope.data.to = moment($scope.data.from).add(+30, 'days').format('YYYY-MM-DD');
+                }
+            }
+        }, true);
+        $scope.$watch('data.to', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.fromMaxDate = new Date($scope.data.to);
+                var from = moment($scope.data.from);
+                var to = moment($scope.data.to);
+                var difference = to.diff(from, 'days') + 1;
+
+                if (difference > 31) {
+                    $scope.data.from = moment($scope.data.to).add(-30, 'days').format('YYYY-MM-DD');
+                }
+            }
+        }, true);
+
+        $scope.deselectAll = function (type) {
+            $timeout(function () {
+                // anything you want can go here and will safely be run on the next digest.
+                if (type == 'branch_wise') {
+                    var branch_wise_button = $('button[data-id="branch_wise"]').next();
+                    var branch_wise_deselect_all = branch_wise_button.find(".bs-deselect-all");
+                    branch_wise_deselect_all.click();
+                }
+                $('#get_report').attr("disabled", true);
             });
-            $rootScope.commonService.GetYear(function (response) {
-                $scope.years = response;
+        }
+
+//        $scope.initReport = function () {
+//            $scope.showTable = false;
+//            $scope.data = {};
+//            $rootScope.commonService.GetMonth(function (response) {
+//                $scope.months = response;
+//            });
+//            $rootScope.commonService.GetYear(function (response) {
+//                $scope.years = response;
+//            });
+//        };
+
+        $scope.initReport = function () {
+            $scope.tenants = [];
+            $rootScope.commonService.GetTenantList(function (response) {
+                if (response.success == true) {
+                    $scope.tenants = response.tenantList;
+                }
             });
-        };
-        
+            $scope.clearReport();
+        }
+
         //Index Page
         $scope.loadReport = function () {
             $scope.records = [];
@@ -21,10 +93,12 @@ app.controller('minMaxSoldQuantityController', ['$rootScope', '$scope', '$timeou
             $scope.msg.successMessage = "";
 
             var data = {};
-            if (typeof $scope.data.month !== 'undefined' && $scope.data.month != '')
-                angular.extend(data, {month: $scope.data.month});
-            if (typeof $scope.data.year !== 'undefined' && $scope.data.year != '')
-                angular.extend(data, {year: $scope.data.year});
+            if (typeof $scope.data.from !== 'undefined' && $scope.data.from != '')
+                angular.extend(data, {from: moment($scope.data.from).format('YYYY-MM-DD')});
+            if (typeof $scope.data.to !== 'undefined' && $scope.data.to != '')
+                angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
+            if (typeof $scope.data.tenant_id !== 'undefined' && $scope.data.tenant_id != '')
+                angular.extend(data, {tenant_id: $scope.data.tenant_id});
 
             // Get data's from service
             $http.post($rootScope.IRISOrgServiceUrl + '/pharmacysale/minmaxquantity', data)
