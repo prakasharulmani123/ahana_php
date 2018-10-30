@@ -353,9 +353,8 @@ class PharmacysaleController extends ActiveController {
     public function actionMinmaxquantity() {
         $post = Yii::$app->getRequest()->post();
         $report = [];
-        if (!empty($post['month']) && !empty($post['year'])) {
+        if (!empty($post)) {
             $saleItem = PhaSaleItem::find()
-                    ->tenant()
                     ->active()
                     ->joinWith('product')
                     ->joinWith('sale')
@@ -365,8 +364,8 @@ class PharmacysaleController extends ActiveController {
                     ->addSelect('pha_product.product_name AS product_name')
                     ->addSelect('pha_brand.brand_name AS brand_name')
                     ->addSelect('count(pha_sale.sale_id) AS sale_count')
-                    ->andWhere(["DATE_FORMAT(pha_sale.sale_date,'%Y')" => $post['year'],
-                        "DATE_FORMAT(pha_sale.sale_date,'%m')" => $post['month']])
+                    ->andWhere("pha_sale.sale_date between '{$post['from']}' AND '{$post['to']}'")
+                    ->andWhere(['pha_sale.tenant_id' => $post['tenant_id']])
                     ->groupBy(['pha_sale_item.product_id'])
                     ->all();
             
