@@ -3445,15 +3445,12 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             });
                         });
                         $timeout(function () {
-                            $scope.ckeditorReplace();
-                        }, 10);
-                        $timeout(function () {
                             $scope.setRefferedBy();
-                        }, 100);
+                        }, 200);
                         $timeout(function () {
                             $scope.checkmedicalcaseemptyrow('medical_case_history');
                             $scope.printElement();
-                        }, 1000);
+                        }, 1500);
                     });
                 }
             });
