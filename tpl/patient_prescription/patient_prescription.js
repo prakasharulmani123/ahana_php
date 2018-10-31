@@ -3446,6 +3446,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         });
                         $timeout(function () {
                             $scope.ckeditorReplace();
+                        }, 10);
+                        $timeout(function () {
                             $scope.setRefferedBy();
                         }, 100);
                         $timeout(function () {
