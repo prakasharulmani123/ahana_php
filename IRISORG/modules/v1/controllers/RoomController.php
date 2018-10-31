@@ -91,6 +91,7 @@ class RoomController extends ActiveController {
                         ['like', 'co_room.bed_name', $requestData['search']['value']],
                         ['like', 'co_room_type.room_type_name', $requestData['search']['value']],
                     ])
+                    ->groupBy(['co_room.bed_name'])
                     ->count();
 
             $rooms = $modelClass::find()->tenant()->active()
@@ -102,6 +103,7 @@ class RoomController extends ActiveController {
                     ])
                     ->limit($requestData['length'])
                     ->offset($requestData['start'])
+                    ->groupBy(['co_room.bed_name'])
                     ->orderBy($order_array)
                     ->all();
         } else {
