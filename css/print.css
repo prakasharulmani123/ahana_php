@@ -52,6 +52,11 @@
         color-adjust: exact;
         line-height: 26px;
     }
+    #printThis {
+        -webkit-print-color-adjust: exact;
+         -moz-box-sizing: exact;
+        color-adjust: exact;
+    }
 
     .RadGrid table, .RadGrid table th, .RadGrid table td {
         border-collapse:collapse;
@@ -648,12 +653,12 @@
     /*padding: 25px 45px;*/
 }
 
-#printThis table {
+#printThis > table {
     border-collapse: collapse;
     width:100%;
 }
 
-#printThis table, #printThis th, #printThis td {
+#printThis > table, #printThis > table > tbody > tr > th, #printThis > table > tbody > tr > td {
     border: 1px solid #AAAAAA !important;
 }
 /*#printThis th, #printThis td {
@@ -729,7 +734,7 @@
     display: none;
 }
 
-div#printThis table {
+div#printThis > table {
     width: 100.8%;
     display:flex;
     font-family:arial;
