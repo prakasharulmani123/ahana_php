@@ -864,7 +864,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     //PrescriptionService.addPrescriptionItem(items);
                 //}
                 //Bc-221 Status inactive products End
-                PrescriptionService.addPrescriptionItem(items);
+                if(items.all_products.length != 0) {
+                    PrescriptionService.addPrescriptionItem(items);
+                }
                 $scope.msg.successMessage = "Medicine has been added to the current prescription";
             });
         }
@@ -1716,7 +1718,9 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 //}
                 //Bc-221 Status inactive products   end
                 //var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
-                if (chkDuplicate.length == 0) {
+                
+                //If Check Generic product is empty
+                if (chkDuplicate.length == 0 && items.all_products.length != 0) {
                     PrescriptionService.addPrescriptionItem(items);
                 }
                 if (loop_total == loop_start) {
