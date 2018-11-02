@@ -207,6 +207,12 @@ class PhaSaleReturn extends PActiveRecord {
             'branch_phone' => function ($model) {
                 return (isset($model->tenant->tenant_contact1) ? $model->tenant->tenant_contact1 : '-');
             },
+            'sale_ret_encounter_type' => function ($model) {
+                return (isset($model->sale->encounter->encounter_type) ? $model->sale->encounter->encounter_type : '-');
+            },
+            'sale_ret_encounter_id' => function ($model) {
+                return (isset($model->sale->encounter_id) ? $model->sale->encounter_id : '-');
+            }
         ];
         $parent_fields = parent::fields();
         $addt_keys = [];
@@ -228,7 +234,7 @@ class PhaSaleReturn extends PActiveRecord {
                     ];
                     break;
                 case 'salereturnreport':
-                    $addt_keys = ['patient_name', 'patient_uhid', 'sale_payment_type', 'sale_group_name'];
+                    $addt_keys = ['patient_name', 'patient_uhid', 'sale_payment_type', 'sale_group_name', 'sale_ret_encounter_type', 'sale_ret_encounter_id'];
                     $parent_fields = [
                         'bill_no' => 'bill_no',
                         'bill_amount' => 'bill_amount',

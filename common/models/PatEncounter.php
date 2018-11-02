@@ -61,7 +61,8 @@ class PatEncounter extends RActiveRecord {
      * @inheritdoc
      */
     public static function tableName() {
-        return 'pat_encounter';
+        $current_database = Yii::$app->client->createCommand("SELECT DATABASE()")->queryScalar();
+        return "$current_database.pat_encounter";
     }
 
     /**

@@ -202,7 +202,13 @@ class PhaSale extends PActiveRecord {
     public function getPatient() {
         return $this->hasOne(PatPatient::className(), ['patient_id' => 'patient_id']);
     }
-
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getEncounter() {
+        return $this->hasOne(PatEncounter::className(), ['encounter_id' => 'encounter_id']);
+    }
     /**
      * @return ActiveQuery
      */
@@ -377,6 +383,9 @@ class PhaSale extends PActiveRecord {
             },
             'ref_no' => function ($model) {
                 return (isset($model->phaSaleBillingsCash) ? $model->phaSaleBillingsCash->ref_no : '');
+            },
+            'encounter_type' => function ($model) {
+                return (isset($model->encounter) ? $model->encounter->encounter_type : '');
             }
         ];
 
@@ -385,13 +394,14 @@ class PhaSale extends PActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'salereport':
-                    $addt_keys = ['patient_name', 'patient_uhid', 'sale_bill_paid_type'];
+                    $addt_keys = ['patient_name', 'patient_uhid', 'sale_bill_paid_type', 'encounter_type'];
                     $parent_fields = [
                         'sale_date' => 'sale_date',
                         'bill_no' => 'bill_no',
                         'payment_type' => 'payment_type',
                         'bill_amount' => 'bill_amount',
                         'patient_group_name' => 'patient_group_name',
+                        'encounter_id' => 'encounter_id',
                     ];
                     break;
                 case 'salevatreport':
