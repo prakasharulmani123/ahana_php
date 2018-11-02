@@ -45,8 +45,8 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <select id="payment_type" class="selectpicker" ng-model="data.payment_type" ng-options="paymentType.value as paymentType.label for paymentType in paymentTypes">
-                                    <option value="">Select Payment Type</option>
+                                <select id="encounter_type" class="selectpicker" ng-model="data.encounter_type" ng-options="registerMode.value as registerMode.label for registerMode in registerModes">
+                                    <option value="">Select Patient Type</option>
                                 </select>
                             </div>
                             <div class="form-group" ng-show="data.payment_type == 'CR' && saleGroupsLength > 0">
@@ -125,11 +125,13 @@
                                         <th id="work-base-grid_c1">Bill No</th>
                                         <th id="work-base-grid_c2">Patient Name</th>
                                         <th id="work-base-grid_c3">UHID</th>
-                                        <th id="work-base-grid_c4">Group</th>
-                                        <th id="work-base-grid_c5">Sale Date</th>
-                                        <th id="work-base-grid_c6">Payment Type</th>
-                                        <th id="work-base-grid_c7">Payment Mode</th>
-                                        <th id="work-base-grid_c8">Sale Value</th>
+                                        <th id="work-base-grid_c4">Encounter ID</th>
+                                        <th id="work-base-grid_c5">Type</th>
+                                        <th id="work-base-grid_c6">Group</th>
+                                        <th id="work-base-grid_c7">Sale Date</th>
+                                        <th id="work-base-grid_c8">Payment Type</th>
+                                        <th id="work-base-grid_c9">Payment Mode</th>
+                                        <th id="work-base-grid_c10">Sale Value</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -138,6 +140,8 @@
                                         <td>{{record.bill_no}}</td>
                                         <td>{{nameReplace(record.patient_name)}}</td>
                                         <td>{{record.patient_uhid}}</td>
+                                        <td>{{record.encounter_id|| '-'}}</td>
+                                        <td>{{record.encounter_type|| '-'}}</td>
                                         <td>{{record.patient_group_name|| '-'}}</td>
                                         <td>{{record.sale_date| date:'dd-MM-yyyy'}}</td>
                                         <td>{{salePaymentType(record.payment_type)}}</td>
@@ -149,6 +153,8 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
+                                        <th></th>
+                                        <th></th>
                                         <th></th>
                                         <th></th>
                                         <th></th>

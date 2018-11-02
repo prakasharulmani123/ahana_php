@@ -40,6 +40,9 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 $scope.saleGroups = response.saleGroupsList;
                 $scope.saleGroupsLength = Object.keys($scope.saleGroups).length;
             });
+            $rootScope.commonService.GetPatientRegisterModelList(function (response) {
+                $scope.registerModes = response;
+            });
             $scope.clearReport();
         }
 
@@ -77,8 +80,8 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 angular.extend(data, {from: moment($scope.data.from).format('YYYY-MM-DD')});
             if (typeof $scope.data.to !== 'undefined' && $scope.data.to != '')
                 angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
-            if (typeof $scope.data.payment_type !== 'undefined' && $scope.data.payment_type != '')
-                angular.extend(data, {payment_type: $scope.data.payment_type});
+            if (typeof $scope.data.encounter_type !== 'undefined' && $scope.data.encounter_type != '')
+                angular.extend(data, {encounter_type: $scope.data.encounter_type});
             if (typeof $scope.data.patient_group_name !== 'undefined' && $scope.data.patient_group_name != '')
                 angular.extend(data, {patient_group_name: $scope.data.patient_group_name});
 
@@ -140,7 +143,7 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 8}, "", "", "", "", "", "", ""
+                {text: branch_name, style: 'header', colSpan: 9}, "", "", "", "", "", "", "", ""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
@@ -148,6 +151,7 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 {text: 'Bill No', style: 'header'},
                 {text: 'Patient Name', style: 'header'},
                 {text: 'UHID', style: 'header'},
+                {text: 'Encounter', style: 'header'},
                 {text: 'Payment Type', style: 'header'},
                 {text: 'Patient Group Name', style: 'header'},
                 {text: 'Sale Return Value', style: 'header'},
@@ -164,6 +168,7 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                     record.bill_no,
                     record.patient_name,
                     record.patient_uhid,
+                    record.sale_ret_encounter_id+'('+record.sale_ret_encounter_type+')',
                     record.sale_payment_type,
                     record.sale_group_name,
                     record.bill_amount,
@@ -179,8 +184,9 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                     text: 'Total Sale Return Value',
                     style: 'header',
                     alignment: 'right',
-                    colSpan: 7
+                    colSpan: 8
                 },
+                "",
                 "",
                 "",
                 "",
@@ -233,7 +239,7 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 style: 'demoTable',
                 table: {
                     headerRows: 2,
-                    widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                    widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
                     body: reports,
                     dontBreakRows: true,
                 },
