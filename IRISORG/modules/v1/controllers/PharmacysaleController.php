@@ -334,7 +334,11 @@ class PharmacysaleController extends ActiveController {
                     ON e.drug_class_id = c.drug_class_id
                     LEFT JOIN pha_brand_division f
                     ON f.division_id = c.division_id
-                    WHERE product_id 
+                    LEFT JOIN pha_sale_item g
+                    ON g.product_id = c.product_id
+                    LEFT JOIN pha_sale h
+                    ON h.sale_id = g.sale_id
+                    WHERE c.product_id 
                     NOT IN 
                     (SELECT 
                     product_id 
@@ -344,7 +348,9 @@ class PharmacysaleController extends ActiveController {
                     WHERE b.sale_date BETWEEN '" . $previous_date . "' AND '" . $current_date . "'
                     AND a.tenant_id = '" . $tenant_id . "'
                     GROUP BY a.product_id) 
-                    AND c.tenant_id = '" . $tenant_id . "'";
+                    AND c.tenant_id = '" . $tenant_id . "'
+                    GROUP BY g.product_id
+                    ORDER BY h.sale_date DESC";
         $command = Yii::$app->client_pharmacy->createCommand($sql);
         $reports = $command->queryAll();
         return ['report' => $reports];
@@ -364,6 +370,7 @@ class PharmacysaleController extends ActiveController {
                     ->addSelect('pha_product.product_name AS product_name')
                     ->addSelect('pha_brand.brand_name AS brand_name')
                     ->addSelect('count(pha_sale.sale_id) AS sale_count')
+                    ->addSelect('sum(quantity) AS total_qty')
                     ->andWhere("pha_sale.sale_date between '{$post['from']}' AND '{$post['to']}'")
                     ->andWhere(['pha_sale.tenant_id' => $post['tenant_id']])
                     ->groupBy(['pha_sale_item.product_id'])
@@ -375,6 +382,7 @@ class PharmacysaleController extends ActiveController {
                 $report[$key]['product_name'] = $sale['product_name'];
                 $report[$key]['brand_name'] = $sale['brand_name'];
                 $report[$key]['sale_count'] = $sale['sale_count'];
+                $report[$key]['total_qty'] = $sale['total_qty'];
             }
         }
         return ['report' => $report];

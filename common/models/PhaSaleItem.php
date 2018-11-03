@@ -46,6 +46,7 @@ class PhaSaleItem extends PActiveRecord {
     public $max_qty;
     public $brand_name;
     public $sale_count;
+    public $total_qty;
            
     /**
      * @inheritdoc
