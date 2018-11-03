@@ -151,7 +151,7 @@ app.controller('minMaxSoldQuantityController', ['$rootScope', '$scope', '$timeou
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 6}, "", "", "", "", ""
+                {text: branch_name, style: 'header', colSpan: 7}, "", "", "", "", "", ""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
@@ -160,6 +160,7 @@ app.controller('minMaxSoldQuantityController', ['$rootScope', '$scope', '$timeou
                 {text: 'Min Quantity', style: 'header'},
                 {text: 'Max Quantity', style: 'header'},
                 {text: 'No Of Bills', style: 'header'},
+                {text: 'Total Sale Qty', style: 'header'},
             ]);
 
             var serial_no = 1;
@@ -173,7 +174,8 @@ app.controller('minMaxSoldQuantityController', ['$rootScope', '$scope', '$timeou
                     record.brand_name,
                     record.min_qty,
                     record.max_qty,
-                    record.sale_count
+                    record.sale_count,
+                    record.total_qty
                 ]);
                 if (serial_no == result_count) {
                     $scope.printloader = '';
@@ -218,7 +220,7 @@ app.controller('minMaxSoldQuantityController', ['$rootScope', '$scope', '$timeou
                 style: 'demoTable',
                 table: {
                     headerRows: 2,
-                    widths: ['auto', 150, 82, 62, 62, 42],
+                    widths: ['auto', 150, 82, 62, 62, 42, 42],
                     body: reports,
                     dontBreakRows: true,
                 },
