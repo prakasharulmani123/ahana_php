@@ -193,11 +193,13 @@
                                                 </tr>
                                                 <tr>
                                                     <th id="work-base-grid_c0">S.No</th>
-                                                    <th id="work-base-grid_c0">Name</th>
-                                                    <th id="work-base-grid_c0">UHID</th>
-                                                    <th id="work-base-grid_c0">Mobile</th>
-                                                    <th id="work-base-grid_c0">Seen On</th>
-                                                    <th id="work-base-grid_c1">Amount</th>
+                                                    <th id="work-base-grid_c1">Name</th>
+                                                    <th id="work-base-grid_c2">UHID</th>
+                                                    <th id="work-base-grid_c3">Mobile</th>
+                                                    <th id="work-base-grid_c4">Seen On</th>
+                                                    <th id="work-base-grid_c5">Payment</th>
+                                                    <th id="work-base-grid_c6">Payment Details</th>
+                                                    <th id="work-base-grid_c7">Amount</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -207,6 +209,8 @@
                                                     <td>{{record.patient_global_int_code}}</td>
                                                     <td>{{record.patient_mobile}}</td>
                                                     <td>{{record.op_seen_date_time| moment:'DD-MM-YYYY hh:mm A'}}</td>
+                                                    <td>{{payment(record.payment)}}</td>
+                                                    <td> <p ng-bind-html="paymentDetails(record)"></p></td>
                                                     <td data-type="Number" ng-init="row_total = parseFloat(record.payment_amount);
                                                         branchwise.total = branchwise.total + row_total;
                                                         doctorwise.total = doctorwise.total + row_total;">

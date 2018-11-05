@@ -185,6 +185,34 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
         $scope.parseFloat = function (row) {
             return parseFloat(row);
         }
+        
+        $scope.payment = function (row) {
+            if(row == 'CA')
+                return 'Cash';
+            else if(row == 'CD')
+                return 'Card';
+            else if(row == 'CH')
+                return 'Cheque';
+            else 
+                return 'Online';
+        }
+        
+        $scope.paymentDetails = function (row) {
+            if(row.payment == 'CA') {
+                return '-';
+            } else if (row.payment == 'CD') {
+                return "Card Type :"+row.payment_card_type +
+                        "<br/>"+"Card No:"+row.payment_card_number;
+            } else if (row.payment == 'CH') {
+                return "Bank Name :"+row.payment_bank_name +
+                        "<br/>"+"Cheque No:"+row.payment_bank_number +
+                        "<br/>"+"Date:"+moment(row.payment_bank_date).format('DD-MM-YYYY hh:mm A');
+            } else {
+                return "Bank Name :"+row.payment_bank_name +
+                        "<br/>"+"Ref No:"+row.payment_ref_no +
+                        "<br/>"+"Date:"+moment(row.payment_bank_date).format('DD-MM-YYYY hh:mm A');
+            }
+        }
 
         //For Print
         $scope.printHeader = function () {
@@ -317,7 +345,7 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                 angular.forEach(branch_wise, function (branch, branch_name) {
                     var items = [];
                     items.push([
-                        {text: branch_name, style: 'header', colSpan: 6}, "", "", "", "", ""
+                        {text: branch_name, style: 'header', colSpan: 8}, "", "", "", "", "", "", ""
                     ]);
                     items.push([
                         {text: 'S.No', style: 'header'},
@@ -325,6 +353,8 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                         {text: 'UHID', style: 'header'},
                         {text: 'Mobile', style: 'header'},
                         {text: 'Seen On', style: 'header'},
+                        {text: 'Payment', style: 'header'},
+                        {text: 'Payment Detail', style: 'header'},
                         {text: 'Amount', style: 'header'}
                     ]);
                     var items_serial_no = 1;
@@ -339,6 +369,8 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                             record.patient_global_int_code,
                             record.patient_mobile,
                             seen_date_time,
+                            $scope.payment(record.payment),
+                            $scope.paymentDetails(record),
                             record.payment_amount
                         ]);
                         total += parseFloat(record.payment_amount);
@@ -347,10 +379,10 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                     items.push([
                         {
                             text: "Total",
-                            colSpan: 5,
+                            colSpan: 7,
                             alignment: 'right',
                             style: 'header'
-                        }, "", "", "", "", {
+                        }, "", "", "", "","","", {
                             text: total.toString(),
                             style: 'header'
                         }
@@ -358,7 +390,7 @@ app.controller('opdoctorpayController', ['$rootScope', '$scope', '$timeout', '$h
                     content_info.push({
                         style: 'demoTable',
                         table: {
-                            widths: [40, '*', '*', 'auto', '*', 'auto'],
+                            widths: [40, '*', 'auto', 'auto','auto','auto','auto','auto'],
                             headerRows: 2,
                             dontBreakRows: true,
                             body: items,
