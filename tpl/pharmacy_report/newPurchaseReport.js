@@ -14,6 +14,12 @@ app.controller('newpurchaseReportController', ['$rootScope', '$scope', '$timeout
                     break;
             }
         };
+        
+        //Expand table in Index page
+        $scope.ctrl = {};
+        $scope.ctrl.expandAll = function (expanded) {
+            $scope.$broadcast('onExpandAll', {expanded: expanded});
+        };
 
         $scope.clearReport = function () {
             $scope.showTable = false;
@@ -71,7 +77,17 @@ app.controller('newpurchaseReportController', ['$rootScope', '$scope', '$timeout
                         $scope.errorData = "An Error has occured";
                     });
         };
-
+        
+        $scope.total_pending = function (a, b) {
+            if (a == undefined)
+                return b;
+            if (a != undefined)
+            {
+                var total = parseFloat(a.replace(',', '')) + parseFloat(b.replace(',', ''));
+                return total.toFixed(2);
+            }
+        }
+        
         $scope.parseFloat = function (row) {
             return parseFloat(row);
         }
