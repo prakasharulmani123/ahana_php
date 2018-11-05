@@ -64,6 +64,13 @@ class MyworkreportsController extends ActiveController {
         $encounters->addSelect(["pat_appointment.amount as op_doctor_payment_amount"]);
         $encounters->addSelect(["pat_appointment.status_date as op_doctor_payment_seen_date"]);
         $encounters->addSelect(["pat_appointment.status_time as op_doctor_payment_seen_time"]);
+        $encounters->addSelect(["pat_appointment.payment_mode as payment"]);
+        $encounters->addSelect(["pat_appointment.card_type as payment_card_type"]);
+        $encounters->addSelect(["pat_appointment.card_number as payment_card_number"]);
+        $encounters->addSelect(["pat_appointment.bank_name as payment_bank_name"]);
+        $encounters->addSelect(["pat_appointment.bank_number as payment_bank_number"]);
+        $encounters->addSelect(["pat_appointment.bank_date as payment_bank_date"]);
+        $encounters->addSelect(["pat_appointment.ref_no as payment_ref_no"]);
 
         $encounters = $encounters->all();
 
@@ -96,6 +103,13 @@ class MyworkreportsController extends ActiveController {
             $reports[$key]['payment_amount'] = $encounter['op_doctor_payment_amount'];
             $reports[$key]['op_seen_date_time'] = $encounter['op_doctor_payment_seen_date'] . " " . $encounter['op_doctor_payment_seen_time'];
             $reports[$key]['op_seen_date'] = $encounter['op_doctor_payment_seen_date'];
+            $reports[$key]['payment'] = $encounter['payment'];
+            $reports[$key]['payment_card_type'] = $encounter['payment_card_type'];
+            $reports[$key]['payment_card_number'] = $encounter['payment_card_number'];
+            $reports[$key]['payment_bank_name'] = $encounter['payment_bank_name'];
+            $reports[$key]['payment_bank_number'] = $encounter['payment_bank_number'];
+            $reports[$key]['payment_bank_date'] = $encounter['payment_bank_date'];
+            $reports[$key]['payment_ref_no'] = $encounter['payment_ref_no'];
         }
         $sheetname = array_map("unserialize", array_unique(array_map("serialize", $sheetname)));
         return ['report' => $reports, 'sheetname' => $sheetname];

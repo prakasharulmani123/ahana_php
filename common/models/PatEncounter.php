@@ -56,6 +56,13 @@ class PatEncounter extends RActiveRecord {
     public $arrived_count;
     public $booked_count;
     public $branch_name;
+    public $payment;
+    public $payment_card_type;
+    public $payment_card_number;
+    public $payment_bank_name;
+    public $payment_bank_number;
+    public $payment_bank_date;
+    public $payment_ref_no;
 
     /**
      * @inheritdoc
