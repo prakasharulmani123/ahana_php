@@ -89,7 +89,7 @@ class PatientprescriptionController extends ActiveController {
                     ->andWhere(['<>', 'value', 0])
                     ->andWhere(['tenant_id' => $tenant_id, 'code' => 'PB'])
                     ->one();
-            
+
             if (!empty($appConfiguration) && !empty(Yii::$app->session['pharmacy_setup_tenant_id'])) {
                 if ($appConfiguration['value'] != Yii::$app->session['pharmacy_setup_tenant_id']) {
                     UserController::Clearpharmacysetupsession();
@@ -97,7 +97,7 @@ class PatientprescriptionController extends ActiveController {
                     return ['success' => false, 'message' => 'Pharmacy Branch mismatch, Kindly check application settings.', 'page_refresh' => true];
                 }
             }
-            
+
             $model = new PatPrescription;
             if (isset($post['pres_id'])) {
                 $prescription = PatPrescription::find()->tenant()->andWhere(['pres_id' => $post['pres_id']])->one();
@@ -167,6 +167,23 @@ class PatientprescriptionController extends ActiveController {
         }
     }
 
+    public function actionGetlatestprescription() {
+        $get = Yii::$app->getRequest()->get();
+
+        if (isset($get['patient_id']) && $get['patient_id'] != 'undefined') {
+            $patient = PatPatient::getPatientByGuid($get['patient_id']);
+            $data = PatPrescription::find()->tenant()
+                    ->active()
+                    ->andWhere("patient_id IN ($patient->patient_id)")
+                    ->orderBy(['created_at' => SORT_DESC])
+                    ->limit(1)
+                    ->one();
+            return ['success' => true, 'prescription' => $data];
+        } else {
+            return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
+
     public function actionGetpreviousprescription() {
         $get = Yii::$app->getRequest()->get();
 
@@ -181,14 +198,14 @@ class PatientprescriptionController extends ActiveController {
 
             if (isset($get['encounter_id'])) {
                 $encounter_id = $get['encounter_id'];
-                $data = PatPrescription::find()->tenant()
+                $data = PatPrescription::find()
                         ->active()
                         ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                         ->andWhere(['encounter_id' => $encounter_id])
                         ->orderBy(['created_at' => SORT_DESC])->limit($get['pageSize'])
                         ->offset($offset)
                         ->all();
-                $totalCount = PatPrescription::find()->tenant()
+                $totalCount = PatPrescription::find()
                         ->active()
                         ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                         ->andWhere(['encounter_id' => $encounter_id])
@@ -199,7 +216,7 @@ class PatientprescriptionController extends ActiveController {
             } else {
                 if (isset($get['date']) && $get['date'] != "") {
                     $pres_date = $get['date'];
-                    $data = PatPrescription::find()->tenant()
+                    $data = PatPrescription::find()
                             ->active()
                             ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                             ->andWhere(['DATE(pres_date)' => $pres_date])
@@ -207,7 +224,7 @@ class PatientprescriptionController extends ActiveController {
                             ->limit($get['pageSize'])
                             ->offset($offset)
                             ->all();
-                    $totalCount = PatPrescription::find()->tenant()
+                    $totalCount = PatPrescription::find()
                             ->active()
                             ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                             ->andWhere(['DATE(pres_date)' => $pres_date])
@@ -216,14 +233,14 @@ class PatientprescriptionController extends ActiveController {
                             ->offset($offset)
                             ->count();
                 } else {
-                    $data = PatPrescription::find()->tenant()
+                    $data = PatPrescription::find()
                             ->active()
                             ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                             ->orderBy(['created_at' => SORT_DESC])
                             ->limit($get['pageSize'])
                             ->offset($offset)
                             ->all();
-                    $totalCount = PatPrescription::find()->tenant()
+                    $totalCount = PatPrescription::find()
                             ->active()
                             ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                             ->orderBy(['created_at' => SORT_DESC])
@@ -317,7 +334,7 @@ class PatientprescriptionController extends ActiveController {
                     ->status()
                     ->active()
                     ->andWhere(['consultant_id' => $get['consultant_id'], 'freq_type' => '3'])
-                    ->andWhere(['<>','product_type', 'SYRUP'])
+                    ->andWhere(['<>', 'product_type', 'SYRUP'])
                     ->orderBy(['modified_at' => SORT_DESC])
                     ->limit(5)
                     ->all();
@@ -326,7 +343,7 @@ class PatientprescriptionController extends ActiveController {
                     ->status()
                     ->active()
                     ->andWhere(['consultant_id' => $get['consultant_id'], 'freq_type' => '4'])
-                    ->andWhere(['<>','product_type', 'SYRUP'])
+                    ->andWhere(['<>', 'product_type', 'SYRUP'])
                     ->orderBy(['modified_at' => SORT_DESC])
                     ->limit(5)
                     ->all();
@@ -335,11 +352,11 @@ class PatientprescriptionController extends ActiveController {
                     ->status()
                     ->active()
                     ->andWhere(['consultant_id' => $get['consultant_id'], 'freq_type' => 'txt'])
-                    ->andWhere(['<>','product_type', 'SYRUP'])
+                    ->andWhere(['<>', 'product_type', 'SYRUP'])
                     ->orderBy(['modified_at' => SORT_DESC])
                     ->limit(5)
                     ->all();
-            $freq = array_merge_recursive($freq_3_syrup,$freq_4_syrup,$freq_txt_syrup,$freq_3,$freq_4,$freq_txt); 
+            $freq = array_merge_recursive($freq_3_syrup, $freq_4_syrup, $freq_txt_syrup, $freq_3, $freq_4, $freq_txt);
             return ['success' => true, 'freq' => $freq];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
@@ -378,8 +395,8 @@ class PatientprescriptionController extends ActiveController {
         $Diag = PatDiagnosis::find()
                 ->andFilterWhere([
                     'or',
-                        ['like', 'diag_name', $text],
-                        ['like', 'diag_description', $text],
+                    ['like', 'diag_name', $text],
+                    ['like', 'diag_description', $text],
                 ])
                 ->limit(25)
                 ->all();
