@@ -887,6 +887,8 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             if (disc_perc > 0) {
                 var new_taxable_value = ((disc_perc / 100) * taxable_value).toFixed(2);
                 var taxable_value = (parseFloat(taxable_value) - parseFloat(new_taxable_value)).toFixed(2);
+                var cgst_amount = (((taxable_value * cgst_perc) / 100)).toFixed(2); // Including vat
+                var sgst_amount = (((taxable_value * sgst_perc) / 100)).toFixed(2); // Including vat
             }
 
             var total_amount = (item_amount - disc_amount).toFixed(2);
@@ -1292,7 +1294,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     },
                 }
             });
-           
+
             modalInstance.result.then(function (selectedItem) {
                 $scope.selected = selectedItem;
             }, function () {
@@ -1448,6 +1450,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
 
             var groupedArr = createGroupedArray($scope.saleItems2, 6); //Changed Description rows
             var sale_info = $scope.data2;
+            if (sale_info.total_item_discount_amount != '0.00') {
+                var sale_discount = [{text: 'Discount', style: 'h2', alignment: 'right'},
+                    {text: ':', style: 'h2'},
+                    {text: sale_info.total_item_discount_amount, alignment: 'right'},
+                ];
+            } else {
+                var sale_discount = [{text: ''}, {text: ''}, {text: ''}];
+            }
             var group_total_count = Object.keys(groupedArr).length;
             angular.forEach(groupedArr, function (sales, key) {
 
@@ -1513,6 +1523,12 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         style: 'th'
                     },
                     {
+                        border: [false, true, false, false],
+                        rowspan: 2,
+                        text: 'Discount',
+                        style: 'th'
+                    },
+                    {
                         border: [false, true, false, true],
                         colSpan: 2,
                         alignmanet: 'center',
@@ -1562,8 +1578,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     }, {
                         border: [false, false, false, true],
                         text: ''
-                    },
-                    {
+                    }, {
+                        border: [false, false, false, true],
+                        text: ''
+                    }, {
                         border: [false, true, false, true],
                         text: 'Rate %',
                         fontSize: 05,
@@ -1664,6 +1682,12 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         {
                             border: border,
                             text: [row.taxable_value || '-'],
+                            fillColor: color,
+                            style: 'td',
+                        },
+                        {
+                            border: border,
+                            text: [row.discount_amount || '-'],
                             fillColor: color,
                             style: 'td',
                         },
@@ -1949,7 +1973,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                             },
                             table: {
                                 headerRows: 1,
-                                widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                                widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
                                 body: perPageItems,
                             },
 
@@ -2059,6 +2083,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                 layout: 'noBorders',
                                 table: {
                                     body: [
+                                        sale_discount,
                                         [
                                             {
                                                 text: 'GST',
