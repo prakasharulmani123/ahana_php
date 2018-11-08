@@ -309,6 +309,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.initForm = function () {
             $scope.pres_id = '';
             $scope.loadPrevPrescriptionsList();
+            $scope.loadLatestPrescription();
             $scope.getFav();
             if (localStorage.getItem("Show_available_medicine") === null) {
                 $scope.available_medicine = '0';
@@ -861,10 +862,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 //Bc-221 Status inactive products Start
                 //var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
                 //if (chkProduct.length != 0) {
-                    //PrescriptionService.addPrescriptionItem(items);
+                //PrescriptionService.addPrescriptionItem(items);
                 //}
                 //Bc-221 Status inactive products End
-                if(items.all_products.length != 0) {
+                if (items.all_products.length != 0) {
                     PrescriptionService.addPrescriptionItem(items);
                 }
                 $scope.msg.successMessage = "Medicine has been added to the current prescription";
@@ -1582,92 +1583,100 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                 .success(function (prescriptionList) {
                                     //$scope.spinnerbar('hide');
                                     $scope.rowCollection = prescriptionList.prescriptions;
+                                    angular.forEach($scope.rowCollection, function (row) {
+
+                                        /* Visible only existing presc dates in datepicker */
+                                        var result = $filter('filter')($scope.enabled_dates, moment(row.pres_date).format('YYYY-MM-DD'));
+                                        if (result.length == 0)
+                                            $scope.enabled_dates.push(moment(row.pres_date).format('YYYY-MM-DD'));
+                                        angular.forEach(row.items, function (item) {
+                                            item.selected = '0';
+                                        });
+                                        row.selected = '0';
+                                    });
                                     $scope.totalCount = prescriptionList.totalCount;
                                     $scope.prescription_layout = prescriptionList.org_prescription;
-                                    if ($scope.rowCollection.length > 0) {
-                                        angular.forEach($scope.rowCollection, function (row) {
 
-                                            /* Visible only existing presc dates in datepicker */
-                                            var result = $filter('filter')($scope.enabled_dates, moment(row.pres_date).format('YYYY-MM-DD'));
-                                            if (result.length == 0)
-                                                $scope.enabled_dates.push(moment(row.pres_date).format('YYYY-MM-DD'));
-                                            angular.forEach(row.items, function (item) {
-                                                item.selected = '0';
-                                            });
-                                            row.selected = '0';
-                                        });
-                                        if (typeof date == 'undefined') {
-                                            var typed_prescription = PrescriptionService.getPrescriptionItems();
-                                            if (typed_prescription.length > 0) {
-                                                angular.forEach(typed_prescription, function (item) {
-                                                    item.number_of_days = 0;
-                                                    item.qty = 0;
-                                                });
-                                                $scope.data.prescriptionItems = typed_prescription;
-                                            } else {
-                                                if ($scope.rowCollection[0].pharmacy_tenant_id == $scope.pharmacy_tenant) {
-                                                    var loop_total = $scope.rowCollection[0].items.length;
-                                                    var loop_start = 0;
-                                                    angular.forEach($scope.rowCollection[0].items, function (item, k) {
-                                                        if (item.product == '-') {
-                                                            var Fields = 'full_name,description_routes,latest_price,availableQuantity,product_description_id,description_name,product_id';
-                                                            $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + item.product_id + '?page_action=branch_pharmacy&fields=' + Fields)
-                                                                    .success(function (product) {
-                                                                        item.product = product;
-                                                                        loop_start = parseFloat(loop_start) + parseFloat(1);
-                                                                        $scope.previousPrescontinue(item, k, loop_start, loop_total);
-                                                                    });
-                                                        } else {
-                                                            loop_start = parseFloat(loop_start) + parseFloat(1);
-                                                            $scope.previousPrescontinue(item, k, loop_start, loop_total);
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        //$scope.isLoading = false;
-                                        $scope.spinnerbar('hide');
-                                        if (typeof date == 'undefined') {
-                                            var typed_prescription = PrescriptionService.getPrescriptionItems();
-                                            if (typed_prescription.length > 0) {
-                                                $scope.data.prescriptionItems = typed_prescription;
-                                            }
-                                        }
-                                    }
-                                    $timeout(function () {
-                                        $scope.showOrhideFrequency();
-                                    }, 2000);
                                     $scope.displayedCollection = [].concat($scope.rowCollection);
                                     //Checkbox initialize
                                     $scope.checkboxes = {'checked': false, items: []};
                                     $scope.previousPresSelectedItems = [];
                                     $scope.previousPresSelected = 0;
-                                    var main_prescription = PrescriptionService.getPrescriptionmainItem();
-                                    if (main_prescription.length > 0) {
-                                        if (main_prescription[0]['numberofdays'])
-                                            $scope.data.number_of_days = main_prescription[0]['numberofdays'];
-                                        if (main_prescription[0]['nextVisit'])
-                                            $scope.data.next_visit = main_prescription[0]['nextVisit'];
-                                        if (main_prescription[0]['consultantId'])
-                                            $scope.data.consultant_id = main_prescription[0]['consultantId'];
-                                    }
-
-
                                     $scope.$broadcast('refreshDatepickers');
                                 })
                                 .error(function () {
                                     $scope.errorData = "An Error has occured while loading list!";
                                 });
-                        $timeout(function () {
-                            $scope.spinnerbar('hide');
-                            //$scope.isLoading = false;
-                        }, 2500);
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading brand!";
                     });
         }
+
+        $scope.loadLatestPrescription = function (date) {
+            url = $rootScope.IRISOrgServiceUrl + '/patientprescription/getlatestprescription?patient_id=' + $state.params.id + '&addtfields=prev_presc';
+            $http.get(url)
+                    .success(function (response) {
+                        $scope.latestPrescription = response.prescription;
+                        if ($scope.latestPrescription) {
+                            if (typeof date == 'undefined') {
+                                var typed_prescription = PrescriptionService.getPrescriptionItems();
+                                if (typed_prescription.length > 0) {
+                                    angular.forEach(typed_prescription, function (item) {
+                                        item.number_of_days = 0;
+                                        item.qty = 0;
+                                    });
+                                    $scope.data.prescriptionItems = typed_prescription;
+                                } else {
+                                    if ($scope.latestPrescription.pharmacy_tenant_id == $scope.pharmacy_tenant) {
+                                        var loop_total = $scope.latestPrescription.items.length;
+                                        var loop_start = 0;
+                                        angular.forEach($scope.latestPrescription.items, function (item, k) {
+                                            if (item.product == '-') {
+                                                var Fields = 'full_name,description_routes,latest_price,availableQuantity,product_description_id,description_name,product_id';
+                                                $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproducts/' + item.product_id + '?page_action=branch_pharmacy&fields=' + Fields)
+                                                        .success(function (product) {
+                                                            item.product = product;
+                                                            loop_start = parseFloat(loop_start) + parseFloat(1);
+                                                            $scope.previousPrescontinue(item, k, loop_start, loop_total);
+                                                        });
+                                            } else {
+                                                loop_start = parseFloat(loop_start) + parseFloat(1);
+                                                $scope.previousPrescontinue(item, k, loop_start, loop_total);
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        } else {
+                            //$scope.isLoading = false;
+                            $scope.spinnerbar('hide');
+                            if (typeof date == 'undefined') {
+                                var typed_prescription = PrescriptionService.getPrescriptionItems();
+                                if (typed_prescription.length > 0) {
+                                    $scope.data.prescriptionItems = typed_prescription;
+                                }
+                            }
+                        }
+                        $timeout(function () {
+                            $scope.showOrhideFrequency();
+                        }, 2000);
+
+                        var main_prescription = PrescriptionService.getPrescriptionmainItem();
+                        if (main_prescription.length > 0) {
+                            if (main_prescription[0]['numberofdays'])
+                                $scope.data.number_of_days = main_prescription[0]['numberofdays'];
+                            if (main_prescription[0]['nextVisit'])
+                                $scope.data.next_visit = main_prescription[0]['nextVisit'];
+                            if (main_prescription[0]['consultantId'])
+                                $scope.data.consultant_id = main_prescription[0]['consultantId'];
+                        }
+                        $timeout(function () {
+                            $scope.spinnerbar('hide');
+                            //$scope.isLoading = false;
+                        }, 2500);
+                    });
+        };
 
         $scope.previousPrescontinue = function (item, k, loop_start, loop_total) {
             $scope.getRelatedProducts(item.generic_id).then(function () {
@@ -1714,11 +1723,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 //Bc-221 Status inactive products   start
                 //var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
                 //if (chkDuplicate.length == 0 && chkProduct.length != 0) {
-                    //PrescriptionService.addPrescriptionItem(items);
+                //PrescriptionService.addPrescriptionItem(items);
                 //}
                 //Bc-221 Status inactive products   end
                 //var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
-                
+
                 //If Check Generic product is empty
                 if (chkDuplicate.length == 0 && items.all_products.length != 0) {
                     PrescriptionService.addPrescriptionItem(items);
@@ -2036,6 +2045,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $("#prev_prescription").focus();
                 $scope.filterdate = '';
                 $scope.loadPrevPrescriptionsList();
+                $scope.loadLatestPrescription();
             }
 
         }
