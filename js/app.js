@@ -36,7 +36,8 @@ angular.module('app', [
     'infinite-scroll',
     'autoCompleteModule',
     'ngIdle',
-    'ui.layout'
+    'ui.layout',
+    'webcam'
 //    'restangular'
 //    'LocalStorageModule',
 ]);
