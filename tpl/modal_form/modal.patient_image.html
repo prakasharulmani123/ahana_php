@@ -17,7 +17,8 @@
                                         on-streaming="onSuccess()" 
                                         on-error="onError(err)" 
                                         on-stream="onStream(stream)"></webcam>
-                                <button ng-click="makeSnapshot()">take picture</button>
+                                <button class="btn m-b-xs  btn-success" ng-click="makeSnapshot()">Take picture</button>
+                                <canvas style="display: none" id="snapshot" width="300" height="300"></canvas>
                             </div>
                         </div>
                         <div class="panel panel-default" ng-show="data.patientObj.patient_img_url">

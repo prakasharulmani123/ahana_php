@@ -1955,7 +1955,7 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
                 ctxPat.putImageData(idata, 0, 0);
 
                 sendSnapshotToServer(patCanvas.toDataURL());
-
+                $scope.uploadPatientPicture(patCanvas.toDataURL(), $scope.block);
                 patData = idata;
             }
         };
