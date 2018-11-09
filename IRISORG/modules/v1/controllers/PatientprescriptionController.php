@@ -172,9 +172,15 @@ class PatientprescriptionController extends ActiveController {
 
         if (isset($get['patient_id']) && $get['patient_id'] != 'undefined') {
             $patient = PatPatient::getPatientByGuid($get['patient_id']);
+
+            $all_patient_id = PatPatient::find()
+                    ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                    ->where(['patient_global_guid' => $patient->patient_global_guid])
+                    ->one();
+
             $data = PatPrescription::find()->tenant()
                     ->active()
-                    ->andWhere("patient_id IN ($patient->patient_id)")
+                    ->andWhere("patient_id IN ($all_patient_id->allpatient)")
                     ->orderBy(['created_at' => SORT_DESC])
                     ->limit(1)
                     ->one();
