@@ -309,7 +309,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         $scope.initForm = function () {
             $scope.pres_id = '';
             $scope.loadPrevPrescriptionsList();
-            $scope.loadLatestPrescription();
+            //$scope.loadLatestPrescription();
             $scope.getFav();
             if (localStorage.getItem("Show_available_medicine") === null) {
                 $scope.available_medicine = '0';
@@ -1596,7 +1596,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                     });
                                     $scope.totalCount = prescriptionList.totalCount;
                                     $scope.prescription_layout = prescriptionList.org_prescription;
-
+                                    $scope.loadLatestPrescription();
                                     $scope.displayedCollection = [].concat($scope.rowCollection);
                                     //Checkbox initialize
                                     $scope.checkboxes = {'checked': false, items: []};
@@ -1614,6 +1614,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.loadLatestPrescription = function (date) {
+            $scope.latestPrescription = [];
             url = $rootScope.IRISOrgServiceUrl + '/patientprescription/getlatestprescription?patient_id=' + $state.params.id + '&addtfields=prev_presc';
             $http.get(url)
                     .success(function (response) {
@@ -2045,7 +2046,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 $("#prev_prescription").focus();
                 $scope.filterdate = '';
                 $scope.loadPrevPrescriptionsList();
-                $scope.loadLatestPrescription();
+                //$scope.loadLatestPrescription();
             }
 
         }
