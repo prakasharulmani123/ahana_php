@@ -771,7 +771,11 @@ pdfMake.createPdf(docDefinition).open();
             // Setup a channel to receive a video property
             // with a reference to the video element
             // See the HTML binding in main.html
-            $scope.channel = {};
+            $scope.channel = {
+                videoHeight: 225,
+                videoWidth: 300,
+                video: null 
+            };
 
             $scope.webcamError = false;
             $scope.onError = function (err) {
