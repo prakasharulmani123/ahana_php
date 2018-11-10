@@ -658,7 +658,7 @@
     width:100%;
 }
 
-#printThis > table, #printThis > table > tbody > tr > th, #printThis > table > tbody > tr > td {
+#printThis > table:first-child {
     border: 1px solid #AAAAAA !important;
 }
 /*#printThis th, #printThis td {
@@ -734,7 +734,7 @@
     display: none;
 }
 
-div#printThis > table {
+div#printThis > table:first-child {
     width: 100.8%;
     display:flex;
     font-family:arial;
