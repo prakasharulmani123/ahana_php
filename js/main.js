@@ -1954,7 +1954,7 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
                 var idata = getVideoData($scope.patOpts.x, $scope.patOpts.y, $scope.patOpts.w, $scope.patOpts.h);
                 ctxPat.putImageData(idata, 0, 0);
 
-                sendSnapshotToServer(patCanvas.toDataURL());
+                //sendSnapshotToServer(patCanvas.toDataURL());
                 $scope.uploadPatientPicture(patCanvas.toDataURL(), $scope.block);
                 patData = idata;
             }
@@ -1964,9 +1964,9 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
          * Redirect the browser to the URL given.
          * Used to download the image by passing a dataURL string
          */
-        $scope.downloadSnapshot = function downloadSnapshot(dataURL) {
-            window.location.href = dataURL;
-        };
+//        $scope.downloadSnapshot = function downloadSnapshot(dataURL) {
+//            window.location.href = dataURL;
+//        };
 
         var getVideoData = function getVideoData(x, y, w, h) {
             var hiddenCanvas = document.createElement('canvas');
@@ -1983,9 +1983,9 @@ angular.module('app').controller('PatientImageController', ['scope', '$scope', '
          *
          * In this example, we simply store it in the scope for display.
          */
-        var sendSnapshotToServer = function sendSnapshotToServer(imgBase64) {
-            $scope.snapshotData = imgBase64;
-        };
+//        var sendSnapshotToServer = function sendSnapshotToServer(imgBase64) {
+//            $scope.snapshotData = imgBase64;
+//        };
 
         $scope.uploadFile = function () {
             var file = $scope.myFile;
