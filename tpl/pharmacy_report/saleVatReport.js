@@ -1,5 +1,11 @@
 app.controller('saleVatReportController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', '$filter', '$timeout', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll, $filter, $timeout) {
 
+        //Expand table in Index page
+        $scope.ctrl = {};
+        $scope.ctrl.expandAll = function (expanded) {
+            $scope.$broadcast('onExpandAll', {expanded: expanded});
+        };
+        
         //For Datepicker
         $scope.open = function ($event, mode) {
             $event.preventDefault();
