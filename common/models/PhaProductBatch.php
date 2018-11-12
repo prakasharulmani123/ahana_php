@@ -202,7 +202,7 @@ class PhaProductBatch extends PActiveRecord {
                     $parent_fields = array_combine($pFields, $pFields);
                     break;
                 case 'expiry_report':
-                    $addt_keys = ['product_name'];
+                    $addt_keys = ['product', 'originalQuantity'];
                     $pFields = ['batch_id', 'batch_no', 'expiry_date'];
                     $parent_fields = array_combine($pFields, $pFields);
                     break;

@@ -477,6 +477,12 @@ class PhaProduct extends PActiveRecord {
                         'product_id' => 'product_id',
                     ];
                     break;
+                case 'expiry_report':
+                    $addt_keys = ['full_name'];
+                    $parent_fields = [
+                        'product_id' => 'product_id',
+                    ];
+                    break;
             endswitch;
         }
 
