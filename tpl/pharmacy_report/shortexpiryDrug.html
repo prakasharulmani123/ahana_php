@@ -84,14 +84,16 @@
                                         <th id="work-base-grid_c0">S.No</th>
                                         <th id="work-base-grid_c1">Batch no</th>
                                         <th id="work-base-grid_c2">Product Name</th>
-                                        <th id="work-base-grid_c3">Expiry Date</th>
+                                        <th id="work-base-grid_c3">Available Qty</th>
+                                        <th id="work-base-grid_c4">Expiry Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="(key, record) in records">
                                         <td>{{key + 1}}</td>
                                         <td>{{record.batch_no}}</td>
-                                        <td>{{record.product_name}}</td>
+                                        <td>{{record.product.full_name}}</td>
+                                        <td>{{record.originalQuantity}}</td>
                                         <td>{{record.expiry_date| date:'MMM yyyy'}}</td>
                                     </tr>
                                 </tbody>
