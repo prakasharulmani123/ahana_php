@@ -69,18 +69,30 @@ class PharmacyreportController extends ActiveController {
     //Sale Report
     public function actionSalereport() {
         $post = Yii::$app->getRequest()->post();
-        
+
         $model = PhaSale::find()->active()
                 ->joinWith(['encounter'])
                 ->tenant()
                 ->andWhere("pha_sale.sale_date between '{$post['from']}' AND '{$post['to']}'");
 
-        if (isset($post['encounter_type']) && $post['encounter_type'] != 'NO') {
-            $model->andWhere(['pat_encounter.encounter_type' => $post['encounter_type']]);
-        } else if (isset($post['encounter_type']) && $post['encounter_type']=='NO') {
-            $model->andWhere(['pha_sale.encounter_id' => null]);
-        } 
-        
+
+        if (isset($post['encounter_type'])) {
+            $encounter_type = join("','", $post['encounter_type']);
+            $model->andWhere("pat_encounter.encounter_type IN ( '$encounter_type' )");
+        } else {
+            $model->andWhere(['or',
+                ['pat_encounter.encounter_type' => 'OP'],
+                ['pat_encounter.encounter_type' => 'IP'],
+                ['pha_sale.encounter_id' => null]
+            ]);
+        }
+
+//        if (isset($post['encounter_type']) && $post['encounter_type'] != 'NO') {
+//            $model->andWhere(['pat_encounter.encounter_type' => $post['encounter_type']]);
+//        } else if (isset($post['encounter_type']) && $post['encounter_type']=='NO') {
+//            $model->andWhere(['pha_sale.encounter_id' => null]);
+//        } 
+
         if (isset($post['patient_group_name'])) {
             $patient_group_names = join("','", $post['patient_group_name']);
             $model->andWhere("pha_sale.patient_group_name IN ( '$patient_group_names' )");
@@ -136,10 +148,10 @@ class PharmacyreportController extends ActiveController {
 
         if (isset($post['encounter_type']) && $post['encounter_type'] != 'NO') {
             $model->andWhere(['pat_encounter.encounter_type' => $post['encounter_type']]);
-        } else if (isset($post['encounter_type']) && $post['encounter_type']=='NO') {
+        } else if (isset($post['encounter_type']) && $post['encounter_type'] == 'NO') {
             $model->andWhere(['pha_sale.encounter_id' => null]);
         }
-        
+
         if (isset($post['patient_group_name'])) {
             $patient_group_names = join("','", $post['patient_group_name']);
             $model->andWhere("pha_sale.patient_group_name IN ( '$patient_group_names' )");
