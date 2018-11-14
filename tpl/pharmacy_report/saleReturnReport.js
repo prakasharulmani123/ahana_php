@@ -40,9 +40,7 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 $scope.saleGroups = response.saleGroupsList;
                 $scope.saleGroupsLength = Object.keys($scope.saleGroups).length;
             });
-            $rootScope.commonService.GetPatientRegisterModelList(function (response) {
-                $scope.registerModes = response;
-            });
+            $scope.registerModes = [{value: 'OP', label: 'OP'}, {value: 'IP', label: 'IP'}];
             $scope.clearReport();
         }
 
