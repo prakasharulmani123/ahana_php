@@ -146,10 +146,21 @@ class PharmacyreportController extends ActiveController {
                 ->joinWith('sale.encounter')
                 ->andWhere("pha_sale_return.sale_return_date between '{$post['from']}' AND '{$post['to']}'");
 
-        if (isset($post['encounter_type']) && $post['encounter_type'] != 'NO') {
-            $model->andWhere(['pat_encounter.encounter_type' => $post['encounter_type']]);
-        } else if (isset($post['encounter_type']) && $post['encounter_type'] == 'NO') {
-            $model->andWhere(['pha_sale.encounter_id' => null]);
+//        if (isset($post['encounter_type']) && $post['encounter_type'] != 'NO') {
+//            $model->andWhere(['pat_encounter.encounter_type' => $post['encounter_type']]);
+//        } else if (isset($post['encounter_type']) && $post['encounter_type'] == 'NO') {
+//            $model->andWhere(['pha_sale.encounter_id' => null]);
+//        }
+        
+        if (isset($post['encounter_type'])) {
+            $encounter_type = join("','", $post['encounter_type']);
+            $model->andWhere("pat_encounter.encounter_type IN ( '$encounter_type' )");
+        } else {
+            $model->andWhere(['or',
+                ['pat_encounter.encounter_type' => 'OP'],
+                ['pat_encounter.encounter_type' => 'IP'],
+                ['pha_sale.encounter_id' => null]
+            ]);
         }
 
         if (isset($post['patient_group_name'])) {
