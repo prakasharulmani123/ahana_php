@@ -58,7 +58,7 @@
                             </td>
                             <td align="center" valign="middle">
                                 <div style="margin-top: -10px; position: relative;">
-                                    <img ng-if="row.patient.hasalert" class="pull-left" src="img/symbol1.png"  alt="" tooltip="Has Alert" tooltip-trigger tooltip-animation="false" tooltip-placement="right"  />
+                                    <img ng-if="row.patient.hasalert" class="pull-left" src="img/symbol1.png"  alt="" tooltip="{{row.patient.alert}}" tooltip-trigger tooltip-animation="false" tooltip-placement="right"  />
                                     <img ng-if="row.patient.address.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
                                 </div>
                             </td>
