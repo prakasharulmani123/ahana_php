@@ -559,9 +559,7 @@ class PatPatient extends RActiveRecord {
                 return $this->hasallergies;
             },
             'alert' => function ($model) {
-                if (!empty($this->activePatientAlert)) {
-                    return $this->activePatientAlert[0]->alert_description;
-                }
+                return $this->alert;
             },
             'allergies' => function ($model) {
                 if (!empty($this->activePatientAllergies)) {
@@ -759,6 +757,12 @@ class PatPatient extends RActiveRecord {
 
     public function getHasallergies() {
         return (!empty($this->activePatientAllergies)) ? true : false;
+    }
+    
+    public function getAlert() {
+        if (!empty($this->activePatientAlert)) {
+            return $this->activePatientAlert[0]->alert_description;
+        }
     }
 
     public function getIncomplete_profile() {

@@ -487,6 +487,7 @@ class PatEncounter extends RActiveRecord {
                 if (isset($model->patient)) {
                     return $model->patient->getAttributes([
                                 'hasalert',
+                                'alert',
                                 'incomplete_profile',
                                 'new_user',
                                 'patient_guid',
