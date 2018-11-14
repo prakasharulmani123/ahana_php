@@ -212,9 +212,9 @@ class MyworkreportsController extends ActiveController {
 
         if (isset($post['from']) && isset($post['to']) && isset($post['tenant_id'])) {
             $encounters->andWhere("date(pat_admission.status_date) between '{$post['from']}' AND '{$post['to']}'");
-            //$tenant_ids = join("','", $post['tenant_id']);
-            //$encounters->andWhere("pat_encounter.tenant_id IN ( '$tenant_ids' )");
-            $encounters->andWhere(['pat_encounter.tenant_id' => $post['tenant_id']]);
+            $tenant_ids = join("','", $post['tenant_id']);
+            $encounters->andWhere("pat_encounter.tenant_id IN ( '$tenant_ids' )");
+            //$encounters->andWhere(['pat_encounter.tenant_id' => $post['tenant_id']]);
         }
 
         $encounters->andWhere("pat_encounter.bill_no != ''");
