@@ -77,8 +77,32 @@ class PharmacyreportController extends ActiveController {
 
 
         if (isset($post['encounter_type'])) {
-            $encounter_type = join("','", $post['encounter_type']);
-            $model->andWhere("pat_encounter.encounter_type IN ( '$encounter_type' )");
+            
+            if (count($post['encounter_type']) == '1') {
+                if (in_array("NO", $post['encounter_type'])) {
+                    $model->andWhere(['pha_sale.encounter_id' => null]);
+                } else {
+                    $model->andWhere(['pat_encounter.encounter_type' => $post['encounter_type']]);
+                }
+            } else if (count($post['encounter_type']) == '2') {
+                if (in_array("NO", $post['encounter_type'])) {
+                    $model->andWhere(['or',
+                        ['pat_encounter.encounter_type' => $post['encounter_type'][0]],
+                        ['pha_sale.encounter_id' => null]
+                    ]);
+                } else {
+                    $model->andWhere(['or',
+                        ['pat_encounter.encounter_type' => 'OP'],
+                        ['pat_encounter.encounter_type' => 'IP']
+                    ]);
+                }
+            } else {
+                $model->andWhere(['or',
+                    ['pat_encounter.encounter_type' => 'OP'],
+                    ['pat_encounter.encounter_type' => 'IP'],
+                    ['pha_sale.encounter_id' => null]
+                ]);
+            }
         } else {
             $model->andWhere(['or',
                 ['pat_encounter.encounter_type' => 'OP'],
@@ -151,10 +175,33 @@ class PharmacyreportController extends ActiveController {
 //        } else if (isset($post['encounter_type']) && $post['encounter_type'] == 'NO') {
 //            $model->andWhere(['pha_sale.encounter_id' => null]);
 //        }
-        
+
         if (isset($post['encounter_type'])) {
-            $encounter_type = join("','", $post['encounter_type']);
-            $model->andWhere("pat_encounter.encounter_type IN ( '$encounter_type' )");
+            if (count($post['encounter_type']) == '1') {
+                if (in_array("NO", $post['encounter_type'])) {
+                    $model->andWhere(['pha_sale.encounter_id' => null]);
+                } else {
+                    $model->andWhere(['pat_encounter.encounter_type' => $post['encounter_type']]);
+                }
+            } else if (count($post['encounter_type']) == '2') {
+                if (in_array("NO", $post['encounter_type'])) {
+                    $model->andWhere(['or',
+                        ['pat_encounter.encounter_type' => $post['encounter_type'][0]],
+                        ['pha_sale.encounter_id' => null]
+                    ]);
+                } else {
+                    $model->andWhere(['or',
+                        ['pat_encounter.encounter_type' => 'OP'],
+                        ['pat_encounter.encounter_type' => 'IP']
+                    ]);
+                }
+            } else {
+                $model->andWhere(['or',
+                    ['pat_encounter.encounter_type' => 'OP'],
+                    ['pat_encounter.encounter_type' => 'IP'],
+                    ['pha_sale.encounter_id' => null]
+                ]);
+            }
         } else {
             $model->andWhere(['or',
                 ['pat_encounter.encounter_type' => 'OP'],
