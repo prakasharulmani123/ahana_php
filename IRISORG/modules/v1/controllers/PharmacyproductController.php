@@ -585,6 +585,18 @@ class PharmacyproductController extends ActiveController {
                     $products = array_merge($products, $related_products);
                 }
             }
+            
+            if(!empty($products)) {
+                $search_string =  str_replace("%","",$like_text_search);
+                $i = 1;
+                foreach ($products as $key => $value) {
+                    
+                    if (strpos($value['product_name'], strtoupper($search_string)) !== false) {
+                        $products[$key]['product_order'] = $i;
+                    }
+                    $i++;
+                }
+            }
         }
 
         return $products;
