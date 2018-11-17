@@ -62,7 +62,7 @@ app.controller('nonMovingDrugController', ['$rootScope', '$scope', '$timeout', '
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 5}, "", "", "", ""
+                {text: branch_name, style: 'header', colSpan: 6}, "", "", "", "", ""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
@@ -70,19 +70,26 @@ app.controller('nonMovingDrugController', ['$rootScope', '$scope', '$timeout', '
                 {text: 'Generic Name', style: 'header'},
                 {text: 'Drug Name', style: 'header'},
                 {text: 'Division Name', style: 'header'},
+                {text: 'Qty', style: 'header'},
             ]);
 
             var serial_no = 1;
             var result_count = $scope.records.length;
             var total = 0;
             angular.forEach($scope.records, function (record, key) {
+                if(record.AvailableQty) {
+                    var qty = record.AvailableQty;
+                } else {
+                    var qty = 0;
+                }
                 var s_no_string = serial_no.toString();
                 reports.push([
                     s_no_string,
                     record.ProductName,
                     record.generic_name,
                     record.drug_name,
-                    record.division_name
+                    record.division_name,
+                    qty
                 ]);
                 if (serial_no == result_count) {
                     $scope.printloader = '';
@@ -128,7 +135,7 @@ app.controller('nonMovingDrugController', ['$rootScope', '$scope', '$timeout', '
                 style: 'demoTable',
                 table: {
                     headerRows: 2,
-                    widths: ['auto', 150, 82, 82, 82],
+                    widths: ['auto', 150, 82, 82, 82, 52],
                     body: reports,
                     dontBreakRows: true,
                 },

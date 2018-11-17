@@ -62,7 +62,8 @@
                                         <th id="work-base-grid_c1">Product Name</th>
                                         <th id="work-base-grid_c2">Generic Name</th>
                                         <th id="work-base-grid_c3">Drug Name</th>
-                                        <th id="work-base-grid_c3">Division Name</th>
+                                        <th id="work-base-grid_c4">Division Name</th>
+                                        <th id="work-base-grid_c5">Available Qty</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -72,6 +73,7 @@
                                         <td>{{nameReplace(record.generic_name)}}</td>
                                         <td>{{nameReplace(record.drug_name)}}</td>
                                         <td>{{nameReplace(record.division_name)}}</td>
+                                        <td>{{record.AvailableQty || '0'}}</td>
                                     </tr>
                                 </tbody>
                             </table>
