@@ -322,11 +322,41 @@ class PharmacysaleController extends ActiveController {
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
         $previous_date = date("Y-m-d", strtotime("-3 months"));
         $current_date = date("Y-m-d");
+//        $sql = "SELECT 
+//                    CONCAT_WS(' ', c.product_name, c.product_unit_count, c.product_unit) AS 'ProductName',
+//                    d.generic_name,
+//                    e.drug_name,
+//                    f.division_name
+//                    FROM pha_product c 
+//                    LEFT JOIN pha_generic d
+//                    ON c.generic_id = d.generic_id
+//                    LEFT JOIN pha_drug_class e
+//                    ON e.drug_class_id = c.drug_class_id
+//                    LEFT JOIN pha_brand_division f
+//                    ON f.division_id = c.division_id
+//                    LEFT JOIN pha_sale_item g
+//                    ON g.product_id = c.product_id
+//                    LEFT JOIN pha_sale h
+//                    ON h.sale_id = g.sale_id
+//                    WHERE c.product_id 
+//                    NOT IN 
+//                    (SELECT 
+//                    product_id 
+//                    FROM pha_sale_item a 
+//                    LEFT JOIN pha_sale b 
+//                    ON a.sale_id = b.sale_id 
+//                    WHERE b.sale_date BETWEEN '" . $previous_date . "' AND '" . $current_date . "'
+//                    AND a.tenant_id = '" . $tenant_id . "'
+//                    GROUP BY a.product_id) 
+//                    AND c.tenant_id = '" . $tenant_id . "'
+//                    GROUP BY g.product_id
+//                    ORDER BY h.sale_date DESC";
         $sql = "SELECT 
                     CONCAT_WS(' ', c.product_name, c.product_unit_count, c.product_unit) AS 'ProductName',
                     d.generic_name,
                     e.drug_name,
-                    f.division_name
+                    f.division_name,
+                    SUM(g.available_qty) AS 'AvailableQty'
                     FROM pha_product c 
                     LEFT JOIN pha_generic d
                     ON c.generic_id = d.generic_id
@@ -334,10 +364,8 @@ class PharmacysaleController extends ActiveController {
                     ON e.drug_class_id = c.drug_class_id
                     LEFT JOIN pha_brand_division f
                     ON f.division_id = c.division_id
-                    LEFT JOIN pha_sale_item g
-                    ON g.product_id = c.product_id
-                    LEFT JOIN pha_sale h
-                    ON h.sale_id = g.sale_id
+                    LEFT JOIN pha_product_batch g
+                    ON g.product_id = c.product_id  
                     WHERE c.product_id 
                     NOT IN 
                     (SELECT 
@@ -349,8 +377,7 @@ class PharmacysaleController extends ActiveController {
                     AND a.tenant_id = '" . $tenant_id . "'
                     GROUP BY a.product_id) 
                     AND c.tenant_id = '" . $tenant_id . "'
-                    GROUP BY g.product_id
-                    ORDER BY h.sale_date DESC";
+                    GROUP BY c.product_id";
         $command = Yii::$app->client_pharmacy->createCommand($sql);
         $reports = $command->queryAll();
         return ['report' => $reports];
