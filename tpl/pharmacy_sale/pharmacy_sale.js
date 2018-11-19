@@ -1797,7 +1797,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                         body: [
                                             [
                                                 {
-                                                    text: 'DL Nos. : MDU/5263/20,21',
+                                                    text: 'DL Nos. : MDU/5454/20',
                                                     fontSize: 07,
                                                     alignment: 'right'
                                                 }
