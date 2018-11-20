@@ -120,7 +120,8 @@ class PharmacysaleController extends ActiveController {
                 $result->joinWith(['patient.glPatient']);
                 $result->andFilterWhere($searchCondition);
             }
-            $result->groupBy(['patient_name', 'patient_id', 'encounter_id']);
+            //$result->groupBy(['patient_name', 'patient_id', 'encounter_id']); Duplicate Entry Occurs so removed patient name
+            $result->groupBy(['patient_id', 'encounter_id']);
             $result->limit($get['pageSize'])->offset($offset)->orderBy(['created_at' => SORT_DESC]);
             $sales = $result->all();
 
@@ -132,7 +133,8 @@ class PharmacysaleController extends ActiveController {
                 $resultCount->joinWith(['patient.glPatient']);
                 $resultCount->andFilterWhere($searchCondition);
             }
-            $resultCount->groupBy(['patient_name', 'patient_id', 'encounter_id']);
+            //$resultCount->groupBy(['patient_name', 'patient_id', 'encounter_id']); Duplicate Entry Occurs so removed patient name
+            $result->groupBy(['patient_id', 'encounter_id']);
             $totalCount = $resultCount->count();
 
             foreach ($sales as $key => $sale) {
