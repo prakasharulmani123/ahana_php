@@ -248,6 +248,16 @@ class CoTenant extends GActiveRecord {
                 $tenant_doc_types->document_out_print_xslt = $tenant_doc_type['document_out_print_xslt'];
                 $tenant_doc_types->save(false);
             }
+            
+            //Tenant Print Configuration Adding
+            $printConfiguration = PrintDocumentSetting::getPrintConfigurations();
+            foreach ($printConfiguration as $key => $print_setting) {
+                $printConfiguration = new PrintDocumentSetting;
+                $printConfiguration->print_document_id = $print_setting['print_document_id'];
+                $printConfiguration->tenant_id = $this->tenant_id;
+                $printConfiguration->value = $print_setting['value'];
+                $printConfiguration->save(false);
+            }
         } else {
             $app_configurations = AppConfiguration::find()
                     ->andWhere(['code' => 'PB', 'tenant_id' => $this->tenant_id])
