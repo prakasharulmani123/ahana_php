@@ -569,6 +569,7 @@ class PatEncounter extends RActiveRecord {
                     $addt_keys = ['consultant_id'];
                     $parent_fields = ['encounter_id' => 'encounter_id',
                         'status' => 'status',
+                        'finalize' => 'finalize',
                         'encounter_type' => 'encounter_type'];
                     break;
                 case 'prescription':
