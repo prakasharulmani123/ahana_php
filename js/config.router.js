@@ -2852,6 +2852,24 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            
+            //Print Template
+            .state('configuration.printConfiguration', {
+                url: '/printConfiguration',
+                templateUrl: 'tpl/organization/printConfiguration.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load([
+                                            'tpl/organization/printConfiguration.js?v=' + APP_VERSION,
+                                        ]);
+                                    }
+                            );
+                        }]
+                }
+            })
 
             //App Configuration
             .state('configuration.appsetting', {

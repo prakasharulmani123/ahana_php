@@ -172,6 +172,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $rootScope.commonService.GetYear(function (response) {
                 $scope.years = response;
             });
+            $scope.salePrintConfiguration();
             $scope.payment_type = payment_type;
             $scope.maxSize = 5; // Limit number for pagination display number.  
             $scope.totalCount = 0; // Total number of items in all pages. initialize as a zero  
@@ -1377,8 +1378,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         }
 
         $scope.printFooter = function () {
+            if ($scope.saleBillPrintOption.footer == '1') {
+                var footer = [{text: 'PHARMACY SERVICE - 24 HOURS \n Powered By: Sumanas Technologies Pvt Ltd'}];
+            } else {
+                var footer = [];
+            }
             return {
-                text: [{text: 'PHARMACY SERVICE - 24 HOURS \n Powered By: Sumanas Technologies Pvt Ltd'}],
+                text: footer,
                 fontSize: 7,
                 margin: 0,
                 alignment: 'center'
@@ -1738,6 +1744,42 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 var ahana_log = $('#sale_logo').attr('src');
                 var barcode = sale_info.patient.patient_global_int_code;
                 var bar_image = $('#' + barcode).attr('src');
+                
+                //Print Configuration for sale bill header
+                if ($scope.saleBillPrintOption.header == '1') {
+                    var header = 'Sale Bill';
+                } else {
+                    var header = [];
+                }
+                //Print Configuration for sale bill logo
+                if ($scope.saleBillPrintOption.logo == '1') {
+                    var logo = [{image: $scope.imgExport('sale_logo'),height: 20, width: 100,}];
+                } else {
+                    var logo = [{text: ''}];
+                }
+                //Print Configuration for sale bill Gst No Text
+                if ($scope.saleBillPrintOption.gst_no_text) {
+                    var gst_no_text = $scope.saleBillPrintOption.gst_no_text;
+                }
+                //Print Configuration for sale bill Dl No Text
+                if ($scope.saleBillPrintOption.dl_no_text) {
+                    var dl_no_text = $scope.saleBillPrintOption.dl_no_text;
+                }
+                
+                //Print Configuration for sale bill
+                if ($scope.saleBillPrintOption.dl_nos == '1') {
+                    var dl_nos = 'DL Nos. : '+ dl_no_text;
+                } else {
+                    var dl_nos = '';
+                }
+                
+                //Print Configuration for sale bill
+                if ($scope.saleBillPrintOption.gst_no == '1') {
+                    var gst_no = 'GST No : '+gst_no_text;
+                } else {
+                    var gst_no = '';
+                }
+                
                 if (bar_image) //Check Bar image is empty or not
                 {
                     var bar_img = [{image: bar_image, height: 20, width: 100, alignment: 'right'}];
@@ -1755,16 +1797,10 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                     layout: 'noBorders',
                                     table: {
                                         body: [
+                                            logo,
                                             [
                                                 {
-                                                    image: $scope.imgExport('sale_logo'),
-                                                    height: 20, width: 100,
-
-                                                }
-                                            ],
-                                            [
-                                                {
-                                                    text: 'GST No : 33AAQFA999IEIZI',
+                                                    text: gst_no,
                                                     fontSize: 07,
                                                 }
                                             ],
@@ -1784,7 +1820,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                         body: [
                                             [
                                                 {
-                                                    text: 'Sale Bill',
+                                                    text: header,
                                                     fontSize: 09,
                                                 }
                                             ],
@@ -1797,7 +1833,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                                         body: [
                                             [
                                                 {
-                                                    text: 'DL Nos. : MDU/5454/20',
+                                                    text: dl_nos,
                                                     fontSize: 07,
                                                     alignment: 'right'
                                                 }
@@ -2848,6 +2884,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 groups.push(arr.slice(i, i + chunkSize));
             }
             return groups;
+        }
+        
+        $scope.salePrintConfiguration = function () {
+            $scope.saleBillPrintOption = {};
+            $http.get($rootScope.IRISOrgServiceUrl + '/printdocumentsetting/getprintoption?print_document_id=1')
+                .success(function (response) {
+                    $scope.saleBillPrintOption = JSON.parse(response.value);
+            })
         }
 
         var save_success = function () {

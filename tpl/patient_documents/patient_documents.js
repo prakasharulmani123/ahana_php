@@ -669,7 +669,7 @@ app.controller('DocumentsController', ['$rootScope', '$scope', '$timeout', '$htt
                         $scope.xml = pat_doc_response.result.document_xml;
                         $timeout(function () {
                             $scope.setRefferedBy();
-                        }, 100);
+                        }, 500);
                         $timeout(function () {
                             if ($scope.document_type == 'CH') {
                                 $scope.checkTablerow();
