@@ -104,12 +104,18 @@ app.controller('PatConsultantsController', ['$rootScope', '$scope', '$timeout', 
                         resp.encounter_id = resp.encounter_id.toString();
                     });
                     $scope.encounters = response;
+                    //Show only active encounters. If encounter is IP until finalize showed add button
+//                    if (response != null) {
+//                        $scope.enc.selected = $scope.encounters[0];
+//                        var actEnc = $filter('filter')($scope.encounters, {status: '1'});
+//                        if(($scope.enc.selected.status == '0') && (actEnc.length != 0)) {
+//                            $scope.enc.selected = actEnc[0]
+//                        }
+//                    }
                     if (response != null) {
-                        $scope.enc.selected = $scope.encounters[0];
-                        var actEnc = $filter('filter')($scope.encounters, {status: '1'});
-                        if(($scope.enc.selected.status == '0') && (actEnc.length != 0)) {
-                            $scope.enc.selected = actEnc[0]
-                        }
+                        var activeSelected = $filter('filter')($scope.encounters, {status: '1'});
+                        $scope.enc.selected = (activeSelected) ? activeSelected[0] : $scope.encounters[0];
+
                     }
                 }, 'encounter_details');
             }
