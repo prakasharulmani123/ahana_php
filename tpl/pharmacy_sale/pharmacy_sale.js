@@ -1113,6 +1113,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                             }
                             $scope.msg.successMessage = msg;
                             if ($scope.btnid == "print") {
+                                $scope.salePrintConfiguration();
                                 $scope.printSaleBill(response.saleId);
                                 $state.go($state.current, {}, {reload: true});
                             } else {
