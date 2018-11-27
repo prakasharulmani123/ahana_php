@@ -38,6 +38,7 @@ angular.module('app')
                     org_small_logo: '',
                     org_document_logo: '',
                     user_care_provider: '',
+                    date_format: 'dd-MM-yyyy',
                     // for chart colors
                     color: {
                         primary: '#7266ba',

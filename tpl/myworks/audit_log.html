@@ -28,7 +28,7 @@
                                 <button class="btn btn-sm btn-grey" ng-click="loadAllauditlog()">
                                     &nbsp; &nbsp; <i class="fa fa-repeat"></i> &nbsp; &nbsp;
                                 </button>
-                                <input prevent-enter id="filter1" type="text" placeholder="Date" class="form-control input-sm w-sm inline filter-date" ng-model="date" datepicker-popup="yyyy-MM-dd" is-open="opened" datepicker-options="dateOptions" close-text="Close"/>
+                                <input prevent-enter id="filter1" type="text" placeholder="Date" class="form-control input-sm w-sm inline filter-date" ng-model="date" datepicker-popup="{{app.date_format}}" is-open="opened" datepicker-options="dateOptions" close-text="Close"/>
                                 <button type="button" class="btn btn-sm btn-default" ng-click="open($event, 'opened')">
                                     <i class="glyphicon glyphicon-calendar"></i>
                                 </button>
