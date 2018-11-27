@@ -69,7 +69,7 @@
                                 <div class="form-group">
                                     <label class="col-lg-2 control-label">Sale Return Date *</label>
                                     <div class="col-lg-4">
-                                        <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="data.sale_return_date" is-open="$parent.opened1" datepicker-options="dateOptions" close-text="Close"  min-date="minDate" ng-click="open($event, 'opened1')" ng-focus="open($event, 'opened1')" prevent-enter="true"/>
+                                        <input type="text" class="form-control" datepicker-popup="{{app.date_format}}" ng-model="data.sale_return_date" is-open="$parent.opened1" datepicker-options="dateOptions" close-text="Close"  min-date="minDate" ng-click="open($event, 'opened1')" ng-focus="open($event, 'opened1')" prevent-enter="true"/>
                                     </div>
                                 </div>
                             </div>
