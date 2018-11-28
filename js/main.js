@@ -1072,13 +1072,17 @@ angular.module('app')
                 }
                 $scope.opBillPrint = function (printData) {
                     $scope.op_print = {};
-                    $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=op_bill_print&addtfields=pres_configuration')
-                            .success(function (response) {
-                                angular.forEach(response, function (row) {
-                                    var listName = row.code;
-                                    $scope.op_print[listName] = row.value;
-                                });
-                            })
+                    $http.get($rootScope.IRISOrgServiceUrl + '/printdocumentsetting/getprintoption?print_document_id=2')
+                        .success(function (response) {
+                            $scope.opBillPrintOption = JSON.parse(response.value);
+                        })
+//                    $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=op_bill_print&addtfields=pres_configuration')
+//                            .success(function (response) {
+//                                angular.forEach(response, function (row) {
+//                                    var listName = row.code;
+//                                    $scope.op_print[listName] = row.value;
+//                                });
+//                            })
                     $timeout(function () {
                         $scope.printloader = '<i class="fa fa-spin fa-spinner"></i>';
                         var print_content = $scope.printContent(printData);
@@ -1099,8 +1103,8 @@ angular.module('app')
                                 },
                                 //pageMargins: ($scope.deviceDetector.browser == 'firefox' ? 50 : 50),
                                 pageMargins: [20, 20, 20, 48],
-                                pageSize: $scope.op_print.PS,
-                                pageOrientation: $scope.op_print.PL,
+                                pageSize: $scope.opBillPrintOption.page_size,
+                                pageOrientation: $scope.opBillPrintOption.page_layout,
                             };
                             var pdf_document = pdfMake.createPdf(docDefinition);
                             var doc_content_length = Object.keys(pdf_document).length;
@@ -1167,6 +1171,33 @@ angular.module('app')
                     //var groupedArr = createGroupedArray($scope.printBillData.procedure, 2); //Changed Description rows
                     var index = 1;
                     //var group_total_count = Object.keys(groupedArr).length;
+                    
+                    //Print Configuration for OP bill header
+                    if ($scope.opBillPrintOption.header == '1') {
+                        var header = 'OP BILL';
+                    } else {
+                        var header = [];
+                    }
+                    //Print Configuration for OP bill logo
+                    if ($scope.opBillPrintOption.logo == '1') {
+                        var logo = {image: $scope.imgExport('ahana_print_logo'),height: 20, width: 100,};
+                    } else {
+                        var logo = {text: ''};
+                    }
+                    //Print Configuration for OP bill Organization
+                    if ($scope.opBillPrintOption.org_name == '1') {
+                        var org_name = $scope.patientObj.org_name;
+                    } else {
+                        var org_name = [];
+                    }
+                    //Print Configuration for OP bill Organization
+                    if ($scope.opBillPrintOption.authorized_sign == '1') {
+                        var auth_sign = 'Authorized Signatory';
+                    } else {
+                        var auth_sign = [];
+                    }
+                    
+                    
                     printData.procedure.unshift({
                         charges: 'Professional Charges',
                         procedure_name: printData.doctor,
@@ -1240,14 +1271,7 @@ angular.module('app')
                                                 colSpan: 3,
                                                 layout: 'noBorders',
                                                 table: {
-                                                    body: [
-                                                        [
-                                                            {
-                                                                image: $scope.imgExport('ahana_print_logo'),
-                                                                height: 20, width: 100,
-                                                            },
-                                                        ],
-                                                    ]
+                                                    body: [[logo],]
                                                 },
                                             }, {}, {},
                                             {
@@ -1257,7 +1281,7 @@ angular.module('app')
                                                     body: [
                                                         [
                                                             {
-                                                                text: 'OP BILL',
+                                                                text: header,
                                                                 style: 'h2'
                                                             },
                                                         ],
@@ -1272,7 +1296,7 @@ angular.module('app')
                                                         [
                                                             {
                                                                 margin: [0, 0, 0, 0],
-                                                                text: $scope.patientObj.org_name,
+                                                                text: org_name,
                                                                 fontSize: 8,
                                                                 alignment: 'right'
                                                             },
@@ -1486,7 +1510,7 @@ angular.module('app')
                                                 [
                                                     {
                                                         colSpan: 3,
-                                                        text: 'Authorized Signatory',
+                                                        text: auth_sign,
                                                         style: 'h2',
                                                         margin: [0, 15, 0, 0],
                                                     },

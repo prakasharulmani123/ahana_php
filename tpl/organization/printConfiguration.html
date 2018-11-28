@@ -3,18 +3,18 @@
         <div class="col">
             <div class="wrapper-md p-b prescription-new">
                 <div class="row">
-                    <div class="col-sm-12" ng-init="loadData(); tab = 1">
+                    <div class="col-sm-12" ng-init="loadData(1); tab = 1">
                         <div class="tab-container">
                             <ul class="nav nav-tabs">
                                 <li ng-class="{active:tab == 1}">
-                                    <a href ng-click="loadData(); tab = 1">
+                                    <a href ng-click="loadData(1); tab = 1">
                                         <tab-heading > 
                                             <i class="fa fa-list-alt" aria-hidden="true"></i> Sale Bill
                                         </tab-heading>
                                     </a>
                                 </li>
                                 <li ng-class="{active:tab == 2}">
-                                    <a href ng-click="tab = 2">
+                                    <a href ng-click="loadData(2); tab = 2">
                                         <tab-heading > 
                                             <i class="fa fa-list-alt" aria-hidden="true"></i> 
                                             OP Bill
@@ -37,7 +37,7 @@
                                                             <label class="col-sm-3 control-label">Show header</label>
                                                             <div class="col-sm-9">
                                                                 <label class="i-checks "> 
-                                                                    <input type="checkbox" name="header" ng-true-value="'1'" ng-false-value="'0'" ng-model="saleBillData.header"> 
+                                                                    <input type="checkbox" name="header" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.header"> 
                                                                     <i></i> 
                                                                 </label> &nbsp; &nbsp;
                                                             </div>
@@ -47,7 +47,7 @@
                                                             <label class="col-sm-3 control-label">Show Footer</label>
                                                             <div class="col-sm-9">
                                                                 <label class="i-checks "> 
-                                                                    <input type="checkbox" name="footer" ng-true-value="'1'" ng-false-value="'0'" ng-model="saleBillData.footer"> 
+                                                                    <input type="checkbox" name="footer" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.footer"> 
                                                                     <i></i> 
                                                                 </label> &nbsp; &nbsp;
                                                             </div>
@@ -57,7 +57,7 @@
                                                             <label class="col-sm-3 control-label">Show Logo</label>
                                                             <div class="col-sm-9">
                                                                 <label class="i-checks "> 
-                                                                    <input type="checkbox" name="logo" ng-true-value="'1'" ng-false-value="'0'" ng-model="saleBillData.logo"> 
+                                                                    <input type="checkbox" name="logo" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.logo"> 
                                                                     <i></i> 
                                                                 </label> &nbsp; &nbsp;
                                                             </div>
@@ -67,7 +67,7 @@
                                                             <label class="col-sm-3 control-label">Show Dl No</label>
                                                             <div class="col-sm-9">
                                                                 <label class="i-checks ">
-                                                                    <input type="checkbox" name="dl_nos" ng-true-value="'1'" ng-false-value="'0'" ng-model="saleBillData.dl_nos"> 
+                                                                    <input type="checkbox" name="dl_nos" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.dl_nos"> 
                                                                     <i></i> 
                                                                 </label> &nbsp; &nbsp;
                                                             </div>
@@ -76,7 +76,7 @@
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">Dl No</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text" maxlength="50" name="roleName" class="form-control" placeholder="Dl No" ng-model="saleBillData.dl_no_text">
+                                                                <input type="text" maxlength="50" name="roleName" class="form-control" placeholder="Dl No" ng-model="billData.dl_no_text">
                                                             </div>
                                                         </div>
                                                         <div class="line line-dashed b-b line-lg "></div>
@@ -84,7 +84,7 @@
                                                             <label class="col-sm-3 control-label">Show GST No</label>
                                                             <div class="col-sm-9">
                                                                 <label class="i-checks ">
-                                                                    <input type="checkbox" name="gst_no" ng-true-value="'1'" ng-false-value="'0'" ng-model="saleBillData.gst_no"> 
+                                                                    <input type="checkbox" name="gst_no" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.gst_no"> 
                                                                     <i></i> 
                                                                 </label> &nbsp; &nbsp;
                                                             </div>
@@ -93,12 +93,12 @@
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">GST No</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text" maxlength="50" name="roleName" class="form-control" placeholder="GST No" ng-model="saleBillData.gst_no_text">
+                                                                <input type="text" maxlength="50" name="roleName" class="form-control" placeholder="GST No" ng-model="billData.gst_no_text">
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <footer class="panel-footer text-right bg-light lter">
-                                                        <button class="btn m-b-xs  btn-success save-btn" ng-click="saveSaleBill()">Save</button>
+                                                        <button class="btn m-b-xs  btn-success save-btn" ng-click="savePrintConfiguration()">Save</button>
                                                         &nbsp;
                                                         <button class="btn m-b-xs  btn-dark" ng-click="$state.go('configuration.roles')"><i class="fa fa-times"></i> Cancel</button>
                                                         &nbsp;
@@ -113,8 +113,94 @@
                                         {% include 'tpl/blocks/alert.html' %}
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-6">
-                                            Coming Soon
+                                        <div class="col-sm-9">
+                                            <form name="roleForm" class="form-horizontal form-validation" novalidate="">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-3 control-label">Show Title</label>
+                                                            <div class="col-sm-9">
+                                                                <label class="i-checks "> 
+                                                                    <input type="checkbox" name="header" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.header"> 
+                                                                    <i></i> 
+                                                                </label> &nbsp; &nbsp;
+                                                            </div>
+                                                        </div>
+                                                        <div class="line line-dashed b-b line-lg "></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-3 control-label">Show Logo</label>
+                                                            <div class="col-sm-9">
+                                                                <label class="i-checks "> 
+                                                                    <input type="checkbox" name="logo" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.logo"> 
+                                                                    <i></i> 
+                                                                </label> &nbsp; &nbsp;
+                                                            </div>
+                                                        </div>
+                                                        <div class="line line-dashed b-b line-lg "></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-3 control-label">Show Organization Name</label>
+                                                            <div class="col-sm-9">
+                                                                <label class="i-checks ">
+                                                                    <input type="checkbox" name="org_name" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.org_name"> 
+                                                                    <i></i> 
+                                                                </label> &nbsp; &nbsp;
+                                                            </div>
+                                                        </div>
+                                                        <div class="line line-dashed b-b line-lg "></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-3 control-label">Show Authorized Signatory</label>
+                                                            <div class="col-sm-9">
+                                                                <label class="i-checks ">
+                                                                    <input type="checkbox" name="org_name" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.authorized_sign"> 
+                                                                    <i></i> 
+                                                                </label> &nbsp; &nbsp;
+                                                            </div>
+                                                        </div>
+                                                        <div class="line line-dashed b-b line-lg "></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-3 control-label">Page Size</label>
+                                                            <div class="col-sm-9">
+                                                                <div>
+                                                                    <label class="i-checks">
+                                                                        <input type="radio" checked="" value="A4" name="billData.page_size" ng-model="billData.page_size">
+                                                                        <i></i>
+                                                                        A4&nbsp; &nbsp;
+                                                                    </label>
+                                                                    <label class="i-checks">
+                                                                        <input type="radio" checked="" value="A5" name="billData.page_size" ng-model="billData.page_size">
+                                                                        <i></i>
+                                                                        A5&nbsp; &nbsp;
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="line line-dashed b-b line-lg "></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-3 control-label">Page Layout</label>
+                                                            <div class="col-sm-9">
+                                                                <div>
+                                                                    <label class="i-checks">
+                                                                        <input type="radio" checked="" value="Portrait" name="billData.page_layout" ng-model="billData.page_layout">
+                                                                        <i></i>
+                                                                        Portrait&nbsp; &nbsp;
+                                                                    </label>
+                                                                    <label class="i-checks">
+                                                                        <input type="radio" checked="" value="landscape" name="billData.page_layout" ng-model="billData.page_layout">
+                                                                        <i></i>
+                                                                        Landscape&nbsp; &nbsp;
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <footer class="panel-footer text-right bg-light lter">
+                                                        <button class="btn m-b-xs  btn-success save-btn" ng-click="savePrintConfiguration()">Save</button>
+                                                        &nbsp;
+                                                        <button class="btn m-b-xs  btn-dark" ng-click="$state.go('configuration.roles')"><i class="fa fa-times"></i> Cancel</button>
+                                                        &nbsp;
+                                                    </footer>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
