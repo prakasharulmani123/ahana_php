@@ -86,6 +86,7 @@
                                         <th id="work-base-grid_c2">Product Name</th>
                                         <th id="work-base-grid_c3">Available Qty</th>
                                         <th id="work-base-grid_c4">Expiry Date</th>
+                                        <th id="work-base-grid_c5">Prodcut Price</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -95,6 +96,7 @@
                                         <td>{{record.product.full_name}}</td>
                                         <td>{{record.originalQuantity}}</td>
                                         <td>{{record.expiry_date| date:'MMM yyyy'}}</td>
+                                        <td>{{record.per_unit_price}}</td>
                                     </tr>
                                 </tbody>
                             </table>

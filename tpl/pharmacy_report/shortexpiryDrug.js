@@ -77,13 +77,15 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 4}, "", "", ""
+                {text: branch_name, style: 'header', colSpan: 6}, "", "", "", "", ""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
                 {text: 'Batch no', style: 'header'},
                 {text: 'Product Name', style: 'header'},
+                {text: 'Available Qty', style: 'header'},
                 {text: 'Expiry Date', style: 'header'},
+                {text: 'Product Price', style: 'header'},
             ]);
 
             var serial_no = 1;
@@ -94,8 +96,10 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
                 reports.push([
                     s_no_string,
                     record.batch_no,
-                    record.product_name,
+                    record.product.full_name,
+                    record.originalQuantity,
                     moment(record.expiry_date).format('MMM YYYY'),
+                    record.per_unit_price,
                 ]);
                 if (serial_no == result_count) {
                     $scope.printloader = '';
@@ -141,7 +145,7 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
                 style: 'demoTable',
                 table: {
                     headerRows: 2,
-                    widths: ['auto', 'auto', '*', 'auto'],
+                    widths: ['auto', 'auto', '*', 'auto', 'auto', 'auto'],
                     body: reports,
                     dontBreakRows: true,
                 },
