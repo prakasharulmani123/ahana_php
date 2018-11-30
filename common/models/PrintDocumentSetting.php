@@ -11,7 +11,6 @@ use Yii;
  *
  * @property integer $document_setting_id
  * @property integer $print_document_id
- * @property integer $tenant_id
  * @property string $value
  * @property string $status
  * @property integer $created_by
@@ -36,8 +35,8 @@ class PrintDocumentSetting extends RActiveRecord
     public function rules()
     {
         return [
-            [['print_document_id', 'tenant_id'], 'required'],
-            [['print_document_id', 'tenant_id', 'created_by', 'modified_by'], 'integer'],
+            [['print_document_id'], 'required'],
+            [['print_document_id', 'created_by', 'modified_by'], 'integer'],
             [['value', 'status'], 'string'],
             [['created_at', 'modified_at', 'deleted_at'], 'safe'],
         ];
@@ -51,7 +50,6 @@ class PrintDocumentSetting extends RActiveRecord
         return [
             'document_setting_id' => 'Document Setting ID',
             'print_document_id' => 'Print Document ID',
-            'tenant_id' => 'Tenant ID',
             'value' => 'Value',
             'status' => 'Status',
             'created_by' => 'Created By',
@@ -67,7 +65,7 @@ class PrintDocumentSetting extends RActiveRecord
     }
     
     public static function getPrintOption($code) {
-        $result = self::find()->tenant()->andWhere(['print_document_id' => $code])->one();
+        $result = self::find()->andWhere(['print_document_id' => $code])->one();
         return $result;
     }
     

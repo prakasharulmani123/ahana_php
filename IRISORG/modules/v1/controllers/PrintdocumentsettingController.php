@@ -49,19 +49,50 @@ class PrintdocumentsettingController extends ActiveController {
             'pagination' => false,
         ]);
     }
-    
+
     public function actionGetprintconfiguration() {
         $get = Yii::$app->request->get();
-        $printSetting = PrintDocumentSetting::find()->tenant()
-                        ->andWhere(['print_document_id' => $get['print_document_id']])
-                        ->one();
-        return ['success' => true, 'printSetting' => $printSetting];
+        $printSetting = PrintDocumentSetting::find()
+                ->andWhere(['print_document_id' => $get['print_document_id']])
+                ->one();
+        return ['success' => true, 'printSetting' => $printSetting, 'logo_path' => \yii\helpers\Url::to("@web/images/uavatar/", true)];
     }
-    
+
     public function actionGetprintoption() {
         $get = Yii::$app->getRequest()->get();
-        return PrintDocumentSetting::getPrintOption($get['print_document_id']);
+        $printSetting = PrintDocumentSetting::getPrintOption($get['print_document_id']);
+        return ['logo_path' => \yii\helpers\Url::to("@web/images/uavatar/", true), 'printSetting' => $printSetting];
     }
-    
+
+    public function actionUploadimage() {
+        $post = Yii::$app->getRequest()->post();
+
+        defined('DS') or define('DS', DIRECTORY_SEPARATOR);
+        $gCode = 'sale_bill_logo';
+
+        $filename = "{$gCode}_" . time() . ".jpg";
+        $uploadPath = "images" . DS . "uavatar" . DS;
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+
+        $output_file = $uploadPath . $filename;
+
+        $ifp = fopen($output_file, "wb");
+        $data = explode(',', $post['file_data']);
+        if (isset($data[1])) {
+            fwrite($ifp, base64_decode($data[1]));
+            fclose($ifp);
+
+            if ($post['old_image']) {
+                $oldFile = "images" . DS . "uavatar" . DS . $post['old_image'];
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
+            }
+            return ['success' => true, 'filename' => $filename];
+        }
+        return false;
+    }
 
 }
