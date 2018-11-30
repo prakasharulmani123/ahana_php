@@ -29,33 +29,32 @@
                                         {% include 'tpl/blocks/alert.html' %}
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-4">
                                             <form name="roleForm" class="form-horizontal form-validation" novalidate="">
                                                 <div class="panel panel-default">
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Show header</label>
-                                                            <div class="col-sm-9">
+                                                            <label class="col-sm-4 control-label">Show Title</label>
+                                                            <div class="col-sm-8">
                                                                 <label class="i-checks "> 
-                                                                    <input type="checkbox" name="header" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.header"> 
+                                                                    <input type="checkbox" name="title" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.title"> 
                                                                     <i></i> 
                                                                 </label> &nbsp; &nbsp;
                                                             </div>
                                                         </div>
                                                         <div class="line line-dashed b-b line-lg "></div>
+
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Show Footer</label>
-                                                            <div class="col-sm-9">
-                                                                <label class="i-checks "> 
-                                                                    <input type="checkbox" name="footer" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.footer"> 
-                                                                    <i></i> 
-                                                                </label> &nbsp; &nbsp;
+                                                            <label class="col-sm-4 control-label">Title</label>
+                                                            <div class="col-sm-8">
+                                                                <input type="text" maxlength="50" name="title_text" class="form-control" placeholder="Title" ng-model="billData.title_text">
                                                             </div>
                                                         </div>
                                                         <div class="line line-dashed b-b line-lg "></div>
+
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Show Logo</label>
-                                                            <div class="col-sm-9">
+                                                            <label class="col-sm-4 control-label">Show Logo</label>
+                                                            <div class="col-sm-8">
                                                                 <label class="i-checks "> 
                                                                     <input type="checkbox" name="logo" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.logo"> 
                                                                     <i></i> 
@@ -63,9 +62,18 @@
                                                             </div>
                                                         </div>
                                                         <div class="line line-dashed b-b line-lg "></div>
+
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Show Dl No</label>
-                                                            <div class="col-sm-9">
+                                                            <label class="col-sm-4 control-label">Logo</label>
+                                                            <div class="col-sm-8">
+                                                                <!--                                                                <input type="file" id="fileInput" file-model="myFile" accept="image/*" ui-jq="filestyle" data-icon="false" data-classButton="btn btn-default" data-classInput="form-control inline v-middle input-s">-->
+                                                                <input id="inputFileToLoad" type="file" onchange="encodeImageFileAsURL();" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="line line-dashed b-b line-lg "></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label">Show Dl No</label>
+                                                            <div class="col-sm-8">
                                                                 <label class="i-checks ">
                                                                     <input type="checkbox" name="dl_nos" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.dl_nos"> 
                                                                     <i></i> 
@@ -74,15 +82,15 @@
                                                         </div>
                                                         <div class="line line-dashed b-b line-lg "></div>
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Dl No</label>
-                                                            <div class="col-sm-9">
+                                                            <label class="col-sm-4 control-label">Dl No</label>
+                                                            <div class="col-sm-8">
                                                                 <input type="text" maxlength="50" name="roleName" class="form-control" placeholder="Dl No" ng-model="billData.dl_no_text">
                                                             </div>
                                                         </div>
                                                         <div class="line line-dashed b-b line-lg "></div>
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Show GST No</label>
-                                                            <div class="col-sm-9">
+                                                            <label class="col-sm-4 control-label">Show GST No</label>
+                                                            <div class="col-sm-8">
                                                                 <label class="i-checks ">
                                                                     <input type="checkbox" name="gst_no" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.gst_no"> 
                                                                     <i></i> 
@@ -91,11 +99,30 @@
                                                         </div>
                                                         <div class="line line-dashed b-b line-lg "></div>
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">GST No</label>
-                                                            <div class="col-sm-9">
-                                                                <input type="text" maxlength="50" name="roleName" class="form-control" placeholder="GST No" ng-model="billData.gst_no_text">
+                                                            <label class="col-sm-4 control-label">GST No</label>
+                                                            <div class="col-sm-8">
+                                                                <input type="text" maxlength="50" name="gst_no" class="form-control" placeholder="GST No" ng-model="billData.gst_no_text">
                                                             </div>
                                                         </div>
+                                                        <div class="line line-dashed b-b line-lg "></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label">Show Footer</label>
+                                                            <div class="col-sm-8">
+                                                                <label class="i-checks "> 
+                                                                    <input type="checkbox" name="footer" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.footer"> 
+                                                                    <i></i> 
+                                                                </label> &nbsp; &nbsp;
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label">Footer</label>
+                                                            <div class="col-sm-8">
+                                                                <textarea rows="5" cols="40" ng-model="billData.footer_text" class="form-control"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="line line-dashed b-b line-lg "></div>
+
                                                     </div>
                                                     <footer class="panel-footer text-right bg-light lter">
                                                         <button class="btn m-b-xs  btn-success save-btn" ng-click="savePrintConfiguration()">Save</button>
@@ -105,6 +132,161 @@
                                                     </footer>
                                                 </div>
                                             </form>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="panel panel-default">
+                                                <div class="panel-body">
+                                                    <div style="text-align: center"><span ng-if="billData.title == 1">{{billData.title_text}}</span></div>
+                                                    <table style="width:100%">
+                                                        <tr>
+                                                            <td align="left">
+                                                                <table>
+                                                                    <tr>
+                                                                        <td><span class="output" ng-show="billData.logo == 1"> <img id="logo_image" src="{{data.logo_path}}/{{billData.logo_text}}" width="200" height="40"></span></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><span ng-if="billData.gst_no == 1">GST No : {{billData.gst_no_text}}</span></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Branch Address</td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                            <td align="right">
+                                                                <table>
+                                                                    <tr>
+                                                                        <td><span ng-if="billData.dl_nos == 1">DL Nos. : {{billData.dl_no_text}}</span></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Cash on delivery</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><img id="AH0002537" code="AH0002537" type="CODE128B" options="barcodeOptions" width="100" height="20" src="data:image/png;base64,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"></td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <div style="border-style: solid; border-width: 1px 1px 0px 1px;margin: 1px 1px 1px 1px;"></div>
+                                                    <table style="width:100%">
+                                                        <tr>
+                                                            <td align="left"><b>Patient :</b> Test</td>
+                                                            <td align="right"><b>Bill No :</b>SL1234/Cash</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="left"><b>UHID :</b> ########</td>
+                                                            <td align="right"><b>Date : </b>{{generate}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="left"><b>Address :</b> Test Address</td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="left"><b>Doctor :</b> Dr.Vikhram</td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </table>
+                                                    <div style="border-style: solid; border-width: 2px 2px 0px 2px;margin: 1px 1px 1px 1px;"></div>
+                                                    <table style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>S.No</th>
+                                                                <th>Description</th>
+                                                                <th>Hsn</th>
+                                                                <th>Batch</th>
+                                                                <th>Expiry</th>
+                                                                <th>Qty</th>
+                                                                <th>Price</th>
+                                                                <th>Taxable</th>
+                                                                <th>Discount</th>
+                                                                <th>CGST</th>
+                                                                <th>CGST</th>
+                                                                <th>SGST</th>
+                                                                <th>SGST</th>
+                                                                <th>Total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody style="border-top :1px solid">
+                                                            <tr>
+                                                                <td>1</td>
+                                                                <td>TETRAFOL</td>
+                                                                <td>300450</td>
+                                                                <td>FHT0</td>
+                                                                <td>02/20</td>
+                                                                <td>20</td>
+                                                                <td>16.40</td>
+                                                                <td>292.80</td>
+                                                                <td>0.00</td>
+                                                                <td>6.00</td>
+                                                                <td>17.57</td>
+                                                                <td>6.00</td>
+                                                                <td>17.57</td>
+                                                                <td>327.94</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>2</td>
+                                                                <td>TOLAZ DT</td>
+                                                                <td>300490</td>
+                                                                <td>2f90</td>
+                                                                <td>11/19</td>
+                                                                <td>10</td>
+                                                                <td>2.60</td>
+                                                                <td>23.20</td>
+                                                                <td>0.00</td>
+                                                                <td>6.00</td>
+                                                                <td>1.39</td>
+                                                                <td>6.00</td>
+                                                                <td>1.39</td>
+                                                                <td>25.98</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>3</td>
+                                                                <td>SIZODON</td>
+                                                                <td>300490</td>
+                                                                <td>EMT1</td>
+                                                                <td>06/20</td>
+                                                                <td>20</td>
+                                                                <td>2.30</td>
+                                                                <td>41.00</td>
+                                                                <td>0.00</td>
+                                                                <td>6.00</td>
+                                                                <td>2.46</td>
+                                                                <td>6.00</td>
+                                                                <td>2.46</td>
+                                                                <td>45.92</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div style="border-style: solid; border-width: 1px 1px 0px 1px;margin: 1px 1px 1px 1px;"></div>
+                                                    <table style="width:100%">
+                                                        <tr>
+                                                            <td align="left"><b>Billed By :</b> Mr.Testdoctor</td>
+                                                            <td align="center"><b>CGST :</b>21.42</td>
+                                                            <td align="right"><b>GST :</b>42.84</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td align="center"><b>SGST :</b>21.42</td>
+                                                            <td align="right"><b>Total Value :</b>399.84</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td align="right"><b>Round Off :</b> 0.16</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td align="right"><b>GRAND TOTAL : INR 400.00</b></td>
+                                                        </tr>
+                                                    </table>
+                                                    <div style="text-align:center">
+                                                        <span ng-if="billData.footer == 1">
+                                                            <p ng-bind-html="billData.footer_text | linebreaks"></p>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -1074,7 +1074,7 @@ angular.module('app')
                     $scope.op_print = {};
                     $http.get($rootScope.IRISOrgServiceUrl + '/printdocumentsetting/getprintoption?print_document_id=2')
                         .success(function (response) {
-                            $scope.opBillPrintOption = JSON.parse(response.value);
+                            $scope.opBillPrintOption = JSON.parse(response.printSetting.value);
                         })
 //                    $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=op_bill_print&addtfields=pres_configuration')
 //                            .success(function (response) {

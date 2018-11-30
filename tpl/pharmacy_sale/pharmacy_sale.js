@@ -1379,10 +1379,15 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         }
 
         $scope.printFooter = function () {
+            var footer = [];
             if ($scope.saleBillPrintOption.footer == '1') {
-                var footer = [{text: 'PHARMACY SERVICE - 24 HOURS \n Powered By: Sumanas Technologies Pvt Ltd'}];
+                if ($scope.saleBillPrintOption.footer_text) {
+                    var footer = [{text: $scope.saleBillPrintOption.footer_text + '\nPowered By: Sumanas Technologies Pvt Ltd'}];
+                } else {
+                    var footer = [{text: 'Powered By: Sumanas Technologies Pvt Ltd'}];
+                }
             } else {
-                var footer = [];
+                var footer = [{text: 'Powered By: Sumanas Technologies Pvt Ltd'}];
             }
             return {
                 text: footer,
@@ -1743,44 +1748,42 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     var payment = 'Cash On Delivery';
 
                 var ahana_log = $('#sale_logo').attr('src');
+                console.log(ahana_log);
                 var barcode = sale_info.patient.patient_global_int_code;
                 var bar_image = $('#' + barcode).attr('src');
-                
-                //Print Configuration for sale bill header
-                if ($scope.saleBillPrintOption.header == '1') {
-                    var header = 'Sale Bill';
-                } else {
-                    var header = [];
-                }
+
                 //Print Configuration for sale bill logo
+                var logo = [{text: ''}];
                 if ($scope.saleBillPrintOption.logo == '1') {
-                    var logo = [{image: $scope.imgExport('sale_logo'),height: 20, width: 100,}];
-                } else {
-                    var logo = [{text: ''}];
+                    if (ahana_log) {
+                        var logo = [{image: $scope.imgExport('sale_logo'), height: 20, width: 100, }];
+                    }
                 }
-                //Print Configuration for sale bill Gst No Text
-                if ($scope.saleBillPrintOption.gst_no_text) {
-                    var gst_no_text = $scope.saleBillPrintOption.gst_no_text;
+
+                //Print Configuration for sale bill title
+                var header = [];
+                if ($scope.saleBillPrintOption.title == '1') {
+                    if ($scope.saleBillPrintOption.title_text) {
+                        var header = $scope.saleBillPrintOption.title_text;
+                    }
                 }
-                //Print Configuration for sale bill Dl No Text
-                if ($scope.saleBillPrintOption.dl_no_text) {
-                    var dl_no_text = $scope.saleBillPrintOption.dl_no_text;
-                }
-                
-                //Print Configuration for sale bill
+
+                //Print Configuration for sale bill Dl No
+                var dl_nos = '';
                 if ($scope.saleBillPrintOption.dl_nos == '1') {
-                    var dl_nos = 'DL Nos. : '+ dl_no_text;
-                } else {
-                    var dl_nos = '';
+                    if ($scope.saleBillPrintOption.dl_no_text) {
+                        var dl_nos = 'DL Nos. : ' + $scope.saleBillPrintOption.dl_no_text;
+                    }
                 }
-                
-                //Print Configuration for sale bill
+
+                //Print Configuration for sale bill Gst No
+                var gst_no = '';
                 if ($scope.saleBillPrintOption.gst_no == '1') {
-                    var gst_no = 'GST No : '+gst_no_text;
-                } else {
-                    var gst_no = '';
+                    if ($scope.saleBillPrintOption.gst_no_text) {
+                        var gst_no = 'GST No : ' + $scope.saleBillPrintOption.gst_no_text;
+                    }
                 }
-                
+
                 if (bar_image) //Check Bar image is empty or not
                 {
                     var bar_img = [{image: bar_image, height: 20, width: 100, alignment: 'right'}];
@@ -2886,13 +2889,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             }
             return groups;
         }
-        
+
         $scope.salePrintConfiguration = function () {
             $scope.saleBillPrintOption = {};
             $http.get($rootScope.IRISOrgServiceUrl + '/printdocumentsetting/getprintoption?print_document_id=1')
-                .success(function (response) {
-                    $scope.saleBillPrintOption = JSON.parse(response.value);
-            })
+                    .success(function (response) {
+                        $scope.saleBillPrintOption = JSON.parse(response.printSetting.value);
+                        $scope.saleLogoPath = response.logo_path;
+                    })
         }
 
         var save_success = function () {
