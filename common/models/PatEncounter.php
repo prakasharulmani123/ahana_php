@@ -633,7 +633,7 @@ class PatEncounter extends RActiveRecord {
     }
 
     public function getEncounterFulldetails($model) {
-        return ucwords("{$this->encounter_id} [" . date('d-m-Y', strtotime($this->encounter_date)) . " | {$model->tenant->tenant_name}]");
+        return ucwords("{$this->encounter_id} [" . date('d-m-Y', strtotime($this->encounter_date)) . " | {$model->tenant->tenant_name} | {$this->encounter_type}]");
     }
 
 //            public function getTotalConcession() {
