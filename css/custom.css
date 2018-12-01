@@ -990,3 +990,18 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
 .presc_vital_no_padding {
     margin-bottom: 10px !important;
 }
+.verticaltext {
+    transform: rotate(-270deg);
+    transform-origin: right, top;
+    -ms-transform: rotate(-270deg);
+    -ms-transform-origin:right, top;
+    -webkit-transform: rotate(-270deg);
+    -webkit-transform-origin:right, top;
+    position: absolute;
+}
+.verticalhead {
+    position: relative;
+    padding-top: 323px;
+    height: 100vh;
+    overflow-y: auto;
+}

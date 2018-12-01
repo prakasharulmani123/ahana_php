@@ -1070,12 +1070,16 @@ angular.module('app')
                     var dataURL = canvas.toDataURL("image/png");
                     return dataURL;
                 }
+                $scope.printSetting = function (printSetting) {
+                    $http.get($rootScope.IRISOrgServiceUrl + '/printdocumentsetting/getprintoption?print_document_id=2')
+                            .success(function (response) {
+                                $scope.opBillPrintOption = JSON.parse(response.printSetting.value);
+                                $scope.saleLogoPath = response.logo_path;
+                            })
+                }
                 $scope.opBillPrint = function (printData) {
                     $scope.op_print = {};
-                    $http.get($rootScope.IRISOrgServiceUrl + '/printdocumentsetting/getprintoption?print_document_id=2')
-                        .success(function (response) {
-                            $scope.opBillPrintOption = JSON.parse(response.printSetting.value);
-                        })
+                    $scope.printSetting();
 //                    $http.get($rootScope.IRISOrgServiceUrl + '/appconfiguration/getpresstatusbygroup?group=op_bill_print&addtfields=pres_configuration')
 //                            .success(function (response) {
 //                                angular.forEach(response, function (row) {
@@ -1171,33 +1175,29 @@ angular.module('app')
                     //var groupedArr = createGroupedArray($scope.printBillData.procedure, 2); //Changed Description rows
                     var index = 1;
                     //var group_total_count = Object.keys(groupedArr).length;
-                    
+
                     //Print Configuration for OP bill header
-                    if ($scope.opBillPrintOption.header == '1') {
-                        var header = 'OP BILL';
-                    } else {
-                        var header = [];
+                    var title = org_name = auth_sign = [];
+                    if ($scope.opBillPrintOption.title == '1') {
+                        var title = $scope.opBillPrintOption.title_text;
                     }
                     //Print Configuration for OP bill logo
+                    var logo = {text: ''};
+                    var op_print_logo = $('#op_print_logo').attr('src');
                     if ($scope.opBillPrintOption.logo == '1') {
-                        var logo = {image: $scope.imgExport('ahana_print_logo'),height: 20, width: 100,};
-                    } else {
-                        var logo = {text: ''};
+                        if(op_print_logo) {
+                            var logo = {image: $scope.imgExport('op_print_logo'), height: 20, width: 100, };
+                        }
                     }
                     //Print Configuration for OP bill Organization
                     if ($scope.opBillPrintOption.org_name == '1') {
                         var org_name = $scope.patientObj.org_name;
-                    } else {
-                        var org_name = [];
                     }
-                    //Print Configuration for OP bill Organization
+                    //Print Configuration for OP bill authorized
                     if ($scope.opBillPrintOption.authorized_sign == '1') {
                         var auth_sign = 'Authorized Signatory';
-                    } else {
-                        var auth_sign = [];
                     }
-                    
-                    
+
                     printData.procedure.unshift({
                         charges: 'Professional Charges',
                         procedure_name: printData.doctor,
@@ -1271,7 +1271,7 @@ angular.module('app')
                                                 colSpan: 3,
                                                 layout: 'noBorders',
                                                 table: {
-                                                    body: [[logo],]
+                                                    body: [[logo], ]
                                                 },
                                             }, {}, {},
                                             {
@@ -1281,7 +1281,7 @@ angular.module('app')
                                                     body: [
                                                         [
                                                             {
-                                                                text: header,
+                                                                text: title,
                                                                 style: 'h2'
                                                             },
                                                         ],

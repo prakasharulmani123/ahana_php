@@ -14,7 +14,7 @@
                                     </a>
                                 </li>
                                 <li ng-class="{active:tab == 2}">
-                                    <a href ng-click="loadData(2); tab = 2">
+                                    <a href ng-click="loadData(2); tab = 2; checkRotate()">
                                         <tab-heading > 
                                             <i class="fa fa-list-alt" aria-hidden="true"></i> 
                                             OP Bill
@@ -125,7 +125,7 @@
 
                                                     </div>
                                                     <footer class="panel-footer text-right bg-light lter">
-                                                        <button class="btn m-b-xs  btn-success save-btn" ng-click="savePrintConfiguration()">Save</button>
+                                                        <button class="btn m-b-xs  btn-success save-btn" ng-click="savePrintConfiguration('sale_bill')">Save</button>
                                                         &nbsp;
                                                         <button class="btn m-b-xs  btn-dark" ng-click="$state.go('configuration.roles')"><i class="fa fa-times"></i> Cancel</button>
                                                         &nbsp;
@@ -295,23 +295,33 @@
                                         {% include 'tpl/blocks/alert.html' %}
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-4">
                                             <form name="roleForm" class="form-horizontal form-validation" novalidate="">
                                                 <div class="panel panel-default">
                                                     <div class="panel-body">
+
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Show Title</label>
-                                                            <div class="col-sm-9">
+                                                            <label class="col-sm-4 control-label">Show Title</label>
+                                                            <div class="col-sm-8">
                                                                 <label class="i-checks "> 
-                                                                    <input type="checkbox" name="header" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.header"> 
+                                                                    <input type="checkbox" name="title" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.title"> 
                                                                     <i></i> 
                                                                 </label> &nbsp; &nbsp;
                                                             </div>
                                                         </div>
                                                         <div class="line line-dashed b-b line-lg "></div>
+
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Show Logo</label>
-                                                            <div class="col-sm-9">
+                                                            <label class="col-sm-4 control-label">Title</label>
+                                                            <div class="col-sm-8">
+                                                                <input type="text" maxlength="50" name="title_text" class="form-control" placeholder="Title" ng-model="billData.title_text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="line line-dashed b-b line-lg "></div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label">Show Logo</label>
+                                                            <div class="col-sm-8">
                                                                 <label class="i-checks "> 
                                                                     <input type="checkbox" name="logo" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.logo"> 
                                                                     <i></i> 
@@ -319,9 +329,19 @@
                                                             </div>
                                                         </div>
                                                         <div class="line line-dashed b-b line-lg "></div>
+
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Show Organization Name</label>
-                                                            <div class="col-sm-9">
+                                                            <label class="col-sm-4 control-label">Logo</label>
+                                                            <div class="col-sm-8">
+                                                                <!--                                                                <input type="file" id="fileInput" file-model="myFile" accept="image/*" ui-jq="filestyle" data-icon="false" data-classButton="btn btn-default" data-classInput="form-control inline v-middle input-s">-->
+                                                                <input id="inputFileToLoadOP" type="file" onchange="encodeImageFileAsURL();" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="line line-dashed b-b line-lg "></div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label">Show Org Name</label>
+                                                            <div class="col-sm-8">
                                                                 <label class="i-checks ">
                                                                     <input type="checkbox" name="org_name" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.org_name"> 
                                                                     <i></i> 
@@ -330,8 +350,8 @@
                                                         </div>
                                                         <div class="line line-dashed b-b line-lg "></div>
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Show Authorized Signatory</label>
-                                                            <div class="col-sm-9">
+                                                            <label class="col-sm-4 control-label">Show Authorized Sign</label>
+                                                            <div class="col-sm-8">
                                                                 <label class="i-checks ">
                                                                     <input type="checkbox" name="org_name" ng-true-value="'1'" ng-false-value="'0'" ng-model="billData.authorized_sign"> 
                                                                     <i></i> 
@@ -340,8 +360,8 @@
                                                         </div>
                                                         <div class="line line-dashed b-b line-lg "></div>
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Page Size</label>
-                                                            <div class="col-sm-9">
+                                                            <label class="col-sm-4 control-label">Page Size</label>
+                                                            <div class="col-sm-8">
                                                                 <div>
                                                                     <label class="i-checks">
                                                                         <input type="radio" checked="" value="A4" name="billData.page_size" ng-model="billData.page_size">
@@ -358,16 +378,16 @@
                                                         </div>
                                                         <div class="line line-dashed b-b line-lg "></div>
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Page Layout</label>
-                                                            <div class="col-sm-9">
+                                                            <label class="col-sm-4 control-label">Page Layout</label>
+                                                            <div class="col-sm-8">
                                                                 <div>
                                                                     <label class="i-checks">
-                                                                        <input type="radio" checked="" value="Portrait" name="billData.page_layout" ng-model="billData.page_layout">
+                                                                        <input type="radio" checked="" value="Portrait" name="billData.page_layout" ng-click="routePrint('Portrait')" ng-model="billData.page_layout">
                                                                         <i></i>
                                                                         Portrait&nbsp; &nbsp;
                                                                     </label>
                                                                     <label class="i-checks">
-                                                                        <input type="radio" checked="" value="landscape" name="billData.page_layout" ng-model="billData.page_layout">
+                                                                        <input type="radio" checked="" value="landscape" name="billData.page_layout" ng-click="routePrint('landscape')" ng-model="billData.page_layout">
                                                                         <i></i>
                                                                         Landscape&nbsp; &nbsp;
                                                                     </label>
@@ -376,13 +396,82 @@
                                                         </div>
                                                     </div>
                                                     <footer class="panel-footer text-right bg-light lter">
-                                                        <button class="btn m-b-xs  btn-success save-btn" ng-click="savePrintConfiguration()">Save</button>
+                                                        <button class="btn m-b-xs  btn-success save-btn" ng-click="savePrintConfiguration('op_bill')">Save</button>
                                                         &nbsp;
                                                         <button class="btn m-b-xs  btn-dark" ng-click="$state.go('configuration.roles')"><i class="fa fa-times"></i> Cancel</button>
                                                         &nbsp;
                                                     </footer>
                                                 </div>
                                             </form>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="panel panel-default">
+                                                <div id="translate_header" class="panel-body">
+                                                    
+                                                    <div id="translate_body" class="col-sm-12">
+                                                        <table style="width:100%">
+                                                            <tr>
+                                                                <td><span class="OP_output" ng-show="billData.logo == 1"> <img id="op_logo_image" src="{{data.logo_path}}/{{billData.logo_text}}" width="200" height="40"></span></td>
+                                                                <td ng-show="billData.title == 1" align="center">{{billData.title_text}}</td>
+                                                                <td ng-show="billData.org_name == 1" align="right">Branch Name</td>
+                                                            </tr>
+                                                        </table>
+                                                        <div style="border-style: solid; border-width: 1px 1px 0px 1px;margin: 1px 1px 1px 1px;"></div>
+                                                        <table style="width:100%">
+                                                            <tr>
+                                                                <td align="left"><b>Patient Name :</b>Mr.JohnTest</td>
+                                                                <td align="right"><b>Bill No :</b>AR0000000</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="left"><b>UHID :</b>AH0000000</td>
+                                                                <td align="right"><b>Bill Date :</b>{{generate}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="left"><b>Age / Sex :</b>8y/Male</td>
+                                                                <td></td>
+                                                            </tr>
+                                                        </table>
+                                                        <table style="width:100%;border: 1px solid black;">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th style="border: 1px solid black;">S.No</th>
+                                                                    <th style="border: 1px solid black;">Service</th>
+                                                                    <th style="border: 1px solid black;">Description</th>
+                                                                    <th style="border: 1px solid black;">Amount</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="border: 1px solid black;">1</td>
+                                                                    <td style="border: 1px solid black;">Professional Charges</td>
+                                                                    <td style="border: 1px solid black;">Dr.TESTDOCTOR</td>
+                                                                    <td style="border: 1px solid black;">100.00</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td align="right" style="border: 1px solid black;" colspan="4">Bill Total:100.00</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td align="right" style="border: 1px solid black;" colspan="4">Amount Paid:100.00</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <table style="width:100%;">
+                                                            <tr>
+                                                                <td align="left"><b>Payment Mode :</b> Cheque(100.00)</td>
+                                                                <td align="right"><b>For ArkTestOrg</b></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="left">One Hundred Rupees Only</td>
+                                                                <td></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td></td>
+                                                                <td ng-show="billData.authorized_sign == 1" align="right"><b>Authorized Signatory</b></td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

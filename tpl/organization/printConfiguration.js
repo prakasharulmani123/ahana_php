@@ -21,9 +21,32 @@ app.controller('PrinttemplateController', ['$rootScope', '$scope', '$anchorScrol
             }
         }
 
+        $scope.checkRotate = function () {
+            $timeout(function () {
+                if ($scope.billData.page_layout == 'landscape') {
+                    $("#translate_body").addClass("verticaltext");
+                    $("#translate_header").addClass("verticalhead");
+                }
+            }, 500);
+        }
+
+        $scope.routePrint = function (a) {
+            if (a == 'Portrait') {
+                $("#translate_body").removeClass("verticaltext");
+                $("#translate_header").removeClass("verticalhead");
+            } else {
+                $("#translate_body").addClass("verticaltext");
+                $("#translate_header").addClass("verticalhead");
+            }
+        }
+
         $('#inputFileToLoad').change(encodeImageFileAsURL(function (base64Img) {
             $('.output').find('img').attr('src', '');
             $('.output').find('img').attr('src', base64Img).attr('width', 200).attr('height', 40);
+        }));
+        $('#inputFileToLoadOP').change(encodeImageFileAsURL(function (base64Img) {
+            $('.OP_output').find('img').attr('src', '');
+            $('.OP_output').find('img').attr('src', base64Img).attr('width', 200).attr('height', 40);
         }));
 
         $scope.loadData = function (a) {
@@ -45,13 +68,18 @@ app.controller('PrinttemplateController', ['$rootScope', '$scope', '$anchorScrol
             )
         };
 
-        $scope.savePrintConfiguration = function () {
+        $scope.savePrintConfiguration = function (a) {
             _that = this;
 
             $scope.errorData = "";
             $scope.msg.successMessage = "";
 
-            var logo_img = $("#logo_image").attr('src');
+            if (a == 'sale_bill') {
+                var logo_img = $("#logo_image").attr('src');
+            } else {
+                var logo_img = $("#op_logo_image").attr('src');
+            }
+
             if (logo_img) {
                 $http({
                     method: "POST",
