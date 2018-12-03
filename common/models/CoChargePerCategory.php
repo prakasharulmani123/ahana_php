@@ -171,7 +171,7 @@ class CoChargePerCategory extends RActiveRecord {
             //Record inserted two time, to avoid 0.00 "&&" condition used in IF statement.
             if ($category->charge_link_id == $charge_link_id && $category->charge_amount != '0.00') {
                 $amount = $category->charge_amount;
-                break;
+                //break;  IP Record Inserted two times, If used break condition 1st record amount only get, hide if condition 1st record value rewrite to new value
             }
         }
         return $amount;
