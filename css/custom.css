@@ -1005,3 +1005,6 @@ ul.dropdown-menu.curPrescFreq > li a:hover, ul.dropdown-menu.curPrescFreq > li a
     height: 100vh;
     overflow-y: auto;
 }
+.empty_product_line td {
+	background-color: #B8E9FF !important;
+}

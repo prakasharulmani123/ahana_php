@@ -512,13 +512,17 @@
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>                                                   
-                                                                            <tr class="{{((item.available_quantity == 0 || !item.in_stock) && presc_stock_status == 1) ? 'out_of_stock' : ''}}" ng-repeat="item in data.prescriptionItems" ng-init="key = item.item_key">
+                                                                            <tr class="{{((item.available_quantity == 0 || !item.in_stock) && presc_stock_status == 1) ? 'out_of_stock' : ''}} {{(item.all_products.length == 0) ? 'empty_product_line' : ''}}" ng-repeat="item in data.prescriptionItems" ng-init="key = item.item_key">
                                                                                 <td align="center">                                                         
                                                                                     <button type="button" class="label bg-info" ng-click="removeItem(item)"><i class=" fa fa-trash"></i></button>
                                                                                 </td>
                                                                                 <td>
                                                                                     <!--e-ng-options="product.full_name as product.full_name for product in item.all_products | filter:$viewValue | filter:{generic_id : item.generic_id} : true"--> 
-                                                                                    <span editable-select="item.product_id"
+                                                                                    <div ng-if="item.all_products.length =='0'">
+                                                                                        {{item.product_name}}
+                                                                                    </div>
+                                                                                    <div ng-if="item.all_products.length !='0'">
+                                                                                        <span editable-select="item.product_id"
                                                                                           e-index ="{{item.item_key}}"
                                                                                           e-tabindex="2{{item.item_key}}1"
                                                                                           e-class="form-control"
@@ -530,7 +534,8 @@
                                                                                           e-options-class="{ 'in-stock' : availableQuantity, 'out-of-stock': !availableQuantity }"
                                                                                           e-required>
                                                                                         {{ showProduct(item)}}
-                                                                                    </span>                                                            
+                                                                                        </span>
+                                                                                    </div>
                                                                                 </td>
                                                                                 <td>
                                                                                     <span editable-select="item.route" 

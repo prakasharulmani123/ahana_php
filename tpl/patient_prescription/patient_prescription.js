@@ -865,9 +865,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 //PrescriptionService.addPrescriptionItem(items);
                 //}
                 //Bc-221 Status inactive products End
-                if (items.all_products.length != 0) {
+                //If Product deactive & empty generic showed blue line
+                //if (items.all_products.length != 0) {
                     PrescriptionService.addPrescriptionItem(items);
-                }
+                //}
                 $scope.msg.successMessage = "Medicine has been added to the current prescription";
             });
         }
@@ -1276,7 +1277,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 return false;
             }
 
-
+            
             /* For print bill */
             $scope.data2 = _that.data;
             $scope.prescriptionItems2 = $scope.data.prescriptionItems;
@@ -1730,7 +1731,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 //var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
 
                 //If Check Generic product is empty
-                if (chkDuplicate.length == 0 && items.all_products.length != 0) {
+                //if (chkDuplicate.length == 0 && items.all_products.length != 0) {
+                if (chkDuplicate.length == 0) {
                     PrescriptionService.addPrescriptionItem(items);
                 }
                 if (loop_total == loop_start) {
