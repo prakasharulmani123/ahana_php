@@ -149,10 +149,10 @@ class UserController extends ActiveController {
         if (!empty($requestData['search']['value'])) {
             $filters = [
                 'OR',
-                    ['like', 'name', $requestData['search']['value']],
-                    ['like', 'designation', $requestData['search']['value']],
-                    ['like', 'mobile', $requestData['search']['value']],
-                    ['like', 'email', $requestData['search']['value']],
+                    ['like', 'name', $requestData['search']['value'].'%', false],
+                    ['like', 'designation', $requestData['search']['value'].'%', false],
+                    ['like', 'mobile', $requestData['search']['value'].'%', false],
+                    ['like', 'email', $requestData['search']['value'].'%', false],
             ];
             $total = $modelClass::find()
                     ->active()
