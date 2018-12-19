@@ -40,7 +40,13 @@
                                                />
                                     </div>
                                     <div class="col-lg-8" ng-show="(formtype == 'update')">
-                                        <label>{{data.patient_name}}</label>
+                                        <label>{{data.patient_name}} <span ng-if="data.patient.patient_int_code">({{data.patient.patient_int_code}})</span></label>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-if="data.patient_int_code" ng-show="(formtype == 'add')">
+                                    <label class="col-lg-4 control-label">Patient UHID</label>
+                                    <div class="col-lg-8">
+                                        <label>{{data.patient_int_code}}</label>
                                     </div>
                                 </div>
                                 <div class="line line-dashed b-b line-lg "></div>
