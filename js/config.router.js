@@ -3209,6 +3209,21 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            //Myworks Discharged Patient Pharmacy Bills
+            .state('myworks.dischargedPatientPharmacyCharge', {
+                url: '/dischargedPatientPharmacyCharge',
+                templateUrl: 'tpl/myworks_report/dischargedPatientPharmacyCharge.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/myworks_report/dischargedPatientPharmacyCharge.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
             //Myworks Discharged Patient Dues
             .state('myworks.dischargedPatientDues', {
                 url: '/dischargedPatientDues',
