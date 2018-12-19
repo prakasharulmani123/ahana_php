@@ -394,7 +394,7 @@ class PhaSale extends PActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'salereport':
-                    $addt_keys = ['patient_name', 'patient_uhid', 'sale_bill_paid_type', 'encounter_type'];
+                    $addt_keys = ['patient_name', 'patient_uhid', 'sale_bill_paid_type', 'encounter_type', 'branch_name'];
                     $parent_fields = [
                         'sale_date' => 'sale_date',
                         'bill_no' => 'bill_no',

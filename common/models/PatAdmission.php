@@ -51,7 +51,8 @@ class PatAdmission extends RActiveRecord {
      * @inheritdoc
      */
     public static function tableName() {
-        return 'pat_admission';
+        $current_database = Yii::$app->client->createCommand("SELECT DATABASE()")->queryScalar();
+        return "$current_database.pat_admission";
     }
 
     /**
