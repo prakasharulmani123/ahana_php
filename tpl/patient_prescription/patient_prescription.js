@@ -1225,6 +1225,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             _that = this;
             $scope.errorData = "";
             $scope.msg.successMessage = "";
+            $scope.emptyProduct = false;
+            $scope.duplicateErrormessage = '';
             post_url = $rootScope.IRISOrgServiceUrl + '/patientprescription/saveprescription';
             method = 'POST';
             succ_msg = 'Prescription saved successfully';
@@ -1258,6 +1260,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 _that.data.prescriptionItems[key].quantity = qty_count;
                 _that.data.prescriptionItems[key].total = $scope.calculate_price(qty_count, prescriptionItem.price);
                 _that.data.prescriptionItems[key].in_stock = (parseInt(prescriptionItem.available_quantity) >= parseInt(qty_count));
+                
+                if(prescriptionItem.all_products.length == 0) {
+                    $scope.emptyProduct = true;
+                }
             });
             var valueArr = _that.data.prescriptionItems.map(function (item) {
                 return item.product_name
@@ -1265,18 +1271,19 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             var isDuplicate = valueArr.some(function (item, idx) {
                 return valueArr.indexOf(item) != idx
             });
-            if (isDuplicate)
-            {
+            if($scope.emptyProduct) {
+                $scope.duplicateErrormessage = 'Kindly Check the Product';
+                $scope.getVisit();
+                return false;
+            }
+            if (isDuplicate) {
                 $scope.duplicateErrormessage = 'Duplicate product is exits';
                 return false;
-            } else {
-                $scope.duplicateErrormessage = '';
             }
             if ($scope.globalData.globalprescription) {
                 $scope.errorData = "Selected product not added to prescription. Add selected product before saving prescription?";
                 return false;
             }
-
             
             /* For print bill */
             $scope.data2 = _that.data;
