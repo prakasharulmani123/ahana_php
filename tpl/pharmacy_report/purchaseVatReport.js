@@ -61,7 +61,7 @@ app.controller('purchaseVatReportController', ['$rootScope', '$scope', '$timeout
                 angular.extend(data, {payment_type: $scope.data.payment_type});
 
             // Get data's from service
-            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyreport/purchasereport?addtfields=purchasevatreport', data)
+            $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyreport/purchasegstreport?addtfields=purchasevatreport', data)
                     .success(function (response) {
                         $scope.loadbar('hide');
                         $scope.records = response.report;
@@ -74,6 +74,14 @@ app.controller('purchaseVatReportController', ['$rootScope', '$scope', '$timeout
 
         $scope.parseFloat = function (row) {
             return parseFloat(row);
+        }
+        
+        $scope.checkNextrecord = function (a,b,c) {
+            if(a==b) {
+                return parseFloat(0);
+            } else {
+                return parseFloat(c);
+            }
         }
 
         //For Print
@@ -112,24 +120,31 @@ app.controller('purchaseVatReportController', ['$rootScope', '$scope', '$timeout
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 8}, "", "", "", "", "", "", ""
+                {text: branch_name, style: 'header', colSpan: 9}, "", "", "", "", "", "", "", ""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
                 {text: 'Invoice no', style: 'header'},
                 {text: 'Date Of Purchase', style: 'header'},
-                {text: 'Supplier', style: 'header'},
-                {text: 'Payment Type', style: 'header'},
-                {text: 'Vat Purchase Amount', style: 'header'},
-                {text: 'Vat Tax Amount', style: 'header'},
-                {text: 'Total Amount', style: 'header'},
+//                {text: 'Supplier', style: 'header'},
+//                {text: 'Payment Type', style: 'header'},
+//                {text: 'Purchase Code', style: 'header'},
+                {text: 'Tax Rate', style: 'header'},
+                {text: 'Taxable Value', style: 'header'},
+                {text: 'CGST', style: 'header'},
+                {text: 'SGST', style: 'header'},
+                {text: 'Round Off', style: 'header'},
+                {text: 'Purchase Value', style: 'header'},
             ]);
 
             var serial_no = 1;
             var result_count = $scope.records.length;
-            var purchase_amount = 0;
-            var vat_amount = 0;
-            var total_amount = 0;
+            var tax_rate = 0;
+            var taxable_value = 0;
+            var cgst_amount = 0;
+            var sgst_amount = 0;
+            var roundoff_amount = 0;
+            
             angular.forEach($scope.records, function (record, key) {
                 var s_no_string = serial_no.toString();
                 if (record.payment_type == 'CA') {
@@ -141,16 +156,22 @@ app.controller('purchaseVatReportController', ['$rootScope', '$scope', '$timeout
                     s_no_string,
                     record.invoice_no,
                     moment(record.invoice_date).format('DD-MM-YYYY'),
-                    record.supplier_name,
-                    payment,
-                    record.total_item_purchase_amount,
-                    record.total_item_vat_amount,
-                    record.net_amount,
+                    //record.supplier_name,
+                    //payment,
+                    //record.purchase_code,
+                    record.tax_rate,
+                    record.taxable_value,
+                    record.cgst_amount,
+                    record.sgst_amount,
+                    record.roundoff_amount,
+                    record.net_amount
                 ]);
 
-                purchase_amount += parseFloat(record.total_item_purchase_amount);
-                vat_amount += parseFloat(record.total_item_vat_amount);
-                total_amount += parseFloat(record.net_amount);
+                tax_rate += parseFloat(record.tax_rate);
+                taxable_value += parseFloat(record.taxable_value);
+                cgst_amount += parseFloat(record.cgst_amount);
+                sgst_amount += parseFloat(record.sgst_amount);
+                roundoff_amount += parseFloat(record.roundoff_amount);
 
                 if (serial_no == result_count) {
                     $scope.printloader = '';
@@ -162,24 +183,33 @@ app.controller('purchaseVatReportController', ['$rootScope', '$scope', '$timeout
                     text: 'Total Purchase Value',
                     style: 'header',
                     alignment: 'right',
-                    colSpan: 5
+                    colSpan: 4
                 },
                 "",
                 "",
                 "",
-                "",
                 {
-                    text: purchase_amount.toFixed(2).toString(),
+                    text: tax_rate.toFixed(2).toString(),
                     style: 'header',
                     alignment: 'right'
                 },
                 {
-                    text: vat_amount.toFixed(2).toString(),
+                    text: taxable_value.toFixed(2).toString(),
                     style: 'header',
                     alignment: 'right'
                 },
                 {
-                    text: total_amount.toFixed(2).toString(),
+                    text: cgst_amount.toFixed(2).toString(),
+                    style: 'header',
+                    alignment: 'right'
+                },
+                {
+                    text: sgst_amount.toFixed(2).toString(),
+                    style: 'header',
+                    alignment: 'right'
+                },
+                {
+                    text: roundoff_amount.toFixed(2).toString(),
                     style: 'header',
                     alignment: 'right'
                 },
@@ -224,7 +254,7 @@ app.controller('purchaseVatReportController', ['$rootScope', '$scope', '$timeout
                 style: 'demoTable',
                 table: {
                     headerRows: 2,
-                    widths: ['auto', 'auto', 'auto', '*', 'auto', 'auto', 'auto', 'auto'],
+                    widths: ['auto', 'auto', 'auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto'],
                     body: reports,
                     dontBreakRows: true,
                 },

@@ -106,9 +106,13 @@
                                         <th id="work-base-grid_c2">Date Of Purchase</th>
                                         <th id="work-base-grid_c3">Supplier</th>
                                         <th id="work-base-grid_c4">Payment Type</th>
-                                        <th id="work-base-grid_c5">Vat Purchase Amount</th>
-                                        <th id="work-base-grid_c6">Vat Tax Amount</th>
-                                        <th id="work-base-grid_c7">Total Amount</th>
+                                        <th id="work-base-grid_c5">Purchase Code</th>
+                                        <th id="work-base-grid_c6">Tax Rate</th>
+                                        <th id="work-base-grid_c7">Taxable Value</th>
+                                        <th id="work-base-grid_c8">CGST</th>
+                                        <th id="work-base-grid_c9">SGST</th>
+                                        <th id="work-base-grid_c10">Round Off</th>
+                                        <th id="work-base-grid_c11">Purchase Value</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -118,14 +122,24 @@
                                         <td>{{record.invoice_date | date:'dd-MM-yyyy'}}</td>
                                         <td>{{nameReplace(record.supplier_name)}}</td>
                                         <td>{{record.payment_type == "CA" ? "Cash" : "Credit"}}</td>
-                                        <td data-type="Number" ng-init="purchase.purchase_amount = purchase.purchase_amount + parseFloat(record.total_item_purchase_amount);">
-                                            {{record.total_item_purchase_amount}}
+                                        <td>{{record.purchase_code}}</td>
+                                        <td data-type="Number" ng-init="purchase.tax_rate = purchase.tax_rate + parseFloat(record.tax_rate);">
+                                            {{record.tax_rate}}
                                         </td>
-                                        <td data-type="Number" ng-init="purchase.vat_amount = purchase.vat_amount + parseFloat(record.total_item_vat_amount);">
-                                            {{record.total_item_vat_amount}}
+                                        <td data-type="Number" ng-init="purchase.taxable_value = purchase.taxable_value + parseFloat(record.taxable_value);">
+                                            {{record.taxable_value}}
                                         </td>
-                                        <td data-type="Number" ng-init="purchase.total_amount = purchase.total_amount + parseFloat(record.net_amount);">
-                                            {{record.net_amount}}
+                                        <td data-type="Number" ng-init="purchase.cgst_amount = purchase.cgst_amount + parseFloat(record.cgst_amount);">
+                                            {{record.cgst_amount}}
+                                        </td>
+                                        <td data-type="Number" ng-init="purchase.sgst_amount = purchase.sgst_amount + parseFloat(record.sgst_amount);">
+                                            {{record.sgst_amount}}
+                                        </td>
+                                        <td data-type="Number" ng-init="purchase.roundoff_amount = purchase.roundoff_amount + checkNextrecord(record.purchase_code, records[$index + 1].purchase_code, record.roundoff_amount);">
+                                            {{checkNextrecord(record.purchase_code, records[$index + 1].purchase_code, record.roundoff_amount)}}
+                                        </td>
+                                        <td data-type="Number" ng-init="purchase.net_amount = purchase.net_amount + checkNextrecord(record.purchase_code, records[$index + 1].purchase_code, record.net_amount);">
+                                            {{checkNextrecord(record.purchase_code, records[$index + 1].purchase_code, record.net_amount) | number:2}}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -135,10 +149,14 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <th class="text-right"><b>Totals</b></th>
-                                        <th data-type="Number"><b>{{purchase.purchase_amount| number:2}}</b></th>
-                                        <th data-type="Number"><b>{{purchase.vat_amount| number:2}}</b></th>
-                                        <th data-type="Number"><b>{{purchase.total_amount| number:2}}</b></th>
+                                        <td></td>
+                                        <th class="text-right">Total</th>
+                                        <th data-type="Number">{{purchase.tax_rate| number:2}}</th>
+                                        <th data-type="Number">{{purchase.taxable_value| number:2}}</th>
+                                        <th data-type="Number">{{purchase.cgst_amount| number:2}}</th>
+                                        <th data-type="Number">{{purchase.sgst_amount| number:2}}</th>
+                                        <th data-type="Number">{{purchase.roundoff_amount| number:2}}</th>
+                                        <th data-type="Number">{{purchase.net_amount| number:2}}</th>
                                     </tr>
                                 </tfoot>
                             </table>
