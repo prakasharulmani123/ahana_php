@@ -66,6 +66,43 @@ class PharmacyreportController extends ActiveController {
         return ['report' => $reports];
     }
 
+    public function actionPurchasegstreport() {
+        $dbname = Yii::$app->client->createCommand("SELECT DATABASE()")->queryScalar();
+        $post = Yii::$app->getRequest()->post();
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        $current_database = Yii::$app->db->createCommand("SELECT DATABASE()")->queryScalar();
+
+        $sql = "SELECT
+                a.purchase_id,
+                a.purchase_code,
+                a.invoice_no,
+                a.invoice_date,
+                a.payment_type,
+                c.supplier_name,
+                (cgst_percent+sgst_percent) AS tax_rate,
+                SUM(b.taxable_value)      AS taxable_value,
+                SUM(b.cgst_amount)        AS cgst_amount,
+                b.cgst_percent        AS cgst_percent,
+                SUM(b.sgst_amount)        AS sgst_amount,
+                b.sgst_percent        AS sgst_percent,
+                a.roundoff_amount,
+                a.net_amount
+              FROM `pha_purchase` `a`
+                LEFT JOIN `pha_purchase_item` `b`
+                  ON `a`.`purchase_id` = `b`.`purchase_id`
+                LEFT JOIN `pha_supplier` c
+                  ON `c`.`supplier_id` = `a`.`supplier_id`
+              WHERE ((`a`.`tenant_id` = '2')
+                     AND (a.invoice_date BETWEEN '" . $post['from'] . "'
+                          AND '" . $post['to'] . "') AND (`a`.`payment_type` = '".$post['payment_type']."'))
+                  AND (b.deleted_at = '0000-00-00 00:00:00')
+                  AND (a.deleted_at = '0000-00-00 00:00:00')
+              GROUP BY `b`.`purchase_id`,`b`.`cgst_percent`";
+        $command = Yii::$app->client_pharmacy->createCommand($sql);
+        $reports = $command->queryAll();
+        return ['report' => $reports];
+    }
+
     //Sale Report
     public function actionSalereport() {
         $post = Yii::$app->getRequest()->post();
@@ -77,7 +114,7 @@ class PharmacyreportController extends ActiveController {
 
 
         if (isset($post['encounter_type'])) {
-            
+
             if (count($post['encounter_type']) == '1') {
                 if (in_array("NO", $post['encounter_type'])) {
                     $model->andWhere(['pha_sale.encounter_id' => null]);
