@@ -358,11 +358,17 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
             var item_amount = (qty * mrp).toFixed(2);
             var disc_amount = disc_perc > 0 ? (item_amount * (disc_perc / 100)).toFixed(2) : 0;
             var total_amount = (item_amount - disc_amount).toFixed(2);
+            
+            var taxable_value = (((mrp / (100 + sgst_perc + cgst_perc)) * 100).toFixed(2) * qty).toFixed(2);
+            //var cgst_amount = ((total_amount * cgst_perc) / (100 + cgst_perc)).toFixed(2); // Including vat
+            //var sgst_amount = ((total_amount * sgst_perc) / (100 + sgst_perc)).toFixed(2); // Including vat
+            var cgst_amount = (((taxable_value * cgst_perc) / 100)).toFixed(2); // Including vat
+            var sgst_amount = (((taxable_value * sgst_perc) / 100)).toFixed(2); // Including vat
 
 //            var vat_amount = (item_amount * (vat_perc / 100)).toFixed(2); // Exculding vat
             var vat_amount = ((total_amount * vat_perc) / (100 + vat_perc)).toFixed(2); // Including vat
-            var cgst_amount = ((total_amount * cgst_perc) / (100 + cgst_perc)).toFixed(2); // Including vat
-            var sgst_amount = ((total_amount * sgst_perc) / (100 + sgst_perc)).toFixed(2); // Including vat
+            //var cgst_amount = ((total_amount * cgst_perc) / (100 + cgst_perc)).toFixed(2); // Including vat
+            //var sgst_amount = ((total_amount * sgst_perc) / (100 + sgst_perc)).toFixed(2); // Including vat
 
             $scope.saleItems[key].item_amount = item_amount;
             $scope.saleItems[key].discount_amount = disc_amount;
@@ -371,7 +377,7 @@ app.controller('SaleReturnController', ['$rootScope', '$scope', '$timeout', '$ht
 
             $scope.saleItems[key].cgst_amount = cgst_amount;
             $scope.saleItems[key].sgst_amount = sgst_amount;
-            $scope.saleItems[key].taxable_value = parseFloat(cgst_amount) + parseFloat(sgst_amount);
+            $scope.saleItems[key].taxable_value = taxable_value;
 
             $scope.updateSaleRate();
         }
