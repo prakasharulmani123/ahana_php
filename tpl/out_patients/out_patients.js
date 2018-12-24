@@ -414,7 +414,9 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
 
 //            grouped_result = $filter('groupBy')(OutPatients.result, 'consultant_id');
             angular.forEach(OutPatients.consultants, function (value, key) {
-                var act_enc = $filter('filter')(OutPatients.result, {consultant_id: key, apptSeenData: "-"});
+                //Using Java script Filter 
+                const act_enc = OutPatients.result.filter(e => e.consultant_id == key && e.apptSeenData == "-");
+                //var act_enc = $filter('filter')(OutPatients.result, {consultant_id: key},true);
                 result[key_index] = {
                     consultant_id: key,
                     consultant_name: value.consultant_name,
