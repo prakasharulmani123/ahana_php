@@ -917,6 +917,7 @@ angular.module('app')
                 }
 
                 $scope.switched_branches_list = [];
+                $scope.pharmacy_menu = '';
                 $scope.branch_switch = {};
                 $scope.initSwitchedBranch = function () {
                     if (AuthenticationService.getCurrentUser()) {
@@ -932,6 +933,14 @@ angular.module('app')
                                         $scope.app.org_small_logo = response.data.org_small_logo;
                                         $scope.app.org_document_logo = response.data.org_document_logo;
                                         $scope.app.logged_org_id = response.data.org_id;
+                                        var pharmacy_resources = JSON.parse(localStorage.getItem("ngStorage-user"));
+                                        if(pharmacy_resources.resources.hasOwnProperty("pharmacy.saleCreate")) {
+                                            $scope.pharmacy_menu = '';
+                                        } else if(pharmacy_resources.resources.hasOwnProperty("pharmacy.purchaseReport")) {
+                                            $scope.pharmacy_menu = 'report';
+                                        } else {
+                                            $scope.pharmacy_menu = '';
+                                        }
                                     }
                                 }
                         );

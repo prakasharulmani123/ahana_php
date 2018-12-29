@@ -139,8 +139,12 @@
                 <a ui-sref="patient.outPatients" check-access>Out-Patients</a>
             </li>
 
-            <li class="{{(currentPage == 'pharmacy' ? 'topactive' : '')}}" ui-sref-active="active">
+            <li ng-if="pharmacy_menu != 'report'" class="{{(currentPage == 'pharmacy' ? 'topactive' : '')}}" ui-sref-active="active">
                 <a ui-sref="pharmacy.saleCreate" check-access> Pharmacy</a>
+            </li>
+            
+            <li ng-if="pharmacy_menu == 'report'" class="{{(currentPage == 'pharmacy' ? 'topactive' : '')}}" ui-sref-active="active">
+                <a ui-sref="pharmacy.purchaseReport" check-access> Pharmacy Report</a>
             </li>
 
             <li class="{{(currentPage == 'configuration' ? 'topactive' : '')}}" ui-sref-active="active">
