@@ -338,8 +338,8 @@
                                             e-index ="{{key}}"
                                             e-number-mask=""
                                             e-form="tableform"
-                                            e-ng-keydown="updateColumn($data, key, 'discount_amount',tableform)"
-                                            e-ng-keyup="updateColumn($data, key, 'discount_amount',tableform)"
+                                            e-ng-keydown="updateColumn($data, key, 'discount_amount',tableform); checkaddRow($event,tableform)"
+                                            e-ng-keyup="updateColumn($data, key, 'discount_amount',tableform); checkaddRow($event,tableform)"
                                             e-autocomplete="off"
                                             e-maxlength="5">
                                             {{saleitem.discount_amount|| 0}}

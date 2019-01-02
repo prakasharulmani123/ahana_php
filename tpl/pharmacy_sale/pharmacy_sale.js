@@ -1027,6 +1027,14 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
         {
             $scope.btnid = btnid;
         }
+        
+        $scope.checkaddRow = function ($event,tableform) {
+            var keyCode = $event.which || $event.keyCode;
+            if (keyCode === 13) {
+                tableform.$show();
+                $scope.addRow();
+            }
+        }
 
         //Save Both Add & Update Data
         $scope.saveForm = function (mode) {
