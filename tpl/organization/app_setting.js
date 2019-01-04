@@ -510,7 +510,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             $scope.loadbar('show');
             $http({
                 method: 'POST',
-                url: $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/phamastersupdatestart',
+                url: $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/phaproductupdatestart',
                 data: {id: id, max_id: max, import_log: $scope.import_log},
             }).success(
                     function (response) {
