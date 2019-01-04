@@ -471,7 +471,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         $scope.showStockImportErrorLog = function () {
 
         }
-
+        
         //Pha Masters Update
         $scope.initPhaMastersParams = function () {
             $scope.pha_master_import_process_text = '';
@@ -505,7 +505,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
-
+        
         $scope.phaMastersUpdateStart = function (id, max) {
             $scope.loadbar('show');
             $http({
@@ -530,6 +530,77 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                         } else {
                             $scope.pha_master_import_process_text = 'Import completed (' + $scope.progress_pha_master_imported_rows + '/' + $scope.total_pha_master_import_rows + ')';
                             $scope.pha_master_import_error_log = true;
+                        }
+                        $scope.loadbar('hide');
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+
+        
+        //Pha Product Delete
+        $scope.initPhaMastersDeleteParams = function () {
+            $scope.pha_master_delete_process_text = '';
+            $scope.progress_pha_master_deleted_rows = $scope.success_pha_master_delete_rows = $scope.failed_pha_master_delete_rows = $scope.total_pha_master_delete_rows = $scope.delete_pha_master_percent = 0;
+            $scope.pha_master_delete_error_log = false;
+        }
+
+        $scope.deletePhaMasters = function () {
+            $scope.initPhaMastersDeleteParams();
+            $scope.loadbar('show');
+            $scope.pha_master_delete_process_text = 'Fetching the Excel Data. Please wait until the importing begins. This might take few mins';
+            //$scope.import_log = Date.parse(moment().format());
+            $scope.import_log = '1546579225000';
+            var currentUser = AuthenticationService.getCurrentUser();
+
+            fileUpload.uploadFileToUrl($scope.phaMastersDelete, $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/phamastersdelete?tenant_id=' + currentUser.credentials.logged_tenant_id + '&import_log=' + $scope.import_log).success(function (response) {
+                if (response.success) {
+                    $scope.total_pha_master_delete_rows = response.message.total_rows;
+                    $scope.pha_master_delete_process_text = 'Importing started';
+                    $scope.phaMastersDeleteStart(response.message.id, response.message.max_id);
+                } else {
+                    $scope.loadbar('hide');
+                    $scope.pha_master_delete_process_text = '';
+                    $scope.errorData = response.message;
+                }
+            }).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+        
+        $scope.phaMastersDeleteStart = function (id, max) {
+            $scope.loadbar('show');
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/phaproductdeletestart',
+                data: {id: id, max_id: max, import_log: $scope.import_log},
+            }).success(
+                    function (response) {
+                        if (response.success) {
+                            $scope.success_pha_master_delete_rows++;
+                            $scope.progress_pha_master_deleted_rows++;
+                        } else if (response.continue) {
+                            $scope.failed_pha_master_delete_rows++;
+                            $scope.progress_pha_master_deleted_rows++;
+                        }
+
+                        $scope.pha_master_delete_process_text = 'Import progressing (' + $scope.progress_pha_master_deleted_rows + '/' + $scope.total_pha_master_delete_rows + ')';
+                        $scope.delete_pha_master_percent = ($scope.progress_pha_master_deleted_rows / $scope.total_pha_master_delete_rows) * 100;
+
+                        if (response.continue) {
+                            $scope.phaMastersDeleteStart(response.continue, max);
+                        } else {
+                            $scope.pha_master_delete_process_text = 'Import completed (' + $scope.progress_pha_master_deleted_rows + '/' + $scope.total_pha_master_delete_rows + ')';
+                            $scope.pha_master_delete_error_log = true;
                         }
                         $scope.loadbar('hide');
                     }
