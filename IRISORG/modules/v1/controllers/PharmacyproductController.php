@@ -1000,6 +1000,107 @@ class PharmacyproductController extends ActiveController {
             return $result[0];
         }
     }
+    
+    //Pha Master Delete Start
+    public function actionPhamastersdelete() {
+        return ['success' => true, 'message' => ['total_rows' => '132', 'id' => '1', 'max_id' => '132']];
+        $get = Yii::$app->getRequest()->get();
+        $allowed = array('csv');
+        $filename = $_FILES['file']['name'];
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        if (!in_array($ext, $allowed)) {
+            return ['success' => false, 'message' => 'Unsupported File Format. CSV Files only accepted'];
+        }
+        $uploadPath = 'uploads/';
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+        $uploadFile = $uploadPath . $filename;
+        if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
+            $file = Url::to($uploadFile);
+            $result = $this->phamastersdeleteimport($file, $get['tenant_id'], $get['import_log']);
+            if (!empty($result)) {
+                return ['success' => true, 'message' => $result];
+            } else {
+                return ['success' => false, 'message' => 'Failed to import. Try again later'];
+            }
+        } else {
+            return ['success' => false, 'message' => 'Failed to import. Try again later'];
+        }
+    }
+
+    public function phamastersdeleteimport($filename, $tenant_id, $log) {
+        $connection = Yii::$app->client_pharmacy;
+        $connection->open();
+
+        $row = 1;
+        if (($handle = fopen($filename, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle)) !== FALSE) {
+                //skip header row 
+                if ($row++ == 1) {
+                    continue;
+                }
+
+                $sql = "INSERT INTO test_pha_product(tenant_id, product_id, product_name, product_unit, generic_id, generic_name, drug_id, drug_class, import_log) VALUES('{$tenant_id}', '{$data[0]}','{$data[1]}', '{$data[2]}', '{$data[3]}','{$data[4]}', '{$data[5]}', '{$data[6]}', '{$log}')";
+                $command = $connection->createCommand($sql);
+                $command->execute();
+            }
+            // close the file
+            fclose($handle);
+            // return the messages
+            @unlink($filename);
+            $command = $connection->createCommand("SELECT COUNT(*) AS 'total_rows', (SELECT MIN(id) FROM test_pha_product WHERE import_log = $log) AS id, (SELECT MAX(id) FROM test_pha_product WHERE import_log = $log) AS max_id FROM test_pha_product WHERE import_log = $log");
+            $result = $command->queryAll(PDO::FETCH_OBJ);
+            $connection->close();
+            return $result[0];
+        }
+    }
+    
+    public function actionPhaproductdeletestart() {
+        $post = Yii::$app->getRequest()->post();
+        $id = $post['id'];
+        $import_log = $post['import_log'];
+        $max_id = $post['max_id'];
+
+        if ($id <= $max_id) {
+            //echo 'If'; die;
+            $next_id = $id + 1;
+            $connection = Yii::$app->client_pharmacy;
+            $connection->open();
+            $command = $connection->createCommand("SELECT * FROM test_pha_product_delete WHERE id = {$id} AND import_log = $import_log");
+            $result = $command->queryAll(PDO::FETCH_OBJ);
+            //print_r($result); die;
+            if (!empty($result)) {
+                $result = $result[0];
+                $product_exists = \common\models\PhaProduct::find()->where([
+                            'tenant_id' => 1,
+                            'product_id' => $result->product_id
+                        ])
+                        ->one();
+                if (!empty($product_exists)) {
+                    $product_exists->deleted_at = date('Y-m-d H:i:s');
+                    $product_exists->save(false);
+                    $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
+                } else {
+                    $return = ['success' => false, 'continue' => $next_id, 'message' => 'Product Not exists'];
+                }
+            }
+        } else {
+            $return = ['success' => false, 'continue' => 0];
+        }
+        
+        if ($return['continue']) {
+            $status = $return['success'] ? 1 : 0;
+            $message = $return['message'];
+//            $message = str_replace('<p>Please fix the following errors:</p>', '', $return['message']);
+            $sql = "UPDATE test_pha_product_delete SET `status` = '{$status}', response = '{$message}' WHERE id={$id}";
+            $command = $connection->createCommand($sql);
+            $command->execute();
+            $connection->close();
+        }
+        return $return;
+        
+    }
 
     private $migrateTables;
 
