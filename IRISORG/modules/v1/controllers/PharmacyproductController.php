@@ -585,12 +585,12 @@ class PharmacyproductController extends ActiveController {
                     $products = array_merge($products, $related_products);
                 }
             }
-            
-            if(!empty($products)) {
-                $search_string =  str_replace("%","",$like_text_search);
+
+            if (!empty($products)) {
+                $search_string = str_replace("%", "", $like_text_search);
                 $i = 1;
                 foreach ($products as $key => $value) {
-                    
+
                     if (strpos($value['product_name'], strtoupper($search_string)) !== false) {
                         $products[$key]['product_order'] = $i;
                     }
@@ -986,8 +986,7 @@ class PharmacyproductController extends ActiveController {
                     continue;
                 }
 
-                $sql = "INSERT INTO test_pha_masters_update(tenant_id, product_id, product_name, generic_id, generic_name, drug_class_id, drug_class, batch_id, batch_no, expiry_date, mrp, quantity, packing_unit, import_log) VALUES('{$tenant_id}', '{$data[0]}','{$data[1]}', '{$data[2]}', '{$data[3]}','{$data[4]}', '{$data[5]}', '{$data[6]}', '{$data[7]}', '{$data[8]}', '{$data[9]}', '{$data[10]}', '{$data[11]}', '{$log}')";
-
+                $sql = "INSERT INTO test_pha_product(tenant_id, product_id, product_name, product_unit, generic_id, generic_name, drug_id, drug_class, import_log) VALUES('{$tenant_id}', '{$data[0]}','{$data[1]}', '{$data[2]}', '{$data[3]}','{$data[4]}', '{$data[5]}', '{$data[6]}', '{$log}')";
                 $command = $connection->createCommand($sql);
                 $command->execute();
             }
@@ -995,7 +994,7 @@ class PharmacyproductController extends ActiveController {
             fclose($handle);
             // return the messages
             @unlink($filename);
-            $command = $connection->createCommand("SELECT COUNT(*) AS 'total_rows', (SELECT MIN(id) FROM test_pha_masters_update WHERE import_log = $log) AS id, (SELECT MAX(id) FROM test_pha_masters_update WHERE import_log = $log) AS max_id FROM test_pha_masters_update WHERE import_log = $log");
+            $command = $connection->createCommand("SELECT COUNT(*) AS 'total_rows', (SELECT MIN(id) FROM test_pha_product WHERE import_log = $log) AS id, (SELECT MAX(id) FROM test_pha_product WHERE import_log = $log) AS max_id FROM test_pha_product WHERE import_log = $log");
             $result = $command->queryAll(PDO::FETCH_OBJ);
             $connection->close();
             return $result[0];
@@ -1048,6 +1047,78 @@ class PharmacyproductController extends ActiveController {
 
         $connection->close();
         return $merge_details;
+    }
+
+    public function actionPhaproductupdatestart() {
+        $post = Yii::$app->getRequest()->post();
+        $id = $post['id'];
+        $import_log = $post['import_log'];
+        $max_id = $post['max_id'];
+
+        if ($id <= $max_id) {
+            $next_id = $id + 1;
+            $connection = Yii::$app->client_pharmacy;
+            $connection->open();
+            $command = $connection->createCommand("SELECT * FROM test_pha_product WHERE id = {$id} AND import_log = $import_log");
+            $result = $command->queryAll(PDO::FETCH_OBJ);
+            //print_r($result); die;
+            if (!empty($result)) {
+                $result = $result[0];
+                $product_exists = \common\models\PhaProduct::find()->where([
+                            'tenant_id' => $result->tenant_id,
+                            'product_id' => $result->product_id
+                        ])
+                        ->one();
+                if (!empty($product_exists)) {
+
+                    // Generic Update
+                    $generic = \common\models\PhaGeneric::find()->where([
+                                'tenant_id' => $result->tenant_id,
+                                'generic_name' => trim($result->generic_name)])
+                            ->one();
+                    if (!empty($generic)) {
+                        $product_exists->generic_id = $generic->generic_id;
+                    } else {
+                        $new_generic = new \common\models\PhaGeneric();
+                        $new_generic->generic_name = trim($result->generic_name);
+                        $new_generic->save(false);
+                        $product_exists->generic_id = $new_generic->generic_id;
+                    }
+                    
+                    //Drug Class Update
+                    $drug = PhaDrugClass::find()->where([
+                                'tenant_id' => $result->tenant_id,
+                                'drug_name' => trim($result->drug_class)])
+                            ->one();
+                    if(!empty($drug)) {
+                        $product_exists->drug_class_id = $drug->drug_class_id;
+                    } else {
+                        $new_drug = new PhaDrugClass();
+                        $new_drug->drug_name = trim($result->drug_class);
+                        $new_drug->save(false);
+                        $product_exists->drug_class_id = $new_drug->drug_class_id;
+                    }
+                    $product_exists->save(false);
+                    $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
+                } else {
+                    $return = ['success' => false, 'continue' => $next_id, 'message' => 'Product Not exists'];
+                }
+            }
+        } else {
+            $return = ['success' => false, 'continue' => 0];
+        }
+        
+        if ($return['continue']) {
+            $status = $return['success'] ? 1 : 0;
+            $message = $return['message'];
+//            $message = str_replace('<p>Please fix the following errors:</p>', '', $return['message']);
+            $sql = "UPDATE test_pha_product SET `status` = '{$status}', response = '{$message}' WHERE id={$id}";
+            $command = $connection->createCommand($sql);
+            $command->execute();
+            $connection->close();
+        }
+        return $return;
+        
     }
 
     // * Note 
