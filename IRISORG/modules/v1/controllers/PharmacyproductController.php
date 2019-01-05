@@ -1102,6 +1102,100 @@ class PharmacyproductController extends ActiveController {
         return $return;
         
     }
+    
+    public function actionPhadrugdelete() {
+        return ['success' => true, 'message' => ['total_rows' => '97', 'id' => '1', 'max_id' => '97']];
+    }
+    
+    public function actionPhadrugdeletestart() {
+        $post = Yii::$app->getRequest()->post();
+        $id = $post['id'];
+        $import_log = $post['import_log'];
+        $max_id = $post['max_id'];
+
+        if ($id <= $max_id) {
+            $next_id = $id + 1;
+            $connection = Yii::$app->client_pharmacy;
+            $connection->open();
+            $command = $connection->createCommand("SELECT * FROM test_pha_drug_delete WHERE id = {$id} AND import_log = $import_log");
+            $result = $command->queryAll(PDO::FETCH_OBJ);
+            //print_r($result); die;
+            if (!empty($result)) {
+                $result = $result[0];
+                $drug_exists = \common\models\PhaDrugClass::find()->where([
+                            'tenant_id' => 1,
+                            'drug_class_id' => $result->drug_class_id,
+                        ])
+                        ->one();
+                if (!empty($drug_exists)) {
+                    $drug_exists->deleted_at = date('Y-m-d H:i:s');
+                    $drug_exists->save(false);
+                    $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
+                } else {
+                    $return = ['success' => false, 'continue' => $next_id, 'message' => 'Drug Not exists'];
+                }
+            }
+        } else {
+            $return = ['success' => false, 'continue' => 0];
+        }
+        
+        if ($return['continue']) {
+            $status = $return['success'] ? 1 : 0;
+            $message = $return['message'];
+            $sql = "UPDATE test_pha_drug_delete SET `status` = '{$status}', response = '{$message}' WHERE id={$id}";
+            $command = $connection->createCommand($sql);
+            $command->execute();
+            $connection->close();
+        }
+        return $return;
+    }
+    
+    public function actionPhagenericdelete() {
+        return ['success' => true, 'message' => ['total_rows' => '837', 'id' => '1', 'max_id' => '837']];
+    }
+    
+    public function actionPhagenericdeletestart() {
+        $post = Yii::$app->getRequest()->post();
+        $id = $post['id'];
+        $import_log = $post['import_log'];
+        $max_id = $post['max_id'];
+
+        if ($id <= $max_id) {
+            $next_id = $id + 1;
+            $connection = Yii::$app->client_pharmacy;
+            $connection->open();
+            $command = $connection->createCommand("SELECT * FROM test_pha_generic_delete WHERE id = {$id} AND import_log = $import_log");
+            $result = $command->queryAll(PDO::FETCH_OBJ);
+            //print_r($result); die;
+            if (!empty($result)) {
+                $result = $result[0];
+                $generic_exists = \common\models\PhaGeneric::find()->where([
+                            'tenant_id' => 1,
+                            'generic_id' => $result->generic_id
+                        ])
+                        ->one();
+                if (!empty($generic_exists)) {
+                    $generic_exists->deleted_at = date('Y-m-d H:i:s');
+                    $generic_exists->save(false);
+                    $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
+                } else {
+                    $return = ['success' => false, 'continue' => $next_id, 'message' => 'Generic Not exists'];
+                }
+            }
+        } else {
+            $return = ['success' => false, 'continue' => 0];
+        }
+        
+        if ($return['continue']) {
+            $status = $return['success'] ? 1 : 0;
+            $message = $return['message'];
+            $sql = "UPDATE test_pha_generic_delete SET `status` = '{$status}', response = '{$message}' WHERE id={$id}";
+            $command = $connection->createCommand($sql);
+            $command->execute();
+            $connection->close();
+        }
+        return $return;
+    }
 
     private $migrateTables;
 
