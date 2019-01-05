@@ -126,48 +126,48 @@
                     </div>
 
                     <!-- This options moved to print configuration OPBILL Start-->
-<!--                    <div class="panel panel-default" ng-init="initPharmacyBranch()">
-                        <div class="panel-heading">
-                            <b>OP Bill Setting</b> 
-                        </div>
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Page Size</label>
-                                <div class="col-sm-9">
-                                    <div>
-                                        <label class="i-checks">
-                                            <input type="radio" checked="" value="A4" name="OpBill.PS" ng-model="OpBill.PS" ng-change="updateOpBill('PS', 'A4')">
-                                            <i></i>
-                                            A4&nbsp; &nbsp;
-                                        </label>
-                                        <label class="i-checks">
-                                            <input type="radio" checked="" value="A5" name="OpBill.PS" ng-model="OpBill.PS" ng-change="updateOpBill('PS', 'A5')">
-                                            <i></i>
-                                            A5&nbsp; &nbsp;
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Page Layout</label>
-                                <div class="col-sm-9">
-                                    <div>
-                                        <label class="i-checks">
-                                            <input type="radio" checked="" value="Portrait" name="OpBill.PL" ng-model="OpBill.PL" ng-change="updateOpBill('PL', 'Portrait')">
-                                            <i></i>
-                                            Portrait&nbsp; &nbsp;
-                                        </label>
-                                        <label class="i-checks">
-                                            <input type="radio" checked="" value="landscape" name="OpBill.PL" ng-model="OpBill.PL" ng-change="updateOpBill('PL', 'landscape')">
-                                            <i></i>
-                                            Landscape&nbsp; &nbsp;
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>-->
-<!-- This options moved to print configuration OPBILL End-->
+                    <!--                    <div class="panel panel-default" ng-init="initPharmacyBranch()">
+                                            <div class="panel-heading">
+                                                <b>OP Bill Setting</b> 
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Page Size</label>
+                                                    <div class="col-sm-9">
+                                                        <div>
+                                                            <label class="i-checks">
+                                                                <input type="radio" checked="" value="A4" name="OpBill.PS" ng-model="OpBill.PS" ng-change="updateOpBill('PS', 'A4')">
+                                                                <i></i>
+                                                                A4&nbsp; &nbsp;
+                                                            </label>
+                                                            <label class="i-checks">
+                                                                <input type="radio" checked="" value="A5" name="OpBill.PS" ng-model="OpBill.PS" ng-change="updateOpBill('PS', 'A5')">
+                                                                <i></i>
+                                                                A5&nbsp; &nbsp;
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Page Layout</label>
+                                                    <div class="col-sm-9">
+                                                        <div>
+                                                            <label class="i-checks">
+                                                                <input type="radio" checked="" value="Portrait" name="OpBill.PL" ng-model="OpBill.PL" ng-change="updateOpBill('PL', 'Portrait')">
+                                                                <i></i>
+                                                                Portrait&nbsp; &nbsp;
+                                                            </label>
+                                                            <label class="i-checks">
+                                                                <input type="radio" checked="" value="landscape" name="OpBill.PL" ng-model="OpBill.PL" ng-change="updateOpBill('PL', 'landscape')">
+                                                                <i></i>
+                                                                Landscape&nbsp; &nbsp;
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>-->
+                    <!-- This options moved to print configuration OPBILL End-->
 
 
                     <!--                    <div class="panel panel-default col-sm-12">
@@ -282,81 +282,162 @@
                                                             </div>-->
 
                     <!-- START -->
-<!--                                        <div class="panel panel-default col-sm-12">
-                                            <div class="panel-body">
-                                                <form name="phaMastersUpdate" class="form-horizontal" novalidate="" enctype="multipart/form-data">
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading">
-                                                            <b>Pharmacy Masters Update (Products, Generic and Drugs)</b>
-                                                        </div>
-                                                        <div class="panel-body">
-                                                            <div class="form-group">
-                                                                <input type="file" id="fileInputPhaMastersUpdate" file-model="phaMastersUpdate" ui-jq="filestyle" data-icon="false" data-classButton="btn btn-default" data-classInput="form-control inline v-middle input-s">
-                                                            </div>
-                                                            <div class="form-group" ng-show="pha_master_import_process_text">
-                                                                <span class="text text-primary">{{ pha_master_import_process_text}}<br /></span>
-                                                                <span class="text text-success" ng-show="progress_pha_master_imported_rows">Success Row: {{ success_pha_master_import_rows}}<br /></span>
-                                                                <span class="text text-danger" ng-show="progress_pha_master_imported_rows">Failed Row: {{ failed_pha_master_import_rows}}<br /></span>
-                                                                <span class="text text-primary" ng-show="progress_pha_master_imported_rows">Total Row: {{ total_pha_master_import_rows}}<br /></span>
-                                                            </div>
-                                                            <div class="form-group" ng-if="import_pha_master_percent > 0">
-                                                                <div class="progress">
-                                                                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ import_pha_master_percent}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ import_pha_master_percent}}%">
-                                                                        <span class="" style="color: black">
-                                                                            {{ import_pha_master_percent | number:2}}% Complete
-                                                                        </span>
-                                                                    </div>
+                    <!--                                        <div class="panel panel-default col-sm-12">
+                                                                <div class="panel-body">
+                                                                    <form name="phaMastersUpdate" class="form-horizontal" novalidate="" enctype="multipart/form-data">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading">
+                                                                                <b>Pharmacy Masters Update (Products, Generic and Drugs)</b>
+                                                                            </div>
+                                                                            <div class="panel-body">
+                                                                                <div class="form-group">
+                                                                                    <input type="file" id="fileInputPhaMastersUpdate" file-model="phaMastersUpdate" ui-jq="filestyle" data-icon="false" data-classButton="btn btn-default" data-classInput="form-control inline v-middle input-s">
+                                                                                </div>
+                                                                                <div class="form-group" ng-show="pha_master_import_process_text">
+                                                                                    <span class="text text-primary">{{ pha_master_import_process_text}}<br /></span>
+                                                                                    <span class="text text-success" ng-show="progress_pha_master_imported_rows">Success Row: {{ success_pha_master_import_rows}}<br /></span>
+                                                                                    <span class="text text-danger" ng-show="progress_pha_master_imported_rows">Failed Row: {{ failed_pha_master_import_rows}}<br /></span>
+                                                                                    <span class="text text-primary" ng-show="progress_pha_master_imported_rows">Total Row: {{ total_pha_master_import_rows}}<br /></span>
+                                                                                </div>
+                                                                                <div class="form-group" ng-if="import_pha_master_percent > 0">
+                                                                                    <div class="progress">
+                                                                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ import_pha_master_percent}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ import_pha_master_percent}}%">
+                                                                                            <span class="" style="color: black">
+                                                                                                {{ import_pha_master_percent | number:2}}% Complete
+                                                                                            </span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <footer class="panel-footer text-right bg-light lter">
+                                                                                <button class="btn m-b-xs  btn-success save-btn" ng-click="importPhaMasters()">
+                                                                                    Import
+                                                                                </button>
+                                                                            </footer>
+                                                                        </div>
+                                                                    </form>
                                                                 </div>
-                                                            </div>
-                                                        </div>
-                                                        <footer class="panel-footer text-right bg-light lter">
-                                                            <button class="btn m-b-xs  btn-success save-btn" ng-click="importPhaMasters()">
-                                                                Import
-                                                            </button>
-                                                        </footer>
-                                                    </div>
-                                                </form>
+                                                            </div>-->
+                    <!-- END -->
+
+                    <!-- START -->
+                    <!--                                        <div class="panel panel-default col-sm-12">
+                                                                <div class="panel-body">
+                                                                    <form name="phaMastersDelete" class="form-horizontal" novalidate="" enctype="multipart/form-data">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading">
+                                                                                <b>Pharmacy Masters Delete (Products)</b>
+                                                                            </div>
+                                                                            <div class="panel-body">
+                                                                                <div class="form-group">
+                                                                                    <input type="file" id="fileInputPhaMastersUpdate" file-model="phaMastersDelete" ui-jq="filestyle" data-icon="false" data-classButton="btn btn-default" data-classInput="form-control inline v-middle input-s">
+                                                                                </div>
+                                                                                <div class="form-group" ng-show="pha_master_delete_process_text">
+                                                                                    <span class="text text-primary">{{ pha_master_delete_process_text}}<br /></span>
+                                                                                    <span class="text text-success" ng-show="progress_pha_master_deleted_rows">Success Row: {{ success_pha_master_delete_rows}}<br /></span>
+                                                                                    <span class="text text-danger" ng-show="progress_pha_master_deleted_rows">Failed Row: {{ failed_pha_master_delete_rows}}<br /></span>
+                                                                                    <span class="text text-primary" ng-show="progress_pha_master_deleted_rows">Total Row: {{ total_pha_master_delete_rows}}<br /></span>
+                                                                                </div>
+                                                                                <div class="form-group" ng-if="delete_pha_master_percent > 0">
+                                                                                    <div class="progress">
+                                                                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ delete_pha_master_percent}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ delete_pha_master_percent}}%">
+                                                                                            <span class="" style="color: black">
+                                                                                                {{ delete_pha_master_percent | number:2}}% Complete
+                                                                                            </span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <footer class="panel-footer text-right bg-light lter">
+                                                                                <button class="btn m-b-xs  btn-success save-btn" ng-click="deletePhaMasters()">
+                                                                                    Import
+                                                                                </button>
+                                                                            </footer>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>-->
+                    <!-- END -->
+
+                    <!-- START -->
+                    <div class="panel panel-default col-sm-12">
+                        <div class="panel-body">
+                            <form name="phaMastersDelete" class="form-horizontal" novalidate="" enctype="multipart/form-data">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <b>Pharmacy Drug Delete (Drugs)</b>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <input type="file" id="fileInputPhaMastersUpdate" file-model="phaMastersDelete" ui-jq="filestyle" data-icon="false" data-classButton="btn btn-default" data-classInput="form-control inline v-middle input-s">
+                                        </div>
+                                        <div class="form-group" ng-show="pha_drug_delete_process_text">
+                                            <span class="text text-primary">{{ pha_drug_delete_process_text}}<br /></span>
+                                            <span class="text text-success" ng-show="progress_pha_drug_deleted_rows">Success Row: {{ success_pha_drug_delete_rows}}<br /></span>
+                                            <span class="text text-danger" ng-show="progress_pha_drug_deleted_rows">Failed Row: {{ failed_pha_drug_delete_rows}}<br /></span>
+                                            <span class="text text-primary" ng-show="progress_pha_drug_deleted_rows">Total Row: {{ total_pha_drug_delete_rows}}<br /></span>
+                                        </div>
+                                        <div class="form-group" ng-if="delete_pha_drug_percent > 0">
+                                            <div class="progress">
+                                                <div class="progress-bar" role="progressbar" aria-valuenow="{{ delete_pha_drug_percent}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ delete_pha_drug_percent}}%">
+                                                    <span class="" style="color: black">
+                                                        {{ delete_pha_drug_percent | number:2}}% Complete
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>-->
+                                        </div>
+                                    </div>
+                                    <footer class="panel-footer text-right bg-light lter">
+                                        <button class="btn m-b-xs  btn-success save-btn" ng-click="deletePhaDrug()">
+                                            Import
+                                        </button>
+                                    </footer>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <!-- END -->
                     
                     <!-- START -->
-<!--                                        <div class="panel panel-default col-sm-12">
-                                            <div class="panel-body">
-                                                <form name="phaMastersDelete" class="form-horizontal" novalidate="" enctype="multipart/form-data">
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading">
-                                                            <b>Pharmacy Masters Delete (Products)</b>
-                                                        </div>
-                                                        <div class="panel-body">
-                                                            <div class="form-group">
-                                                                <input type="file" id="fileInputPhaMastersUpdate" file-model="phaMastersDelete" ui-jq="filestyle" data-icon="false" data-classButton="btn btn-default" data-classInput="form-control inline v-middle input-s">
-                                                            </div>
-                                                            <div class="form-group" ng-show="pha_master_delete_process_text">
-                                                                <span class="text text-primary">{{ pha_master_delete_process_text}}<br /></span>
-                                                                <span class="text text-success" ng-show="progress_pha_master_deleted_rows">Success Row: {{ success_pha_master_delete_rows}}<br /></span>
-                                                                <span class="text text-danger" ng-show="progress_pha_master_deleted_rows">Failed Row: {{ failed_pha_master_delete_rows}}<br /></span>
-                                                                <span class="text text-primary" ng-show="progress_pha_master_deleted_rows">Total Row: {{ total_pha_master_delete_rows}}<br /></span>
-                                                            </div>
-                                                            <div class="form-group" ng-if="delete_pha_master_percent > 0">
-                                                                <div class="progress">
-                                                                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ delete_pha_master_percent}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ delete_pha_master_percent}}%">
-                                                                        <span class="" style="color: black">
-                                                                            {{ delete_pha_master_percent | number:2}}% Complete
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <footer class="panel-footer text-right bg-light lter">
-                                                            <button class="btn m-b-xs  btn-success save-btn" ng-click="deletePhaMasters()">
-                                                                Import
-                                                            </button>
-                                                        </footer>
-                                                    </div>
-                                                </form>
-                                            </div>
+                    <div class="panel panel-default col-sm-12">
+                        <div class="panel-body">
+                            <form name="phaMastersGenericDelete" class="form-horizontal" novalidate="" enctype="multipart/form-data">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <b>Pharmacy Generic Delete (Generics)</b>
+                                    </div>
+                                    <div class="panel-body">
+<!--                                        <div class="form-group">
+                                            <input type="file" id="fileInputPhaGenericUpdate" file-model="phaMastersGenericDelete" ui-jq="filestyle" data-icon="false" data-classButton="btn btn-default" data-classInput="form-control inline v-middle input-s">
                                         </div>-->
+                                        <div class="form-group" ng-show="pha_generic_delete_process_text">
+                                            <span class="text text-primary">{{ pha_generic_delete_process_text}}<br /></span>
+                                            <span class="text text-success" ng-show="progress_pha_generic_deleted_rows">Success Row: {{ success_pha_generic_delete_rows}}<br /></span>
+                                            <span class="text text-danger" ng-show="progress_pha_generic_deleted_rows">Failed Row: {{ failed_pha_generic_delete_rows}}<br /></span>
+                                            <span class="text text-primary" ng-show="progress_pha_generic_deleted_rows">Total Row: {{ total_pha_generic_delete_rows}}<br /></span>
+                                        </div>
+                                        <div class="form-group" ng-if="delete_pha_generic_percent > 0">
+                                            <div class="progress">
+                                                <div class="progress-bar" role="progressbar" aria-valuenow="{{ delete_pha_generic_percent}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ delete_pha_generic_percent}}%">
+                                                    <span class="" style="color: black">
+                                                        {{ delete_pha_generic_percent | number:2}}% Complete
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <footer class="panel-footer text-right bg-light lter">
+                                        <button class="btn m-b-xs  btn-success save-btn" ng-click="Hello()">
+                                            Importtt
+                                        </button>
+<!--                                        <button class="btn m-b-xs  btn-success save-btn" ng-click="deletePhageneric()">
+                                            Importtt
+                                        </button>-->
+                                    </footer>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <!-- END -->
 
                     <!--                    <div class="panel panel-default col-sm-12">
@@ -433,42 +514,42 @@
                                             </div>
                                         </div>-->
                     <!-- Product Description Route Start need to enable kknagar-->
-<!--                    <div class="panel panel-default col-sm-12">
-                        <div class="panel-body">
-                            <form name="productdescriptionImport" class="form-horizontal" novalidate="" enctype="multipart/form-data">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <b>Product Description Route import</b>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div class="form-group">
-                                            <input type="file" id="fileInputProductdescriptionImport" file-model="productdescriptionImport" ui-jq="filestyle" data-icon="false" data-classButton="btn btn-default" data-classInput="form-control inline v-middle input-s">
-                                        </div>
-                                        <div class="form-group" ng-show="product_description_import_process_text">
-                                            <span class="text text-primary">{{ product_description_import_process_text}}<br /></span>
-                                            <span class="text text-success" ng-show="progress_product_description_imported_rows">Success Row: {{ success_product_description_import_rows}}<br /></span>
-                                            <span class="text text-danger" ng-show="progress_product_description_imported_rows">Failed Row: {{ failed_product_description_import_rows}}<br /></span>
-                                            <span class="text text-primary" ng-show="progress_product_description_imported_rows">Total Row: {{ total_product_description_import_rows}}<br /></span>
-                                        </div>
-                                        <div class="form-group" ng-if="import_product_description_percent > 0">
-                                            <div class="progress">
-                                                <div class="progress-bar" role="progressbar" aria-valuenow="{{ import_product_description_percent}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ import_product_description_percent}}%">
-                                                    <span class="" style="color: black">
-                                                        {{ import_product_description_percent | number:2}}% Complete
-                                                    </span>
-                                                </div>
+                    <!--                    <div class="panel panel-default col-sm-12">
+                                            <div class="panel-body">
+                                                <form name="productdescriptionImport" class="form-horizontal" novalidate="" enctype="multipart/form-data">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading">
+                                                            <b>Product Description Route import</b>
+                                                        </div>
+                                                        <div class="panel-body">
+                                                            <div class="form-group">
+                                                                <input type="file" id="fileInputProductdescriptionImport" file-model="productdescriptionImport" ui-jq="filestyle" data-icon="false" data-classButton="btn btn-default" data-classInput="form-control inline v-middle input-s">
+                                                            </div>
+                                                            <div class="form-group" ng-show="product_description_import_process_text">
+                                                                <span class="text text-primary">{{ product_description_import_process_text}}<br /></span>
+                                                                <span class="text text-success" ng-show="progress_product_description_imported_rows">Success Row: {{ success_product_description_import_rows}}<br /></span>
+                                                                <span class="text text-danger" ng-show="progress_product_description_imported_rows">Failed Row: {{ failed_product_description_import_rows}}<br /></span>
+                                                                <span class="text text-primary" ng-show="progress_product_description_imported_rows">Total Row: {{ total_product_description_import_rows}}<br /></span>
+                                                            </div>
+                                                            <div class="form-group" ng-if="import_product_description_percent > 0">
+                                                                <div class="progress">
+                                                                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ import_product_description_percent}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ import_product_description_percent}}%">
+                                                                        <span class="" style="color: black">
+                                                                            {{ import_product_description_percent | number:2}}% Complete
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <footer class="panel-footer text-right bg-light lter">
+                                                            <button class="btn m-b-xs  btn-success save-btn" ng-click="importProductdescription()">
+                                                                Import
+                                                            </button>
+                                                        </footer>
+                                                    </div>
+                                                </form>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <footer class="panel-footer text-right bg-light lter">
-                                        <button class="btn m-b-xs  btn-success save-btn" ng-click="importProductdescription()">
-                                            Import
-                                        </button>
-                                    </footer>
-                                </div>
-                            </form>
-                        </div>
-                    </div>-->
+                                        </div>-->
                     <!-- Product Description Route End-->
 
                 </div>

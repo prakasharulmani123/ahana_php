@@ -541,6 +541,81 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
+        
+        
+        
+        //Pha Generic Delete
+        $scope.initPhaGenericDeleteParams = function () {
+            $scope.pha_generic_delete_process_text = '';
+            $scope.progress_pha_generic_deleted_rows = $scope.success_pha_generic_delete_rows = $scope.failed_pha_generic_delete_rows = $scope.total_pha_generic_delete_rows = $scope.delete_pha_generic_percent = 0;
+            $scope.pha_generic_delete_error_log = false;
+        }
+
+        $scope.Hello = function () {
+            console.log('dfdsf');
+            $scope.initPhaGenericDeleteParams();
+            $scope.loadbar('show');
+            $scope.pha_generic_delete_process_text = 'Fetching the Excel Data. Please wait until the importing begins. This might take few mins';
+            //$scope.import_log = Date.parse(moment().format());
+            $scope.import_log = '1546579225000';
+            var currentUser = AuthenticationService.getCurrentUser();
+
+            fileUpload.uploadFileToUrl($scope.phaMastersGenericDelete, $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/phagenericdelete?tenant_id=' + currentUser.credentials.logged_tenant_id + '&import_log=' + $scope.import_log).success(function (response) {
+                if (response.success) {
+                    $scope.total_pha_generic_delete_rows = response.message.total_rows;
+                    $scope.pha_generic_delete_process_text = 'Importing started';
+                    $scope.phaGenericDeleteStart(response.message.id, response.message.max_id);
+                } else {
+                    $scope.loadbar('hide');
+                    $scope.pha_generic_delete_process_text = '';
+                    $scope.errorData = response.message;
+                }
+            }).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+        
+        $scope.phaGenericDeleteStart = function (id, max) {
+            $scope.loadbar('show');
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/phagenericdeletestart',
+                data: {id: id, max_id: max, import_log: $scope.import_log},
+            }).success(
+                    function (response) {
+                        if (response.success) {
+                            $scope.success_pha_generic_delete_rows++;
+                            $scope.progress_pha_generic_deleted_rows++;
+                        } else if (response.continue) {
+                            $scope.failed_pha_generic_delete_rows++;
+                            $scope.progress_pha_generic_deleted_rows++;
+                        }
+
+                        $scope.pha_generic_delete_process_text = 'Import progressing (' + $scope.progress_pha_generic_deleted_rows + '/' + $scope.total_pha_generic_delete_rows + ')';
+                        $scope.delete_pha_generic_percent = ($scope.progress_pha_generic_deleted_rows / $scope.total_pha_generic_delete_rows) * 100;
+
+                        if (response.continue) {
+                            $scope.phaGenericDeleteStart(response.continue, max);
+                        } else {
+                            $scope.pha_generic_delete_process_text = 'Import completed (' + $scope.progress_pha_generic_deleted_rows + '/' + $scope.total_pha_generic_delete_rows + ')';
+                            $scope.pha_generic_delete_error_log = true;
+                        }
+                        $scope.loadbar('hide');
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+        
+        
 
         
         //Pha Product Delete
@@ -612,6 +687,78 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
+        
+        //Pha Drug Delete
+        $scope.initPhaDrugDeleteParams = function () {
+            $scope.pha_drug_delete_process_text = '';
+            $scope.progress_pha_drug_deleted_rows = $scope.success_pha_drug_delete_rows = $scope.failed_pha_drug_delete_rows = $scope.total_pha_drug_delete_rows = $scope.delete_pha_drug_percent = 0;
+            $scope.pha_drug_delete_error_log = false;
+        }
+
+        $scope.deletePhaDrug = function () {
+            $scope.initPhaDrugDeleteParams();
+            $scope.loadbar('show');
+            $scope.pha_drug_delete_process_text = 'Fetching the Excel Data. Please wait until the importing begins. This might take few mins';
+            //$scope.import_log = Date.parse(moment().format());
+            $scope.import_log = '1546579225000';
+            var currentUser = AuthenticationService.getCurrentUser();
+
+            fileUpload.uploadFileToUrl($scope.phaMastersDelete, $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/phadrugdelete?tenant_id=' + currentUser.credentials.logged_tenant_id + '&import_log=' + $scope.import_log).success(function (response) {
+                if (response.success) {
+                    $scope.total_pha_drug_delete_rows = response.message.total_rows;
+                    $scope.pha_drug_delete_process_text = 'Importing started';
+                    $scope.phaDrugDeleteStart(response.message.id, response.message.max_id);
+                } else {
+                    $scope.loadbar('hide');
+                    $scope.pha_drug_delete_process_text = '';
+                    $scope.errorData = response.message;
+                }
+            }).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+        
+        $scope.phaDrugDeleteStart = function (id, max) {
+            $scope.loadbar('show');
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/phadrugdeletestart',
+                data: {id: id, max_id: max, import_log: $scope.import_log},
+            }).success(
+                    function (response) {
+                        if (response.success) {
+                            $scope.success_pha_drug_delete_rows++;
+                            $scope.progress_pha_drug_deleted_rows++;
+                        } else if (response.continue) {
+                            $scope.failed_pha_drug_delete_rows++;
+                            $scope.progress_pha_drug_deleted_rows++;
+                        }
+
+                        $scope.pha_drug_delete_process_text = 'Import progressing (' + $scope.progress_pha_drug_deleted_rows + '/' + $scope.total_pha_drug_delete_rows + ')';
+                        $scope.delete_pha_drug_percent = ($scope.progress_pha_drug_deleted_rows / $scope.total_pha_drug_delete_rows) * 100;
+
+                        if (response.continue) {
+                            $scope.phaDrugDeleteStart(response.continue, max);
+                        } else {
+                            $scope.pha_drug_delete_process_text = 'Import completed (' + $scope.progress_pha_drug_deleted_rows + '/' + $scope.total_pha_drug_delete_rows + ')';
+                            $scope.pha_drug_delete_error_log = true;
+                        }
+                        $scope.loadbar('hide');
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
+        
+        
 
         //In-Progress
         $scope.showphaMastersUpdateErrorLog = function () {
