@@ -873,6 +873,7 @@ class PharmacyproductController extends ActiveController {
         if (!empty($requestData['search']['value'])) {
             $tenant_id = Yii::$app->user->identity->logged_tenant_id;
             $totalFiltered = $modelClass::find()
+                    ->active()
                     ->joinWith(['productDescription', 'brand', 'generic'])
                     ->andWhere([
                         'pha_product.tenant_id' => $tenant_id,
@@ -888,6 +889,7 @@ class PharmacyproductController extends ActiveController {
                     ->count();
 
             $products = $modelClass::find()
+                    ->active()
                     ->joinWith(['productDescription', 'brand', 'generic'])
                     ->andWhere([
                         'pha_product.tenant_id' => $tenant_id,
