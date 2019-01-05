@@ -363,6 +363,9 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                     $scope.encounters = response;
                     if (response.length > 0 && response != null && mode == 'add') {
                         $scope.data.encounter_id = response[0].encounter_id;
+                        if((response[0].status == 0) && ($scope.active_ip_encounter)) {
+                            $scope.data.encounter_id = $scope.active_ip_encounter;
+                        }
                         $scope.getPrescription(); //Waiting For testing
                     } else if (mode == 'edit') {
                         $scope.data.encounter_id = encounter_id.toString();
