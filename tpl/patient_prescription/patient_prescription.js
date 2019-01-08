@@ -1407,7 +1407,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.getDays = function () {
-            var newValue = moment(this.data.next_visit).format('YYYY-MM-DD');
+            var newValue = this.data.next_visit;
             if (newValue != '') {
                 $http({
                     method: 'POST',
