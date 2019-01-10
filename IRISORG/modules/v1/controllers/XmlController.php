@@ -77,7 +77,7 @@ class XmlController extends Controller {
         $item->addAttribute('id', $id);
         $item->addAttribute('Selected', 'False');
     }
-    
+
     private function createCheckBox($field, $item, $value, $id) {
         $item = $field->addChild('LISTITEM', $item);
         $item->addAttribute('value', $value);
@@ -250,7 +250,7 @@ class XmlController extends Controller {
                             }
                         }
                     }
-                    
+
                     $xml->asXML($files);
                     //print_r($targets); die;
                 }
@@ -448,7 +448,7 @@ class XmlController extends Controller {
     }
 
     public function actionRbtoddl() {
-        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadioButtonList' and @id='primary_care_giver']";
+        $xpath = "/FIELDS/GROUP/PANELBODY//FIELD[@type='RadioButtonList' and @id='rb_pb_treatmenthistory']/LISTITEMS/LISTITEM";
         $field_property = [
             'id' => 'primary_care_giver',
             'name' => 'primary_care_giver',
@@ -471,23 +471,39 @@ class XmlController extends Controller {
                     $targets = $xml->xpath($xpath);
                     if (!empty($targets)) {
                         foreach ($targets as $target) {
-                            $target['type'] = 'DropDownList';
-
-                            unset($target->PROPERTIES);
-                            $properties = $target->addChild('PROPERTIES');
-                            foreach ($field_property as $key => $value) {
-                                $property_{$key} = $properties->addChild("PROPERTY", $value);
-                                $property_{$key}->addAttribute('name', $key);
-                            }
-
-                            unset($target->LISTITEMS);
-                            $listItems = $target->addChild('LISTITEMS');
-                            foreach ($list_items as $key => $value) {
-                                $item_{$key} = $listItems->addChild('LISTITEM', $value);
-                                $item_{$key}->addAttribute('value', $value);
-                                $item_{$key}->addAttribute('Selected', ($key == 0 ? "True" : "False"));
+                            foreach ($targets as $target) {
+                                if (($target['value'] == 'Non-complaint') && ($target[0] == 'Non-complaint')) {
+                                    $target['value'] = 'Non-compliance';
+                                    $target[0] = 'Non-compliance';
+                                }
+                                if (($target['value'] == 'Complaint') && ($target[0] == 'Complaint')) {
+                                    $target['value'] = 'Compliance';
+                                    $target[0] = 'Compliance';
+                                }
+                                if (($target['value'] == 'Partially Complaint') && ($target[0] == 'Partially Complaint')) {
+                                    $target['value'] = 'Partially Compliance';
+                                    $target[0] = 'Partially Compliance';
+                                }
                             }
                         }
+//                        foreach ($targets as $target) {
+//                            $target['type'] = 'DropDownList';
+//
+//                            unset($target->PROPERTIES);
+//                            $properties = $target->addChild('PROPERTIES');
+//                            foreach ($field_property as $key => $value) {
+//                                $property_{$key} = $properties->addChild("PROPERTY", $value);
+//                                $property_{$key}->addAttribute('name', $key);
+//                            }
+//
+//                            unset($target->LISTITEMS);
+//                            $listItems = $target->addChild('LISTITEMS');
+//                            foreach ($list_items as $key => $value) {
+//                                $item_{$key} = $listItems->addChild('LISTITEM', $value);
+//                                $item_{$key}->addAttribute('value', $value);
+//                                $item_{$key}->addAttribute('Selected', ($key == 0 ? "True" : "False"));
+//                            }
+//                        }
                     }
                     $xml->asXML($files);
                 }
@@ -647,9 +663,10 @@ class XmlController extends Controller {
                     $fileContent = file_get_contents($files);
                     //PatDocumentTypes::updateAllCounters(["document_xml" => $fileContent]);
                     $docModel = PatDocumentTypes::find()->andWhere(['doc_type' => 'CH'])
-                            //->where(['IN', 'tenant_id', [1, 2, 3, 4]]) //1st set
-                            //->where(['IN', 'tenant_id', [6, 7, 11, 13]]) //2nd set 
-                            //->where(['IN', 'tenant_id', [12]])    //Medclinic tenant id
+                            //->where(['IN', 'tenant_id', [1,2,3,6,7,11,13,15,38]]) //1st set
+                            ->where(['IN', 'tenant_id', [1,2,3,6,7]]) //1st set
+                            //->where(['IN', 'tenant_id', [11,13,15,38]]) //2nd set 
+                            //->where(['IN', 'tenant_id', [12,37]])    //Medclinic tenant id
                             //->where(['IN', 'tenant_id', []])    //Msctrf tenant id
                             ->all();
                     foreach ($docModel as $doc) {
@@ -825,7 +842,7 @@ class XmlController extends Controller {
 //                            }
                         }
                     } //print_r($target); die;
-                    $xml->asXML($files); 
+                    $xml->asXML($files);
                 } //die;
             }
         }

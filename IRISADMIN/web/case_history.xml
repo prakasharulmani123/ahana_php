@@ -819,9 +819,9 @@
                         </PROPERTY>
                     </PROPERTIES>
                     <LISTITEMS>
-                        <LISTITEM id="rb_pb_treatmenthistory1" value="Non-complaint" Selected="False">Non-complaint</LISTITEM>
-                        <LISTITEM id="rb_pb_treatmenthistory2" value="Complaint" Selected="False">Complaint</LISTITEM>
-                        <LISTITEM id="rb_pb_treatmenthistory3" value="Partially Complaint" Selected="False">Partially Complaint</LISTITEM>
+                        <LISTITEM id="rb_pb_treatmenthistory1" value="Non-compliance" Selected="False">Non-compliance</LISTITEM>
+                        <LISTITEM id="rb_pb_treatmenthistory2" value="Compliance" Selected="False">Compliance</LISTITEM>
+                        <LISTITEM id="rb_pb_treatmenthistory3" value="Partially Compliance" Selected="False">Partially Compliance</LISTITEM>
                     </LISTITEMS>
                 </FIELD>
                 
