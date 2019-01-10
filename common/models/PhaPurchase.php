@@ -180,6 +180,9 @@ class PhaPurchase extends PActiveRecord {
                 $balance = $model->net_amount - $paid_amount;
                 return $balance;
             },
+            'branch_name' => function ($model) {
+                return (isset($model->tenant) ? $model->tenant->tenant_name : '-');
+            },
         ];
 
         $parent_fields = parent::fields();
@@ -187,7 +190,7 @@ class PhaPurchase extends PActiveRecord {
         if ($addtField = Yii::$app->request->get('addtfields')) {
             switch ($addtField):
                 case 'purchasereport':
-                    $addt_keys = ['supplier_name'];
+                    $addt_keys = ['supplier_name', 'branch_name'];
                     $parent_fields = [
                         'gr_num' => 'gr_num',
                         'invoice_no' => 'invoice_no',

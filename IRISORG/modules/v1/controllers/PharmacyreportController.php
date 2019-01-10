@@ -41,10 +41,13 @@ class PharmacyreportController extends ActiveController {
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
 
         $model = PhaPurchase::find()
-                ->tenant()
                 ->andWhere("pha_purchase.invoice_date between '{$post['from']}' AND '{$post['to']}'");
         if (isset($post['payment_type'])) {
             $model->andWhere(['pha_purchase.payment_type' => $post['payment_type']]);
+        }
+        if (isset($post['tenant_id'])) {
+            $tenant_ids = join("','", $post['tenant_id']);
+            $model->andWhere("pha_purchase.tenant_id IN ( '$tenant_ids' )");
         }
         $reports = $model->all();
 
