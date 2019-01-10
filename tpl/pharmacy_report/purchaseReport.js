@@ -25,6 +25,12 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
         }
 
         $scope.initReport = function () {
+            $scope.tenants = [];
+            $rootScope.commonService.GetTenantList(function (response) {
+                if (response.success == true) {
+                    $scope.tenants = response.tenantList;
+                }
+            });
             $scope.paymentTypes = [];
             $rootScope.commonService.GetPaymentType(function (response) {
                 $scope.paymentTypes = response;
@@ -59,6 +65,8 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
                 angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
             if (typeof $scope.data.payment_type !== 'undefined' && $scope.data.payment_type != '')
                 angular.extend(data, {payment_type: $scope.data.payment_type});
+            if (typeof $scope.data.tenant_id !== 'undefined' && $scope.data.tenant_id != '')
+                angular.extend(data, {tenant_id: $scope.data.tenant_id});
 
             // Get data's from service
             $http.post($rootScope.IRISOrgServiceUrl + '/pharmacyreport/purchasereport?addtfields=purchasereport', data)
@@ -66,6 +74,18 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
                         $scope.loadbar('hide');
                         $scope.records = response.report;
                         $scope.generated_on = moment().format('YYYY-MM-DD hh:mm A');
+                        $scope.tableid = [];
+                        $scope.sheet_name = [];
+                        var newunique = {};
+                        angular.forEach(response.report, function (item, key) {
+                            if (!newunique[item.branch_name]) {
+                                $scope.sheet_name.push(item.branch_name);
+                                $scope.tableid.push('table_' + item.branch_name);
+                                newunique[item.branch_name] = item;
+                            }
+                        });
+                        $scope.tableid.push('branchwise_report');
+                        $scope.sheet_name.push('Branchwise Report');
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured";
@@ -105,119 +125,112 @@ app.controller('purchaseReportController', ['$rootScope', '$scope', '$timeout', 
 
         $scope.printloader = '';
         $scope.printContent = function () {
+            var content = [];
             var generated_on = $scope.generated_on;
             var generated_by = $scope.app.username;
             var date_rage = moment($scope.data.from).format('YYYY-MM-DD') + " - " + moment($scope.data.to).format('YYYY-MM-DD');
             var branch_name = $scope.app.org_name;
-
-            var reports = [];
-            reports.push([
-                {text: branch_name, style: 'header', colSpan: 7}, "", "", "", "", "",""
-            ]);
-            reports.push([
-                {text: 'S.No', style: 'header'},
-                {text: 'GR no', style: 'header'},
-                {text: 'Invoice no', style: 'header'},
-                {text: 'Date Of Purchase', style: 'header'},
-                {text: 'Supplier', style: 'header'},
-                {text: 'Payment Type', style: 'header'},
-                {text: 'Purchase Value', style: 'header'},
-            ]);
-
-            var serial_no = 1;
-            var result_count = $scope.records.length;
-            var total = 0;
-            angular.forEach($scope.records, function (record, key) {
-                var s_no_string = serial_no.toString();
-                if (record.payment_type == 'CA') {
-                    var payment = 'Cash';
-                } else {
-                    var payment = 'Credit';
-                }
-                reports.push([
-                    s_no_string,
-                    record.gr_num,
-                    record.invoice_no,
-                    moment(record.invoice_date).format('DD-MM-YYYY'),
-                    record.supplier_name,
-                    payment,
-                    record.net_amount,
+            
+            var branch_wise = $filter('groupBy')($scope.records, 'branch_name');
+            var result_count = Object.keys(branch_wise).length;
+            var index = 1;
+            
+            angular.forEach(branch_wise, function (branch, branch_name) {
+                var content_info = [];
+                content_info.push({
+                    columns: [
+                        {
+                            text: [
+                                {text: 'Branch Name: ', bold: true},
+                                branch_name
+                            ],
+                            margin: [0, 0, 0, 5]
+                        },
+                        {
+                            text: [
+                                {text: 'Generated On: ', bold: true},
+                                generated_on
+                            ],
+                            margin: [0, 0, 0, 5]
+                        }
+                    ]
+                }, {
+                    columns: [
+                        {
+                            text: [
+                                {text: 'Date: ', bold: true},
+                                date_rage
+                            ],
+                            margin: [0, 0, 0, 5]
+                        },
+                        {
+                            text: [
+                                {text: ' Generated By: ', bold: true},
+                                generated_by
+                            ],
+                            margin: [0, 0, 0, 5]
+                        }
+                    ]
+                });
+                //angular.forEach(branch, function (item) {
+                var items = [];
+                items.push([
+                    {text: 'S.No', style: 'header'},
+                    {text: 'GR no', style: 'header'},
+                    {text: 'Invoice no', style: 'header'},
+                    {text: 'Date Of Purchase', style: 'header'},
+                    {text: 'Supplier', style: 'header'},
+                    {text: 'Payment Type', style: 'header'},
+                    {text: 'Purchase Value', style: 'header'},
                 ]);
-                total += parseFloat(record.net_amount);
-                if (serial_no == result_count) {
-                    $scope.printloader = '';
-                }
-                serial_no++;
-            });
-            reports.push([
-                {
-                    text: 'Total Purchase Value',
-                    style: 'header',
-                    alignment: 'right',
-                    colSpan: 6
-                },
-                "",
-                "",
-                "",
-                "",
-                "",
-                {
-                    text: total.toString(),
-                    style: 'header',
-                    alignment: 'right'
-                }
-            ]);
-
-            var content = [];
-            content.push({
-                columns: [
+                var items_serial_no = 1;
+                var total = 0;
+                angular.forEach(branch, function (record, key) {
+                    if(record.payment_type == 'CA')
+                        var payment = 'Cash';
+                    else
+                        var payment = 'Card';
+                    var s_no_string = items_serial_no.toString();
+                    items.push([
+                        s_no_string,
+                        record.gr_num,
+                        record.invoice_no,
+                        moment(record.invoice_date).format('DD-MM-YYYY'),
+                        record.supplier_name,
+                        payment,
+                        record.net_amount,
+                    ]);
+                    total += parseFloat(record.net_amount);
+                    items_serial_no++;
+                });
+                items.push([
                     {
-                        text: [
-                            {text: 'Report Name: ', bold: true},
-                            'Purchase Report'
-                        ],
-                        margin: [0, 0, 0, 20]
+                        text: "Total",
+                        colSpan: 4,
+                        alignment: 'right',
+                        style: 'header'
+                    }, "", "", "", {
+                        text: total.toString(),
+                        style: 'header',
+                        colSpan: 3,
+                    }, "",""
+                ]);
+                content_info.push({
+                    style: 'demoTable',
+                    table: {
+                        widths: ['auto', '*', '*', 'auto', '*', 'auto','auto'],
+                        headerRows: 1,
+                        body: items,
                     },
-                    {
-                        text: [
-                            {text: ' Generated On: ', bold: true},
-                            generated_on
-                        ],
-                        margin: [0, 0, 0, 20]
-                    }
-                ]
-            }, {
-                columns: [
-                    {
-                        text: [
-                            {text: 'Date: ', bold: true},
-                            date_rage
-                        ],
-                        margin: [0, 0, 0, 20]
+                    layout: {
+                        hLineWidth: function (i, node) {
+                            return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
+                        }
                     },
-                    {
-                        text: [
-                            {text: ' Generated By: ', bold: true},
-                            generated_by
-                        ],
-                        margin: [0, 0, 0, 20]
-                    }
-                ]
-            }, {
-                style: 'demoTable',
-                table: {
-                    headerRows: 2,
-                    widths: ['auto', 'auto', 'auto','auto', '*', 'auto', 'auto'],
-                    body: reports,
-                    dontBreakRows: true,
-                },
-                layout: {
-                    hLineWidth: function (i, node) {
-                        return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
-                    }
-                }
+                    pageBreak: (index === result_count ? '' : 'after'),
+                });
+                content.push(content_info);
             });
-
             return content;
         }
 
