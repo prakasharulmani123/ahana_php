@@ -463,6 +463,7 @@ class XmlController extends Controller {
                 if (filesize($files) > 0) {
                     libxml_use_internal_errors(true);
                     $xml = simplexml_load_file($files, null, LIBXML_NOERROR);
+                    echo $files; echo "<br>";
                     if ($xml === false) {
                         $error_files[$key]['name'] = $files;
                         $error_files[$key]['error'] = libxml_get_errors();
@@ -664,9 +665,9 @@ class XmlController extends Controller {
                     //PatDocumentTypes::updateAllCounters(["document_xml" => $fileContent]);
                     $docModel = PatDocumentTypes::find()->andWhere(['doc_type' => 'CH'])
                             //->where(['IN', 'tenant_id', [1,2,3,6,7,11,13,15,38]]) //1st set
-                            ->where(['IN', 'tenant_id', [1,2,3,6,7]]) //1st set
+                            //->where(['IN', 'tenant_id', [1,2,3,6,7]]) //1st set
                             //->where(['IN', 'tenant_id', [11,13,15,38]]) //2nd set 
-                            //->where(['IN', 'tenant_id', [12,37]])    //Medclinic tenant id
+                            ->where(['IN', 'tenant_id', [12,37]])    //Medclinic tenant id
                             //->where(['IN', 'tenant_id', []])    //Msctrf tenant id
                             ->all();
                     foreach ($docModel as $doc) {
