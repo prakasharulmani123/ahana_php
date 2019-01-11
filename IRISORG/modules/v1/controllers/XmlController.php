@@ -34,14 +34,37 @@ class XmlController extends Controller {
         return $this->render('index');
     }
 
-    private function getAllFiles($foler_name = 'uploads') {
+    private function getAllFiles($foler_name = 'uploads/1') {
         $webroot = Yii::getAlias('@webroot');
-        $files = FileHelper::findFiles($webroot . '/' . $foler_name, [
-                    'only' => ['CH_*.xml'],
-                    'recursive' => true,
-        ]);
+        $limit_dir = 1;
+        $limit_start = 1;
+        $limit_end = 1000;
+        $ffs = scandir($webroot . '/' . $foler_name);
+
+        foreach ($ffs as $ff) {
+
+            if ($limit_start == $limit_end) {
+                break;
+            }
+            if ($limit_dir >= $limit_start) {
+                $files[] = FileHelper::findFiles($webroot . '/' . $foler_name . '/' . $ff, [
+                            'only' => ['CH_*.xml'],
+                            'recursive' => true,
+                ]);
+                $limit_start++;
+            }
+            $limit_dir++;
+        }
+
+        $singleArray = [];
+        foreach ($files as $childArray) {
+            foreach ($childArray as $value) {
+                $singleArray[] = $value;
+            }
+        }
+        
         $base_xml = [realpath(dirname(__FILE__) . '/../../../../IRISADMIN/web/case_history.xml')];
-        $all_files = \yii\helpers\ArrayHelper::merge($base_xml, $files);
+        $all_files = \yii\helpers\ArrayHelper::merge($base_xml, $singleArray);
         return $all_files;
     }
 
@@ -457,13 +480,15 @@ class XmlController extends Controller {
         $list_items = ['Self', 'Father', 'Mother', 'Sibling', 'Spouse', 'Children', 'Friend', 'Others'];
 
         $all_files = $this->getAllFiles();
+        //print_r($all_files); die;
         $error_files = [];
         if (!empty($all_files)) {
             foreach ($all_files as $key => $files) {
                 if (filesize($files) > 0) {
                     libxml_use_internal_errors(true);
                     $xml = simplexml_load_file($files, null, LIBXML_NOERROR);
-                    echo $files; echo "<br>";
+                    echo $files;
+                    echo "<br>";
                     if ($xml === false) {
                         $error_files[$key]['name'] = $files;
                         $error_files[$key]['error'] = libxml_get_errors();
@@ -667,7 +692,7 @@ class XmlController extends Controller {
                             //->where(['IN', 'tenant_id', [1,2,3,6,7,11,13,15,38]]) //1st set
                             //->where(['IN', 'tenant_id', [1,2,3,6,7]]) //1st set
                             //->where(['IN', 'tenant_id', [11,13,15,38]]) //2nd set 
-                            ->where(['IN', 'tenant_id', [12,37]])    //Medclinic tenant id
+                            ->where(['IN', 'tenant_id', [12, 37]])    //Medclinic tenant id
                             //->where(['IN', 'tenant_id', []])    //Msctrf tenant id
                             ->all();
                     foreach ($docModel as $doc) {
