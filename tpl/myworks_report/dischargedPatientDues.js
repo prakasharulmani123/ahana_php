@@ -141,6 +141,8 @@ app.controller('dischargedPatientDuesController', ['$rootScope', '$scope', '$tim
                                 newunique1[item.branch_name] = item;
                             }
                         });
+                        $scope.tableid.push('overall_report');
+                        $scope.sheet_name.push('Overall Report');
                         $scope.generated_on = moment().format('YYYY-MM-DD hh:mm A');
                     })
                     .error(function () {

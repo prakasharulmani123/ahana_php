@@ -113,6 +113,8 @@ app.controller('IpincomereportController', ['$rootScope', '$scope', '$timeout', 
                         });
                         $scope.tableid.push('branchwise_report');
                         $scope.sheet_name.push('Branchwise Report');
+                        $scope.tableid.push('overall_report');
+                        $scope.sheet_name.push('Overall Report');
                         $scope.generated_on = moment().format('YYYY-MM-DD hh:mm A');
                     })
                     .error(function () {
