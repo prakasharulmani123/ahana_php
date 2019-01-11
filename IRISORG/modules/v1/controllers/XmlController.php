@@ -37,8 +37,8 @@ class XmlController extends Controller {
     private function getAllFiles($foler_name = 'uploads/1') {
         $webroot = Yii::getAlias('@webroot');
         $limit_dir = 1;
-        $limit_start = 1;
-        $limit_end = 1000;
+        $limit_start = 2000;
+        $limit_end = 2500;
         $ffs = scandir($webroot . '/' . $foler_name);
 
         foreach ($ffs as $ff) {
