@@ -6,6 +6,7 @@ use common\models\query\CoRolesResourcesQuery;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "co_roles_resources".
@@ -194,9 +195,11 @@ class CoRolesResources extends ActiveRecord {
     //Get Particular organization accessed modules tree
     public static function getOrgModuletree($tenant_id, $super_roler_id, $org = null) {
         $tree = self::getModuleTree();
-        $role_resources_ids = self::find()->select(['GROUP_CONCAT(resource_id) AS resource_ids'])->where(['role_id' => $super_roler_id, 'tenant_id' => $tenant_id, 'status' => '1'])->one();
-        $role_resources_ids = explode(',', $role_resources_ids->resource_ids);
-
+        //Group concat only support 1024 bytes so used arrayhelper concept
+        //$role_resources_ids = self::find()->select('resource_id')->where(['role_id' => $super_roler_id, 'tenant_id' => $tenant_id, 'status' => '1'])->asArray()->all();
+        //$role_resources_ids = explode(',', $role_resources_ids->resource_ids);
+        $role_resources_ids = ArrayHelper::map(self::find()->where(['role_id' => $super_roler_id, 'tenant_id' => $tenant_id, 'status' => '1'])->all(), "role_perm_id", "resource_id" );
+        
         foreach ($tree as $key => $menu) {
             if (in_array($menu['value'], $role_resources_ids)) {
                 if (isset($menu['children'])) {
