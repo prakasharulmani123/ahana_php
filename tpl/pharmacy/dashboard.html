@@ -1,0 +1,15 @@
+<div class="bg-light lter b-b wrapper-md">
+    <div class="row">
+        <div class="col-sm-6 col-xs-12">
+            <h1 class="m-n font-thin h3 text-black">Dashboard</h1>
+        </div>
+    </div>
+</div>
+<div class="wrapper-md ng-scope" ng-controller="PharmacyController">
+    <div ng-include="'tpl/blocks/alert.html'">
+        {% include 'tpl/blocks/alert.html' %}
+    </div>
+    <div class="ng-scope">
+        <h4 class="text-center">Hi {{app.username}}, Welcome to {{app.name}} ({{app.org_name}}) !!!</h4>
+    </div>
+</div>

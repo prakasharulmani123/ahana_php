@@ -936,7 +936,7 @@ angular.module('app')
                                         var pharmacy_resources = JSON.parse(localStorage.getItem("ngStorage-user"));
                                         if(pharmacy_resources.resources.hasOwnProperty("pharmacy.saleCreate")) {
                                             $scope.pharmacy_menu = '';
-                                        } else if(pharmacy_resources.resources.hasOwnProperty("pharmacy.purchaseReport")) {
+                                        } else if(pharmacy_resources.resources.hasOwnProperty("pharmacy.dashboard")) {
                                             $scope.pharmacy_menu = 'report';
                                         } else {
                                             $scope.pharmacy_menu = '';

@@ -3110,6 +3110,21 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         }]
                 }
             })
+            //Pharmacy Dashboard
+            .state('pharmacy.dashboard', {
+                url: '/pharmacyDashboard',
+                templateUrl: 'tpl/pharmacy/dashboard.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                        function ($ocLazyLoad) {
+                            return $ocLazyLoad.load(['xeditable', 'smart-table']).then(
+                                    function () {
+                                        return $ocLazyLoad.load('tpl/pharmacy/pharmacy.js?v=' + APP_VERSION);
+                                    }
+                            );
+                        }]
+                }
+            })
 
             //Myworks
             .state('myworks', {
