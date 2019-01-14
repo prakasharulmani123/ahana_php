@@ -327,12 +327,14 @@ app.controller('PatientAppointmentController', ['$rootScope', '$scope', '$timeou
 
         $scope.setCurrentArrivalTime = function () {
             if ($scope.data.appt_status == 'A' && $scope.timeslots.length > 0) {
-                start = moment();
-                remainder = 5 - start.minute() % 5;
-                $scope.data.status_time = '';
-                $timeout(function () {
-                    $scope.data.status_time = moment(start).add("minutes", remainder).format("HH:mm") + ':00';
-                }, 400);
+                $rootScope.commonService.GetServerTime(function (response) {
+                    start = moment(response);
+                    remainder = 5 - start.minute() % 5;
+                    $scope.data.status_time = '';
+                    $timeout(function () {
+                        $scope.data.status_time = moment(start).add("minutes", remainder).format("HH:mm") + ':00';
+                    }, 400);
+                });
             }
         }
 

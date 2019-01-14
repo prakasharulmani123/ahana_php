@@ -83,7 +83,8 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
     service.GetSaleGroups = GetSaleGroups;
     service.GetIntervalList = GetIntervalList;
     service.GettoWords = GettoWords;
-
+    
+    service.GetServerTime = GetServerTime;
     return service;
 
     function GettoWords(s)
@@ -939,6 +940,17 @@ function CommonService($http, $rootScope, $window, $q, $filter, $localStorage, A
         var response;
 
         $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyreport/getsalegrouplist?tenant=' + tenant + '&status=' + sts + '&deleted=' + del_sts)
+                .success(function (response) {
+                    callback(response);
+                }, function (x) {
+                    response = {success: false, message: 'Server Error'};
+                    callback(response);
+                });
+    }
+    
+    function GetServerTime(callback) {
+        var response;
+        $http.get($rootScope.IRISOrgServiceUrl + '/patient/getservertime')
                 .success(function (response) {
                     callback(response);
                 }, function (x) {
