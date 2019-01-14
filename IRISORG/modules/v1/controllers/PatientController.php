@@ -912,5 +912,9 @@ class PatientController extends ActiveController {
         }
         return ['next' => $next, 'prev' => $prev, 'allencounterlist' => $allencounterlist];
     }
+    
+    public function actionGetservertime() {
+        return date("Y-m-d H:i:s");
+    }
 
 }
