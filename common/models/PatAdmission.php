@@ -5,6 +5,7 @@ namespace common\models;
 use common\models\query\PatAdmissionQuery;
 use Yii;
 use yii\db\ActiveQuery;
+use yii\helpers\Json;
 
 /**
  * This is the model class for table "pat_admission".
@@ -63,7 +64,7 @@ class PatAdmission extends RActiveRecord {
                 [['consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id', 'status_date'], 'required'],
                 [['swapPatientId', 'swapRoomId', 'swapRoomTypeId'], 'required', 'on' => 'swap'],
                 [['tenant_id', 'patient_id', 'encounter_id', 'consultant_id', 'floor_id', 'ward_id', 'room_id', 'room_type_id', 'created_by', 'modified_by'], 'integer'],
-                [['status_date', 'created_at', 'modified_at', 'deleted_at', 'status_date', 'admission_status', 'is_swap', 'discharge_type', 'type_of_transfer'], 'safe'],
+                [['status_date', 'created_at', 'modified_at', 'deleted_at', 'status_date', 'admission_status', 'is_swap', 'discharge_type', 'type_of_transfer', 'diag_ids'], 'safe'],
                 [['status', 'notes'], 'string'],
                 ['admission_status', 'validateAdmissionStatus'],
                 ['status_date', 'validateStatusDate'],
@@ -221,10 +222,14 @@ class PatAdmission extends RActiveRecord {
     }
 
     public function beforeSave($insert) {
+        
         if (!empty($this->status_date))
             $this->status_date = date('Y-m-d H:i:s', strtotime($this->status_date));
 
         if ($insert) {
+            if (is_array($this->diag_ids))
+                $this->diag_ids = Json::encode($this->diag_ids);
+            
             $this->setCurrentData();
 
             //Encounter transfer to anthor branch check patient_id in particular branch and insert
