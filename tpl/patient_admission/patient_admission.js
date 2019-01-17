@@ -125,6 +125,10 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
             $rootScope.commonService.GetRoomTypesRoomsList('', function (response) {
                 $scope.roomTypesRoomsList = response.roomtypesroomsList;
             });
+
+            $rootScope.commonService.GetDiagnosisList(function (response) {
+                $scope.diagnosisList = response.diagnosisList;
+            });
         }
 
         $scope.initAdmissionForm = function () {
@@ -455,7 +459,7 @@ app.controller('PatientAdmissionController', ['$rootScope', '$scope', '$timeout'
                     succ_msg = "Branch Transfered successfully";
                 }
             }
-                        _that.data.PatAdmission.status_date = moment(_that.data.PatAdmission.status_date).format('YYYY-MM-DD HH:mm:ss');
+            _that.data.PatAdmission.status_date = moment(_that.data.PatAdmission.status_date).format('YYYY-MM-DD HH:mm:ss');
 
 
             $scope.loadbar('show');
