@@ -92,6 +92,15 @@
             </div>
         </div>
         <div class="line line-dashed b-b line-lg "></div>
+        
+        <div class="form-group">
+            <label class="col-lg-3 control-label">Provisional Diagnosis </label>
+            <div class="col-lg-6">
+                <select class="selectpicker form-control" data-selected-text-format="count" data-live-search="true" ng-model="data.PatAdmission.diag_ids" ng-options="diagnosis.value as diagnosis.label for diagnosis in diagnosisList| orderBy: diag_name" multiple>
+                    <option value="">Select Procedure</option>
+                </select>
+            </div>
+        </div>
 
     </div>
     <footer class="panel-footer text-right bg-light lter">
