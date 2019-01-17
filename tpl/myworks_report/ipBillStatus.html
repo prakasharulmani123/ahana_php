@@ -101,15 +101,16 @@
                                 <thead>
                                     <tr>
                                         <th id="work-base-grid_c0">S.No</th>
-                                        <th id="work-base-grid_c0">UHID</th>
-                                        <th id="work-base-grid_c0">Patient Name</th>
-                                        <th id="work-base-grid_c0">Admission Date</th>
-                                        <th id="work-base-grid_c0">Stay Duration</th>
-                                        <th id="work-base-grid_c0">Room</th>
-                                        <th id="work-base-grid_c0">Total Charges</th>
-                                        <th id="work-base-grid_c0">Consultant</th>
-                                        <th id="work-base-grid_c1">Advance</th>
-                                        <th id="work-base-grid_c1">Due</th>
+                                        <th id="work-base-grid_c1">UHID</th>
+                                        <th id="work-base-grid_c2">Patient Name</th>
+                                        <th id="work-base-grid_c3">Admission Date</th>
+                                        <th id="work-base-grid_c4">Bill No</th>
+                                        <th id="work-base-grid_c5">Stay Duration</th>
+                                        <th id="work-base-grid_c6">Room</th>
+                                        <th id="work-base-grid_c7">Total Charges</th>
+                                        <th id="work-base-grid_c8">Consultant</th>
+                                        <th id="work-base-grid_c9">Advance</th>
+                                        <th id="work-base-grid_c10">Due</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -118,6 +119,7 @@
                                         <td>{{row.apptPatientData.patient_global_int_code}}</td>
                                         <td>{{row.apptPatientData.fullname}}</td>
                                         <td>{{row.encounter_date| moment:'DD-MM-YYYY'}}</td>
+                                        <td>{{row.bill_no || '-'}}</td>
                                         <td>{{row.stay_duration}}</td>
                                         <td>{{row.apptPatientData.current_room}}</td>
                                         <td data-type="Number">{{row.viewChargeCalculation.total_charge - row.viewChargeCalculation.total_concession| number:2 }}</td>

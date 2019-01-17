@@ -152,13 +152,14 @@ app.controller('ipBillStatusController', ['$rootScope', '$scope', '$timeout', '$
 
                 var branches = [];
                 branches.push([
-                    {text: branch_name, style: 'header', colSpan: 10}, "", "", "", "", "", "", "", "", ""
+                    {text: branch_name, style: 'header', colSpan: 11}, "", "", "", "", "", "", "", "", "", ""
                 ]);
 
                 branches.push([
                     {text: 'S.No', style: 'header'},
                     {text: 'UHID', style: 'header'},
                     {text: 'Patient Name', style: 'header'},
+                    {text: 'Bill No', style: 'header'},
                     {text: 'Admission Date', style: 'header'},
                     {text: 'Stay Duration', style: 'header'},
                     {text: 'Room', style: 'header'},
@@ -175,6 +176,7 @@ app.controller('ipBillStatusController', ['$rootScope', '$scope', '$timeout', '$
                         s_no_string,
                         row.apptPatientData.patient_global_int_code,
                         row.apptPatientData.fullname,
+                        (row.bill_no || '-'),
                         row.encounter_date,
                         row.stay_duration.toString(),
                         row.apptPatientData.current_room,
@@ -207,7 +209,7 @@ app.controller('ipBillStatusController', ['$rootScope', '$scope', '$timeout', '$
                     style: 'demoTable',
                     table: {
                         headerRows: 1,
-                        widths: ['auto', 'auto', '*', '*', 'auto', '*', 'auto', '*', 'auto', 'auto'],
+                        widths: ['auto', 'auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
                         body: branches,
                     },
                     pageBreak: (index === result_count ? '' : 'after'),
