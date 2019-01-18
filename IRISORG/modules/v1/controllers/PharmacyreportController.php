@@ -95,7 +95,7 @@ class PharmacyreportController extends ActiveController {
                   ON `a`.`purchase_id` = `b`.`purchase_id`
                 LEFT JOIN `pha_supplier` c
                   ON `c`.`supplier_id` = `a`.`supplier_id`
-              WHERE ((`a`.`tenant_id` = '2')
+              WHERE ((`a`.`tenant_id` = '" . $tenant_id . "')
                      AND (a.invoice_date BETWEEN '" . $post['from'] . "'
                           AND '" . $post['to'] . "') AND (`a`.`payment_type` = '".$post['payment_type']."'))
                   AND (b.deleted_at = '0000-00-00 00:00:00')
