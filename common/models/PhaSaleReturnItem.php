@@ -180,6 +180,7 @@ class PhaSaleReturnItem extends PActiveRecord {
                         'sgst_percent' => 'sgst_percent',
                         'total_amount' => 'total_amount'
                     ];
+                    break;
                 case 'sale_return_list':
                     $addt_keys = ['product', 'sale_quantity', 'batch', 'total_returned_quantity'];
                     $parent_fields = [
