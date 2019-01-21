@@ -119,22 +119,26 @@
                                         <th id="work-base-grid_c6">Encounter Type</th>
                                         <th id="work-base-grid_c7">Payment Type</th>
                                         <th id="work-base-grid_c8">Patient Group Name</th>
-                                        <th id="work-base-grid_c9">Sale Return Value</th>
+                                        <th id="work-base-grid_c9">Product Name</th>
+                                        <th id="work-base-grid_c10">Tax Rate</th>
+                                        <th id="work-base-grid_c11">Item Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="(key, record) in records">
                                         <td>{{key + 1}}</td>
-                                        <td>{{record.sale_return_date | date:'dd-MM-yyyy'}}</td>
-                                        <td>{{record.bill_no}}</td>
-                                        <td>{{record.patient_name}}</td>
-                                        <td>{{record.patient_uhid}}</td>
-                                        <td>{{record.sale_ret_encounter_id}}</td>
-                                        <td>{{record.sale_ret_encounter_type}}</td>
-                                        <td>{{record.sale_payment_type}}</td>
-                                        <td>{{record.sale_group_name|| '-'}}</td>
-                                        <td data-type="Number" ng-init="sale.total_amount = sale.total_amount + parseFloat(record.bill_amount);">
-                                            {{record.bill_amount}}
+                                        <td>{{record.sale_return.sale_return_date | date:'dd-MM-yyyy'}}</td>
+                                        <td>{{record.sale_return.bill_no}}</td>
+                                        <td>{{record.sale_return.patient_name}}</td>
+                                        <td>{{record.sale_return.patient_uhid}}</td>
+                                        <td>{{record.sale_return.sale_ret_encounter_id}}</td>
+                                        <td>{{record.sale_return.sale_ret_encounter_type}}</td>
+                                        <td>{{record.sale_return.sale_payment_type}}</td>
+                                        <td>{{record.sale_return.sale_group_name|| '-'}}</td>
+                                        <td>{{record.product.full_name || '-'}}</td>
+                                        <td>{{(parseFloat(record.cgst_percent) + parseFloat(record.sgst_percent))| number:2}}</td>
+                                        <td data-type="Number" ng-init="sale.total_amount = sale.total_amount + parseFloat(record.total_amount);">
+                                            {{record.total_amount}}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -148,7 +152,9 @@
                                         <td style="display: none;" ></td> <!-- For Excel Export-->
                                         <td style="display: none;" ></td> <!-- For Excel Export-->
                                         <td style="display: none;" ></td> <!-- For Excel Export-->
-                                        <th colspan="9" class="text-right"><b>Total Sale Return Value</b></th>
+                                        <td style="display: none;" ></td> <!-- For Excel Export-->
+                                        <td style="display: none;" ></td> <!-- For Excel Export-->
+                                        <th colspan="11" class="text-right"><b>Total Sale Return Value</b></th>
                                         <td data-type="Number"><b>{{sale.total_amount| number:2}}</b></td>
                                     </tr>
                                 </tfoot>
@@ -173,10 +179,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="(date, record) in records | groupBy: 'sale_return_date' | orderBy:'sale_return_date'" ng-init="sale_return_date = {}">
+                                    <tr ng-repeat="(date, record) in records | groupBy: 'sale_return.sale_return_date' | orderBy:'sale_return.sale_return_date'" ng-init="sale_return_date = {}">
                                         <td>{{date| date:'dd-MM-yyyy'}}</td>
                                         <td data-type="Number">
-                                            <span ng-repeat="(key, report) in record" ng-init="row_bill_total = parseFloat(report.bill_amount);
+                                            <span ng-repeat="(key, report) in record" ng-init="row_bill_total = parseFloat(report.total_amount);
                                                                 sale_return_date.total = sale_return_date.total + row_bill_total;">
                                             </span>
                                             {{sale_return_date.total| number:2}}  

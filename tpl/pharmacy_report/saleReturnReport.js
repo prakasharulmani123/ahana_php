@@ -143,7 +143,7 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
 
             var reports = [];
             reports.push([
-                {text: branch_name, style: 'header', colSpan: 9}, "", "", "", "", "", "", "", ""
+                {text: branch_name, style: 'header', colSpan: 8}, "", "", "", "", "", "", "", ""
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
@@ -152,9 +152,9 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 {text: 'Patient Name', style: 'header'},
                 {text: 'UHID', style: 'header'},
                 {text: 'Encounter', style: 'header'},
-                {text: 'Payment Type', style: 'header'},
-                {text: 'Patient Group Name', style: 'header'},
-                {text: 'Sale Return Value', style: 'header'},
+                {text: 'Product Name', style: 'header'},
+                {text: 'Tax Rate', style: 'header'},
+                {text: 'Item Amount', style: 'header'},
             ]);
 
             var serial_no = 1;
@@ -164,16 +164,16 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 var s_no_string = serial_no.toString();
                 reports.push([
                     s_no_string,
-                    moment(record.sale_return_date).format('DD-MM-YYYY'),
-                    record.bill_no,
-                    record.patient_name,
-                    record.patient_uhid,
-                    record.sale_ret_encounter_id+'('+record.sale_ret_encounter_type+')',
-                    record.sale_payment_type,
-                    record.sale_group_name,
-                    record.bill_amount,
+                    moment(record.sale_return.sale_return_date).format('DD-MM-YYYY'),
+                    record.sale_return.bill_no,
+                    record.sale_return.patient_name,
+                    record.sale_return.patient_uhid,
+                    record.sale_return.sale_ret_encounter_id+'('+record.sale_return.sale_ret_encounter_type+')',
+                    record.product.full_name,
+                    (parseFloat(record.cgst_percent) + parseFloat(record.sgst_percent)),
+                    record.total_amount,
                 ]);
-                total += parseFloat(record.bill_amount);
+                total += parseFloat(record.total_amount);
                 if (serial_no == result_count) {
                     $scope.printloader = '';
                 }
@@ -194,7 +194,7 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 "",
                 "",
                 {
-                    text: total.toString(),
+                    text: total.toFixed(2).toString(),
                     style: 'header',
                     alignment: 'right'
                 }
@@ -239,7 +239,7 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 style: 'demoTable',
                 table: {
                     headerRows: 2,
-                    widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                    widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', '*'],
                     body: reports,
                     dontBreakRows: true,
                 },
@@ -250,7 +250,7 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 }
             });
 
-            var sale_date_wise = $filter('groupBy')($scope.records, 'sale_return_date');
+            var sale_date_wise = $filter('groupBy')($scope.records, 'sale_return.sale_return_date');
             var date_info = [];
             date_info.push({
                 columns: [
@@ -271,9 +271,9 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
             angular.forEach(sale_date_wise, function (branch, sale_date) {
                 var date_wise_total = 0;
                 angular.forEach(branch, function (record, key) {
-                    date_wise_total += parseFloat(record.bill_amount);
+                    date_wise_total += parseFloat(record.total_amount);
                 });
-                var date_total = date_wise_total.toString();
+                var date_total = date_wise_total.toFixed(2).toString()
                 branch_item.push([
                     {text: moment(sale_date).format('DD-MM-YYYY')},
                     {text: date_total, alignment: 'right'}
