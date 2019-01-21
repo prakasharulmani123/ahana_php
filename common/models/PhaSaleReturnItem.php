@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\PhaSaleReturnItemQuery;
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -162,10 +163,63 @@ class PhaSaleReturnItem extends PActiveRecord {
             },
             'total_returned_quantity' => function($model) {
                 return $this->getTotalReturnedQuantity();
-            }
+            },
+            'sale_return' => function ($model) {
+                return (isset($model->saleRet) ? $model->saleRet : '-');
+            },        
         ];
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
+        $parent_fields = parent::fields();
+        $addt_keys = [];
+        if ($addtField = Yii::$app->request->get('addtfields')) {
+            switch ($addtField):
+                case 'salereturnreport':
+                    $addt_keys = ['product', 'sale_return'];
+                    $parent_fields = [
+                        'sale_item_id' => 'sale_item_id',
+                        'cgst_percent' => 'cgst_percent',
+                        'sgst_percent' => 'sgst_percent',
+                        'total_amount' => 'total_amount'
+                    ];
+                case 'sale_return_list':
+                    $addt_keys = ['product', 'sale_quantity', 'batch', 'total_returned_quantity'];
+                    $parent_fields = [
+                        'sale_ret_item_id' => 'sale_ret_item_id',
+                        'tenant_id' => 'tenant_id',
+                        'sale_ret_id' => 'sale_ret_id',
+                        'quantity' => 'quantity',
+                        'package_name' => 'package_name',
+                        'mrp' => 'mrp',
+                        'item_amount' => 'item_amount',
+                        'discount_amount' => 'discount_amount',
+                        'vat_amount' => 'vat_amount',
+                        'total_amount' => 'total_amount'
+                    ];
+                    break;
+                case 'sale_return':
+                    $addt_keys = ['product', 'sale_quantity', 'batch', 'total_returned_quantity'];
+                    $parent_fields = [
+                        'sale_ret_item_id' => 'sale_ret_item_id',
+                        'tenant_id' => 'tenant_id',
+                        'sale_ret_id' => 'sale_ret_id',
+                        'quantity' => 'quantity',
+                        'package_name' => 'package_name',
+                        'mrp' => 'mrp',
+                        'item_amount' => 'item_amount',
+                        'discount_amount' => 'discount_amount',
+                        'vat_amount' => 'vat_amount',
+                        'total_amount' => 'total_amount',
+                        'taxable_value' => 'taxable_value',
+                        'sgst_amount' => 'sgst_amount',
+                        'sgst_percent' => 'sgst_percent',
+                        'cgst_amount' => 'cgst_amount',
+                        'cgst_percent' => 'cgst_percent',
+                        'vat_percent' => 'vat_percent',
+                    ];
+                    break;
+            endswitch;
+        }
+        $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+        return array_merge($parent_fields, $extFields);
     }
 
     public function beforeSave($insert) {

@@ -6,6 +6,7 @@ use common\models\PhaProductBatch;
 use common\models\PhaPurchase;
 use common\models\PhaSale;
 use common\models\PhaSaleReturn;
+use common\models\PhaSaleReturnItem;
 use common\models\PhaPurchaseItem;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
@@ -204,10 +205,11 @@ class PharmacyreportController extends ActiveController {
     public function actionSalereturnreport() {
         $post = Yii::$app->getRequest()->post();
 
-        $model = PhaSaleReturn::find()->active()
+        $model = PhaSaleReturnItem::find()->active()
                 ->tenant()
-                ->joinWith('sale')
-                ->joinWith('sale.encounter')
+                ->joinWith('saleRet')
+                ->joinWith('saleRet.sale')
+                ->joinWith('saleRet.sale.encounter')
                 ->andWhere("pha_sale_return.sale_return_date between '{$post['from']}' AND '{$post['to']}'");
 
 //        if (isset($post['encounter_type']) && $post['encounter_type'] != 'NO') {
