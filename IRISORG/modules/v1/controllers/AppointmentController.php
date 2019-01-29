@@ -66,6 +66,9 @@ class AppointmentController extends ActiveController {
                 $amount_words = Yii::$app->hepler->convert_number_to_words((int) ($amount)) . ' Rupees Only';
 
                 $appt_model->save(false);
+                $patient = $appt_model->patient;
+                if($patient['patient_mobile'] && Yii::$app->user->identity->user->organization->org_id == '1')
+                    Yii::$app->hepler->sendSurveysms($patient['patient_title_code'],$patient['patient_firstname'],$patient['patient_mobile']);
                 if (!empty($post['charge_subcat_id'])) {
                     foreach ($post['charge_subcat_id'] as $key => $value) {
                         $procedure = new PatProcedure();

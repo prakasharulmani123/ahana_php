@@ -423,6 +423,24 @@ class HelperComponent extends Component {
 
         return !empty($bill_recurring) ? $bill_recurring->charge_amount : $charge->charge;
     }
+    
+    public function sendSurveysms($title, $first_name,$mobile) {
+        //$name = $title.$first_name;
+        $url = "http://smssparkalerts.in/api/sendmsg.php?user=ahana&pass=123456&service=TRANS&sender=AHANAA&phone=".$mobile."&text=Thank you for visiting Ahana Hospitals. Kindly, spend a minute to provide your valuable feedback, "
+                . "https://www.surveymonkey.com/r/MWQ573K&stype=normal";
+        $url = str_replace(" ", '%20', $url);
+        
+        $headers = array();
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        
+        $server_output = curl_exec($ch);
+        
+        curl_close($ch);
+    }
 
     public static function getAgeWithMonth($dob) {
         $dob = date('d-m-Y', strtotime($dob));

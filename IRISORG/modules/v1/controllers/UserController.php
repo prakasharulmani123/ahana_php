@@ -764,9 +764,13 @@ class UserController extends ActiveController {
             if ($value || $column == 'discharge') {
                 $encounter->$column = Yii::$app->user->identity->user_id;
 
-                if ($column == 'discharge')
+                if ($column == 'discharge') {
                     $encounter->status = 0;
-
+                    $patient = $encounter->patient;
+                    if($patient['patient_mobile'])
+                        Yii::$app->hepler->sendSurveysms($patient['patient_title_code'],$patient['patient_firstname'],$patient['patient_mobile']);
+                }
+                    
                 if ($column == 'finalize')
                     $encounter->finalize_date = date("Y-m-d");
             }else {
