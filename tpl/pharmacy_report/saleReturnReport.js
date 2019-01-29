@@ -147,13 +147,13 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
             ]);
             reports.push([
                 {text: 'S.No', style: 'header'},
-                {text: 'Date', style: 'header'},
                 {text: 'Bill No', style: 'header'},
                 {text: 'Patient Name', style: 'header'},
-                {text: 'UHID', style: 'header'},
-                {text: 'Encounter', style: 'header'},
                 {text: 'Product Name', style: 'header'},
                 {text: 'Tax Rate', style: 'header'},
+                {text: 'CGST', style: 'header'},
+                {text: 'SGST', style: 'header'},
+                {text: 'Tax Val', style: 'header'},
                 {text: 'Item Amount', style: 'header'},
             ]);
 
@@ -164,13 +164,16 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 var s_no_string = serial_no.toString();
                 reports.push([
                     s_no_string,
-                    moment(record.sale_return.sale_return_date).format('DD-MM-YYYY'),
+                    //moment(record.sale_return.sale_return_date).format('DD-MM-YYYY'),
                     record.sale_return.bill_no,
-                    record.sale_return.patient_name,
-                    record.sale_return.patient_uhid,
+                    //record.sale_return.patient_name,
+                    //record.sale_return.patient_uhid,
                     record.sale_return.sale_ret_encounter_id+'('+record.sale_return.sale_ret_encounter_type+')',
                     record.product.full_name,
                     (parseFloat(record.cgst_percent) + parseFloat(record.sgst_percent)),
+                    record.cgst_amount,
+                    record.sgst_amount,
+                    record.taxable_value,
                     record.total_amount,
                 ]);
                 total += parseFloat(record.total_amount);

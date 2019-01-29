@@ -121,7 +121,10 @@
                                         <th id="work-base-grid_c8">Patient Group Name</th>
                                         <th id="work-base-grid_c9">Product Name</th>
                                         <th id="work-base-grid_c10">Tax Rate</th>
-                                        <th id="work-base-grid_c11">Item Amount</th>
+                                        <th id="work-base-grid_c11">CGST Amount</th>
+                                        <th id="work-base-grid_c12">SGST Amount</th>
+                                        <th id="work-base-grid_c13">Taxable Value</th>
+                                        <th id="work-base-grid_c14">Item Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -137,6 +140,9 @@
                                         <td>{{record.sale_return.sale_group_name|| '-'}}</td>
                                         <td>{{record.product.full_name || '-'}}</td>
                                         <td>{{(parseFloat(record.cgst_percent) + parseFloat(record.sgst_percent))| number:2}}</td>
+                                        <td>{{record.cgst_amount}}</td>
+                                        <td>{{record.sgst_amount}}</td>
+                                        <td>{{record.taxable_value}}</td>
                                         <td data-type="Number" ng-init="sale.total_amount = sale.total_amount + parseFloat(record.total_amount);">
                                             {{record.total_amount}}
                                         </td>
@@ -154,7 +160,10 @@
                                         <td style="display: none;" ></td> <!-- For Excel Export-->
                                         <td style="display: none;" ></td> <!-- For Excel Export-->
                                         <td style="display: none;" ></td> <!-- For Excel Export-->
-                                        <th colspan="11" class="text-right"><b>Total Sale Return Value</b></th>
+                                        <td style="display: none;" ></td> <!-- For Excel Export-->
+                                        <td style="display: none;" ></td> <!-- For Excel Export-->
+                                        <td style="display: none;" ></td> <!-- For Excel Export-->
+                                        <th colspan="14" class="text-right"><b>Total Sale Return Value</b></th>
                                         <td data-type="Number"><b>{{sale.total_amount| number:2}}</b></td>
                                     </tr>
                                 </tfoot>
