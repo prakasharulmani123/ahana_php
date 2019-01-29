@@ -178,7 +178,10 @@ class PhaSaleReturnItem extends PActiveRecord {
                         'sale_item_id' => 'sale_item_id',
                         'cgst_percent' => 'cgst_percent',
                         'sgst_percent' => 'sgst_percent',
-                        'total_amount' => 'total_amount'
+                        'total_amount' => 'total_amount',
+                        'cgst_amount' => 'cgst_amount',
+                        'sgst_amount' => 'sgst_amount',
+                        'taxable_value' => 'taxable_value',
                     ];
                     break;
                 case 'sale_return_list':
