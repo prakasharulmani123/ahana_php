@@ -426,7 +426,7 @@ class HelperComponent extends Component {
     
     public function sendSurveysms($title, $first_name,$mobile) {
         //$name = $title.$first_name;
-        $url = "http://smssparkalerts.in/api/sendmsg.php?user=ahana&pass=123456&service=TRANS&sender=AHANAA&phone=".$mobile."&text=Thank you for visiting Ahana Hospitals. Kindly, spend a minute to provide your valuable feedback, "
+        $url = "http://smssparkalerts.in/api/sendmsg.php?user=ahana&pass=123456&service=TRANS&sender=AHANAA&phone=".$mobile."&text=Thank you for visiting Ahana Hospitals. Kindly, spend a minute to provide your valuable feedback. "
                 . "https://www.surveymonkey.com/r/MWQ573K&stype=normal";
         $url = str_replace(" ", '%20', $url);
         
