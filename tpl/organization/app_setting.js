@@ -557,7 +557,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             $scope.loadbar('show');
             $scope.pha_generic_delete_process_text = 'Fetching the Excel Data. Please wait until the importing begins. This might take few mins';
             //$scope.import_log = Date.parse(moment().format());
-            $scope.import_log = '1546579225000';
+            $scope.import_log = '1546579225555';
             var currentUser = AuthenticationService.getCurrentUser();
 
             fileUpload.uploadFileToUrl($scope.phaMastersGenericDelete, $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/phagenericdelete?tenant_id=' + currentUser.credentials.logged_tenant_id + '&import_log=' + $scope.import_log).success(function (response) {
@@ -700,7 +700,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             $scope.loadbar('show');
             $scope.pha_drug_delete_process_text = 'Fetching the Excel Data. Please wait until the importing begins. This might take few mins';
             //$scope.import_log = Date.parse(moment().format());
-            $scope.import_log = '1546579225000';
+            $scope.import_log = '1546579225555';
             var currentUser = AuthenticationService.getCurrentUser();
 
             fileUpload.uploadFileToUrl($scope.phaMastersDelete, $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/phadrugdelete?tenant_id=' + currentUser.credentials.logged_tenant_id + '&import_log=' + $scope.import_log).success(function (response) {
