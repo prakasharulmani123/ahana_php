@@ -1006,7 +1006,7 @@ class PharmacyproductController extends ActiveController {
     
     //Pha Master Delete Start
     public function actionPhamastersdelete() {
-        return ['success' => true, 'message' => ['total_rows' => '132', 'id' => '1', 'max_id' => '132']];
+        return ['success' => true, 'message' => ['total_rows' => '354', 'id' => '134', 'max_id' => '488']];
         $get = Yii::$app->getRequest()->get();
         $allowed = array('csv');
         $filename = $_FILES['file']['name'];
@@ -1069,21 +1069,29 @@ class PharmacyproductController extends ActiveController {
             //echo 'If'; die;
             $next_id = $id + 1;
             $connection = Yii::$app->client_pharmacy;
+            $date = date('Y-m-d');
             $connection->open();
-            $command = $connection->createCommand("SELECT * FROM test_pha_product_delete WHERE id = {$id} AND import_log = $import_log");
+            $command = $connection->createCommand("SELECT * FROM test_pha_product_delete WHERE id = {$id} AND tenant_id= '2' AND import_log = $import_log");
             $result = $command->queryAll(PDO::FETCH_OBJ);
             //print_r($result); die;
             if (!empty($result)) {
                 $result = $result[0];
                 $product_exists = \common\models\PhaProduct::find()->where([
-                            'tenant_id' => 1,
+                            'tenant_id' => 2,
                             'product_id' => $result->product_id
                         ])
                         ->one();
                 if (!empty($product_exists)) {
-                    $product_exists->deleted_at = date('Y-m-d H:i:s');
-                    $product_exists->save(false);
-                    $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
+                    $product_batch = PhaProductBatch::find()
+                            ->andWhere("available_qty != 0 AND expiry_date > $date AND product_id = $result->product_id")
+                            ->one();
+                    if(empty($product_batch)) {
+                        $product_exists->status = 0;
+                        $product_exists->save(false);
+                        $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
+                    } else {
+                        $return = ['success' => false, 'continue' => $next_id, 'message' => 'Batch exists'];
+                    }
                 } else {
                     $return = ['success' => false, 'continue' => $next_id, 'message' => 'Product Not exists'];
                 }
