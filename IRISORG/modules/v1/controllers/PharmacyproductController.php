@@ -1106,7 +1106,7 @@ class PharmacyproductController extends ActiveController {
     }
     
     public function actionPhadrugdelete() {
-        return ['success' => true, 'message' => ['total_rows' => '97', 'id' => '1', 'max_id' => '97']];
+        return ['success' => true, 'message' => ['total_rows' => '355', 'id' => '99', 'max_id' => '454']];
     }
     
     public function actionPhadrugdeletestart() {
@@ -1119,13 +1119,12 @@ class PharmacyproductController extends ActiveController {
             $next_id = $id + 1;
             $connection = Yii::$app->client_pharmacy;
             $connection->open();
-            $command = $connection->createCommand("SELECT * FROM test_pha_drug_delete WHERE id = {$id} AND import_log = $import_log");
+            $command = $connection->createCommand("SELECT * FROM test_pha_drug_delete WHERE id = {$id} AND tenant_id = '2' AND import_log = $import_log");
             $result = $command->queryAll(PDO::FETCH_OBJ);
-            //print_r($result); die;
             if (!empty($result)) {
                 $result = $result[0];
                 $drug_exists = \common\models\PhaDrugClass::find()->where([
-                            'tenant_id' => 1,
+                            'tenant_id' => 2,
                             'drug_class_id' => $result->drug_class_id,
                         ])
                         ->one();
@@ -1153,7 +1152,7 @@ class PharmacyproductController extends ActiveController {
     }
     
     public function actionPhagenericdelete() {
-        return ['success' => true, 'message' => ['total_rows' => '837', 'id' => '1', 'max_id' => '837']];
+        return ['success' => true, 'message' => ['total_rows' => '761', 'id' => '839', 'max_id' => '1600']];
     }
     
     public function actionPhagenericdeletestart() {
@@ -1166,13 +1165,13 @@ class PharmacyproductController extends ActiveController {
             $next_id = $id + 1;
             $connection = Yii::$app->client_pharmacy;
             $connection->open();
-            $command = $connection->createCommand("SELECT * FROM test_pha_generic_delete WHERE id = {$id} AND import_log = $import_log");
+            $command = $connection->createCommand("SELECT * FROM test_pha_generic_delete WHERE id = {$id} AND tenant_id = '2' AND import_log = $import_log");
             $result = $command->queryAll(PDO::FETCH_OBJ);
             //print_r($result); die;
             if (!empty($result)) {
                 $result = $result[0];
                 $generic_exists = \common\models\PhaGeneric::find()->where([
-                            'tenant_id' => 1,
+                            'tenant_id' => 2,
                             'generic_id' => $result->generic_id
                         ])
                         ->one();
