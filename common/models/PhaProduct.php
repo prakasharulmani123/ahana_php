@@ -536,20 +536,20 @@ class PhaProduct extends PActiveRecord {
         CoAuditLog::insertAuditLog(PhaProduct::tableName(), $this->product_id, $activity);
 
         //Check Generic already assigned
-        $assigned = PhaDrugGeneric::find()
-                ->tenant()
-                ->active()
-                ->andWhere([
-                    'generic_id' => $this->generic_id,
-                ])
-                ->one();
+//        $assigned = PhaDrugGeneric::find()
+//                ->tenant()
+//                ->active()
+//                ->andWhere([
+//                    'generic_id' => $this->generic_id,
+//                ])
+//                ->one();
         //If not assigned then link in pivot table 
-        if (empty($assigned)) {
-            $drugGeneric = new PhaDrugGeneric();
-            $drugGeneric->drug_class_id = $this->drug_class_id;
-            $drugGeneric->generic_id = $this->generic_id;
-            $drugGeneric->save(false);
-        }
+//        if (empty($assigned)) {
+//            $drugGeneric = new PhaDrugGeneric();
+//            $drugGeneric->drug_class_id = $this->drug_class_id;
+//            $drugGeneric->generic_id = $this->generic_id;
+//            $drugGeneric->save(false);
+//        }
         return parent::afterSave($insert, $changedAttributes);
     }
 
