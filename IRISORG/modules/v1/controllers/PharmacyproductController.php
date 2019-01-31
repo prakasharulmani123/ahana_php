@@ -1106,7 +1106,7 @@ class PharmacyproductController extends ActiveController {
     }
     
     public function actionPhadrugdelete() {
-        return ['success' => true, 'message' => ['total_rows' => '355', 'id' => '99', 'max_id' => '454']];
+        return ['success' => true, 'message' => ['total_rows' => '112', 'id' => '99', 'max_id' => '211']];
     }
     
     public function actionPhadrugdeletestart() {
