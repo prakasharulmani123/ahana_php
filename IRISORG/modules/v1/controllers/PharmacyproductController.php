@@ -2439,8 +2439,8 @@ class PharmacyproductController extends ActiveController {
     
     //Pharmacy Product Update Start
     public function actionPhaproductupdate() {
-        //return ['success' => true, 'message' => ['total_rows' => '2465', 'id' => '1', 'max_id' => '2465']];
-        return ['success' => true, 'message' => ['total_rows' => '2407', 'id' => '2466', 'max_id' => '4973']];
+        return ['success' => true, 'message' => ['total_rows' => '2465', 'id' => '1', 'max_id' => '2465']];
+        //return ['success' => true, 'message' => ['total_rows' => '2407', 'id' => '2466', 'max_id' => '4973']];
     }
     
     public function actionPhaproductupdatecheckstart() {
@@ -2453,12 +2453,12 @@ class PharmacyproductController extends ActiveController {
             $next_id = $id + 1;
             $connection = Yii::$app->client_pharmacy;
             $connection->open();
-            $command = $connection->createCommand("SELECT * FROM test_pha_product WHERE id = {$id} AND tenant_id = '2' AND import_log = $import_log");
+            $command = $connection->createCommand("SELECT * FROM test_pha_product WHERE id = {$id} AND tenant_id = '1' AND import_log = $import_log");
             $result = $command->queryAll(PDO::FETCH_OBJ);
             if (!empty($result)) {
                 $result = $result[0];
                 $product = \common\models\PhaProduct::find()->where([
-                            'tenant_id' => 2,
+                            'tenant_id' => 1,
                             'product_id' => $result->product_id
                         ])
                         ->one();
