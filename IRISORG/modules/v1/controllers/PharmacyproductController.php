@@ -2436,7 +2436,66 @@ class PharmacyproductController extends ActiveController {
     }
 
     //Product Description Route End
+    
+    //Pharmacy Product Update Start
+    public function actionPhaproductupdate() {
+        //return ['success' => true, 'message' => ['total_rows' => '2465', 'id' => '1', 'max_id' => '2465']];
+        return ['success' => true, 'message' => ['total_rows' => '2407', 'id' => '2466', 'max_id' => '4973']];
+    }
+    
+    public function actionPhaproductupdatecheckstart() {
+        $post = Yii::$app->getRequest()->post();
+        $id = $post['id'];
+        $import_log = $post['import_log'];
+        $max_id = $post['max_id'];
 
+        if ($id <= $max_id) {
+            $next_id = $id + 1;
+            $connection = Yii::$app->client_pharmacy;
+            $connection->open();
+            $command = $connection->createCommand("SELECT * FROM test_pha_product WHERE id = {$id} AND tenant_id = '2' AND import_log = $import_log");
+            $result = $command->queryAll(PDO::FETCH_OBJ);
+            if (!empty($result)) {
+                $result = $result[0];
+                $product = \common\models\PhaProduct::find()->where([
+                            'tenant_id' => 2,
+                            'product_id' => $result->product_id
+                        ])
+                        ->one();
+                if (!empty($product)) {
+                    if($result->product_unit) {
+                        $string = explode (" ", $result->product_unit);
+                        if(isset($string[0]))
+                            $product->product_unit_count = $string[0];
+                        if(isset($string[1]))
+                            $product->product_unit = $string[1];
+                    }
+                    $product->product_name = trim($result->product_name);
+                    if($product->save()) {
+                        $return = ['success' => true, 'continue' => $next_id, 'message' => 'success'];
+                    } else {
+                        $return = ['success' => true, 'continue' => $next_id, 'message' => json_encode($product->getErrors())];
+                    }
+                } else {
+                    $return = ['success' => false, 'continue' => $next_id, 'message' => 'Product Not exists'];
+                }
+            }
+        } else {
+            $return = ['success' => false, 'continue' => 0];
+        }
+        
+        if ($return['continue']) {
+            $status = $return['success'] ? 1 : 0;
+            $message = $return['message'];
+            $sql = "UPDATE test_pha_product SET `status` = '{$status}', update_log = '{$message}' WHERE id={$id}";
+            $command = $connection->createCommand($sql);
+            $command->execute();
+            $connection->close();
+        }
+        return $return;
+    }
+    
+    //Pharmacy Product Update End
     public function actionPharmacybranch() {
         $appConfig = AppConfiguration::find()
                         ->tenant()
