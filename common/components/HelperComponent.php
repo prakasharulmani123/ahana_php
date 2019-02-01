@@ -427,8 +427,8 @@ class HelperComponent extends Component {
     public function sendSurveysms($title, $first_name,$mobile,$module, $UHID=null) {
         if($module == 'Register') {
             $name = $title.$first_name;
-            $url = "http://smssparkalerts.in/api/sendmsg.php?user=ahana&pass=123456&service=TRANS&sender=AHANAA&phone=".$mobile."&text="
-                    . "Hello $name, you have successfully registered with Ahana Hospitals. Your Unique ID is : $UHID. Kindly, save it for future reference.";
+            $url = "http://smssparkalerts.in/api/sendmsg.php?user=ahana&pass=123456&service=TRANS&sender=AHANAA&phone=".$mobile."&text=Hello $name, you have successfully registered with Ahana Hospitals. Your Unique ID is : $UHID. "
+            . "Kindly, save it for future reference.&stype=normal";
             $url = str_replace(" ", '%20', $url);
         }
         if($module == 'appointment') {
