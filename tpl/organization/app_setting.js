@@ -1055,8 +1055,8 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             $scope.loadbar('show');
             $scope.pha_product_update_process_text = 'Fetching the Excel Data. Please wait until the importing begins. This might take few mins';
             //$scope.import_log = Date.parse(moment().format());
-            //$scope.import_log = '1546580673000';
-            $scope.import_log = '1548914263000'; //KK Nagar
+            $scope.import_log = '1546580673000';
+            //$scope.import_log = '1548914263000'; //KK Nagar
             var currentUser = AuthenticationService.getCurrentUser();
 
             fileUpload.uploadFileToUrl($scope.phaMastersGenericDelete, $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/phaproductupdate?tenant_id=' + currentUser.credentials.logged_tenant_id + '&import_log=' + $scope.import_log).success(function (response) {
