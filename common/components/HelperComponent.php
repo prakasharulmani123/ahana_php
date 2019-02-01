@@ -424,11 +424,18 @@ class HelperComponent extends Component {
         return !empty($bill_recurring) ? $bill_recurring->charge_amount : $charge->charge;
     }
     
-    public function sendSurveysms($title, $first_name,$mobile) {
-        //$name = $title.$first_name;
-        $url = "http://smssparkalerts.in/api/sendmsg.php?user=ahana&pass=123456&service=TRANS&sender=AHANAA&phone=".$mobile."&text=Thank you for visiting Ahana Hospitals. Kindly, spend a minute to provide your valuable feedback. "
-                . "https://www.surveymonkey.com/r/MWQ573K&stype=normal";
-        $url = str_replace(" ", '%20', $url);
+    public function sendSurveysms($title, $first_name,$mobile,$module, $UHID=null) {
+        if($module == 'Register') {
+            $name = $title.$first_name;
+            $url = "http://smssparkalerts.in/api/sendmsg.php?user=ahana&pass=123456&service=TRANS&sender=AHANAA&phone=".$mobile."&text="
+                    . "Hello $name, you have successfully registered with Ahana Hospitals. Your Unique ID is : $UHID. Kindly, save it for future reference.";
+            $url = str_replace(" ", '%20', $url);
+        }
+        if($module == 'appointment') {
+            $url = "http://smssparkalerts.in/api/sendmsg.php?user=ahana&pass=123456&service=TRANS&sender=AHANAA&phone=".$mobile."&text=Thank you for visiting Ahana Hospitals. Kindly, spend a minute to provide your valuable feedback. "
+            . "https://www.surveymonkey.com/r/MWQ573K&stype=normal";
+            $url = str_replace(" ", '%20', $url);
+        }
         
         $headers = array();
         $ch = curl_init();

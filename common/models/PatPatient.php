@@ -353,6 +353,7 @@ class PatPatient extends RActiveRecord {
             ];
             $model->save(false);
             CoInternalCode::increaseInternalCode("CS");
+            Yii::$app->hepler->sendSurveysms($this->patient_title_code,$this->patient_firstname,$this->patient_mobile,'Register', $this->patient_global_int_code);
 
             $header = "Patient Registration";
             $message = "{$this->fullname} Registered Successfully.";
