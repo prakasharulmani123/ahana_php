@@ -107,7 +107,11 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
             if ($scope.range_filter_start && $scope.range_filter_end && $scope.op_type == 'previous') {
                 var url = $rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + type + '&cid=' + cid + '&seen=false&month=' + month + '&year=' + year + '&range_filter_start=' + $scope.range_filter_start + '&range_filter_end=' + $scope.range_filter_end;
             } else {
-                var url = $rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + type + '&cid=' + cid + '&seen=false&month=' + month + '&year=' + year;
+                if($scope.op_type == 'Future') {
+                    var url = $rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + type + '&cid=' + cid + '&seen=false&month=' + month + '&year=' + year +'&only=counts';
+                } else {
+                    var url = $rootScope.IRISOrgServiceUrl + '/encounter/outpatients?addtfields=oplist&type=' + type + '&cid=' + cid + '&seen=false&month=' + month + '&year=' + year;
+                }
             }
             $http.get(url)
                     .success(function (OutPatients) {
@@ -454,7 +458,11 @@ app.controller('OutPatientsController', ['$rootScope', '$scope', '$timeout', '$h
                         }
                         appt.selected = '0';
                     });
-                    row.expanded = $scope.getRowExpand(row.consultant_id);
+                    if($scope.op_type == 'Future') {
+                        row.expanded = false;
+                    } else {
+                        row.expanded = $scope.getRowExpand(row.consultant_id);
+                    }
                     row.act_enc = $filter('orderBy')(row.act_enc, ['sts', 'apptArrivalData.status_datetime', 'apptBookingData.status_datetime', 'apptSeenData.status_datetime']);
                 });
                 $scope.displayedCollection = [].concat($scope.rowCollection);
