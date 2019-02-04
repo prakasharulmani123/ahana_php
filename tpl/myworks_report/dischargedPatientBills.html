@@ -148,7 +148,7 @@
                                     <td>{{row.apptPatientData.patient_global_int_code}}</td>
                                     <td>{{row.apptPatientData.fullname}}</td>
                                     <td>{{row.encounter_date | moment:'DD-MM-YYYY'}}</td>
-                                    <td>{{row.clinical_discharge_date | moment:'DD-MM-YYYY'}}</td>
+                                    <td>{{row.discharge_date | moment:'DD-MM-YYYY'}}</td>
                                     <td>{{row.currentAdmission.room_details}}</td>
                                     <td>{{row.currentAdmission.consultant_name}}</td>
                                     <td data-type="Number">{{row.viewChargeCalculation.total_charge - row.viewChargeCalculation.total_concession| number:2 }}</td>
