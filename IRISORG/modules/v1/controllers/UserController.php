@@ -757,6 +757,9 @@ class UserController extends ActiveController {
 
         if ($check) {
             $encounter = PatEncounter::find()->where(['encounter_id' => $post['encounter_id']])->one();
+            if(isset($post['discharge_date'])) {
+                $encounter->discharge_date = $post['discharge_date'];
+            }
 
             $column = $post['column'];
             $value = $post['value'];

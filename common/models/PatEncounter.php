@@ -63,6 +63,7 @@ class PatEncounter extends RActiveRecord {
     public $payment_bank_number;
     public $payment_bank_date;
     public $payment_ref_no;
+    public $discharge_date;
 
     /**
      * @inheritdoc
@@ -848,11 +849,15 @@ class PatEncounter extends RActiveRecord {
         }
 
         if ($this->discharge != 0) {
+            if($this->discharge_date)
+                $discharge_date = date("Y-m-d H:i:s", strtotime($this->discharge_date));
+            else
+                $discharge_date = date('Y-m-d H:i:s');
             $model = new PatAdmission;
             $model->attributes = [
                 'encounter_id' => $this->encounter_id,
                 'patient_id' => $this->patient_id,
-                'status_date' => date('Y-m-d H:i:s'),
+                'status_date' => $discharge_date,
                 'admission_status' => 'D',
             ];
             $model->save(false);
