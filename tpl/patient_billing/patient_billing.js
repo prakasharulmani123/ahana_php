@@ -541,7 +541,12 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             }
         };
 
-        $scope.password_auth = function (encounter_id, column, value, title) {
+        $scope.password_auth = function (encounter_id, column, value, title, final_date) {
+            if ($scope.checkAccess('patient.backdatedischarge')) {
+                var backdateDischarge = true;
+            } else {
+                var backdateDischarge = false;
+            }
             var modalInstance = $modal.open({
                 templateUrl: 'tpl/modal_form/modal.password_auth.html',
                 controller: "PasswordAuthController",
@@ -556,6 +561,8 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                 column: column,
                 value: value,
                 title: title,
+                backdateDischarge : backdateDischarge,
+                finalize_date : final_date
             };
 
             modalInstance.result.then(function (selectedItem) {

@@ -3,10 +3,13 @@ app.controller('PasswordAuthController', ['scope', '$scope', '$modalInstance', '
         var encounter_id = $modalInstance.data.encounter_id;
         var column = $modalInstance.data.column;
         var value = $modalInstance.data.value;
-        
+
         $scope.title = $modalInstance.data.title;
-        
-        $scope.getTitle = function(){
+        $scope.column = $modalInstance.data.column;
+        $scope.backdateDischarge = $modalInstance.data.backdateDischarge;
+        $scope.minDate = $modalInstance.data.finalize_date;
+
+        $scope.getTitle = function () {
             return $modalInstance.data.title;
         };
 
@@ -18,7 +21,7 @@ app.controller('PasswordAuthController', ['scope', '$scope', '$modalInstance', '
 
         $scope.saveForm = function () {
             _that = this;
-            
+
             angular.extend(_that.data, {
                 encounter_id: encounter_id,
                 column: column,
@@ -70,5 +73,26 @@ app.controller('PasswordAuthController', ['scope', '$scope', '$modalInstance', '
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
+
+        $scope.beforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+            var d = new Date($scope.minDate);
+            var n = d.getDate();
+            var m = d.getMonth();
+            var y = d.getFullYear();
+            var today_date = (new Date(y, m, n)).valueOf(); //19
+
+            angular.forEach($dates, function (date, key) {
+                var calender = new Date(date.localDateValue());
+                var calender_n = calender.getDate();
+                var calender_m = calender.getMonth();
+                var calender_y = calender.getFullYear();
+                var calender_date = (new Date(calender_y, calender_m, calender_n)).valueOf();
+
+                if (today_date > calender_date) {
+                    $dates[key].selectable = false;
+                }
+            });
+
+        }
     }]);
   
