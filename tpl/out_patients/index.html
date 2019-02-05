@@ -122,7 +122,7 @@
                                         <img ng-if="row.apptPatientData.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
                                     </div>
                                     <div class="op-alert-icon">
-                                        <img ng-if="row.apptPatientData.new_user" class="pull-left" src="img/new.png"  alt="" tooltip="New" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
+                                        <img ng-if="row.apptBookingData.consultant_visit == '0'" class="pull-left" src="img/new.png"  alt="" tooltip="New" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
                                     </div>
                                     <!--</div>-->
                                 </td>
@@ -263,7 +263,7 @@
                                     <div style="margin-top: -10px; position: relative;">
                                         <img ng-if="row.apptPatientData.hasalert" class="pull-left" src="img/symbol1.png"  alt="" tooltip="{{row.apptPatientData.alert}}" tooltip-trigger tooltip-animation="false" tooltip-placement="right"  />
                                         <img ng-if="row.apptPatientData.incomplete_profile" class="pull-left" src="img/question.png"  alt="" tooltip="Incomplete Profile" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
-                                        <img ng-if="row.apptPatientData.new_user" class="pull-left" src="img/new.png"  alt="" tooltip="New" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
+                                        <img ng-if="row.apptBookingData.consultant_visit == '0'" class="pull-left" src="img/new.png"  alt="" tooltip="New" tooltip-trigger tooltip-animation="false" tooltip-placement="right" />
                                     </div>
                                 </td>
                                 <td class="{{row.apptPatientData.patient_img_url ? 'patientImage' : ''}}">
