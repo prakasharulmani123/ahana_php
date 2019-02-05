@@ -686,9 +686,9 @@ class PatPatient extends RActiveRecord {
                     return '-';
                 }
             },
-            'new_user' => function($model) {
-                return $model->new_user;
-            },
+//            'new_user' => function($model) {
+//                return $model->new_user;
+//            },
             'name_with_int_code' => function($model) {
                 $name = ucfirst($model->patient_firstname);
 
@@ -832,17 +832,18 @@ class PatPatient extends RActiveRecord {
             return '-';
         }
     }
-
-    public function getNew_user() {
-        $active_op = $this->patActiveOp;
-        if (isset($active_op) && !empty($active_op)) {
-            if ($this->getPatLastSeenAppointment()->count() == 0) {
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
+      // Bc-255 New sticker consultant specific 
+      // New Function in appointment model->patConsultantVisit   
+//    public function getNew_user() {
+//        $active_op = $this->patActiveOp;
+//        if (isset($active_op) && !empty($active_op)) {
+//            if ($this->getPatLastSeenAppointment()->count() == 0) {
+//                return true;
+//            }
+//            return false;
+//        }
+//        return false;
+//    }
 
     public function getFullcurrentaddress() {
         if (isset($this->patPatientAddress)) {

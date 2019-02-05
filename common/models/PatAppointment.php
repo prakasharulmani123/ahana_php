@@ -129,6 +129,19 @@ class PatAppointment extends RActiveRecord {
     public function getTenant() {
         return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
     }
+    
+    public function getPatConsultantVisit() {
+        $all_patient_id = PatPatient::find()
+                ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                ->where(['patient_global_guid' => $this->patient->patient_global_guid])
+                ->one();
+        
+        return $this->hasOne(PatAppointment::className(), ['consultant_id' => 'consultant_id'])
+                ->where("patient_id IN ($all_patient_id->allpatient)")
+                ->status()
+                ->andWhere(['appt_status' => 'S'])
+                ->orderBy(['created_at' => SORT_DESC])->count();
+    }
 
     public function beforeValidate() {
         $this->setCurrentData();
@@ -261,7 +274,7 @@ class PatAppointment extends RActiveRecord {
             },
             'city_name' => function ($model) {
                 return isset($model->patient->patPatientAddress) ? $model->patient->patPatientAddress->Cityname() : '-';
-            }        
+            }
             
         ];
         $fields = array_merge(parent::fields(), $extend);
@@ -291,6 +304,10 @@ class PatAppointment extends RActiveRecord {
 
     public function getStatus_datetime() {
         return "{$this->status_date} {$this->status_time}";
+    }
+    
+    public function getConsultant_visit() {
+        return $this->getPatConsultantVisit();
     }
 
     public function getWaiting_elapsed() {

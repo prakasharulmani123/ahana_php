@@ -468,7 +468,8 @@ class PatEncounter extends RActiveRecord {
                                 'appt_id',
                                 'status_datetime',
                                 'status_date',
-                                'status_time'
+                                'status_time',
+                                'consultant_visit'
                     ]);
                 } else {
                     return '-';
@@ -489,7 +490,7 @@ class PatEncounter extends RActiveRecord {
                                 'hasalert',
                                 'alert',
                                 'incomplete_profile',
-                                'new_user',
+                                //'new_user',
                                 'patient_guid',
                                 'patient_img_url',
                                 'fullcurrentaddress',
