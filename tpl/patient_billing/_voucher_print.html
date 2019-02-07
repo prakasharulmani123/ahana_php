@@ -10,7 +10,7 @@
                     <img width="60" height="60" alt="AHANA HOSPITALS" src="{{app.org_document_logo}}">
                 </td>
                 <td>
-                    <span style="display:inline-block;width:100%;" class="orgcss" id="lblOrganisation">{{app.org_name}}</span>
+                    <span style="display:inline-block;width:100%;" class="orgcss" id="lblOrganisation">{{printVoucher.tenant_name}}</span>
                 </td>
                 <td class="orgtable2" style="width: 25%">
                     <span style="display:inline-block;width:100%;" class="SplCss" id="lblvourcherno">
@@ -20,9 +20,9 @@
             </tr>
             <tr>
                 <td class="orgtable" rowspan="1"> 
-                    {{app.org_address}}<br>
-                    {{app.org_city}} {{app.org_state}} {{app.org_country}}<br>
-                    Ph : {{app.org_mobile}}
+                    {{printVoucher.tenant_address}}<br>
+                    {{printVoucher.city_name}} {{printVoucher.state_name}} {{printVoucher.country_name}}<br>
+                    Ph : {{printVoucher.tenant_mobile}}
                 </td>
                 <td class="orgtable2"><span style="display:inline-block;width:100%;" class="DateCss" id="lblDate">
                         <span class="SplCss">Date : </span>{{printVoucher.payment_date| moment:'DD/MM/YYYY'}}
@@ -52,7 +52,7 @@
                     <br />
                     <div class="amount">{{printVoucher.total_charge}}</div>
                     <div class="sign">
-                        For {{app.org_name}} 
+                        For {{printVoucher.tenant_name}} 
                         <br/>
                         <br/>
                         <span> Authorised signatory</span> 
@@ -70,7 +70,7 @@
                     <img width="60" height="60" alt="AHANA HOSPITALS" src="{{app.org_document_logo}}">
                 </td>
                 <td>
-                    <span style="display:inline-block;width:100%;" class="orgcss" id="lblOrganisation">{{app.org_name}}</span>
+                    <span style="display:inline-block;width:100%;" class="orgcss" id="lblOrganisation">{{printVoucher.tenant_name}}</span>
                 </td>
                 <td class="orgtable2" style="width: 25%">
                     <span style="display:inline-block;width:100%;" class="SplCss" id="lblvourcherno">
@@ -80,9 +80,9 @@
             </tr>
             <tr>
                 <td class="orgtable" rowspan="1"> 
-                    {{app.org_address}}<br>
-                    {{app.org_city}} {{app.org_state}} {{app.org_country}}<br>
-                    Ph : {{app.org_mobile}}
+                    {{printVoucher.tenant_address}}<br>
+                    {{printVoucher.city_name}} {{printVoucher.state_name}} {{printVoucher.country_name}}<br>
+                    Ph : {{printVoucher.tenant_mobile}}
                 </td>
                 <td class="orgtable2"><span style="display:inline-block;width:100%;" class="DateCss" id="lblDate">
                         <span class="SplCss">Date : </span>{{printVoucher.payment_date| moment:'DD/MM/YYYY'}}
@@ -109,7 +109,7 @@
                     <br />
                     <br />
                     <div class="amount">{{printVoucher.total_charge}}</div>
-                    <div class="sign">For {{app.org_name}} <br/>
+                    <div class="sign">For {{printVoucher.tenant_name}} <br/>
                         <br/>
                         <span> Authorised signatory</span> </div>
                     <br />

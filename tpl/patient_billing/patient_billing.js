@@ -144,17 +144,28 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             $rootScope.commonService.GetYear(function (response) {
                 $scope.years = response;
             });
+            $scope.type = type;
+            $scope.date = date;
             $scope.errorData = '';
             $scope.isLoading = true;
+            $scope.maxSize = 5; // Limit number for pagination display number.  
+            $scope.totalCount = 0; // Total number of items in all pages. initialize as a zero  
+            $scope.pageIndex = 1; // Current page number. First page is 1.-->  
+            $scope.pageSizeSelected = 10; // Maximum number of items per page.
+
             $scope.rowCollection = [];  // base collection
 //            $scope.itemsByPage = 10; // No.of records per page
             $scope.displayedCollection = [].concat($scope.rowCollection);  // displayed collection
+            $scope.allBillingList(type, date);
+        };
 
+        $scope.allBillingList = function (type, date) {
+            $scope.isLoading = true;
             if (typeof date == 'undefined') {
-                url = $rootScope.IRISOrgServiceUrl + '/encounter/getallbilling?id=' + $state.params.id + '&type=' + type;
+                url = $rootScope.IRISOrgServiceUrl + '/encounter/getallbilling?id=' + $state.params.id + '&type=' + type + '&pageIndex=' + $scope.pageIndex + '&pageSize=' + $scope.pageSizeSelected;
             } else {
                 date = moment(date).format('YYYY-MM-DD');
-                url = $rootScope.IRISOrgServiceUrl + '/encounter/getallbilling?id=' + $state.params.id + '&type=' + type + '&date=' + date;
+                url = $rootScope.IRISOrgServiceUrl + '/encounter/getallbilling?id=' + $state.params.id + '&type=' + type + '&date=' + date + '&pageIndex=' + $scope.pageIndex + '&pageSize=' + $scope.pageSizeSelected;
             }
 
             $http.get(url)
@@ -162,6 +173,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                         if (response.success == true) {
                             $scope.isLoading = false;
                             $scope.rowCollection = response.encounters;
+                            $scope.totalCount = response.totalCount;
 
                             angular.forEach($scope.rowCollection, function (row) {
                                 var result = $filter('filter')($scope.enabled_dates, moment(row.date_time).format('YYYY-MM-DD'));
@@ -176,6 +188,10 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading encounter!";
                     });
+        }
+        
+        $scope.pageChanged = function () {
+            $scope.allBillingList($scope.type, $scope.date);
         };
 
         //Collapse / Expand 
@@ -189,7 +205,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
         $scope.enc = {};
         $scope.$watch('patientObj.patient_id', function (newValue, oldValue) {
             if (newValue != '' && typeof newValue != 'undefined') {
-                $rootScope.commonService.GetEncounterListByPatientAndType($scope.app.logged_tenant_id, '0,1', false, $scope.patientObj.patient_id, 'IP', function (response) {
+                $rootScope.commonService.GetEncounterListByPatientAllTenant('0,1', false, $scope.patientObj.patient_id, 'IP', function (response) {
                     //Most probably because splice() mutates the array, and angular.forEach() uses invalid indexes
                     //That's y used while instead of foreach
                     var i = response.length;
@@ -561,8 +577,8 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                 column: column,
                 value: value,
                 title: title,
-                backdateDischarge : backdateDischarge,
-                finalize_date : final_date
+                backdateDischarge: backdateDischarge,
+                finalize_date: final_date
             };
 
             modalInstance.result.then(function (selectedItem) {

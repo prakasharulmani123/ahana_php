@@ -10,7 +10,7 @@
                     <img width="60" height="60" alt="AHANA HOSPITALS" src="{{app.org_document_logo}}">
                 </td>
                 <td colspan="2">
-                    <span style="display:inline-block;width:100%;" class="orgcss" id="lblOrganisation">{{app.org_name}}</span>
+                    <span style="display:inline-block;width:100%;" class="orgcss" id="lblOrganisation">{{printVoucher.tenant.branch_name}}</span>
                 </td>
                 <td class="orgtable2" style="width: 25%">
                     <span style="display:inline-block;width:100%;" class="SplCss" id="lblvourcherno">
@@ -20,9 +20,9 @@
             </tr>
             <tr>
                 <td class="orgtable" rowspan="1" colspan="2"> 
-                    {{app.org_address}}<br>
-                    {{app.org_city}} {{app.org_state}} {{app.org_country}}<br>
-                    Ph : {{app.org_mobile}}
+                    {{printVoucher.tenant.tenant_address}}<br>
+                    {{printVoucher.tenant.tenant_city_name}} {{printVoucher.tenant.tenant_state_name}} {{printVoucher.tenant.tenant_country_name}}<br>
+                    Ph : {{printVoucher.tenant.tenant_mobile}}
                 </td>
                 <td class="orgtable2"><span style="display:inline-block;width:100%;" class="DateCss" id="lblDate">
                         <span class="SplCss">Date : </span>{{printVoucher.refund_date| moment:'DD/MM/YYYY'}}

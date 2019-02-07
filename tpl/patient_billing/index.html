@@ -4,12 +4,12 @@
             <h1 class="m-n h3">Billing</h1>
         </div>
         <div class="col-sm-8 text-right">
-            <a data-button="patient.finalize" check-access-custom class="btn btn-default btn-success" ng-show="enc.selected.finalize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '1', 'Finalize')"> <i class="fa fa-check-square-o"></i> Finalize</a>
-            <a data-button="patient.unfinalize" check-access-custom class="btn btn-default btn-dark" ng-show="enc.selected.authorize == '0' && enc.selected.finalize != '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '0', 'Unfinalize')"> <i class="fa fa-ban"></i> Unfinalize</a>
-            <a data-button="patient.authorize" check-access-custom class="btn btn-default btn-success" ng-show="enc.selected.finalize != '0' && enc.selected.authorize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '1', 'Authorize')"> <i class="fa fa-eye"></i> Authorize</a>
-            <a data-button="patient.unathorize" check-access-custom class="btn btn-default btn-dark" ng-show="enc.selected.authorize != '0' && enc.selected.discharge == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '0', 'Unauthorize')"> <i class="fa fa-eye-slash"></i> Unauthorize</a>
-            <a data-button="patient.admindischarge" check-access-custom class="btn btn-default btn-success" ng-show="enc.selected.authorize != '0' && enc.selected.discharge == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'discharge', '1', 'Administrative Discharge',enc.selected.finalize_date)"> <i class="fa fa-home"></i> Administrative Discharge</a>
-            <a data-button="patient.refundamount" class="btn btn-default btn-success" ng-show="enc.selected.encounter_status == '0' && billing_total_balance < 0" ng-click="refundAmount(enc.selected.encounter_id, 'discharge', '1', 'Administrative Discharge')"> <i class="fa fa-plus"></i> Add Refund Amount</a>
+            <a ng-if="enc.selected.current_tenant_id == app.logged_tenant_id" data-button="patient.finalize" check-access-custom class="btn btn-default btn-success" ng-show="enc.selected.finalize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '1', 'Finalize')"> <i class="fa fa-check-square-o"></i> Finalize</a>
+            <a ng-if="enc.selected.current_tenant_id == app.logged_tenant_id" data-button="patient.unfinalize" check-access-custom class="btn btn-default btn-dark" ng-show="enc.selected.authorize == '0' && enc.selected.finalize != '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'finalize', '0', 'Unfinalize')"> <i class="fa fa-ban"></i> Unfinalize</a>
+            <a ng-if="enc.selected.current_tenant_id == app.logged_tenant_id" data-button="patient.authorize" check-access-custom class="btn btn-default btn-success" ng-show="enc.selected.finalize != '0' && enc.selected.authorize == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '1', 'Authorize')"> <i class="fa fa-eye"></i> Authorize</a>
+            <a ng-if="enc.selected.current_tenant_id == app.logged_tenant_id" data-button="patient.unathorize" check-access-custom class="btn btn-default btn-dark" ng-show="enc.selected.authorize != '0' && enc.selected.discharge == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'authorize', '0', 'Unauthorize')"> <i class="fa fa-eye-slash"></i> Unauthorize</a>
+            <a ng-if="enc.selected.current_tenant_id == app.logged_tenant_id" data-button="patient.admindischarge" check-access-custom class="btn btn-default btn-success" ng-show="enc.selected.authorize != '0' && enc.selected.discharge == '0' && enc.selected.discharge_date" ng-click="password_auth(enc.selected.encounter_id, 'discharge', '1', 'Administrative Discharge', enc.selected.finalize_date)"> <i class="fa fa-home"></i> Administrative Discharge</a>
+            <a ng-if="enc.selected.current_tenant_id == app.logged_tenant_id" data-button="patient.refundamount" class="btn btn-default btn-success" ng-show="enc.selected.encounter_status == '0' && billing_total_balance < 0" ng-click="refundAmount(enc.selected.encounter_id, 'discharge', '1', 'Administrative Discharge')"> <i class="fa fa-plus"></i> Add Refund Amount</a>
             <button check-access-button ng-click="$state.go('patient.viewBillingHistory', {id: $state.params.id, enc_id: enc.selected.encounter_id})" class="btn btn-sm btn-info">
                 <i class="fa fa-file-text"></i> &nbsp; View Billing History
             </button>
@@ -50,12 +50,12 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label class="col-sm-5 control-label"> <b> Encounter ID </b> </label>
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-7">
                                         <div class="btn-group btn-group-justified">
                                             <ui-select ng-model="enc.selected" theme="bootstrap">
                                                 <ui-select-match placeholder="Select">{{$select.selected.encounter_id}}</ui-select-match>
                                                 <ui-select-choices repeat="item in encounters | filter: $select.search | orderBy: 'encounter_id' : true">
-                                                    <div ng-bind-html="item.encounter_id | highlight: $select.search"></div>
+                                                    <div ng-bind-html="item.encounter_details | highlight: $select.search"></div>
                                                 </ui-select-choices>
                                             </ui-select>
 
@@ -128,7 +128,7 @@
                 <div class="panel-heading no-border bg-primary"> <i class="fa fa-medkit"></i> Recurring Charges</div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <a check-access-button class="btn btn-default" ng-show="enc.selected.finalize == '0'" ng-click="$state.go('patient.roomConcession', {id: $state.params.id, encounter_id: enc.selected.encounter_id})"> <i class="fa fa-plus-square"></i> &nbsp;Room Concession</a>
+                        <a ng-if="enc.selected.current_tenant_id == app.logged_tenant_id" check-access-button class="btn btn-default" ng-show="enc.selected.finalize == '0'" ng-click="$state.go('patient.roomConcession', {id: $state.params.id, encounter_id: enc.selected.encounter_id})"> <i class="fa fa-plus-square"></i> &nbsp;Room Concession</a>
                         <span class="pull-right"> <b> Concession amount : </b><span class="label bg-success"> {{enc.selected.concession_amount| number:2}} </span></span>
                     </div>
                     <div class="m-b-sm">
@@ -149,8 +149,8 @@
                             <td>{{row.tenant_name}}</td>
                             <td> {{row.charge_amount}} </td>
                             <td> {{row.room_type}} </td>
-                            <td> {{row.from_date | moment:'DD-MM-YYYY'}} </td>
-                            <td> {{row.to_date | moment:'DD-MM-YYYY'}} </td>
+                            <td> {{row.from_date| moment:'DD-MM-YYYY'}} </td>
+                            <td> {{row.to_date| moment:'DD-MM-YYYY'}} </td>
                             <td> {{row.duration}} </td>
                             <td align="right" ng-init="row_recurring_total = getTotalRecurringPrice(row);
                                 recurr_billing.total.recurring_total = recurr_billing.total.recurring_total + row_recurring_total;
@@ -168,7 +168,7 @@
             <div class="panel panel-default m-b">
                 <div class="panel-heading bg-info font-bold"> <i class="fa fa-medkit"></i> Non-recurring charges</div>
                 <div class="panel-body">
-                    <div class="form-group" ng-if="enc.selected.finalize == '0'"> 
+                    <div class="form-group" ng-if="enc.selected.finalize == '0' && enc.selected.current_tenant_id == app.logged_tenant_id"> 
                         <a check-access-button ng-click="$state.go('patient.addOtherCharge', {id: $state.params.id, enc_id: enc.selected.encounter_id})" class="btn btn-default">
                             <i class="fa fa-plus-square"></i> &nbsp; Add other charges
                         </a>
@@ -214,9 +214,11 @@
                             <tr ng-show="expanded_1" ng-repeat="(key, row) in procedures">
                                 <td align="center" valign="middle"></td>
                                 <td>
-                                    <label class="i-checks m-b-none">
-                                        <input id="enc_procedure_{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions(key, 'procedure', row.ec_id, row.category_id, row.concession_amount, row.extra_amount, '', row.tenant_id)"><i></i>
-                                    </label>
+                                    <span ng-if="enc.selected.current_tenant_id == app.logged_tenant_id">
+                                        <label class="i-checks m-b-none">
+                                            <input id="enc_procedure_{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions(key, 'procedure', row.ec_id, row.category_id, row.concession_amount, row.extra_amount, '', row.tenant_id)"><i></i>
+                                        </label>
+                                    </span>
                                 </td>
                                 <td>{{row.category}} </td>
                                 <td>{{row.tenant_name}}</td>
@@ -252,9 +254,11 @@
                             <tr ng-show="expanded_2" ng-repeat="(key, row) in consultants">
                                 <td align="center" valign="middle"></td>
                                 <td>
-                                    <label class="i-checks m-b-none">
-                                        <input id="enc_consultant_{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions(key, 'consultant', row.ec_id, row.category_id, row.concession_amount, row.extra_amount, '', row.tenant_id)"><i></i>
-                                    </label>
+                                    <span ng-if="enc.selected.current_tenant_id == app.logged_tenant_id">
+                                        <label class="i-checks m-b-none">
+                                            <input ng-if="enc.selected.current_tenant_id == app.logged_tenant_id" id="enc_consultant_{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions(key, 'consultant', row.ec_id, row.category_id, row.concession_amount, row.extra_amount, '', row.tenant_id)"><i></i>
+                                        </label>
+                                    </span>
                                 </td>
                                 <td>{{row.category}}</td>
                                 <td>{{row.tenant_name}}</td>
@@ -290,9 +294,11 @@
                             <tr ng-show="expanded_3" ng-repeat="(key, row) in other_charges">
                                 <td align="center" valign="middle"></td>
                                 <td>
-                                    <label class="i-checks m-b-none">
-                                        <input id="enc_other_{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions(key, 'other', row.other_charge_id)"><i></i>
-                                    </label>
+                                    <span ng-if="enc.selected.current_tenant_id == app.logged_tenant_id">
+                                        <label class="i-checks m-b-none">
+                                            <input ng-if="enc.selected.current_tenant_id == app.logged_tenant_id" id="enc_other_{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions(key, 'other', row.other_charge_id)"><i></i>
+                                        </label>
+                                    </span>
                                 </td>
                                 <td>{{row.category}} </td>
                                 <td>{{row.tenant_name}}</td>
@@ -326,7 +332,7 @@
                 <div class="panel-heading no-border bg-primary"> <i class="fa fa-medkit"></i> Pharmacy Charges</div>
                 <div class="panel-body" ng-init="pharmacy = {}">
                     <div class="form-group">
-                        <a class="btn btn-default" ng-if = "pharmacy.total != 0" ng-show="enc.selected.finalize == '0'" ng-click="$state.go('patient.pharmacyConcession', {id: $state.params.id,enc_id: enc.selected.encounter_id})">
+                        <a class="btn btn-default" ng-if = "(enc.selected.current_tenant_id == app.logged_tenant_id && pharmacy.total != 0)" ng-show="enc.selected.finalize == '0'" ng-click="$state.go('patient.pharmacyConcession', {id: $state.params.id, enc_id: enc.selected.encounter_id})">
                             <i class="fa fa-plus-square"></i> &nbsp;Add concession amount
                         </a>
                         <span class="pull-right"> <b> Total Pending Amount : </b><span class="label bg-danger"> {{pharmacy.total| number:2}} </span></span>
@@ -401,10 +407,10 @@
                 <div class="panel-heading panel-heading bg-dark font-bold"> <i class="fa fa-medkit"></i> Payments</div>
                 <div class="panel-body">
                     <div class="form-group" ng-if="add_payment">
-                        <a check-access-button ng-click="$state.go('patient.addPayment', {id: $state.params.id, enc_id: enc.selected.encounter_id})" class="btn btn-default">
+                        <a ng-if="enc.selected.current_tenant_id == app.logged_tenant_id" check-access-button ng-click="$state.go('patient.addPayment', {id: $state.params.id, enc_id: enc.selected.encounter_id})" class="btn btn-default">
                             <i class="fa fa-plus-square"></i>&nbsp; Add Payment
                         </a>
-                        <span ng-show="enc.selected.finalize == '0'" ng-if="more_advance_li.length > 0" ng-repeat="(key, li) in more_advance_li">
+                        <span ng-show="enc.selected.finalize == '0'" ng-if="more_advance_li.length > 0 && enc.selected.current_tenant_id == app.logged_tenant_id" ng-repeat="(key, li) in more_advance_li">
                             <a check-access-custom2 ng-if="li.mode == 'sref'" ui-sref="{{li.href}}" class="btn btn-default"> <i class="{{li.i_class}}"></i> &nbsp;{{li.name}}</a>    
                             <a check-access-custom3 ng-if="li.mode == 'click'" ng-click="{{li.href}}" class="btn btn-default" data-url='{{li.url}}'> <i class="{{li.i_class}}"></i> &nbsp;{{li.name}}</a>
                         </span>
@@ -429,9 +435,11 @@
                             <tr ng-repeat="(key, row) in advances">
                                 <td align="center" valign="middle"></td>
                                 <td>
-                                    <label class="i-checks m-b-none">
-                                        <input id="enc_advance_{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions(key, 'advance', row.payment_id)"><i></i>
-                                    </label>
+                                    <span ng-if="enc.selected.current_tenant_id == app.logged_tenant_id">
+                                        <label class="i-checks m-b-none">
+                                            <input id="enc_advance_{{key}}" class="enc_chk" type="checkbox" name="b[]" ng-click="moreOptions(key, 'advance', row.payment_id)"><i></i>
+                                        </label>
+                                    </span>
                                 </td>
                                 <td>{{row.category}} </td>
                                 <td>{{row.tenant_name}} </td>
@@ -542,10 +550,10 @@
                     <i class="fa fa-file"></i> Notes
                 </div>
                 <div class="panel-body">
-                    <textarea ng-model="enc.selected.bill_notes" class="form-control" placeholder="Notes"></textarea>
+                    <textarea ng-readonly="enc.selected.current_tenant_id != app.logged_tenant_id" ng-model="enc.selected.bill_notes" class="form-control" placeholder="Notes"></textarea>
                     <span class="text-danger" ng-show="notes_error">Enter Billing Notes !!! </span>
                     <footer class="panel-footer text-right">
-                        <button ng-click="saveBillNotes()" class="btn m-b-xs  btn-success save-btn">Save</button>
+                        <button ng-if="enc.selected.current_tenant_id == app.logged_tenant_id" ng-click="saveBillNotes()" class="btn m-b-xs  btn-success save-btn">Save</button>
                     </footer>
                 </div>
             </div>

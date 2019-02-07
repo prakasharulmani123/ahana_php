@@ -1034,6 +1034,7 @@ angular.module('app')
                                 $scope.printBillData.op_amount_inwords = response.model.appointmentSeen_amt_inwords;
                                 $scope.printBillData.bill_no = response.model.bill_no;
                                 $scope.printBillData.encounter_id = item.encounter_id;
+                                $scope.printBillData.branch_name = response.model.apptBranchData.branch_name;
                                 if (response.model.appointmentSeen.payment_mode == "CA")
                                     $scope.printBillData.payment_mode = 'Cash';
                                 else if (response.model.appointmentSeen.payment_mode == "CD")
@@ -1200,7 +1201,7 @@ angular.module('app')
                     }
                     //Print Configuration for OP bill Organization
                     if ($scope.opBillPrintOption.org_name == '1') {
-                        var org_name = $scope.patientObj.org_name;
+                        var org_name = $scope.printBillData.branch_name;
                     }
                     //Print Configuration for OP bill authorized
                     if ($scope.opBillPrintOption.authorized_sign == '1') {
@@ -1504,7 +1505,7 @@ angular.module('app')
                                             body: [
                                                 [
                                                     {
-                                                        text: 'For ' + $scope.patientObj.org_name,
+                                                        text: 'For ' + $scope.printBillData.branch_name,
                                                         style: 'h2'
                                                     },
                                                     {

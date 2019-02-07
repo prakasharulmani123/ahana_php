@@ -49,6 +49,7 @@
                     <thead>
                         <tr>
                             <th>Encounter ID </th>
+                            <th>Branch Name</th>
                             <th>Date</th>
                             <th>Details</th>
                             <th>Doctors Name</th>
@@ -60,6 +61,7 @@
                     <tbody ng-hide="isLoading">
                         <tr ng-repeat="encounter in displayedCollection" ng-init="encounter.seen.doctor = encounter.seen.consultant_name">
                             <td> {{encounter.encounter_id}} </td>
+                            <td> {{encounter.tenant_name}}</td>
                             <td class="logindeatils">
                                 <p ng-if="encounter.encounter_type == 'OP'"> 
                                     <b> OP: </b>
@@ -101,9 +103,18 @@
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="6" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                            <td colspan="8" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                        <tr>  
+                            <td align="center" colspan="8">  
+                                <div class="pull-right">  
+                                    <pagination total-items="totalCount" ng-change="pageChanged()" items-per-page="pageSizeSelected" direction-links="true" ng-model="pageIndex" max-size="maxSize" class="pagination" boundary-links="true" rotate="false" num-pages="numPages"></pagination>  
+                                </div>  
+                            </td>  
+                        </tr> 
+                    </tfoot>
                 </table>
             </div>
         </div>
