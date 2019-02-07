@@ -960,6 +960,24 @@ class PatPatient extends RActiveRecord {
         $patient = self::find()->where(['patient_guid' => $patient_guid])->one();
         return $patient;
     }
+    
+    public static function getAllTenantPatientByGuid($patient_guid) {
+        $patient = self::find()->where(['patient_guid' => $patient_guid])->one();
+        $all_patient_id = PatPatient::find()
+                ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                ->where(['patient_global_guid' => $patient->patient_global_guid])
+                ->one();
+        return $all_patient_id;
+    }
+    
+    public static function getAllTenantPatientById($patient_id) {
+        $patient = self::find()->where(['patient_id' => $patient_id])->one();
+        $all_patient_id = PatPatient::find()
+                ->select('GROUP_CONCAT(patient_id) AS allpatient')
+                ->where(['patient_global_guid' => $patient->patient_global_guid])
+                ->one();
+        return $all_patient_id;
+    }
 
     /* I think this function is not used anywhere - prakash* */
 

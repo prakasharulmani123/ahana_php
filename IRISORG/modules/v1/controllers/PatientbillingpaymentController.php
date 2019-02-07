@@ -73,13 +73,13 @@ class PatientbillingpaymentController extends ActiveController {
         $GET = Yii::$app->getRequest()->get();
 
         if (!empty($GET)) {
-            $patient = PatPatient::getPatientByGuid($GET['id']);
+            //$patient = PatPatient::getPatientByGuid($GET['id']);
 
-            $condition['patient_id'] = $patient->patient_id;
+            //$condition['patient_id'] = $patient->patient_id;
             $condition['encounter_id'] = $GET['enc_id'];
 
             $data = PatBillingLog::find()
-                    ->tenant()
+                    //->tenant()
                     ->active()
                     ->status()
                     ->andWhere($condition)

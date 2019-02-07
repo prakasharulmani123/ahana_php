@@ -540,7 +540,24 @@ class PatEncounter extends RActiveRecord {
             },
             'prescription_status' => function ($model) {
                 return (empty($model->patPrescriptions)) ? false : true;
-            }        
+            },
+            'apptBranchData' => function ($model) {
+                if (isset($model->tenant)) {
+                    return $model->tenant->getAttributes([
+                        'tenant_name',
+                        'tenant_mobile',
+                        'tenant_address',
+                        'tenant_city_name',
+                        'tenant_state_name',
+                        'tenant_country_name'
+                    ]);
+                } else {
+                    return '-';
+                }
+            },
+            'encounter_details' => function ($model) {
+                return ucwords("{$model->encounter_id} [ {$model->tenant->tenant_name} ]");
+            }
         ];
 
         $parent_fields = parent::fields();
@@ -770,15 +787,20 @@ class PatEncounter extends RActiveRecord {
         return $list;
     }
 
-    public static function getEncounterListByTenantSamePatient($tenant = null, $status = '1', $deleted = false, $patient_id = null, $encounter_type = 'IP,OP', $oldencounter) {
-        $patient = PatPatient::find()
-                ->where(['patient_id' => $patient_id])
-                ->one();
+    public static function getEncounterListByPatientDiffTenant($status = '1', $deleted = false, $patient_id = null, $encounter_type = 'IP,OP') {
+        $all_patient_id = PatPatient::getAllTenantPatientById($patient_id);
 
-        $all_patient_id = PatPatient::find()
-                ->select('GROUP_CONCAT(patient_id) AS allpatient')
-                ->where(['patient_global_guid' => $patient->patient_global_guid])
-                ->one();
+        if (!$deleted) {
+            $list = self::find()->where("patient_id IN ($all_patient_id->allpatient)")->status($status)->active()->encounterType($encounter_type);
+            $list = $list->orderBy(['encounter_id' => SORT_DESC])->all();
+        } else
+            $list = self::find()->tenant($tenant)->encounterType($encounter_type)->deleted()->andWhere(['patient_id' => $patient_id])->orderBy(['encounter_id' => SORT_DESC])->all();
+
+        return $list;
+    }
+
+    public static function getEncounterListByTenantSamePatient($tenant = null, $status = '1', $deleted = false, $patient_id = null, $encounter_type = 'IP,OP', $oldencounter) {
+        $all_patient_id = PatPatient::getAllTenantPatientById($patient_id);
 
         if (!$deleted) {
             $list = self::find()->where("patient_id IN ($all_patient_id->allpatient)")->active();

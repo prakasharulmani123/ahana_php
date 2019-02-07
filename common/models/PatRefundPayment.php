@@ -93,7 +93,32 @@ class PatRefundPayment extends RActiveRecord {
             'deleted_at' => 'Deleted At',
         ];
     }
-
+    
+    public function getTenant() {
+        return $this->hasOne(CoTenant::className(), ['tenant_id' => 'tenant_id']);
+    }
+    
+    public function fields() {
+        $extend = [
+            'tenant' => function ($model) {
+                if (isset($model->tenant)) {
+                    return $model->tenant->getAttributes([
+                        'tenant_name',
+                        'tenant_mobile',
+                        'tenant_address',
+                        'tenant_city_name',
+                        'tenant_state_name',
+                        'tenant_country_name'
+                    ]);
+                } else {
+                    return '-';
+                }
+            },
+        ];
+        $fields = array_merge(parent::fields(), $extend);
+        return $fields;
+    }
+    
     public static function find() {
         return new PatRefundPaymentQuery(get_called_class());
     }

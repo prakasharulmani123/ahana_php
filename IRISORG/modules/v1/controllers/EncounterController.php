@@ -245,19 +245,25 @@ class EncounterController extends ActiveController {
     public function actionGetallbilling() {
         $get = Yii::$app->getRequest()->get();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
-
+        
         if (isset($get['id'])) {
-            $condition['patient_guid'][$get['id']] = $get['id'];
+            $offset = abs($get['pageIndex'] - 1) * $get['pageSize'];
+            $all_patient_id = PatPatient::getAllTenantPatientByGuid($get['id']);
 
-            if (isset($get['date'])) {
-                $condition['DATE(date)'] = $get['date'];
-            }
-
-            $encounters = VEncounter::find()
-                    ->where($condition)
-                    ->groupBy('encounter_id')
-                    ->orderBy(['encounter_id' => SORT_DESC])
-                    ->all();
+            //$condition['patient_guid'][$get['id']] = $get['id'];
+            
+            $encounter = VEncounter::find()
+                    ->where("patient_id IN ($all_patient_id->allpatient)");
+                    if (isset($get['date'])) {
+                        $encounter->andWhere(['DATE(date)' => $get['date']]);
+                    }
+                    $encounter->groupBy(['encounter_id']);
+                    $encounter->andWhere("type != 'Cancelled'");
+                    $encounter->andWhere("type != 'Admission Cancelled'");
+            $totalCount = $encounter->count();        
+                    $encounter->limit($get['pageSize'])->offset($offset)
+                    ->orderBy(['encounter_id' => SORT_DESC]);
+            $encounters = $encounter->all();
 
             $data = [];
             foreach ($encounters as $k => $e) {
@@ -279,7 +285,7 @@ class EncounterController extends ActiveController {
                 }
             }
 
-            return ['success' => true, 'encounters' => array_values($data)];
+            return ['success' => true, 'encounters' => $encounters, 'totalCount' => $totalCount];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
         }
@@ -634,6 +640,27 @@ class EncounterController extends ActiveController {
 
         return $model;
     }
+    
+    public function actionGetencounterlistbypatientdifftenant() {
+        $GET = Yii::$app->getRequest()->get();
+
+        if (isset($GET['status']))
+            $status = strval($GET['status']);
+
+        if (isset($GET['deleted']))
+            $deleted = $GET['deleted'] == 'true';
+
+        if (isset($GET['patient_id']))
+            $patient_id = $GET['patient_id'];
+
+        $encounter_type = 'IP,OP';
+        if (isset($GET['encounter_type']))
+            $encounter_type = $GET['encounter_type'];
+
+        $model = PatEncounter::getEncounterListByPatientDiffTenant($status, $deleted, $patient_id, $encounter_type);
+
+        return $model;
+    }
 
     public function actionGetencounterlistbytenantsamepatient() {
         $GET = Yii::$app->getRequest()->get();
@@ -707,9 +734,9 @@ class EncounterController extends ActiveController {
         if (!empty($post)) {
             $patient = PatPatient::find()->where(['patient_guid' => $post['patient_id']])->one();
             $model = PatEncounter::find()
-                    ->tenant()
+                    //->tenant()
                     ->status('0')
-                    ->andWhere(['patient_id' => $patient->patient_id])
+                    //->andWhere(['patient_id' => $patient->patient_id])
                     ->andWhere(['encounter_id' => $post['enc_id']])
                     ->one();
 

@@ -129,13 +129,13 @@ class CoTenant extends GActiveRecord {
     public function fields() {
         $extend = [
             'tenant_city_name' => function ($model) {
-                return (isset($model->coMasterCity) ? $model->coMasterCity->city_name : '-');
+                return $model->tenant_city_name;
             },
             'tenant_state_name' => function ($model) {
-                return (isset($model->coMasterState) ? $model->coMasterState->state_name : '-');
+                return $model->tenant_state_name;
             },
             'tenant_country_name' => function ($model) {
-                return (isset($model->coMasterCountry) ? $model->coMasterCountry->country_name : '-');
+                return $model->tenant_country_name;
             },
             'branch_id' => function ($model) {
                 return $model->tenant_id;
@@ -150,6 +150,19 @@ class CoTenant extends GActiveRecord {
         $fields = array_merge(parent::fields(), $extend);
         return $fields;
     }
+    
+    public function getTenant_city_name() {
+        return (isset($this->coMasterCity) ? $this->coMasterCity->city_name : '-');
+    }
+    
+    public function getTenant_state_name() {
+        return (isset($this->coMasterState) ? $this->coMasterState->state_name : '-');
+    }
+    
+    public function getTenant_country_name() {
+        return (isset($this->coMasterCountry) ? $this->coMasterCountry->country_name : '-');
+    }
+    
 
     public static function find() {
         return new CoTenantQuery(get_called_class());
