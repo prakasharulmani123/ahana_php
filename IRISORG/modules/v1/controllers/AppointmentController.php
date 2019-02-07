@@ -67,8 +67,8 @@ class AppointmentController extends ActiveController {
 
                 $appt_model->save(false);
                 $patient = $appt_model->patient;
-                if($patient['patient_mobile'] && Yii::$app->user->identity->user->organization->org_id == '1')
-                    Yii::$app->hepler->sendSurveysms($patient['patient_title_code'],$patient['patient_firstname'],$patient['patient_mobile'], 'appointment');
+                if ($patient['patient_mobile'] && Yii::$app->user->identity->user->organization->org_id == '1')
+                    Yii::$app->hepler->sendSurveysms($patient['patient_title_code'], $patient['patient_firstname'], $patient['patient_mobile'], 'appointment');
                 if (!empty($post['charge_subcat_id'])) {
                     foreach ($post['charge_subcat_id'] as $key => $value) {
                         $procedure = new PatProcedure();
@@ -243,6 +243,26 @@ class AppointmentController extends ActiveController {
             return ['success' => true, 'result' => $result];
         } else {
             return ['success' => false, 'message' => 'Invalid Access'];
+        }
+    }
+
+    public function actionCheckbookingtime() {
+        $post = Yii::$app->getRequest()->post();
+        $bookApp = PatAppointment::find()
+                        ->where([
+                            'encounter_id' => $post['encounter_id'],
+                            'appt_status' => 'B',
+                        ])->one();
+        if (!empty($bookApp)) {
+            if (strtotime($bookApp['status_date']) <= strtotime($post['status_date'])) {
+                if (strtotime($bookApp['status_time']) <= strtotime($post['status_time'])) {
+                    return ['success' => true];
+                } else {
+                    return ['success' => false, 'message' => 'Kindly check booking date and time'];
+                }
+            } else {
+                return ['success' => false, 'message' => 'Kindly check booking date and time'];
+            }
         }
     }
 
