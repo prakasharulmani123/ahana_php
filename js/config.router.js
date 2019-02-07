@@ -1141,7 +1141,10 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table', 'xeditable']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_encounter/encounter.js?v=' + APP_VERSION);
+                                        return $ocLazyLoad.load([
+                                            'tpl/patient_encounter/encounter.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.edit_arrival_time.js?v=' + APP_VERSION,
+                                            ]);
                                     }
                             );
                         }]

@@ -1,4 +1,4 @@
-app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, $filter, modalService) {
+app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$filter', '$modal','modalService', function ($rootScope, $scope, $timeout, $http, $state, $filter, $modal, modalService) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -148,7 +148,7 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
             $scope.displayedCollection[main_key].all[key].date = moment(newDate).format('YYYY-MM-DD hh:mm A');
         }
 
-        $scope.moreOptions = function (key, enc_id, type, row_sts, id, status, is_swap) {
+        $scope.moreOptions = function (key, enc_id, type, row_sts, id, status, is_swap, date) {
             $scope.more_li = [];
 
             $('.enc_chk').not('#enc_' + enc_id + key).attr('checked', false);
@@ -185,6 +185,14 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                                     mode: 'click',
                                     url: 'patient.cancelAppointment'
                                 });
+                        if (row_sts == 'A') {
+                            $scope.more_li.push({
+                                href: "editArrivalTime(" + enc_id + ", " + id + ", '" + row_sts + "', '" + date + "')",
+                                name: 'Edit Arrival Time',
+                                mode: 'click',
+                                url: 'patient.editArrivalTime'
+                            });
+                        }
                     } else {
                         $scope.more_li.push({
                             href: 'patient.editDoctorFee({id: "' + $state.params.id + '", enc_id: ' + enc_id + '})',
@@ -195,6 +203,27 @@ app.controller('EncounterController', ['$rootScope', '$scope', '$timeout', '$htt
                 }
             }
         }
+        $scope.editArrivalTime = function (enc_id, id, row_sts, date) {
+            var modalInstance = $modal.open({
+                templateUrl: 'tpl/modal_form/modal.edit_arrival_time.html',
+                controller: "EditArrivalModalInstanceCtrl",
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    },
+                }
+            });
+            modalInstance.data = {
+                encounter_id: enc_id,
+                id: id,
+                arrival_date: date,
+            };
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+        };
 
         $scope.isPatientHaveActiveEncounter = function (callback) {
             $scope.loadbar('show');
