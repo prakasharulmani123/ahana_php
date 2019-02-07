@@ -258,8 +258,8 @@ class EncounterController extends ActiveController {
                         $encounter->andWhere(['DATE(date)' => $get['date']]);
                     }
                     $encounter->groupBy(['encounter_id']);
-                    //$encounter->andWhere("type != 'Cancelled'");
-                    //$encounter->andWhere("type != 'Admission Cancelled'");
+                    $encounter->andWhere("type != 'Cancelled'");
+                    $encounter->andWhere("type != 'Admission Cancelled'");
             $totalCount = $encounter->count();        
                     $encounter->limit($get['pageSize'])->offset($offset)
                     ->orderBy(['encounter_id' => SORT_DESC]);
