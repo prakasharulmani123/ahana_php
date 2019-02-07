@@ -1201,7 +1201,7 @@ angular.module('app')
                     }
                     //Print Configuration for OP bill Organization
                     if ($scope.opBillPrintOption.org_name == '1') {
-                        var org_name = $scope.printBillData.branch_name;
+                        var org_name = $scope.patientObj.org_name;
                     }
                     //Print Configuration for OP bill authorized
                     if ($scope.opBillPrintOption.authorized_sign == '1') {
