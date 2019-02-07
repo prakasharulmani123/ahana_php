@@ -1505,7 +1505,7 @@ angular.module('app')
                                             body: [
                                                 [
                                                     {
-                                                        text: 'For ' + $scope.printBillData.branch_name,
+                                                        text: 'For ' + $scope.patientObj.org_name,
                                                         style: 'h2'
                                                     },
                                                     {
