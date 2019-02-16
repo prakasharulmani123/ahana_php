@@ -220,6 +220,19 @@ class PhaSaleReturnItem extends PActiveRecord {
                         'vat_percent' => 'vat_percent',
                     ];
                     break;
+                case 'sale_print':
+                    $addt_keys = ['product', 'batch'];
+                    $parent_fields = [
+                        'sale_ret_item_id' => 'sale_ret_item_id',
+                        'quantity' => 'quantity',
+                        'mrp' => 'mrp',
+                        'taxable_value' => 'taxable_value',
+                        'sgst_amount' => 'sgst_amount',
+                        'sgst_percent' => 'sgst_percent',
+                        'cgst_amount' => 'cgst_amount',
+                        'cgst_percent' => 'cgst_percent',
+                        'total_amount' => 'total_amount',
+                    ];
             endswitch;
         }
         $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
