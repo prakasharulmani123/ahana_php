@@ -2411,13 +2411,13 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                             },
                             {
                                 border: border,
-                                text: row.batch_no,
+                                text: row.batch.batch_no,
                                 fillColor: color,
                                 style: 'td'
                             },
                             {
                                 border: border,
-                                text: moment(row.expiry_date).format('MM/YY'),
+                                text: moment(row.batch.expiry_date).format('MM/YY'),
                                 fillColor: color,
                                 style: 'td'
                             },
