@@ -605,6 +605,14 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             //var sgst_amount = ((total_amount * sgst_perc) / (100 + sgst_perc)).toFixed(2); // Including vat
             var cgst_amount = (((taxable_value * cgst_perc) / 100)).toFixed(2); // Including vat
             var sgst_amount = (((taxable_value * sgst_perc) / 100)).toFixed(2); // Including vat
+	    
+	//After discount amount changed to taxable, cgst, sgst amount
+	    if(disc_perc > 0) {
+		var new_taxable_value = ((disc_perc / 100) * taxable_value).toFixed(2);
+                var taxable_value = (parseFloat(taxable_value) - parseFloat(new_taxable_value)).toFixed(2);
+                var cgst_amount = (((taxable_value * cgst_perc) / 100)).toFixed(2); // Including vat
+                var sgst_amount = (((taxable_value * sgst_perc) / 100)).toFixed(2); // Including vat
+	    }	
 
             var purchase_amount = (parseFloat(taxable_value) + parseFloat(cgst_amount) + parseFloat(sgst_amount)).toFixed(2);
 
