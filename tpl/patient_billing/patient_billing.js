@@ -557,7 +557,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
             }
         };
 
-        $scope.password_auth = function (encounter_id, column, value, title, final_date) {
+        $scope.password_auth = function (encounter_id, column, value, title, clinical_final_date) {
             if ($scope.checkAccess('patient.backdatedischarge')) {
                 var backdateDischarge = true;
             } else {
@@ -578,7 +578,7 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                 value: value,
                 title: title,
                 backdateDischarge: backdateDischarge,
-                finalize_date: final_date
+                clinical_finalize_date: moment(clinical_final_date).format('YYYY-MM-DD')
             };
 
             modalInstance.result.then(function (selectedItem) {

@@ -1,5 +1,6 @@
 app.controller('PasswordAuthController', ['scope', '$scope', '$modalInstance', '$rootScope', '$timeout', '$http', '$state', function (scope, $scope, $modalInstance, $rootScope, $timeout, $http, $state) {
 
+        $scope.data = {};
         var encounter_id = $modalInstance.data.encounter_id;
         var column = $modalInstance.data.column;
         var value = $modalInstance.data.value;
@@ -7,7 +8,10 @@ app.controller('PasswordAuthController', ['scope', '$scope', '$modalInstance', '
         $scope.title = $modalInstance.data.title;
         $scope.column = $modalInstance.data.column;
         $scope.backdateDischarge = $modalInstance.data.backdateDischarge;
-        $scope.minDate = $modalInstance.data.finalize_date;
+        $scope.minDate = $modalInstance.data.clinical_finalize_date;
+        $scope.maxDate = moment().format('YYYY-MM-DD');
+        $scope.data.discharge_date = moment().format('YYYY-MM-DD');
+        $scope.data.finalize_date = moment().format('YYYY-MM-DD');
 
         $scope.getTitle = function () {
             return $modalInstance.data.title;
@@ -80,7 +84,13 @@ app.controller('PasswordAuthController', ['scope', '$scope', '$modalInstance', '
             var m = d.getMonth();
             var y = d.getFullYear();
             var today_date = (new Date(y, m, n)).valueOf(); //19
-
+            
+            var d = new Date($scope.maxDate);
+            var n = d.getDate();
+            var m = d.getMonth();
+            var y = d.getFullYear();
+            var max_date = (new Date(y, m, n)).valueOf(); //19
+            
             angular.forEach($dates, function (date, key) {
                 var calender = new Date(date.localDateValue());
                 var calender_n = calender.getDate();
@@ -88,11 +98,16 @@ app.controller('PasswordAuthController', ['scope', '$scope', '$modalInstance', '
                 var calender_y = calender.getFullYear();
                 var calender_date = (new Date(calender_y, calender_m, calender_n)).valueOf();
 
-                if (today_date > calender_date) {
+                if (today_date > calender_date) { 
                     $dates[key].selectable = false;
                 }
+                
+                if (max_date < calender_date) {  //hidden calendar Future date
+                    $dates[key].selectable = false;
+                }
+                
             });
-
+                        
         }
     }]);
   
