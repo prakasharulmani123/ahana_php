@@ -774,8 +774,15 @@ class UserController extends ActiveController {
                         //Yii::$app->hepler->sendSurveysms($patient['patient_title_code'],$patient['patient_firstname'],$patient['patient_mobile']);
                 }
                     
-                if ($column == 'finalize')
-                    $encounter->finalize_date = date("Y-m-d");
+                if ($column == 'finalize') {
+                    if(isset($post['finalize_date'])) 
+                        $encounter->finalize_date = date("Y-m-d", strtotime($post['finalize_date']));
+                    else
+                        $encounter->finalize_date = date("Y-m-d");
+                    if (date("Y-m-d") > $encounter->finalize_date) {
+                        Yii::$app->hepler->finalizeRecurring($encounter->patCurrentAdmissionExecptClinicalDischarge, $encounter->finalize_date);
+                    }
+                }
             }else {
                 $encounter->$column = 0;
                 if ($column == 'finalize') {

@@ -210,7 +210,22 @@ class HelperComponent extends Component {
         $billing_charge->attributes = $data;
         $billing_charge->save(false);
     }
-
+    
+    public function finalizeRecurring($admission , $from_date) {
+        $from_date = date('Y-m-d', strtotime($from_date));
+        $to_date = date('Y-m-d');
+        $diff_days = $this->_getDayDiff($from_date, $to_date);
+        for ($i = 0; $i < $diff_days; $i++) {
+            $recurr_date = date('Y-m-d', strtotime($to_date . "-$i days"));
+                //Delete Before Finalize date Recurring Billings
+                PatBillingRecurring::deleteAll("tenant_id = :tenant_id AND encounter_id = :encounter_id AND recurr_date = :recurr_date", [
+                    ':tenant_id' => $admission->tenant_id,
+                    ':encounter_id' => $admission->encounter_id,
+                    ':recurr_date' => $recurr_date,
+                ]);
+        }
+    }
+    
     public function addRecurring($admission) {
         $room_charges = $this->getRoomChargeItems($admission->tenant_id, $admission->room_type_id);
 
