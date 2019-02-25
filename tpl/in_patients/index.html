@@ -50,11 +50,13 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="(ip_key, row) in displayedCollection">
-                            <td align="center" valign="middle" style="width:40px;">
+                            <td ng-if= "row.finalize == 0" align="center" valign="middle" style="width:40px;">
                                 <label class="i-checks">
                                     <input ng-model="row.selected" ng-checked="row.selected == '1'"  ng-click="moreOptions(ip_key, row)" ng-true-value="'1'" ng-false-value="'0'" class="iplistcheckbox iplistcheckbox_{{ip_key}}" id="iplist_{{ip_key}}" type="checkbox" name="status">
                                     <i></i>
                                 </label>
+                            </td>
+                            <td ng-if= "row.finalize > 0" align="center" valign="middle" style="width:40px;">
                             </td>
                             <td align="center" valign="middle">
                                 <div style="margin-top: -10px; position: relative;">
