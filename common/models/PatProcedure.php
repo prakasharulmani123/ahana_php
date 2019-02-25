@@ -138,7 +138,12 @@ class PatProcedure extends RActiveRecord {
         $this->_setConsultId();
 
         $type = $this->encounter->encounter_type;
-
+        if ($insert) {
+            if($this->encounter->finalize != 0) {
+                $this->addError('proc_date', "Encounter is finalized, so can't add Procedure.");
+                return false;
+            }
+        }
         if ($type == 'IP') {
             $charge_link_id = $this->encounter->patCurrentAdmission->room_type_id;
         } else {

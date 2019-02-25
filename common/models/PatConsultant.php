@@ -231,6 +231,12 @@ class PatConsultant extends RActiveRecord {
     public function beforeSave($insert) {
         $encounter_type = $this->encounter->encounter_type;
         $link_id = $this->patient->patient_category_id;
+        if ($insert) {
+            if($this->encounter->finalize != 0) {
+                $this->addError('consult_date', "Encounter is finalized, so can't add consultant visit.");
+                return false;
+            }
+        }
 
         if ($encounter_type == 'IP')
             $link_id = $this->encounter->patCurrentAdmission->room_type_id;
