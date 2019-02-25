@@ -113,5 +113,11 @@ class AppconfigurationController extends ActiveController {
         $appConfig->save(false);
         return ['success' => true];
     }
+    
+    public function actionUpdateexpiryinterval() {
+        $post = Yii::$app->getRequest()->post();
+        $this->modelClass::updateAll(['value' => $post['value']], "`code` = 'PET'");
+        return ['success' => true];
+    }
 
 }

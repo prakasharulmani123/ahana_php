@@ -219,11 +219,20 @@ class PhaProduct extends PActiveRecord {
     }
 
     public function getPhaLatestBatch() {
-        return $this->hasOne(PhaProductBatch::className(), ['product_id' => 'product_id'])->andWhere('available_qty > 0')->andWhere("expiry_date >= '" . date('Y-m-d') . "'")->orderBy(['batch_id' => SORT_DESC]); //Changed expiry_date asc to batch_id desc refer BC141
+        return $this->hasOne(PhaProductBatch::className(), ['product_id' => 'product_id'])
+                ->andWhere('available_qty > 0')
+                //->andWhere("expiry_date >= '" . date('Y-m-d') . "'")
+                ->andWhere("MONTH(expiry_date) >= '" . date('m'). "'")
+                ->andWhere("YEAR(expiry_date) >= '" . date('Y'). "'")
+                ->orderBy(['batch_id' => SORT_DESC]); //Changed expiry_date asc to batch_id desc refer BC141
     }
 
     public function getPhaProductBatchesAvailableQty() {
-        return $this->hasMany(PhaProductBatch::className(), ['product_id' => 'product_id'])->andWhere("expiry_date >= '" . date('Y-m-d') . "'")->sum('available_qty');
+        return $this->hasMany(PhaProductBatch::className(), ['product_id' => 'product_id'])
+                //->andWhere("expiry_date >= '" . date('Y-m-d') . "'")
+                ->andWhere("MONTH(expiry_date) >= '" . date('m'). "'")
+                ->andWhere("YEAR(expiry_date) >= '" . date('Y'). "'")
+                ->sum('available_qty');
     }
 
     /**
@@ -333,7 +342,12 @@ class PhaProduct extends PActiveRecord {
                 return (isset($model->phaLatestBatch) ? $model->phaLatestBatch->phaProductBatchRate->per_unit_price : 0);
             },
             'product_batches' => function ($model) {
-                return $model->getPhaProductBatches()->andWhere('available_qty > 0')->andWhere("expiry_date >= '" . date('Y-m-d') . "'")->all();
+                return $model->getPhaProductBatches()
+                        ->andWhere('available_qty > 0')
+                        //->andWhere("expiry_date >= '" . date('Y-m-d') . "'")
+                        ->andWhere("MONTH(expiry_date) >= '" . date('m'). "'")
+                        ->andWhere("YEAR(expiry_date) >= '" . date('Y'). "'")
+                        ->all();
             },
             'product_batches_count' => function ($model) {
                 return $model->getPhaProductBatches()->andWhere('available_qty > 0')->count();
