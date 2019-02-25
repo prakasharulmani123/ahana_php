@@ -203,7 +203,7 @@
                                         <th> Amount</th>
                                     </tr>
                                 </thead>
-                                <tr class="r-v-top" ng-repeat="(key, saleitem) in saleItems">
+                                <tr class="r-v-top {{(saleitem.exp_warning == 'short expiry drug') ? 'empty_product_line' : ''}}" ng-repeat="(key, saleitem) in saleItems">
                                     <td>
                                         <div id="i_full_name_{{key}}">
                                             <span

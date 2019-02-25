@@ -30,7 +30,7 @@
 
                                 <tbody ng-hide="isLoading">
                                     <tr ng-repeat="row in displayedCollection| orderBy: key">
-                                        <td>
+                                        <td ng-if="row.code == 'CSP' || row.code =='ET' || row.code =='PET'">
                                             {{row.key}}
                                         </td>
                                         <td ng-if="row.code == 'CSP'" class="v-middle">
@@ -41,6 +41,10 @@
                                             <span>
                                                 {{ row.notes || 'empty' }}
                                             </span>
+                                        </td>
+                                        <td ng-if="row.code == 'PET'" class="v-middle">
+                                            <select class="form-control search-dropdown" ng-model="row.value" ng-options="month.value as month.label for month in months" ng-change="updateExpiryInterval(row.value)">
+                                            </select> Months
                                         </td>
                                         <td ng-if="row.code == 'ET'" class="v-middle">
                                             <span editable-text="row.value" e-name="value" e-form="rowform" onbeforesave="checkValue($data)" e-required>

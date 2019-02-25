@@ -70,6 +70,9 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         $scope.initSettings = function () {
 //            $('.sb-toggle-right').trigger('click');
             $scope.isLoading = true;
+            $rootScope.commonService.GetMonth(function (response) {
+                $scope.months = response;
+            });
             // pagination set up
             $scope.rowCollection = [];  // base collection
             $scope.itemsByPage = 10; // No.of records per page
@@ -1001,6 +1004,31 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 {value: '60', label: '60'}]
             var time_sess = $localStorage.user.credentials.user_timeout;
             $scope.session_timeout = time_sess.toString();
+        }
+        
+        $scope.updateExpiryInterval = function (a) {
+            $scope.errorData = "";
+            $scope.msg.successMessage = "";
+            $scope.loadbar('show');
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/appconfiguration/updateexpiryinterval',
+                data: {value : a},
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        $scope.msg.successMessage = 'Updated successfully';
+                        $localStorage.user.credentials.user_timeout = $scope.session_timeout;
+                        var stay_date = moment().add($scope.session_timeout, 'minutes');
+                        $localStorage.stay = moment(stay_date).format("YYYY-MM-DD hh:mm:ss");
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
         }
 
         $scope.updateTimeout = function (a) {
