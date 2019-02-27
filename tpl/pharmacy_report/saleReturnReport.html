@@ -112,68 +112,47 @@
                                     <tr>
                                         <th id="work-base-grid_c0">S.No</th>
                                         <th id="work-base-grid_c1">Date</th>
-                                        <th id="work-base-grid_c2">Bill No</th>
-                                        <th id="work-base-grid_c3">Patient Name</th>
-                                        <th id="work-base-grid_c4">UHID</th>
-                                        <th id="work-base-grid_c5">Encounter ID</th>
-                                        <th id="work-base-grid_c6">Encounter Type</th>
-                                        <th id="work-base-grid_c7">Payment Type</th>
+                                        <th id="work-base-grid_c2">Return Bill No</th>
+                                        <th id="work-base-grid_c3">Sale Bill No</th>
+                                        <th id="work-base-grid_c4">Patient Name</th>
+                                        <th id="work-base-grid_c5">UHID</th>
+                                        <th id="work-base-grid_c6">Encounter ID</th>
+                                        <th id="work-base-grid_c7">Encounter Type</th>
                                         <th id="work-base-grid_c8">Patient Group Name</th>
-                                        <th id="work-base-grid_c9">Product Name</th>
-                                        <th id="work-base-grid_c10">Tax Rate</th>
-                                        <th id="work-base-grid_c11">CGST Amount</th>
-                                        <th id="work-base-grid_c12">SGST Amount</th>
-                                        <th id="work-base-grid_c13">Taxable Value</th>
-                                        <th id="work-base-grid_c14">Item Amount</th>
+                                        <th id="work-base-grid_c9">Tax Rate</th>
+                                        <th id="work-base-grid_c10">CGST Amount</th>
+                                        <th id="work-base-grid_c11">SGST Amount</th>
+                                        <th id="work-base-grid_c12">Taxable Value</th>
+                                        <th id="work-base-grid_c13">Item Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="(key, record) in records">
                                         <td>{{key + 1}}</td>
-                                        <td>{{record.sale_return.sale_return_date | date:'dd-MM-yyyy'}}</td>
-                                        <td>{{record.sale_return.bill_no}}</td>
-                                        <td>{{record.sale_return.patient_name}}</td>
-                                        <td>{{record.sale_return.patient_uhid}}</td>
-                                        <td>{{record.sale_return.sale_ret_encounter_id}}</td>
-                                        <td>{{record.sale_return.sale_ret_encounter_type}}</td>
-                                        <td>{{record.sale_return.sale_payment_type}}</td>
-                                        <td>{{record.sale_return.sale_group_name|| '-'}}</td>
-                                        <td>{{record.product.full_name || '-'}}</td>
-                                        <td>{{(parseFloat(record.cgst_percent) + parseFloat(record.sgst_percent))| number:2}}</td>
+                                        <td>{{record.sale_return_date | date:'dd-MM-yyyy'}}</td>
+                                        <td>{{record.bill_no}}</td>
+                                        <td>{{record.sale_bill_no}}</td>
+                                        <td>{{record.patient_name}}</td>
+                                        <td>{{record.patient_global_int_code}}</td>
+                                        <td>{{record.encounter_id}}</td>
+                                        <td>{{record.encounter_type}}</td>
+                                        <td>{{record.patient_group_name|| '-'}}</td>
+                                        <td>{{record.tax_rate | number:2}}</td>
                                         <td>{{record.cgst_amount}}</td>
                                         <td>{{record.sgst_amount}}</td>
                                         <td>{{record.taxable_value}}</td>
-                                        <td data-type="Number" ng-init="sale.total_amount = sale.total_amount + parseFloat(record.total_amount);">
-                                            {{record.total_amount}}
+                                        <td data-type="Number">
+                                            {{parseFloat(record.cgst_amount) + parseFloat(record.sgst_amount) + parseFloat(record.taxable_value) | number:2}}
                                         </td>
                                     </tr>
                                 </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td style="display: none;" ></td> <!-- For Excel Export-->
-                                        <td style="display: none;" ></td> <!-- For Excel Export-->
-                                        <td style="display: none;" ></td> <!-- For Excel Export-->
-                                        <td style="display: none;" ></td> <!-- For Excel Export-->
-                                        <td style="display: none;" ></td> <!-- For Excel Export-->
-                                        <td style="display: none;" ></td> <!-- For Excel Export-->
-                                        <td style="display: none;" ></td> <!-- For Excel Export-->
-                                        <td style="display: none;" ></td> <!-- For Excel Export-->
-                                        <td style="display: none;" ></td> <!-- For Excel Export-->
-                                        <td style="display: none;" ></td> <!-- For Excel Export-->
-                                        <td style="display: none;" ></td> <!-- For Excel Export-->
-                                        <td style="display: none;" ></td> <!-- For Excel Export-->
-                                        <td style="display: none;" ></td> <!-- For Excel Export-->
-                                        <th colspan="14" class="text-right"><b>Total Sale Return Value</b></th>
-                                        <td data-type="Number"><b>{{sale.total_amount| number:2}}</b></td>
-                                    </tr>
-                                </tfoot>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-sm-12" ng-show='showTable && records.length > 0'>
+<!--            <div class="col-sm-12" ng-show='showTable && records.length > 0'>
                 <div id="table_datewise_report">
                     <div class="panel panel-default">
                         <div class="panel-heading font-bold">
@@ -202,7 +181,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>

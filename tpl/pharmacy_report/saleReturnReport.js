@@ -94,8 +94,8 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                         $scope.sheet_name = [];
                         $scope.tableid.push('sale_return_report');
                         $scope.sheet_name.push($scope.app.org_name);
-                        $scope.tableid.push('table_datewise_report');
-                        $scope.sheet_name.push('Date Wise Summary');
+                        //$scope.tableid.push('table_datewise_report');
+                        //$scope.sheet_name.push('Date Wise Summary');
                         $scope.generated_on = moment().format('YYYY-MM-DD hh:mm A');
                     })
                     .error(function () {
@@ -148,8 +148,8 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
             reports.push([
                 {text: 'S.No', style: 'header'},
                 {text: 'Bill No', style: 'header'},
+                {text: 'sale Bill No', style: 'header'},
                 {text: 'Patient Name', style: 'header'},
-                {text: 'Product Name', style: 'header'},
                 {text: 'Tax Rate', style: 'header'},
                 {text: 'CGST', style: 'header'},
                 {text: 'SGST', style: 'header'},
@@ -164,44 +164,41 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 var s_no_string = serial_no.toString();
                 reports.push([
                     s_no_string,
-                    //moment(record.sale_return.sale_return_date).format('DD-MM-YYYY'),
-                    record.sale_return.bill_no,
-                    //record.sale_return.patient_name,
-                    //record.sale_return.patient_uhid,
-                    record.sale_return.sale_ret_encounter_id+'('+record.sale_return.sale_ret_encounter_type+')',
-                    record.product.full_name,
-                    (parseFloat(record.cgst_percent) + parseFloat(record.sgst_percent)),
+                    record.bill_no,
+                    record.sale_bill_no,
+                    record.patient_name,
+                    record.tax_rate,
                     record.cgst_amount,
                     record.sgst_amount,
                     record.taxable_value,
-                    record.total_amount,
+                    (parseFloat(record.cgst_amount) + parseFloat(record.cgst_amount) + parseFloat(record.taxable_value)).toFixed(2).toString()
                 ]);
-                total += parseFloat(record.total_amount);
+                //total += parseFloat(record.total_amount);
                 if (serial_no == result_count) {
                     $scope.printloader = '';
                 }
                 serial_no++;
             });
-            reports.push([
-                {
-                    text: 'Total Sale Return Value',
-                    style: 'header',
-                    alignment: 'right',
-                    colSpan: 8
-                },
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                {
-                    text: total.toFixed(2).toString(),
-                    style: 'header',
-                    alignment: 'right'
-                }
-            ]);
+//            reports.push([
+//                {
+//                    text: 'Total Sale Return Value',
+//                    style: 'header',
+//                    alignment: 'right',
+//                    colSpan: 8
+//                },
+//                "",
+//                "",
+//                "",
+//                "",
+//                "",
+//                "",
+//                "",
+//                {
+//                    text: total.toFixed(2).toString(),
+//                    style: 'header',
+//                    alignment: 'right'
+//                }
+//            ]);
 
             var content = [];
             content.push({
@@ -253,49 +250,49 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
                 }
             });
 
-            var sale_date_wise = $filter('groupBy')($scope.records, 'sale_return.sale_return_date');
-            var date_info = [];
-            date_info.push({
-                columns: [
-                    {
-                        text: [
-                            {text: 'Date Wise Summary: ', bold: true},
-                        ],
-                    }, ]
-            });
-
-            var branch_item = [];
-
-            branch_item.push([
-                {text: 'Date', style: 'header'},
-                {text: 'Amount', alignment: 'right'}
-            ]);
-
-            angular.forEach(sale_date_wise, function (branch, sale_date) {
-                var date_wise_total = 0;
-                angular.forEach(branch, function (record, key) {
-                    date_wise_total += parseFloat(record.total_amount);
-                });
-                var date_total = date_wise_total.toFixed(2).toString()
-                branch_item.push([
-                    {text: moment(sale_date).format('DD-MM-YYYY')},
-                    {text: date_total, alignment: 'right'}
-                ]);
-            });
-
-            date_info.push({
-                style: 'demoTable1',
-                table: {
-                    widths: ['*', 'auto'],
-                    body: branch_item,
-                },
-                layout: {
-                    hLineWidth: function (i, node) {
-                        return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
-                    }
-                },
-            });
-            content.push(date_info);
+//            var sale_date_wise = $filter('groupBy')($scope.records, 'sale_return.sale_return_date');
+//            var date_info = [];
+//            date_info.push({
+//                columns: [
+//                    {
+//                        text: [
+//                            {text: 'Date Wise Summary: ', bold: true},
+//                        ],
+//                    }, ]
+//            });
+//
+//            var branch_item = [];
+//
+//            branch_item.push([
+//                {text: 'Date', style: 'header'},
+//                {text: 'Amount', alignment: 'right'}
+//            ]);
+//
+//            angular.forEach(sale_date_wise, function (branch, sale_date) {
+//                var date_wise_total = 0;
+//                angular.forEach(branch, function (record, key) {
+//                    date_wise_total += parseFloat(record.total_amount);
+//                });
+//                var date_total = date_wise_total.toFixed(2).toString()
+//                branch_item.push([
+//                    {text: moment(sale_date).format('DD-MM-YYYY')},
+//                    {text: date_total, alignment: 'right'}
+//                ]);
+//            });
+//
+//            date_info.push({
+//                style: 'demoTable1',
+//                table: {
+//                    widths: ['*', 'auto'],
+//                    body: branch_item,
+//                },
+//                layout: {
+//                    hLineWidth: function (i, node) {
+//                        return (i === 0 || i === node.table.body.length) ? 1 : 0.5;
+//                    }
+//                },
+//            });
+//            content.push(date_info);
 
             return content;
         }
