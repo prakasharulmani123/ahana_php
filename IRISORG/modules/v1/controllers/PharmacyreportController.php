@@ -98,7 +98,7 @@ class PharmacyreportController extends ActiveController {
                   ON `c`.`supplier_id` = `a`.`supplier_id`
               WHERE ((`a`.`tenant_id` = '" . $tenant_id . "')
                      AND (a.invoice_date BETWEEN '" . $post['from'] . "'
-                          AND '" . $post['to'] . "') AND (`a`.`payment_type` = '".$post['payment_type']."'))
+                          AND '" . $post['to'] . "') AND (`a`.`payment_type` = '" . $post['payment_type'] . "'))
                   AND (b.deleted_at = '0000-00-00 00:00:00')
                   AND (a.deleted_at = '0000-00-00 00:00:00')
               GROUP BY `b`.`purchase_id`,`b`.`cgst_percent`";
@@ -204,60 +204,116 @@ class PharmacyreportController extends ActiveController {
     //Sale Return Report
     public function actionSalereturnreport() {
         $post = Yii::$app->getRequest()->post();
-
-        $model = PhaSaleReturnItem::find()->active()
-                ->tenant()
-                ->joinWith('saleRet')
-                ->joinWith('saleRet.sale')
-                ->joinWith('saleRet.sale.encounter')
-                ->andWhere("pha_sale_return.sale_return_date between '{$post['from']}' AND '{$post['to']}'");
-
-//        if (isset($post['encounter_type']) && $post['encounter_type'] != 'NO') {
-//            $model->andWhere(['pat_encounter.encounter_type' => $post['encounter_type']]);
-//        } else if (isset($post['encounter_type']) && $post['encounter_type'] == 'NO') {
-//            $model->andWhere(['pha_sale.encounter_id' => null]);
-//        }
-
         if (isset($post['encounter_type'])) {
             if (count($post['encounter_type']) == '1') {
                 if (in_array("NO", $post['encounter_type'])) {
-                    $model->andWhere(['pha_sale.encounter_id' => null]);
+                    $encounter_condition = "AND ((e.encounter_id IS NULL))";
                 } else {
-                    $model->andWhere(['pat_encounter.encounter_type' => $post['encounter_type']]);
+                    $encounter_condition = "AND ((f.encounter_type =  " . $post['encounter_type'] . "))";
                 }
             } else if (count($post['encounter_type']) == '2') {
                 if (in_array("NO", $post['encounter_type'])) {
-                    $model->andWhere(['or',
-                        ['pat_encounter.encounter_type' => $post['encounter_type'][0]],
-                        ['pha_sale.encounter_id' => null]
-                    ]);
+                    $encounter_condition = "AND ((f.encounter_type = 'OP') OR (e.encounter_id IS NULL))";
                 } else {
-                    $model->andWhere(['or',
-                        ['pat_encounter.encounter_type' => 'OP'],
-                        ['pat_encounter.encounter_type' => 'IP']
-                    ]);
+                    $encounter_condition = "AND ((f.encounter_type = 'OP') OR (f.encounter_type = 'IP'))";
                 }
             } else {
-                $model->andWhere(['or',
-                    ['pat_encounter.encounter_type' => 'OP'],
-                    ['pat_encounter.encounter_type' => 'IP'],
-                    ['pha_sale.encounter_id' => null]
-                ]);
+                $encounter_condition = "AND ((f.encounter_type = 'OP') OR (f.encounter_type = 'IP') OR (e.encounter_id IS NULL))";
             }
         } else {
-            $model->andWhere(['or',
-                ['pat_encounter.encounter_type' => 'OP'],
-                ['pat_encounter.encounter_type' => 'IP'],
-                ['pha_sale.encounter_id' => null]
-            ]);
+            $encounter_condition = "AND ((f.encounter_type = 'OP') OR (f.encounter_type = 'IP') OR (e.encounter_id IS NULL))";
         }
-
         if (isset($post['patient_group_name'])) {
             $patient_group_names = join("','", $post['patient_group_name']);
-            $model->andWhere("pha_sale.patient_group_name IN ( '$patient_group_names' )");
+            $group_name = "AND e.patient_group_name IN ( '$patient_group_names' )";
+        } else {
+            $group_name = '';
         }
+        $dbname = Yii::$app->client->createCommand("SELECT DATABASE()")->queryScalar();
+        $post = Yii::$app->getRequest()->post();
+        $tenant_id = Yii::$app->user->identity->logged_tenant_id;
+        $current_database = Yii::$app->db->createCommand("SELECT DATABASE()")->queryScalar();
+        $sql = "SELECT
+                    a.sale_ret_id,a.bill_no,a.sale_date,
+                    a.sale_return_date,e.bill_no AS sale_bill_no,
+                    d.patient_global_int_code, a.patient_name,
+                    (cgst_percent+sgst_percent) AS tax_rate,
+                    SUM(b.taxable_value) AS taxable_value,  
+                    SUM(b.cgst_amount) AS cgst_amount,
+                    SUM(b.sgst_amount) AS sgst_amount,
+                    a.roundoff_amount,
+                    f.encounter_id, f.encounter_type,
+                    a.bill_amount
+                FROM `pha_sale_return` `a`
+                    LEFT JOIN `pha_sale_return_item` `b`
+                    ON `a`.`sale_ret_id` = `b`.`sale_ret_id`
+                    LEFT JOIN `pha_sale` `e`
+                    ON `a`.`sale_id` = `e`.`sale_id`
+                    Left JOIN " . $dbname . ". pat_encounter f
+                    ON `f`.`encounter_id` = `e`.`encounter_id`
+                    LEFT JOIN " . $dbname . ".pat_patient c
+                    ON c.patient_id = a.patient_id
+                    LEFT JOIN $current_database.gl_patient d
+                    ON c.patient_global_guid = d.patient_global_guid
+                    WHERE ((`a`.`tenant_id` = '" . $tenant_id . "')
+                    AND (a.sale_return_date BETWEEN '" . $post['from'] . "' AND '" . $post['to'] . "'))
+                    $group_name $encounter_condition
+                    AND (b.deleted_at = '0000-00-00 00:00:00')
+                    AND (a.deleted_at = '0000-00-00 00:00:00')
+                    GROUP BY `b`.`sale_ret_id`,`b`.`cgst_percent` ";
+        //$command = Yii::$app->client->createCommand($sql);
+        $command = Yii::$app->client_pharmacy->createCommand($sql);
+        $reports = $command->queryAll();
+        return ['report' => $reports];
+        /* Comments : Sale Return report need to group by cgst percent like sale gst report so hide this coding */
+//        $model = PhaSaleReturnItem::find()->active()
+//                ->tenant()
+//                ->joinWith('saleRet')
+//                ->joinWith('saleRet.sale')
+//                ->joinWith('saleRet.sale.encounter')
+//                ->andWhere("pha_sale_return.sale_return_date between '{$post['from']}' AND '{$post['to']}'");
+//
+//        if (isset($post['encounter_type'])) {
+//            if (count($post['encounter_type']) == '1') {
+//                if (in_array("NO", $post['encounter_type'])) {
+//                    $model->andWhere(['pha_sale.encounter_id' => null]);
+//                } else {
+//                    $model->andWhere(['pat_encounter.encounter_type' => $post['encounter_type']]);
+//                }
+//            } else if (count($post['encounter_type']) == '2') {
+//                if (in_array("NO", $post['encounter_type'])) {
+//                    $model->andWhere(['or',
+//                        ['pat_encounter.encounter_type' => $post['encounter_type'][0]],
+//                        ['pha_sale.encounter_id' => null]
+//                    ]);
+//                } else {
+//                    $model->andWhere(['or',
+//                        ['pat_encounter.encounter_type' => 'OP'],
+//                        ['pat_encounter.encounter_type' => 'IP']
+//                    ]);
+//                }
+//            } else {
+//                $model->andWhere(['or',
+//                    ['pat_encounter.encounter_type' => 'OP'],
+//                    ['pat_encounter.encounter_type' => 'IP'],
+//                    ['pha_sale.encounter_id' => null]
+//                ]);
+//            }
+//        } else {
+//            $model->andWhere(['or',
+//                ['pat_encounter.encounter_type' => 'OP'],
+//                ['pat_encounter.encounter_type' => 'IP'],
+//                ['pha_sale.encounter_id' => null]
+//            ]);
+//        }
+//
+//        if (isset($post['patient_group_name'])) {
+//            $patient_group_names = join("','", $post['patient_group_name']);
+//            $model->andWhere("pha_sale.patient_group_name IN ( '$patient_group_names' )");
+//        }
+//
+//        $reports = $model->all();
 
-        $reports = $model->all();
 
         return ['report' => $reports];
     }

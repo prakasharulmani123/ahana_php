@@ -234,7 +234,7 @@ class PhaSaleReturn extends PActiveRecord {
                     ];
                     break;
                 case 'salereturnreport':
-                    $addt_keys = ['patient_name', 'patient_uhid', 'sale_payment_type', 'sale_group_name', 'sale_ret_encounter_type', 'sale_ret_encounter_id'];
+                    $addt_keys = ['patient_name', 'patient_uhid', 'sale_payment_type', 'sale_group_name', 'sale_ret_encounter_type', 'sale_ret_encounter_id', 'sale_bill_no'];
                     $parent_fields = [
                         'bill_no' => 'bill_no',
                         'bill_amount' => 'bill_amount',
