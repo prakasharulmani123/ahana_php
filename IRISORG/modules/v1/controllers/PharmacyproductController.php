@@ -298,6 +298,8 @@ class PharmacyproductController extends ActiveController {
 
             $productCount = PhaProductBatch::find()
                     ->addSelect([$having_column])
+                    ->andWhere("MONTH(pha_product_batch.expiry_date) >= '" . date('m'). "'")
+                    ->andWhere("YEAR(pha_product_batch.expiry_date) >= '" . date('Y'). "'")
                     ->joinWith('product')
                     ->joinWith('phaProductBatchRate')
                     ->andWhere(['pha_product.tenant_id' => $tenant_id])
@@ -306,6 +308,8 @@ class PharmacyproductController extends ActiveController {
             $totalCount = $productCount;
             $products = PhaProductBatch::find()
                     ->addSelect(["*", $having_column])
+                    ->andWhere("MONTH(pha_product_batch.expiry_date) >= '" . date('m'). "'")
+                    ->andWhere("YEAR(pha_product_batch.expiry_date) >= '" . date('Y'). "'")
                     ->joinWith('product')
                     ->joinWith('phaProductBatchRate')
                     ->andWhere(['pha_product.tenant_id' => $tenant_id])
@@ -317,12 +321,17 @@ class PharmacyproductController extends ActiveController {
         } else {
             $products = PhaProductBatch::find()
                     ->joinWith('product')
+                    ->andWhere("MONTH(pha_product_batch.expiry_date) >= '" . date('m'). "'")
+                    ->andWhere("YEAR(pha_product_batch.expiry_date) >= '" . date('Y'). "'")
                     ->tenant()
                     ->limit($_REQUEST['pageSize'])
                     ->offset($offset)
                     ->orderBy($_REQUEST['sortOptions'])
                     ->all();
-            $totalCount = PhaProductBatch::find()->tenant()->count();
+            $totalCount = PhaProductBatch::find()
+                    ->andWhere("MONTH(pha_product_batch.expiry_date) >= '" . date('m'). "'")
+                    ->andWhere("YEAR(pha_product_batch.expiry_date) >= '" . date('Y'). "'")
+                    ->tenant()->count();
         }
 
         return ['productLists' => $products, 'totalCount' => $totalCount];
