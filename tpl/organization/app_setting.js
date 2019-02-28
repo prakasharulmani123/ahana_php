@@ -633,7 +633,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             $scope.loadbar('show');
             $scope.pha_master_delete_process_text = 'Fetching the Excel Data. Please wait until the importing begins. This might take few mins';
             //$scope.import_log = Date.parse(moment().format());
-            $scope.import_log = '1546579225555';
+            $scope.import_log = '1546579666666';
             var currentUser = AuthenticationService.getCurrentUser();
 
             fileUpload.uploadFileToUrl($scope.phaMastersDelete, $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/phamastersdelete?tenant_id=' + currentUser.credentials.logged_tenant_id + '&import_log=' + $scope.import_log).success(function (response) {
