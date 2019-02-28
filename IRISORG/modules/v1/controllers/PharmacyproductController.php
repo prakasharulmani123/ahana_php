@@ -1006,7 +1006,7 @@ class PharmacyproductController extends ActiveController {
     
     //Pha Master Delete Start
     public function actionPhamastersdelete() {
-        return ['success' => true, 'message' => ['total_rows' => '354', 'id' => '134', 'max_id' => '488']];
+        return ['success' => true, 'message' => ['total_rows' => '130', 'id' => '489', 'max_id' => '618']];
         $get = Yii::$app->getRequest()->get();
         $allowed = array('csv');
         $filename = $_FILES['file']['name'];
