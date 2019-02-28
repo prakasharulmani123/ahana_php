@@ -71,11 +71,12 @@ class PharmacyreportController extends ActiveController {
     }
 
     public function actionPurchasegstreport() {
-        $dbname = Yii::$app->client->createCommand("SELECT DATABASE()")->queryScalar();
         $post = Yii::$app->getRequest()->post();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
-        $current_database = Yii::$app->db->createCommand("SELECT DATABASE()")->queryScalar();
-
+        return $this->_get_gst_report($post, $tenant_id);
+    }
+    
+    public function _get_gst_report($params , $tenant_id) {
         $sql = "SELECT
                 a.purchase_id,
                 a.purchase_code,
@@ -97,8 +98,8 @@ class PharmacyreportController extends ActiveController {
                 LEFT JOIN `pha_supplier` c
                   ON `c`.`supplier_id` = `a`.`supplier_id`
               WHERE ((`a`.`tenant_id` = '" . $tenant_id . "')
-                     AND (a.invoice_date BETWEEN '" . $post['from'] . "'
-                          AND '" . $post['to'] . "') AND (`a`.`payment_type` = '" . $post['payment_type'] . "'))
+                     AND (a.invoice_date BETWEEN '" . $params['from'] . "'
+                          AND '" . $params['to'] . "') AND (`a`.`payment_type` = '" . $params['payment_type'] . "'))
                   AND (b.deleted_at = '0000-00-00 00:00:00')
                   AND (a.deleted_at = '0000-00-00 00:00:00')
               GROUP BY `b`.`purchase_id`,`b`.`cgst_percent`";

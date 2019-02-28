@@ -50,6 +50,11 @@ class DefaultController extends Controller {
         exit;
         return $this->render('index');
     }
+    
+    public function actionGetpharmacyjsonreport() {
+        $get = Yii::$app->request->get();
+        return PharmacyreportController::_get_gst_report($get, $get['tenant']);
+    }
 
     public function actionGetCountryList() {
         $list = array();
