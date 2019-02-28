@@ -20,7 +20,7 @@ app.controller('minMaxSoldQuantityController', ['$rootScope', '$scope', '$timeou
             $scope.data = {};
             $scope.data.tenant_id = '';
             $scope.data.to = moment().format('YYYY-MM-DD');
-            $scope.data.from = moment($scope.data.to).add(-30, 'days').format('YYYY-MM-DD');
+            $scope.data.from = moment($scope.data.to).add(-100, 'days').format('YYYY-MM-DD');
             $scope.deselectAll('branch_wise');
             $scope.fromMaxDate = new Date($scope.data.to);
             $scope.toMinDate = new Date($scope.data.from);
@@ -33,8 +33,8 @@ app.controller('minMaxSoldQuantityController', ['$rootScope', '$scope', '$timeou
                 var to = moment($scope.data.to);
                 var difference = to.diff(from, 'days') + 1;
 
-                if (difference > 31) {
-                    $scope.data.to = moment($scope.data.from).add(+30, 'days').format('YYYY-MM-DD');
+                if (difference > 101) {
+                    $scope.data.to = moment($scope.data.from).add(+100, 'days').format('YYYY-MM-DD');
                 }
             }
         }, true);
@@ -45,8 +45,8 @@ app.controller('minMaxSoldQuantityController', ['$rootScope', '$scope', '$timeou
                 var to = moment($scope.data.to);
                 var difference = to.diff(from, 'days') + 1;
 
-                if (difference > 31) {
-                    $scope.data.from = moment($scope.data.to).add(-30, 'days').format('YYYY-MM-DD');
+                if (difference > 101) {
+                    $scope.data.from = moment($scope.data.to).add(-100, 'days').format('YYYY-MM-DD');
                 }
             }
         }, true);
