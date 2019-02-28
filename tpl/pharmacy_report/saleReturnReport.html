@@ -141,11 +141,29 @@
                                         <td>{{record.cgst_amount}}</td>
                                         <td>{{record.sgst_amount}}</td>
                                         <td>{{record.taxable_value}}</td>
-                                        <td data-type="Number">
+                                        <td data-type="Number" ng-init="sale.total_amount = sale.total_amount + parseFloat(record.cgst_amount) + parseFloat(record.sgst_amount) + parseFloat(record.taxable_value)">
                                             {{parseFloat(record.cgst_amount) + parseFloat(record.sgst_amount) + parseFloat(record.taxable_value) | number:2}}
                                         </td>
                                     </tr>
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th class="text-right">Total</th>
+                                        <th data-type="Number">{{sale.total_amount | number:2}}</th>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
