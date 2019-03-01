@@ -396,7 +396,7 @@ class PharmacysaleController extends ActiveController {
                     ->joinWith('product.brand')
                     ->select('min(quantity) AS min_qty')
                     ->addSelect('max(quantity) AS max_qty')
-                    ->addSelect('pha_product.product_name AS product_name')
+                    ->addSelect("CONCAT_WS(' ',`pha_product`.`product_name`,  `pha_product`.`product_unit_count`, `pha_product`.`product_unit`) AS product_name")
                     ->addSelect('pha_brand.brand_name AS brand_name')
                     ->addSelect('count(pha_sale.sale_id) AS sale_count')
                     ->addSelect('sum(quantity) AS total_qty')
