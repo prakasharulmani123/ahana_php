@@ -851,9 +851,9 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
         /*PRINT BILL*/
         $scope.printHeader = function () {
             return {
-                text: "Purchase Bill",
-                margin: 5,
-                alignment: 'center'
+//                text: "Purchase Bill",
+//                margin: 5,
+//                alignment: 'center'
             };
         }
 
@@ -863,15 +863,22 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
 
         $scope.printStyle = function () {
             return {
-                header: {
+                h2: {
+                    fontSize: 9,
                     bold: true,
-                    color: '#000',
-                    fontSize: 11
                 },
-                demoTable: {
-                    color: '#000',
-                    fontSize: 10
-                }
+                th: {
+                    fontSize: 9,
+                    bold: true,
+                    margin: [0, 3, 0, 3]
+                },
+                td: {
+                    fontSize: 8,
+                    margin: [0, 3, 0, 3]
+                },
+                normaltxt: {
+                    fontSize: 9,
+                },
             };
         }
 
@@ -886,135 +893,517 @@ app.controller('PurchaseController', ['$rootScope', '$scope', '$timeout', '$http
             var result_count = Object.keys($scope.purchaseitems2).length;
             var index = 1;
             var loop_count = 0;
-            
+
             var purchase = $scope.data2;
             purchaseItems.push([
-                {text: 'S.No', style: 'header'},
-                {text: 'Product Name', style: 'header'},
-                {text: 'Batch No', style: 'header'},
-                {text: 'Exp Date', style: 'header'},
-                {text: 'Qty', style: 'header'},
-                {text: 'P.Unit', style: 'header'},
-                {text: 'Free', style: 'header'},
-                {text: 'FreeUnit', style: 'header'},
-                {text: 'MRP', style: 'header'},
-                {text: 'P.Price', style: 'header'},
-                {text: 'Amt', style: 'header'},
-                {text: 'Dis %', style: 'header'},
-                {text: 'Dis Amt', style: 'header'},
-//                {text: 'P.Vat%', style: 'header'},
-//                {text: 'Vat Amt', style: 'header'},
-                {text: 'Cgst Amt', style: 'header'},
-                {text: 'Cgst %', style: 'header'},
-                {text: 'Sgst Amt', style: 'header'},
-                {text: 'Sgst %', style: 'header'},
-                {text: 'Total Amt', style: 'header'},
+                {
+                    border: [false, true, false, true],
+                    text: 'S.No',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'Product Name',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'Batch No',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'Exp Date',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'Qty',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'P.Unit',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'Free',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'F.Unit',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'MRP',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'P.Price',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'Amt',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'Dis %',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'Taxable',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'CGST%',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'CGST',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'SGST%',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'SGST',
+                    style: 'th'
+                },
+                {
+                    border: [false, true, false, true],
+                    text: 'Total Amt',
+                    style: 'th'
+                },
             ]);
 
             angular.forEach($scope.purchaseitems2, function (row, key) {
+                if (loop_count % 2 == 0)
+                    var color = '';
+                else
+                    var color = '#eeeeee';
+                if (result_count == loop_count + 1)
+                    var border = [false, false, false, true];
+                else
+                    var border = [false, false, false, false];
                 purchaseItems.push([
-                    index.toString(),
-                    row.product.full_name,
-                    row.batch_no,
-                    moment(row.expiry_date).format('MM/YY'),
-                    row.quantity.toString(),
-                    row.package_name,
-                    row.free_quantity,
-                    (row.free_quantity_package_unit ? row.free_quantity_package_unit : '-'),
-                    row.mrp,
-                    row.purchase_rate,
-                    row.taxable_value,
-                    (row.discount_percent ? row.discount_percent : '-'),
-                    row.discount_amount,
-                    //row.vat_percent,
-                    //row.vat_amount,
-                    row.cgst_amount,
-                    row.cgst_percent,
-                    row.sgst_amount,
-                    row.sgst_percent,
-                    row.total_amount,
+                    {
+                        border: border,
+                        text: index.toString(),
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
+                        text: row.product.full_name,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
+                        text: row.batch_no,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
+                        text: moment(row.expiry_date).format('MM/YY'),
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
+                        text: row.quantity.toString(),
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
+                        text: row.package_name,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
+                        text: row.free_quantity,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
+                        text: (row.free_quantity_package_unit ? row.free_quantity_package_unit : '-'),
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
+                        text: row.mrp,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
+                        text: row.purchase_rate,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
+                        text: row.purchase_amount,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
+                        text: (row.discount_percent ? row.discount_percent : '-'),
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
+                        text: row.taxable_value,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
+                        text: row.cgst_percent,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
+                        text: row.cgst_amount,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
+                        text: row.sgst_percent,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
+                        text: row.sgst_amount,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    },
+                    {
+                        border: border,
+                        text: row.total_amount,
+                        fillColor: color,
+                        style: 'td',
+                        alignment: 'left',
+                    }
                 ]);
                 index++;
                 loop_count++;
             });
 
-            purchaseInfo.push({
-                columns: [
-                    {
-                        text: [
-                            {text: 'Invoice No: ', bold: true},
-                            purchase.invoice_no
-                        ],
-                        margin: [0, 0, 0, 10]
-                    },
-                    {
-                        text: [
-                            {text: 'Payment Type: ', bold: true},
-                            purchase.payment_type_name
-                        ],
-                        margin: [0, 0, 0, 10]
-                    }
-
-                ]
-            }, {
-                columns: [
-                    {
-                        text: [
-                            {text: 'Invoice Date: ', bold: true},
-                            purchase.invoice_date
-                        ],
-                        margin: [0, 0, 0, 10]
-                    },
-                    {
-                        text: [
-                            {text: ' Supplier Name: ', bold: true},
-                            purchase.supplier_name
-                        ],
-                        margin: [0, 0, 0, 10]
-                    }
-                ]
-            }, {
-                columns: [
-                    {
-                        text: [
-                            {text: 'GR No: ', bold: true},
-                            purchase.gr_num
-                        ],
-                        margin: [0, 0, 0, 20]
-                    },
-                ]
-            }, {
-                style: 'demoTable',
-                margin: [0, 0, 0, 20],
+            purchaseInfo.push({layout: 'noBorders',
                 table: {
-                    headerRows: 1,
-                    widths: [30, '*', '*', 40, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', '*'],
-                    body: purchaseItems,
+                    widths: ['*', 'auto', 'auto', '*', 'auto', 'auto', 'auto'],
+                    body: [
+                        [
+                            {
+                                colSpan: 3,
+                                layout: 'noBorders',
+                                table: {
+                                    body: [
+                                        [
+                                            {
+                                                image: $scope.imgExport('sale_logo'),
+                                                height: 20, width: 100,
+
+                                            }
+                                        ],
+//                                        [
+//                                            {
+//                                                text: 'GST No : 33AAQFA999IEIZI',
+//                                                fontSize: 07,
+//                                            }
+//                                        ],
+//                                        [
+//                                            {
+//                                                text: 'Branch Address',
+//                                                fontSize: 09,
+//                                            }
+//                                        ],
+                                    ]
+                                },
+                            },
+                            {}, {}, {
+                                colSpan: 3,
+                                layout: 'noBorders',
+                                table: {
+                                    body: [
+                                        [
+                                            {
+                                                text: 'Purchase Bill',
+                                                fontSize: 09,
+                                            }
+                                        ],
+                                    ]
+                                },
+                            }, {}, {},
+                            {
+                                layout: 'noBorders',
+                                table: {
+                                    body: [
+//                                        [
+//                                            {
+//                                                text: 'DL Nos. : MDU/5263/20,21',
+//                                                fontSize: 07,
+//                                                alignment: 'right'
+//                                            }
+//                                        ],
+//                                        [
+//                                            {
+//                                                text: 'Cash on Delivery : Branch Phone',
+//                                                fontSize: 09,
+//                                                alignment: 'right'
+//                                            }
+//                                        ],
+                                        [{text: purchase.branch_name}]
+                                    ]
+                                },
+                            },
+                        ],
+                    ]
                 },
-//                pageBreak: (loop_count === result_count ? '' : 'after'),
-            }, {
+            });
+
+            purchaseInfo.push({
+                layout: 'Borders',
+                table: {
+                    widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                    body: [
+                        [
+                            {
+                                border: [false, true, false, false],
+                                colSpan: 6,
+                                layout: {
+                                    paddingLeft: function (i, node) {
+                                        return 0;
+                                    },
+                                    paddingRight: function (i, node) {
+                                        return 2;
+                                    },
+                                    paddingTop: function (i, node) {
+                                        return 0;
+                                    },
+                                    paddingBottom: function (i, node) {
+                                        return 0;
+                                    },
+                                },
+                                table: {
+                                    body: [
+                                        [
+                                            {
+                                                border: [false, false, false, false],
+                                                text: 'Invoice No',
+                                                style: 'h2',
+                                                margin: [-5, 0, 0, 0],
+                                            },
+                                            {
+                                                text: ':',
+                                                border: [false, false, false, false],
+                                                style: 'h2'
+                                            },
+                                            {
+                                                border: [false, false, false, false],
+                                                text: purchase.invoice_no,
+                                                style: 'normaltxt'
+                                            }
+                                        ],
+                                        [
+                                            {
+                                                border: [false, false, false, false],
+                                                text: 'Invoice Date',
+                                                style: 'h2',
+                                                margin: [-5, 0, 0, 0],
+                                            },
+                                            {
+                                                text: ':',
+                                                border: [false, false, false, false],
+                                                style: 'h2'
+                                            },
+                                            {
+                                                border: [false, false, false, false],
+                                                text: moment(purchase.invoice_date).format('DD-MM-YYYY'),
+                                                style: 'normaltxt'
+                                            }
+                                        ],
+                                        [
+                                            {
+                                                border: [false, false, false, false],
+                                                text: 'GR No',
+                                                style: 'h2',
+                                                margin: [-5, 0, 0, 0],
+                                            },
+                                            {
+                                                text: ':',
+                                                border: [false, false, false, false],
+                                                style: 'h2'
+                                            },
+                                            {
+                                                border: [false, false, false, false],
+                                                text: purchase.gr_num,
+                                                style: 'normaltxt'
+                                            }
+                                        ],
+                                    ]
+                                },
+                            },
+                            {}, {}, {}, {}, {},
+                            {
+                                border: [false, true, false, false],
+                                layout: 'noBorders',
+                                table: {
+                                    body: [
+                                        [
+                                            {
+                                                border: [false, false, false, false],
+                                                text: 'Payment Type',
+                                                style: 'h2',
+                                                margin: [-7, 0, 0, 0],
+                                            },
+                                            {
+                                                text: ':',
+                                                border: [false, false, false, false],
+                                                style: 'h2'
+                                            },
+                                            {
+                                                border: [false, false, false, false],
+                                                text: purchase.payment_type_name,
+                                                style: 'normaltxt'
+                                            }
+                                        ],
+                                        [
+                                            {
+                                                text: 'Supplier Name',
+                                                style: 'h2',
+                                                margin: [-7, 0, 0, 0],
+                                            },
+                                            {
+                                                text: ':',
+                                                style: 'h2'
+                                            },
+                                            {
+                                                //text: moment(sale_info.created_at).format('YYYY-MM-DD hh:mm A'),
+                                                text: purchase.supplier_name,
+                                                style: 'normaltxt'
+                                            }
+                                        ],
+                                    ]
+                                },
+                            }
+                        ],
+                    ]
+                },
+            },
+                    {
+                        layout: {
+                            hLineWidth: function (i, node) {
+                                return (i === 0) ? 3 : 1;
+                            }
+                        },
+                        table: {
+                            headerRows: 1,
+                            widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                            body: purchaseItems,
+                        },
+
+                    });
+
+            purchaseInfo.push({
                 columns: [
                     {
                         alignment: 'right',
                         text: [
-                            {text: 'Total Disc. Amount: ', bold: true},
-                            purchase.total_item_discount_amount + '\n\n',
-                            {text: 'Total Gst Amount: ', bold: true},
-                            purchase.total_item_gst_amount + '\n\n',
-                            //{text: 'Total Vat Amount: ', bold: true},
-                            //purchase.total_item_vat_amount + '\n\n',
-                            {text: 'Total Amount: ', bold: true},
-                            purchase.total_item_purchase_amount + '\n\n',
-                            {text: 'Disc(' + purchase.discount_percent + ') %: ', bold: true},
-                            purchase.discount_amount + '\n\n',
-                            {text: 'Before Disc. Total: ', bold: true},
-                            purchase.before_disc_amount + '\n\n',
-                            {text: 'After Disc. Total: ', bold: true},
-                            purchase.after_disc_amount + '\n\n',
-                            {text: 'Round Off: ', bold: true},
-                            purchase.roundoff_amount + '\n\n',
-                            {text: 'Net Amount: ', bold: true},
-                            purchase.net_amount + '\n\n',
+                            {
+                                text: 'Total Disc. Amount: ',
+                                bold: true,
+                                style: 'h2'
+                            },
+                            {
+                                text: purchase.total_item_discount_amount + '\n\n',
+                                style: 'h2'
+                            },
+                            {
+                                text: 'Disc(' + purchase.discount_percent + ') %: ',
+                                bold: true,
+                                style: 'h2'
+                            },
+                            {
+                                text: purchase.discount_amount + '\n\n',
+                                style: 'h2'
+                            },
+                            {
+                                text: 'Before Disc. Total: ',
+                                bold: true,
+                                style: 'h2'
+                            },
+                            {
+                                text: purchase.before_disc_amount + '\n\n',
+                                style: 'h2'
+                            },
+                            {
+                                text: 'After Disc. Total: ',
+                                bold: true,
+                                style: 'h2'
+                            },
+                            {
+                                text: purchase.after_disc_amount + '\n\n',
+                                style: 'h2'
+                            },
+                            {
+                                text: 'Round Off: ',
+                                bold: true,
+                                style: 'h2'
+                            },
+                            {
+                                text: purchase.roundoff_amount + '\n\n',
+                                style: 'h2'
+                            },
+                            {
+                                text: 'Net Amount: ',
+                                bold: true,
+                                style: 'h2'
+                            },
+                            {
+                                text: purchase.net_amount + '\n\n',
+                                style: 'h2'
+                            },
                         ],
                     }
                 ]
