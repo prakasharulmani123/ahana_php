@@ -177,6 +177,7 @@ class PharmacyreportController extends ActiveController {
         $current_database = Yii::$app->db->createCommand("SELECT DATABASE()")->queryScalar();
         $sql = "SELECT
                     a.sale_id,a.bill_no,a.sale_date,
+                    a.patient_group_name,
                     d.patient_global_int_code, a.patient_name,
                     (cgst_percent+sgst_percent) AS tax_rate,
                     SUM(b.taxable_value) AS taxable_value,  
