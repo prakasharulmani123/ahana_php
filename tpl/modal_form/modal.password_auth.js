@@ -10,7 +10,7 @@ app.controller('PasswordAuthController', ['scope', '$scope', '$modalInstance', '
         $scope.backdateDischarge = $modalInstance.data.backdateDischarge;
         $scope.minDate = $modalInstance.data.clinical_finalize_date;
         $scope.maxDate = moment().format('YYYY-MM-DD');
-        $scope.data.discharge_date = moment().format('YYYY-MM-DD');
+        $scope.data.discharge_date = moment().format('YYYY-MM-DD HH:mm:ss');
         $scope.data.finalize_date = moment().format('YYYY-MM-DD');
 
         $scope.getTitle = function () {
