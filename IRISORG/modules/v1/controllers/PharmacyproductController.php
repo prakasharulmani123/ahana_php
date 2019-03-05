@@ -964,7 +964,7 @@ class PharmacyproductController extends ActiveController {
     }
 
     public function actionPhamastersupdate() {
-//        return ['success' => true, 'message' => ['total_rows' => '2996', 'id' => '47', 'max_id' => '2996']];
+        return ['success' => true, 'message' => ['total_rows' => '47', 'id' => '4975', 'max_id' => '5021']];
         $get = Yii::$app->getRequest()->get();
         $allowed = array('csv');
         $filename = $_FILES['file']['name'];
