@@ -742,7 +742,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
         }
 
-        $scope.addToOtherTenantPrescriptionList = function (value) {
+        $scope.addToOtherTenantPrescriptionList = function (value, loop_total, loop_start) {
             $scope.errorData = $scope.msg.errorMessage = "";
             $http.get($rootScope.IRISOrgServiceUrl + '/pharmacyproduct/getproductbytenant?product_name=' + value.product.product_name + '&product_unit=' + value.product.product_unit + '&product_unit_count=' + value.product.product_unit_count + '&pharmacy_tenant=' + $scope.pharmacy_tenant + '&addtfields=presc_search&page_action=branch_pharmacy')
                     .success(function (response) {
@@ -806,13 +806,22 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                             $scope.errorProduct.push(value.product_name);
                             $scope.msg.errorMessage = $scope.errorProduct + " Product is not available for this branch";
                         }
+                        if (loop_total == loop_start) {
+                            $timeout(function () {
+                                $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+                            }, 1000);
+                            $timeout(function () {
+                                $scope.showOrhideFrequency();
+                                $scope.commonCheckAvailable();
+                            }, 2000);
+                        }
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading related products!";
                     });
         }
 
-        $scope.addToPrescriptionList = function (value) {
+        $scope.addToPrescriptionList = function (value, loop_total, loop_start) {
             $scope.getRelatedProducts(value.generic_id).then(function () {
                 qty_count = $scope.calculate_qty(value.frequency_name, value.number_of_days, value.product.product_description_id, value.product.description_name);
                 var no_of_days = $scope.data.number_of_days;
@@ -869,6 +878,15 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 //if (items.all_products.length != 0) {
                     PrescriptionService.addPrescriptionItem(items);
                 //}
+                if (loop_total == loop_start) {
+                    $timeout(function () {
+                        $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+                    }, 1000);
+                    $timeout(function () {
+                        $scope.showOrhideFrequency();
+                        $scope.commonCheckAvailable();
+                    }, 2000);
+                }
                 $scope.msg.successMessage = "Medicine has been added to the current prescription";
             });
         }
@@ -918,20 +936,11 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 //$scope.msg.errorMessage = "Pharmacy branch mismatch";
                 //} else {
                 angular.forEach($scope.represcribeSelectedItems, function (value, key) {
-                    if ($scope.pharmacy_tenant != value.pharmacy_tenant_id) {
-                        $scope.addToOtherTenantPrescriptionList(value);
-                    } else {
-                        $scope.addToPrescriptionList(value);
-                    }
                     loop_start = parseFloat(loop_start) + parseFloat(1);
-                    if (loop_total == loop_start) {
-                        $timeout(function () {
-                            $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
-                        }, 1000);
-                        $timeout(function () {
-                            $scope.showOrhideFrequency();
-                            $scope.commonCheckAvailable();
-                        }, 2000);
+                    if ($scope.pharmacy_tenant != value.pharmacy_tenant_id) {
+                        $scope.addToOtherTenantPrescriptionList(value, loop_total, loop_start);
+                    } else {
+                        $scope.addToPrescriptionList(value, loop_total, loop_start);
                     }
                 });
                 $scope.pres_status = 'current';
@@ -956,17 +965,8 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     $scope.msg.errorMessage = "Pharmacy branch mismatch";
                 } else {
                     angular.forEach($scope.editItems, function (value, key) {
-                        $scope.addToPrescriptionEditList(value);
                         loop_start = parseFloat(loop_start) + parseFloat(1);
-                        if (loop_total == loop_start) {
-                            $timeout(function () {
-                                $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
-                            }, 1000);
-                            $timeout(function () {
-                                $scope.showOrhideFrequency();
-                                $scope.commonCheckAvailable();
-                            }, 2000);
-                        }
+                        $scope.addToPrescriptionEditList(value, loop_total, loop_start);
                     });
                     $scope.pres_status = 'current';
                     $("#current_prescription").focus();
@@ -975,7 +975,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
             }
         }
 
-        $scope.addToPrescriptionEditList = function (value) {
+        $scope.addToPrescriptionEditList = function (value, loop_total, loop_start) {
             $scope.pres_id = value.pres_id;
             $scope.getRelatedProducts(value.generic_id).then(function () {
 
@@ -1025,6 +1025,16 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 if (chkProduct.length != 0) {
                     PrescriptionService.addPrescriptionItem(items);
                 }
+                if (loop_total == loop_start) {
+                    $timeout(function () {
+                        $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+                    }, 1000);
+                    $timeout(function () {
+                        $scope.showOrhideFrequency();
+                        $scope.commonCheckAvailable();
+                    }, 2000);
+                }
+
             });
         }
 
