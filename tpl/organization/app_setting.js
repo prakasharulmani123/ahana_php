@@ -486,8 +486,8 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             $scope.initPhaMastersParams();
             $scope.loadbar('show');
             $scope.pha_master_import_process_text = 'Fetching the Excel Data. Please wait until the importing begins. This might take few mins';
-            $scope.import_log = Date.parse(moment().format());
-//            $scope.import_log = '1501669314000';
+            //$scope.import_log = Date.parse(moment().format());
+            $scope.import_log = '1548914263333';
             var currentUser = AuthenticationService.getCurrentUser();
 
             fileUpload.uploadFileToUrl($scope.phaMastersUpdate, $rootScope.IRISOrgServiceUrl + '/pharmacyproduct/phamastersupdate?tenant_id=' + currentUser.credentials.logged_tenant_id + '&import_log=' + $scope.import_log).success(function (response) {
