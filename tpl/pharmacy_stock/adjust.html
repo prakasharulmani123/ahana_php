@@ -111,7 +111,7 @@
                                     <td>{{row.mrp}}</td>
                                     <td><span class="label bg-info">{{row.available_qty}}</span></td>
                                     <td>
-                                        <span editable-text="row.add_stock" e-name="add_stock" e-form="rowform" onbeforesave="checkInput($data)" e-number-mask="" e-limit-to="7" e-required>
+                                        <span editable-text="row.add_stock" e-name="add_stock" e-form="rowform" onbeforesave="checkInput($data, row.available_qty)" e-number-mask="" e-limit-to="7" e-required>
                                             {{ row.add_stock || '-' }}
                                         </span>
                                     </td>

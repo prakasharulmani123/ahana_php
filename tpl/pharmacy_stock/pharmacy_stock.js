@@ -256,7 +256,13 @@ app.controller('stockController', ['$rootScope', '$scope', '$timeout', '$http', 
                     });
         }
 
-        $scope.checkInput = function (data) {
+        $scope.checkInput = function (data, available_qty) {
+            if((data < 0) && (-Math.abs(available_qty) > data)) {
+                return "Check stock adjust value";
+            }
+            if((data < 0) && (available_qty < 0)) {
+                return "Check stock adjust value";
+            }
             if (!data || data == 0) {
                 return "Not empty";
             }
