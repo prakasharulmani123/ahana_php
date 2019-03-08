@@ -404,7 +404,7 @@ class PharmacysaleController extends ActiveController {
                     ->andWhere(['pha_sale.tenant_id' => $post['tenant_id']])
                     ->groupBy(['pha_sale_item.product_id'])
                     ->all();
-            
+
             foreach ($saleItem as $key => $sale) {
                 $report[$key]['min_qty'] = $sale['min_qty'];
                 $report[$key]['max_qty'] = $sale['max_qty'];
@@ -415,6 +415,30 @@ class PharmacysaleController extends ActiveController {
             }
         }
         return ['report' => $report];
+    }
+
+    public function actionSearchsalebill() {
+        $post = Yii::$app->getRequest()->post();
+        if (isset($post['encounter_id']))
+            $condition['encounter_id'] = $post['encounter_id'];
+        if (isset($post['patient_id']))
+            $condition['patient_id'] = $post['patient_id'];
+        if (isset($post['patient_name']))
+            $condition['patient_name'] = $post['patient_name'];
+        $searchCondition = [
+            'or',
+            ['like', 'pha_product.product_name', $post['value']],
+            ['like', 'pha_product.product_unit', $post['value']],
+        ];
+
+        $sale = PhaSale::find()
+                ->select('bill_no')
+                ->tenant()
+                ->joinWith('phaSaleItems.product')
+                ->andWhere($condition);
+        $sale->andFilterWhere($searchCondition);
+        $result = $sale->all();
+        return ['result' => $result];
     }
 
 }
