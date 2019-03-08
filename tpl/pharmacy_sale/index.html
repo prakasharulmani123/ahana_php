@@ -116,6 +116,7 @@
                     <tr ng-show="expanded" data-value="{{row.patient_name}} {{row.encounter_id}} {{row.sum_bill_amount}} {{row.sum_paid_amount}} {{row.sum_balance_amount}}">
                         <td data-value="{{row.patient_name}} {{row.encounter_id}} {{row.sum_bill_amount}} {{row.sum_paid_amount}} {{row.sum_balance_amount}}"></td>
                         <td colspan="11" data-value="{{row.patient_name}} {{row.encounter_id}} {{row.sum_bill_amount}} {{row.sum_paid_amount}} {{row.sum_balance_amount}}">
+                            <input class="form-control input-sm w-sm inline m-r" ng-model = "sale_search" ng-keyup="searchSale(sale_search, row.encounter_id, row.patient_id, row.patient_name, key)" type="text" name ="" value="" />
                             <table class="table table-condensed table-bordered">
                                 <thead>
                                     <tr>
@@ -140,7 +141,7 @@
                                 <i ng-if="value.seenExpanded" class="fa fa-minus text"></i>
                             </button>&nbsp; &nbsp;
                         </td>
-                        <td>{{saleitem.bill_no}}</td>
+                        <td ng-class="{'highlighted':(selectSaleBill[key].indexOf(saleitem.bill_no)>-1)}">{{saleitem.bill_no}}</td>
                         <td>{{saleitem.sale_date | date:'dd-MM-yyyy'}}</td>
                         <td>{{saleitem.bill_amount| number:2}}</td>
                         <td>{{saleitem.billings_total_paid_amount| number:2}}</td>

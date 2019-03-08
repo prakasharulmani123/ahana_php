@@ -195,7 +195,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.doctors = response.doctorsList;
             });
         };
-
+        
         $scope.getSaleList = function (payment_type) {
             if (payment_type == 'CA') {
                 $scope.sale_payment_type_name = 'Cash';
@@ -1296,6 +1296,31 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                         $scope.show_consultant_loader = false;
                         return $scope.doctors;
                     }
+            );
+        };
+        
+        var canceler2;
+        $scope.selectSaleBill = [];
+        $scope.searchSale = function (search_value, encounter_id, patient_id, patient_name, key) {
+            if (canceler2)
+                canceler2.resolve();
+            canceler2 = $q.defer();
+
+            return $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/pharmacysale/searchsalebill?addtfields=sale_bill_search',
+                data: {'value': search_value,'encounter_id': encounter_id, 'patient_id': patient_id, 'patient_name' : patient_name},
+                timeout: canceler2.promise,
+            }).then(
+                function (response) {
+                    if(response.data.result.length > 0) {
+                        var bills = [];
+                        angular.forEach(response.data.result, function (item) {
+                            bills.push(item.bill_no);
+                        });
+                        $scope.selectSaleBill[key] = bills;
+                    }
+                }
             );
         };
 
