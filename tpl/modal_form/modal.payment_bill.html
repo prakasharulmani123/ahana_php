@@ -1,0 +1,196 @@
+<div>
+    <div class="bg-light lter b-b wrapper-md">
+        <span class="m-n h3"> View Bill </span>
+        <button class="close" type="button" ng-click="cancel()">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <style>
+        #receipt_background {
+            position:absolute;
+            z-index:0;
+            background:white;
+            display:block;
+            min-height:50%; 
+            min-width:70%;
+            color:yellow;
+        }
+
+        #receipt_bg-text {
+            color: #000000;
+            font-size: 100px;
+            transform: rotate(300deg);
+            -webkit-transform: rotate(300deg);
+            width: 100%;
+            float: left;
+            position: absolute;
+            top: 25%;
+            opacity: 0.1;
+            text-align: center;
+        }
+
+        #receipt_content {
+            position:absolute;
+            z-index:1;
+        }
+
+        .voucher-table
+        {
+            border:#975e1f dotted 1px;
+            border-collapse:collapse;
+            font-family:Arial, Helvetica, sans-serif;
+            font-size:15px;
+            margin-bottom:40px;
+            page-break-inside:avoid;
+            page-break-after:auto
+        }
+
+        .voucher-table td, .voucher-table th
+        {
+            border:#975e1f dotted 2px;
+            border-collapse:collapse;
+            padding:10px;
+        }
+        .recived-details span
+        {
+            border-bottom:#2e2e2e dotted 1px;
+        }
+    </style>
+    <div class="wrapper-md">
+        <div ng-show="payment_bill_type == 'advance_payment'">
+            <table width="100%" cellspacing="0" cellpadding="0" class="voucher-table">
+                <tbody>
+                    <tr>
+                        <td width="10px" class="orgimg" rowspan="2">
+                            <img width="60" height="60" alt="AHANA HOSPITALS" src="{{app.org_document_logo}}">
+                        </td>
+                        <td>
+                            <span style="display:inline-block;width:100%;" class="orgcss" id="lblOrganisation">{{data.tenant_name}}</span>
+                        </td>
+                        <td class="orgtable2" style="width: 25%">
+                            <span style="display:inline-block;width:100%;" class="SplCss" id="lblvourcherno">
+                                Voucher No : <b>{{data.payment_id}}</b>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="orgtable" rowspan="1"> 
+                            {{data.tenant_address}}<br>
+                            {{data.city_name}} {{data.state_name}} {{data.country_name}}<br>
+                            Ph : {{data.tenant_mobile}}
+                        </td>
+                        <td class="orgtable2"><span style="display:inline-block;width:100%;" class="DateCss" id="lblDate">
+                                <span class="SplCss">Date : </span>{{data.payment_date| moment:'DD/MM/YYYY'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="recived-details">
+                            Received with thanks from 
+                            <span> 
+                                <strong>
+                                    {{patientObj.fullname}} 
+                                    ({{patientObj.patient_age_ym}}) 
+                                    ({{patientObj.patient_global_int_code}}) 
+                                    <span ng-if="patientObj.current_room != '-'">
+                                        ({{patientObj.current_room}})
+                                    </span>
+                                </strong> 
+                            </span> 
+                            <br />
+                            <br />
+                            a sum of rupees <span><strong>{{data.total_charge}}</strong></span> through <span><strong>{{data.trans_mode}}</strong></span>
+                            <br />
+                            <br />
+                            <span><strong>{{data.total_charge| words}}</strong></span> on account of <strong>{{data.category == 'Settlement Charge' ? 'Discharge' : 'Advance'}}</strong>
+                            <br />
+                            <br />
+                            <br />
+                            <div class="amount">{{data.total_charge}}</div>
+                            <div class="sign">
+                                For {{data.tenant_name}} 
+                                <br/>
+                                <br/>
+                                <span> Authorised signatory</span> 
+                            </div>
+                            <br />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div ng-show="payment_bill_type == 'refund_payment'">
+            <table width="100%" cellspacing="0" cellpadding="0" class="voucher-table">
+                <tbody>
+                    <tr>
+                        <td width="10px" class="orgimg" rowspan="2">
+                            <img width="60" height="60" alt="AHANA HOSPITALS" src="{{app.org_document_logo}}">
+                        </td>
+                        <td colspan="2">
+                            <span style="display:inline-block;width:100%;" class="orgcss" id="lblOrganisation">{{data.tenant.branch_name}}</span>
+                        </td>
+                        <td class="orgtable2" style="width: 25%">
+                            <span style="display:inline-block;width:100%;" class="SplCss" id="lblvourcherno">
+                                Voucher No : <b>{{data.refund_payment_id}}</b>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="orgtable" rowspan="1" colspan="2"> 
+                            {{data.tenant.tenant_address}}<br>
+                            {{data.tenant.tenant_city_name}} {{data.tenant.tenant_state_name}} {{data.tenant.tenant_country_name}}<br>
+                            Ph : {{data.tenant.tenant_mobile}}
+                        </td>
+                        <td class="orgtable2"><span style="display:inline-block;width:100%;" class="DateCss" id="lblDate">
+                                <span class="SplCss">Date : </span>{{data.refund_date| moment:'DD/MM/YYYY'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="recived-details">
+                            Patient Name : 
+                            <span> 
+                                <strong>
+                                    {{patientObj.fullname}} 
+                                    ({{patientObj.patient_age_ym}})
+                                </strong> 
+                            </span>
+                            UHID :
+                            <span> 
+                                <strong>
+                                    ({{patientObj.patient_global_int_code}}) 
+                                </strong>
+                            </span>
+                            <span ng-if="patientObj.current_room != '-'">
+                                ({{patientObj.current_room}})
+                            </span>
+                            <br />
+                            <br /> 
+                            Rs <span><strong>{{data.refund_amount}}</strong></span> (Rupees <span><strong>{{data.refund_amount| words}}</strong></span> only)
+                            <br />
+                            <br />
+                            on account of <strong><span>Refund Payment</span></strong>
+                            <br />
+                            <br />
+                            through <strong><span ng-if="data.payment_mode == 'CA'">Cash</span><span ng-if="data.payment_mode == 'CH'">Cheque</span>
+                                <span ng-if="data.payment_mode == 'ON'">Online</span><span ng-if="data.payment_mode == 'CD'">Card</span></strong>
+                            Bank <strong><span>{{data.bank_name}}</span></strong>
+                            <br />
+                            <br />
+                            Dated <strong><span>{{data.bank_date| moment:'DD/MM/YYYY'}}</span></strong>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Accountant</td>
+                        <td>Biller</td>
+                        <td>Attender</td>
+                        <td>Payee</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

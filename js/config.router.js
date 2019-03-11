@@ -2589,6 +2589,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                                             'tpl/modal_form/modal.password_auth.js?v=' + APP_VERSION,
                                             'tpl/modal_form/modal.print_bill.js?v=' + APP_VERSION,
                                             'tpl/modal_form/modal.refund_amount.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.payment_bill.js?v=' + APP_VERSION,
                                         ]);
                                     }
                             );

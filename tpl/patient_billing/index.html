@@ -426,7 +426,7 @@
                                 <th>Headers</th>
                                 <th>Mode</th>
                                 <th>Details</th>
-                                <th>Print Bill</th>
+                                <th>Bill Action</th>
                                 <th align="right" style="text-align:right;">Paid Amount</th>
                             </tr>
                         </thead>
@@ -463,7 +463,10 @@
                                     </div>
                                     <div ng-show="row.trans_mode == 'Cash'"> - </div> 
                                 </td>
-                                <td>                             
+                                <td>
+                                    <button class="btn btn-sm btn-primary" ng-click="openPaymentBill('lg',row, 'advance_payment')">
+                                        <i class="fa fa-eye"></i>
+                                    </button> &nbsp;&nbsp;
                                     <button class="btn btn-sm btn-primary" ng-click="setVoucher(row, 'voucherPrint', 'PatBillingPayment', row.payment_id)">
                                         <i class="fa fa-print"></i>
                                     </button>
@@ -497,7 +500,7 @@
                                 <th>Date</th>
                                 <th>Mode</th>
                                 <th>Details</th>
-                                <th>Print Bill</th>
+                                <th>Bill Action</th>
                                 <th align="right" style="text-align:right;">Refund Amount</th>
                             </tr>
                         </thead>
@@ -531,7 +534,10 @@
                                     </div>
                                     <div ng-show="refund.trans_mode == 'CA'"> - </div> 
                                 </td>
-                                <td>                             
+                                <td>
+                                    <button class="btn btn-sm btn-primary" ng-click="openPaymentBill('lg',refund, 'refund_payment')">
+                                        <i class="fa fa-eye"></i>
+                                    </button> &nbsp;&nbsp;
                                     <button class="btn btn-sm btn-primary" ng-click="setVoucher(refund, 'refundvoucherPrint', 'PatRefundPayment', refund.refund_payment_id); increasePrintCount();">
                                         <i class="fa fa-print"></i>
                                     </button>

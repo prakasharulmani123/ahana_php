@@ -701,6 +701,30 @@ app.controller('BillingController', ['$rootScope', '$scope', '$timeout', '$http'
                 $log.info('Modal dismissed at: ' + new Date());
             });
         }
+        
+        $scope.openPaymentBill = function (size, row, bill_type) {
+            $scope.row_data = row;
+            $scope.payment_bill_type = bill_type;
+            var modalInstance = $modal.open({
+                templateUrl: 'tpl/modal_form/modal.payment_bill.html',
+                controller: "PaymentBillController",
+                size: size,
+                resolve: {
+                    scope: function () {
+                        return $scope;
+                    },
+                }
+            });
+//            modalInstance.data = {
+//                row_data: row,
+//            };
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+        }
 
         //Patient Billing History
         $scope.loadBillingHistory = function () {
