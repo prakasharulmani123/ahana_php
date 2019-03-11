@@ -5,57 +5,6 @@
             <span aria-hidden="true">×</span>
         </button>
     </div>
-    <style>
-        #receipt_background {
-            position:absolute;
-            z-index:0;
-            background:white;
-            display:block;
-            min-height:50%; 
-            min-width:70%;
-            color:yellow;
-        }
-
-        #receipt_bg-text {
-            color: #000000;
-            font-size: 100px;
-            transform: rotate(300deg);
-            -webkit-transform: rotate(300deg);
-            width: 100%;
-            float: left;
-            position: absolute;
-            top: 25%;
-            opacity: 0.1;
-            text-align: center;
-        }
-
-        #receipt_content {
-            position:absolute;
-            z-index:1;
-        }
-
-        .voucher-table
-        {
-            border:#975e1f dotted 1px;
-            border-collapse:collapse;
-            font-family:Arial, Helvetica, sans-serif;
-            font-size:15px;
-            margin-bottom:40px;
-            page-break-inside:avoid;
-            page-break-after:auto
-        }
-
-        .voucher-table td, .voucher-table th
-        {
-            border:#975e1f dotted 2px;
-            border-collapse:collapse;
-            padding:10px;
-        }
-        .recived-details span
-        {
-            border-bottom:#2e2e2e dotted 1px;
-        }
-    </style>
     <div class="wrapper-md">
         <div ng-show="payment_bill_type == 'advance_payment'">
             <table width="100%" cellspacing="0" cellpadding="0" class="voucher-table">
