@@ -103,7 +103,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                                     if (string.indexOf(substring) > -1 == false) {
                                         if ((string.indexOf(op_substring) > -1 == false) && (string.indexOf(ip_substring) > -1 == false)) {
                                             $scope.config_data.push(conf);
-                                        } else if(string.indexOf(ip_substring) > -1 == false) {
+                                        } else if (string.indexOf(ip_substring) > -1 == false) {
                                             $scope.config_opvital_data.push(conf);
                                         }
                                     } else {
@@ -474,7 +474,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
         $scope.showStockImportErrorLog = function () {
 
         }
-        
+
         //Pha Masters Update
         $scope.initPhaMastersParams = function () {
             $scope.pha_master_import_process_text = '';
@@ -508,7 +508,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
-        
+
         $scope.phaMastersUpdateStart = function (id, max) {
             $scope.loadbar('show');
             $http({
@@ -544,9 +544,9 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
-        
-        
-        
+
+
+
         //Pha Generic Delete
         $scope.initPhaGenericDeleteParams = function () {
             $scope.pha_generic_delete_process_text = '';
@@ -581,7 +581,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
-        
+
         $scope.phaGenericDeleteStart = function (id, max) {
             $scope.loadbar('show');
             $http({
@@ -617,10 +617,10 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
-        
-        
 
-        
+
+
+
         //Pha Product Delete
         $scope.initPhaMastersDeleteParams = function () {
             $scope.pha_master_delete_process_text = '';
@@ -654,7 +654,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
-        
+
         $scope.phaMastersDeleteStart = function (id, max) {
             $scope.loadbar('show');
             $http({
@@ -690,7 +690,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
-        
+
         //Pha Drug Delete
         $scope.initPhaDrugDeleteParams = function () {
             $scope.pha_drug_delete_process_text = '';
@@ -724,7 +724,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
-        
+
         $scope.phaDrugDeleteStart = function (id, max) {
             $scope.loadbar('show');
             $http({
@@ -760,8 +760,8 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
-        
-        
+
+
 
         //In-Progress
         $scope.showphaMastersUpdateErrorLog = function () {
@@ -912,8 +912,8 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
-        
-        
+
+
         //Product Description Route Start
         $scope.initProductdescriptionParams = function () {
             $scope.product_description_import_process_text = '';
@@ -1005,7 +1005,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             var time_sess = $localStorage.user.credentials.user_timeout;
             $scope.session_timeout = time_sess.toString();
         }
-        
+
         $scope.updateExpiryInterval = function (a) {
             $scope.errorData = "";
             $scope.msg.successMessage = "";
@@ -1013,7 +1013,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             $http({
                 method: 'POST',
                 url: $rootScope.IRISOrgServiceUrl + '/appconfiguration/updateexpiryinterval',
-                data: {value : a},
+                data: {value: a},
             }).success(
                     function (response) {
                         $scope.loadbar('hide');
@@ -1070,7 +1070,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                 $scope.OpBill[listName] = row.value;
             });
         }
-        
+
         //Pha Generic Delete
         $scope.initPhaProductUpdateParams = function () {
             $scope.pha_product_update_process_text = '';
@@ -1105,7 +1105,7 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
                     $scope.errorData = data.message;
             });
         }
-        
+
         $scope.phaProductUpdateStart = function (id, max) {
             $scope.loadbar('show');
             $http({
@@ -1142,6 +1142,45 @@ app.controller('OrganizationController', ['$rootScope', '$scope', '$timeout', '$
             });
         }
 
+        $scope.initDoctorInterval = function () {
+            $scope.inverval_time = 5;
+            $rootScope.commonService.GetIntervalList(function (response) {
+                $scope.intervals = response;
+            });
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/doctorschedule/getdoctorinterval",
+                method: "GET"
+            }).then(
+                    function (response) {
+                        if (response.data.success === true) {
+                            $scope.inverval_time = response.data.interval;
+                        }
+                    }
+            )
+        }
+
+        $scope.updateInterval = function () {
+            $scope.errorData = "";
+            $scope.msg.successMessage = "";
+
+            $scope.loadbar('show');
+            $http({
+                method: 'POST',
+                url: $rootScope.IRISOrgServiceUrl + '/doctorschedule/updatedoctorinterval',
+                data: {interval_time : $scope.inverval_time},
+            }).success(
+                function (response) {
+                    $scope.loadbar('hide');
+                    $scope.msg.successMessage = 'Updated successfully';
+                }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
+        }
     }]);
 
 // I provide a request-transformation method that is used to prepare the outgoing
