@@ -31,7 +31,7 @@ app.filter('propsFilter', function () {
         return out;
     };
 })
-app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$timeout', '$filter', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, $timeout, $filter, modalService) {
+app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$timeout', '$filter', '$modal', 'modalService', function ($rootScope, $scope, $timeout, $http, $state, $timeout, $filter, $modal, modalService) {
 
         $scope.app.settings.patientTopBar = true;
         $scope.app.settings.patientSideMenu = true;
@@ -335,6 +335,45 @@ app.controller('ProcedureController', ['$rootScope', '$scope', '$timeout', '$htt
                     });
                 }
             }, true);
+        }
+        $scope.viewProcedureBill = function (proc_id) {
+            $scope.loadbar('show');
+            _that = this;
+            $scope.errorData = "";
+            $http({
+                url: $rootScope.IRISOrgServiceUrl + "/procedures/" + proc_id,
+                method: "GET"
+            }).success(
+                    function (response) {
+                        $scope.loadbar('hide');
+                        var modalInstance = $modal.open({
+                            templateUrl: 'tpl/modal_form/modal.procedure_bill_print.html',
+                            controller: "ProcedureBillPrintController",
+                            size: 'lg',
+                            resolve: {
+                                scope: function () {
+                                    return $scope;
+                                },
+                            }
+                        });
+                        
+                        modalInstance.data = {
+                            row_data: response,
+                        };
+
+                        modalInstance.result.then(function (selectedItem) {
+                            $scope.selected = selectedItem;
+                        }, function () {
+                            $log.info('Modal dismissed at: ' + new Date());
+                        });
+                    }
+            ).error(function (data, status) {
+                $scope.loadbar('hide');
+                if (status == 422)
+                    $scope.errorData = $scope.errorSummary(data);
+                else
+                    $scope.errorData = data.message;
+            });
         }
         $scope.printProcedureBill = function (proc_id) {
             $scope.loadbar('show');

@@ -1293,7 +1293,9 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load(['smart-table', 'ui.select']).then(
                                     function () {
-                                        return $ocLazyLoad.load('tpl/patient_procedure/procedure.js?v=' + APP_VERSION);
+                                        return $ocLazyLoad.load([
+                                            'tpl/patient_procedure/procedure.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.procedure_bill_print.js?v=' + APP_VERSION,]);
                                     }
                             );
                         }]

@@ -96,6 +96,9 @@
                             <td>
                                 <!--ng-show="enc.selected.status == '1' && enc.selected.encounter_id == value.data.encounter_id"-->
                                 <div>
+                                    <a tooltip="View Procedure Bill"  class="label bg-primary dk" ng-click="viewProcedureBill(patProcedure.proc_id)">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
                                     <span ng-if="patProcedure.tenant_id != null && patProcedure.encounter_status">
                                         <a ng-show="patProcedure.tenant_id == app.logged_tenant_id" title="Edit" check-access  ui-sref="patient.edit_procedure({id: $state.params.id, proc_id : patProcedure.proc_id})" class="label bg-info dk">
                                             <i class="fa fa-pencil"></i>
@@ -106,7 +109,7 @@
                                     </span>
                                     <a tooltip="Print Procedure Bill"  class="label bg-primary dk" ng-click="printProcedureBill(patProcedure.proc_id)">
                                         <i class="fa fa-print"></i>
-                                    </a>
+                                    </a>                                    
                                 </div>
                             </td>
                         </tr>
