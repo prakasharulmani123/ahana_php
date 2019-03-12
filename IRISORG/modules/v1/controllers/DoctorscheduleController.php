@@ -234,5 +234,25 @@ class DoctorscheduleController extends ActiveController {
 
         return $array_of_time;
     }
+    
+    public function actionGetdoctorinterval() {
+        $interval = CoDoctorInterval::find()->tenant()->active()->andWhere(['user_id' => Yii::$app->user->identity->user->user_id])->one();
+        if($interval)
+            return ['success' => true,'interval' => $interval['interval']];
+        else
+            return ['success' => false];
+    }
+    
+    public function actionUpdatedoctorinterval() {
+        $post = Yii::$app->getRequest()->post();
+        $new_interval = new CoDoctorInterval();
+        $interval = CoDoctorInterval::find()->tenant()->active()->andWhere(['user_id' => Yii::$app->user->identity->user->user_id])->one();
+        if(!$interval)
+            $interval = $new_interval;
+        $interval->user_id = Yii::$app->user->identity->user->user_id;
+        $interval->interval = $post['interval_time'];
+        $interval->save(false);
+        return ['success' => true];
+    }
 
 }
