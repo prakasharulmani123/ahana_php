@@ -1144,6 +1144,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                                         return $ocLazyLoad.load([
                                             'tpl/patient_encounter/encounter.js?v=' + APP_VERSION,
                                             'tpl/modal_form/modal.edit_arrival_time.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.op_bill_print.js?v=' + APP_VERSION,
                                             ]);
                                     }
                             );
@@ -2569,6 +2570,7 @@ function config($stateProvider, $urlRouterProvider, $httpProvider, ivhTreeviewOp
                                     function () {
                                         return $ocLazyLoad.load([
                                             'tpl/patient_billing/patient_billing.js?v=' + APP_VERSION,
+                                            'tpl/modal_form/modal.op_bill_print.js?v=' + APP_VERSION,
                                         ]);
                                     }
                             );

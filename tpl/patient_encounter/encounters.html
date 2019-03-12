@@ -208,6 +208,9 @@
                             </td>
                             <td> {{item.doctor}} </td>
                             <td>
+                                <button tooltip="View Bill"  class="label bg-success dk" ng-show="(item.type == 'Seen')" ng-click="viewOPBill(item)">
+                                    <i class="fa fa-eye"></i>
+                                </button>
                                 <button tooltip="Print Bill"  class="label bg-primary dk" ng-show="(item.type == 'Seen')" ng-click="printOPBill(item)">
                                     <i class="fa fa-print"></i>
                                 </button>

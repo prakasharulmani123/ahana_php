@@ -1,0 +1,77 @@
+<div>
+    <div class="bg-light lter b-b wrapper-md">
+        <span class="m-n h3"> View Procedure Bill </span>
+        <button class="close" type="button" ng-click="cancel()">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <div class="wrapper-md">
+        <div class="bill-cont">
+
+            <div class="bill-header">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td align="left">
+                            <img width="60" height="60" alt="AHANA HOSPITALS" src="{{app.org_document_logo}}">
+                        </td>
+                        <td align="center">OP Bill</td>
+                        <td align="right">{{patientObj.org_name}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="clearfix"></div>
+            <main>
+                <div class="clearfix">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td align="left"><strong>Patient Name : </strong> {{patientObj.fullname}}</td>
+                            <td align="right"><strong>Bill No : </strong>{{ viewData.bill_no }} </td>
+                        </tr>
+                        <tr>
+                            <td align="left"><strong>UHID : </strong> {{patientObj.patient_global_int_code}}</td>
+                            <td align="right"><strong>Bill Date : </strong> {{viewData.date}}</td>
+                        </tr>
+                        <tr>
+                            <td align="left"><strong>Age / Sex : </strong> {{ patientObj.patient_age_ym }} / {{app.patientDetail.patientSex}}</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <table width="100%" border="1" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <th style="border:1px solid black">S.No</th>
+                            <th style="border:1px solid black">Service</th>
+                            <th style="border:1px solid black">Description</th>
+                            <th style="border:1px solid black">Amount</th>
+                        </tr>
+                        <tr ng-repeat="(key, procedure) in viewData.procedure">
+                            <td style="border:1px solid black">{{key + 1}}</td>
+                            <td ng-if="!procedure.charges" style="border:1px solid black">Procedure Charges</td>
+                            <td ng-if="procedure.charges" style="border:1px solid black">{{procedure.charges}}</td>
+                            <td style="border:1px solid black">{{procedure.procedure_name}}</td>
+                            <td style="border:1px solid black">{{procedure.charge_amount || 0}}</td>
+                        </tr>
+                        <tr align="right">
+                            <td colspan="5"><strong>Bill Total :</strong> {{viewData.op_bill_total | number:2}}</td>
+                        </tr>
+                        <tr align="right">
+                            <td colspan="5"><strong>Amount Paid :</strong> {{viewData.op_bill_total | number:2}}</td>
+                        </tr>
+                    </table>
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td align="left">Payment Mode : {{viewData.payment_mode}}({{viewData.op_bill_total | number:2}})</td>
+                            <td align="right"><strong>For Ahana - K.K Nagar</strong></td>
+                        </tr>
+                        <tr>
+                            <td align="left">{{viewData.op_bill_total | words}} Rupees Only</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td align="right" colspan="2">Authorized Signatory</td>
+                        </tr>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>

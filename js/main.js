@@ -1019,6 +1019,70 @@ angular.module('app')
                         $state.go($state.current, {}, {reload: true});
                     }
                 })
+                //View OP Billing
+                $scope.viewBillData = {};
+                $scope.viewOPBill = function (item) {
+                    $scope.viewBillData.date = moment(item.date).format('DD/MM/YYYY');
+                    $scope.viewBillData.doctor = item.doctor;
+                    
+                    //Get appointment details
+                    $http.post($rootScope.IRISOrgServiceUrl + '/encounter/appointmentseenencounter', {patient_id: $state.params.id, enc_id: item.encounter_id})
+                        .success(function (response) {
+                            //appointment seen amount
+                            $scope.viewBillData.op_amount = response.model.appointmentSeen.amount;
+                            $scope.viewBillData.op_amount_inwords = response.model.appointmentSeen_amt_inwords;
+                            $scope.viewBillData.bill_no = response.model.bill_no;
+                            $scope.viewBillData.encounter_id = item.encounter_id;
+                            $scope.viewBillData.branch_name = response.model.apptBranchData.branch_name;
+                            if (response.model.appointmentSeen.payment_mode == "CA")
+                                $scope.viewBillData.payment_mode = 'Cash';
+                            else if (response.model.appointmentSeen.payment_mode == "CD")
+                                $scope.viewBillData.payment_mode = 'Card';
+                            else if (response.model.appointmentSeen.payment_mode == "CH")
+                                $scope.viewBillData.payment_mode = 'Cheque';
+                            else
+                                $scope.viewBillData.payment_mode = 'Online';
+
+                            $http.post($rootScope.IRISOrgServiceUrl + '/procedure/getprocedureencounter?addtfields=billing', {enc_id: item.encounter_id})
+                                .success(function (billresponse) {
+                                    $scope.viewBillData.procedure = billresponse.procedure;
+                                    
+                                    var total = 0.00;
+                                    angular.forEach(billresponse.procedure, function (bill_amount) {
+                                        if (bill_amount.charge_amount)
+                                            total = total + parseFloat(bill_amount.charge_amount);
+                                    });
+                                    $scope.viewBillData.op_bill_total = total + parseFloat($scope.viewBillData.op_amount);
+                                    $scope.viewBillData.procedure.unshift({
+                                        charges: 'Professional Charges',
+                                        procedure_name: $scope.viewBillData.doctor,
+                                        charge_amount: $scope.viewBillData.op_amount
+                                    });
+                                    var modalInstance = $modal.open({
+                                    templateUrl: 'tpl/modal_form/modal.op_bill_print.html',
+                                    controller: "OPBillPrintController",
+                                    size: 'lg',
+                                    resolve: {
+                                        scope: function () {
+                                            return $scope;
+                                        },
+                                    }
+                                    });
+                        
+                                    modalInstance.data = {
+                                        bill_data: $scope.viewBillData,
+                                    };
+
+                                    modalInstance.result.then(function (selectedItem) {
+                                        $scope.selected = selectedItem;
+                                    }, function () {
+                                        $log.info('Modal dismissed at: ' + new Date());
+                                    });
+                                })
+                        }, function (x) {
+                            response = {success: false, message: 'Server Error'};
+                        });
+                }
                 //Print OP Billing
                 $scope.printBillData = {};
                 $scope.printOPBill = function (item) {
