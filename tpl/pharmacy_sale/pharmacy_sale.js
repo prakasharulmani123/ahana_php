@@ -1498,7 +1498,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 var salereturnbreak = '';
             }
 
-            var groupedArr = createGroupedArray($scope.saleItems2, 6); //Changed Description rows
+            var groupedArr = createGroupedArray($scope.saleItems2, 5); //Changed Description rows
             var sale_info = $scope.data2;
             if (sale_info.total_item_discount_amount != '0.00') {
                 var sale_discount = [{text: 'Discount', style: 'h2', alignment: 'right'},
