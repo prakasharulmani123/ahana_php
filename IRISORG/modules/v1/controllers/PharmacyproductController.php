@@ -299,22 +299,20 @@ class PharmacyproductController extends ActiveController {
             $productCount = PhaProductBatch::find()
                     ->addSelect([$having_column])
                     ->andWhere("DATE_FORMAT(pha_product_batch.expiry_date, '%Y-%m') >= '" . date('Y-m'). "'")
-//                    ->andWhere("MONTH(pha_product_batch.expiry_date) >= '" . date('m'). "'")
-//                    ->andWhere("YEAR(pha_product_batch.expiry_date) >= '" . date('Y'). "'")
                     ->joinWith('product')
                     ->joinWith('phaProductBatchRate')
                     ->andWhere(['pha_product.tenant_id' => $tenant_id])
+                    ->andWhere(['pha_product.deleted_at' => '0000-00-00 00:00:00'])
                     ->andHaving("search_column LIKE '$text'")
                     ->count();
             $totalCount = $productCount;
             $products = PhaProductBatch::find()
                     ->addSelect(["*", $having_column])
                     ->andWhere("DATE_FORMAT(pha_product_batch.expiry_date, '%Y-%m') >= '" . date('Y-m'). "'")
-//                    ->andWhere("MONTH(pha_product_batch.expiry_date) >= '" . date('m'). "'")
-//                    ->andWhere("YEAR(pha_product_batch.expiry_date) >= '" . date('Y'). "'")
                     ->joinWith('product')
                     ->joinWith('phaProductBatchRate')
                     ->andWhere(['pha_product.tenant_id' => $tenant_id])
+                    ->andWhere(['pha_product.deleted_at' => '0000-00-00 00:00:00'])
                     ->andHaving("search_column LIKE '$text'")
                     ->limit($_REQUEST['pageSize'])
                     ->offset($offset)
@@ -324,18 +322,18 @@ class PharmacyproductController extends ActiveController {
             $products = PhaProductBatch::find()
                     ->joinWith('product')
                     ->andWhere("DATE_FORMAT(pha_product_batch.expiry_date, '%Y-%m') >= '" . date('Y-m'). "'")
-//                    ->andWhere("MONTH(pha_product_batch.expiry_date) >= '" . date('m'). "'")
-//                    ->andWhere("YEAR(pha_product_batch.expiry_date) >= '" . date('Y'). "'")
                     ->tenant()
+                    ->andWhere(['pha_product.deleted_at' => '0000-00-00 00:00:00'])
                     ->limit($_REQUEST['pageSize'])
                     ->offset($offset)
                     ->orderBy($_REQUEST['sortOptions'])
                     ->all();
             $totalCount = PhaProductBatch::find()
+                    ->joinWith('product')
+                    ->andWhere(['pha_product.deleted_at' => '0000-00-00 00:00:00'])
                     ->andWhere("DATE_FORMAT(pha_product_batch.expiry_date, '%Y-%m') >= '" . date('Y-m'). "'")
-//                    ->andWhere("MONTH(pha_product_batch.expiry_date) >= '" . date('m'). "'")
-//                    ->andWhere("YEAR(pha_product_batch.expiry_date) >= '" . date('Y'). "'")
-                    ->tenant()->count();
+                    ->tenant()
+                    ->count();
         }
 
         return ['productLists' => $products, 'totalCount' => $totalCount];
