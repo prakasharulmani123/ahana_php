@@ -1,4 +1,4 @@
-<div ng-controller="nonMovingDrugController" ng-init="loadReport();">
+<div ng-controller="nonMovingDrugController" ng-init="clearReport();">
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n h3">Non Moving Drug</h1>
     </div>
@@ -7,6 +7,39 @@
             {% include 'tpl/blocks/alert.html' %}
         </div>
         <div class="row">
+            
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-body p-b form-horizontal">
+                        <form role="form" class="form-inline" name="searchForm">
+                            <div class="form-group">
+                                <label>From  :</label>
+                                <div class="input-group ">
+                                    <input type="text" class="form-control" datepicker-popup="{{app.date_format}}" ng-model="data.from" is-open="opened1" datepicker-options="dateOptions" close-text="Close" max-date="fromMaxDate" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="open($event, 'opened1')">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>To :</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" datepicker-popup="{{app.date_format}}" ng-model="data.to" is-open="opened2" datepicker-options="dateOptions" close-text="Close" min-date="toMinDate" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="open($event, 'opened2')">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <button class="btn btn-success get-report" ng-click="loadReport()">Get Report</button>
+                            <button class="btn btn-dark" ng-click="clearReport()">Clear</button>
+                        </form>
+                    </div>    
+                </div>
+            </div>
 
             <div class="col-sm-12" ng-if='showTable && records.length > 0'>
                 <div class="panel panel-default">

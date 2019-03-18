@@ -1,5 +1,52 @@
 app.controller('nonMovingDrugController', ['$rootScope', '$scope', '$timeout', '$http', '$state', '$anchorScroll', '$filter', '$timeout', function ($rootScope, $scope, $timeout, $http, $state, $anchorScroll, $filter, $timeout) {
 
+        $scope.open = function ($event, mode) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.opened1 = $scope.opened2 = false;
+            switch (mode) {
+                case 'opened1':
+                    $scope.opened1 = true;
+                    break;
+                case 'opened2':
+                    $scope.opened2 = true;
+                    break;
+            }
+        };
+        
+        $scope.clearReport = function () {
+            $scope.showTable = false;
+            $scope.data = {};
+            $scope.data.to = moment().format('YYYY-MM-DD');
+            $scope.data.from = moment().subtract(3, 'months').format('YYYY-MM-DD');
+            $scope.fromMaxDate = new Date($scope.data.to);
+            $scope.toMinDate = new Date($scope.data.from);
+        }
+        
+        $scope.$watch('data.from', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.toMinDate = new Date($scope.data.from);
+                var from = moment($scope.data.from);
+                var to = moment($scope.data.to);
+                var difference = to.diff(from, 'days') + 1;
+
+                if (difference > 91) {
+                    $scope.data.to = moment($scope.data.from).add(+90, 'days').format('YYYY-MM-DD');
+                }
+            }
+        }, true);
+        $scope.$watch('data.to', function (newValue, oldValue) {
+            if (newValue != '' && typeof newValue != 'undefined') {
+                $scope.fromMaxDate = new Date($scope.data.to);
+                var from = moment($scope.data.from);
+                var to = moment($scope.data.to);
+                var difference = to.diff(from, 'days') + 1;
+
+                if (difference > 91) {
+                    $scope.data.from = moment($scope.data.to).add(-91, 'days').format('YYYY-MM-DD');
+                }
+            }
+        }, true);
         
         //Index Page
         $scope.loadReport = function () {
@@ -10,7 +57,10 @@ app.controller('nonMovingDrugController', ['$rootScope', '$scope', '$timeout', '
             $scope.msg.successMessage = "";
 
             var data = {};
-            
+            if (typeof $scope.data.from !== 'undefined' && $scope.data.from != '')
+                angular.extend(data, {from: moment($scope.data.from).format('YYYY-MM-DD')});
+            if (typeof $scope.data.to !== 'undefined' && $scope.data.to != '')
+                angular.extend(data, {to: moment($scope.data.to).format('YYYY-MM-DD')});
             // Get data's from service
             $http.post($rootScope.IRISOrgServiceUrl + '/pharmacysale/nonmovingdrug?addtfields=non_moving_drug', data)
                     .success(function (response) {
