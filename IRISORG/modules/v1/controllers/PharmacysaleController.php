@@ -318,12 +318,13 @@ class PharmacysaleController extends ActiveController {
     }
 
     public function actionNonmovingdrug() {
-        $get = Yii::$app->getRequest()->get();
-
+        $post = Yii::$app->getRequest()->post();
         //$dbname = Yii::$app->client->createCommand("SELECT DATABASE()")->queryScalar();
         $tenant_id = Yii::$app->user->identity->logged_tenant_id;
-        $previous_date = date("Y-m-d", strtotime("-3 months"));
-        $current_date = date("Y-m-d");
+        $previous_date = date("Y-m-d", strtotime($post['from']));
+        $current_date = date("Y-m-d", strtotime($post['to']));
+//        $previous_date = date("Y-m-d", strtotime("-3 months"));
+//        $current_date = date("Y-m-d");
 //        $sql = "SELECT 
 //                    CONCAT_WS(' ', c.product_name, c.product_unit_count, c.product_unit) AS 'ProductName',
 //                    d.generic_name,
