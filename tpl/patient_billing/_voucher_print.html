@@ -25,7 +25,7 @@
                     Ph : {{printVoucher.tenant_mobile}}
                 </td>
                 <td class="orgtable2"><span style="display:inline-block;width:100%;" class="DateCss" id="lblDate">
-                        <span class="SplCss">Date : </span>{{printVoucher.payment_date| moment:'DD/MM/YYYY'}}
+                        <span class="SplCss">Date : </span><b>{{printVoucher.payment_date| moment:'DD/MM/YYYY'}}</b>
                 </td>
             </tr>
             <tr>
@@ -40,10 +40,12 @@
                                 ({{patientObj.current_room}})
                             </span>
                         </strong> 
-                    </span> 
-                    <br />
-                    <br />
-                    a sum of rupees <span><strong>{{printVoucher.total_charge}}</strong></span> through <span><strong>{{printVoucher.trans_mode}}</strong></span>
+                    </span>                     
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    A sum of rupees <span><strong>{{printVoucher.total_charge}}</strong></span> through <span><strong>{{printVoucher.trans_mode}}</strong></span>
                     <br />
                     <br />
                     <span><strong>{{printVoucher.total_charge| words}}</strong></span> on account of <strong>{{printVoucher.category == 'Settlement Charge' ? 'Discharge' : 'Advance'}}</strong>
@@ -58,6 +60,34 @@
                         <span> Authorised signatory</span> 
                     </div>
                     <br />
+                </td>
+                <td>
+                    <table style="border-collapse:collapse">
+                        <tr ng-if="printVoucher.trans_mode== 'Card'">
+                            <td>Type</td>
+                            <td><strong>{{printVoucher.card_type}}</strong></td>
+                        </tr>
+                        <tr ng-if="printVoucher.trans_mode== 'Card'">
+                            <td>Number</td>
+                            <td><strong>{{printVoucher.card_number}}</strong></td>
+                        </tr>
+                        <tr ng-if="((printVoucher.trans_mode== 'Online') || (printVoucher.trans_mode== 'Cheque'))">
+                            <td>Name</td>
+                            <td><strong>{{printVoucher.bank_name}}</strong></td>
+                        </tr>
+                        <tr ng-if="printVoucher.trans_mode== 'Cheque'">
+                            <td>Number</td>
+                            <td><strong>{{printVoucher.bank_number}}</strong></td>
+                        </tr>
+                        <tr ng-if="printVoucher.trans_mode== 'Online'">
+                            <td>Number</td>
+                            <td><strong>{{printVoucher.ref_no}}</strong></td>
+                        </tr>
+                        <tr ng-if="((printVoucher.trans_mode== 'Online') || (printVoucher.trans_mode== 'Cheque'))">
+                            <td>Date</td>
+                            <td><strong>{{printVoucher.bank_date| moment:'DD/MM/YYYY'}}</strong></td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </tbody>
@@ -100,8 +130,10 @@
                             </span>
                         </strong> 
                     </span>
-                    <br />
-                    <br />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
                     a sum of rupees <span><strong>{{printVoucher.total_charge}}</strong></span> through <span><strong>{{printVoucher.trans_mode}}</strong></span>
                     <br />
                     <br />
@@ -113,6 +145,34 @@
                         <br/>
                         <span> Authorised signatory</span> </div>
                     <br />
+                </td>
+                <td>
+                    <table style="border-collapse:collapse">
+                        <tr ng-if="printVoucher.trans_mode== 'Card'">
+                            <td>Type</td>
+                            <td><strong>{{printVoucher.card_type}}</strong></td>
+                        </tr>
+                        <tr ng-if="printVoucher.trans_mode== 'Card'">
+                            <td>Number</td>
+                            <td><strong>{{printVoucher.card_number}}</strong></td>
+                        </tr>
+                        <tr ng-if="((printVoucher.trans_mode== 'Online') || (printVoucher.trans_mode== 'Cheque'))">
+                            <td>Name</td>
+                            <td><strong>{{printVoucher.bank_name}}</strong></td>
+                        </tr>
+                        <tr ng-if="printVoucher.trans_mode== 'Cheque'">
+                            <td>Number</td>
+                            <td><strong>{{printVoucher.bank_number}}</strong></td>
+                        </tr>
+                        <tr ng-if="printVoucher.trans_mode== 'Online'">
+                            <td>Number</td>
+                            <td><strong>{{printVoucher.ref_no}}</strong></td>
+                        </tr>
+                        <tr ng-if="((printVoucher.trans_mode== 'Online') || (printVoucher.trans_mode== 'Cheque'))">
+                            <td>Date</td>
+                            <td><strong>{{printVoucher.bank_date| moment:'DD/MM/YYYY'}}</strong></td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </tbody>
