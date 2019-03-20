@@ -151,6 +151,7 @@ class MyworkreportsController extends ActiveController {
                     ->andWhere(['consultant_id' => $post['consultant_id']])
                     ->andWhere(['tenant_id' => $post['tenant_id']])
                     ->andWhere(['status_date' => $post['status_date']])
+                    ->andWhere(['appt_status' => 'S'])
                     ->all();
         return $model;
     }
