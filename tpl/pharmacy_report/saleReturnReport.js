@@ -31,7 +31,7 @@ app.controller('saleReturnReportController', ['$rootScope', '$scope', '$timeout'
             $scope.paymentTypes = [];
             $rootScope.commonService.GetPaymentType(function (response) {
                 $scope.paymentTypes = response;
-                $scope.paymentTypes.push({value: 'COD', label: 'Cash On Delivery'});
+                $scope.paymentTypes.push({value: 'COD', label: 'Courier'});
             });
 
             $scope.saleGroups = {};

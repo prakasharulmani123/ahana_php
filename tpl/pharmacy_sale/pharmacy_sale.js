@@ -204,7 +204,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.sale_payment_type_name = 'Credit';
             }
             if (payment_type == 'COD') {
-                $scope.sale_payment_type_name = 'Cash On Deleivery';
+                $scope.sale_payment_type_name = 'Courier';
             }
             $scope.sale_payment_type = payment_type;
 
@@ -279,7 +279,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             //Payment types
             $rootScope.commonService.GetPaymentType(function (response) {
                 $scope.paymentTypes = response;
-                $scope.paymentTypes.push({value: 'COD', label: 'Cash On Delivery'});
+                $scope.paymentTypes.push({value: 'COD', label: 'Courier'});
             });
 
             //Patient Groups
@@ -1177,7 +1177,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 $scope.purchase_type_name = 'Credit';
             }
             if (payment_type == 'COD') {
-                $scope.purchase_type_name = 'Cash On Delivery';
+                $scope.purchase_type_name = 'Courier';
             }
         }
 
@@ -1783,7 +1783,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
                 if (sale_info.payment_type == 'CR')
                     var payment = 'Credit';
                 if (sale_info.payment_type == 'COD')
-                    var payment = 'Cash On Delivery';
+                    var payment = 'Courier';
 
                 var ahana_log = $('#sale_logo').attr('src');
                 console.log(ahana_log);

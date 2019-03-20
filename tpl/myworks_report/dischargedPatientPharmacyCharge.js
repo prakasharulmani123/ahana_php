@@ -263,7 +263,7 @@ app.controller('dischargedPatientPharmacyController', ['$rootScope', '$scope', '
                     } else if (row.payment_type == 'CR') {
                         var Payment = 'Credit';
                     } else {
-                        var Payment = 'Cash On Delivery';
+                        var Payment = 'Courier';
                     }
                     branches.push([
                         s_no_string,

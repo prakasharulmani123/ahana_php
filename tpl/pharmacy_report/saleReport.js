@@ -31,7 +31,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
             $scope.paymentTypes = [];
             $rootScope.commonService.GetPaymentType(function (response) {
                 $scope.paymentTypes = response;
-                $scope.paymentTypes.push({value: 'COD', label: 'Cash On Delivery'});
+                $scope.paymentTypes.push({value: 'COD', label: 'Courier'});
             });
 
             $scope.saleGroups = {};
@@ -124,7 +124,7 @@ app.controller('saleReportController', ['$rootScope', '$scope', '$timeout', '$ht
             } else if (payment_type == 'CR') {
                 sale_payment_type = 'Credit';
             } else if (payment_type == 'COD') {
-                sale_payment_type = 'CashOnDelivery';
+                sale_payment_type = 'Courier';
             }
             return sale_payment_type;
         }
