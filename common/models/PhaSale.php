@@ -357,7 +357,7 @@ class PhaSale extends PActiveRecord {
                 } else if ($model->payment_type == 'CR') {
                     return 'Credit';
                 } else {
-                    return 'Cash On Delivery';
+                    return 'Courier';
                 }
             },
             'billed_by' => function ($model) {

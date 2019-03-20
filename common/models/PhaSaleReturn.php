@@ -190,7 +190,7 @@ class PhaSaleReturn extends PActiveRecord {
                     if ($model->sale->payment_type == 'CR')
                         return 'Credit';
                     else
-                        return 'Cash On Delivery';
+                        return 'Courier';
                 } else {
                     return '-';
                 }
