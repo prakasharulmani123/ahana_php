@@ -447,8 +447,13 @@ class HelperComponent extends Component {
             $url = str_replace(" ", '%20', $url);
         }
         if($module == 'appointment') {
-            $url = "http://smssparkalerts.in/api/sendmsg.php?user=ahana&pass=123456&service=TRANS&sender=AHANAA&phone=".$mobile."&text=Thank you for visiting Ahana Hospitals. Kindly, spend a minute to provide your valuable feedback. "
+            if(Yii::$app->user->identity->logged_tenant_id == '1') {
+                $url = "http://smssparkalerts.in/api/sendmsg.php?user=ahana&pass=123456&service=TRANS&sender=AHANAA&phone=".$mobile."&text=Thank you for visiting Ahana Hospitals. Kindly, spend a minute to provide your valuable feedback. "
+            . "https://www.surveymonkey.com/r/52RJM72&stype=normal";
+            } else {
+                $url = "http://smssparkalerts.in/api/sendmsg.php?user=ahana&pass=123456&service=TRANS&sender=AHANAA&phone=".$mobile."&text=Thank you for visiting Ahana Hospitals. Kindly, spend a minute to provide your valuable feedback. "
             . "https://www.surveymonkey.com/r/MWQ573K&stype=normal";
+            }
             $url = str_replace(" ", '%20', $url);
         }
         
