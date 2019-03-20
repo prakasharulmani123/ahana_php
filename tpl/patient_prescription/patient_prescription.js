@@ -795,10 +795,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                                 'remarks': value.remarks,
                                             };
                                             //In Master table product, changed geneic and drug glass remove the product
-                                            var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
-                                            if (chkProduct.length != 0) {
+                                            //var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
+                                            //if (chkProduct.length != 0) {
                                                 PrescriptionService.addPrescriptionItem(items);
-                                            }
+                                            //}
                                         });
                                     });
                             $scope.msg.successMessage = "Medicine has been added to the current prescription";
@@ -1021,10 +1021,10 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     angular.extend(items, {is_favourite: 1});
                 }
                 //In Master table product, changed geneic and drug glass remove the product   
-                var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
-                if (chkProduct.length != 0) {
+                //var chkProduct = $filter('filter')(items.all_products, {product_id: items.product_id}, true);
+                //if (chkProduct.length != 0) {
                     PrescriptionService.addPrescriptionItem(items);
-                }
+                //}
                 if (loop_total == loop_start) {
                     $timeout(function () {
                         $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
