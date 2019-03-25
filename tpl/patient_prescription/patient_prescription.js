@@ -761,7 +761,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                         } else {
                                             var food_type = 'NA';
                                         }
-                                        $scope.getRelatedProducts(productDetails.generic_id).then(function () {
+                                        //$scope.getRelatedProducts(productDetails.generic_id).then(function () {
                                             route = (response_product.description_routes && response_product.description_routes.length > 0) ? response_product.description_routes[0].route_name : '';
                                             items = {
                                                 'product_id': response_product.product_id,
@@ -799,22 +799,22 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                                             //if (chkProduct.length != 0) {
                                                 PrescriptionService.addPrescriptionItem(items);
                                             //}
-                                        });
+                                        //});
                                     });
                             $scope.msg.successMessage = "Medicine has been added to the current prescription";
                         } else {
                             $scope.errorProduct.push(value.product_name);
                             $scope.msg.errorMessage = $scope.errorProduct + " Product is not available for this branch";
                         }
-                        if (loop_total == loop_start) {
-                            $timeout(function () {
-                                $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
-                            }, 1000);
-                            $timeout(function () {
-                                $scope.showOrhideFrequency();
-                                $scope.commonCheckAvailable();
-                            }, 2000);
-                        }
+//                        if (loop_total == loop_start) {
+//                            $timeout(function () {
+//                                $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+//                            }, 1000);
+//                            $timeout(function () {
+//                                $scope.showOrhideFrequency();
+//                                $scope.commonCheckAvailable();
+//                            }, 2000);
+//                        }
                     })
                     .error(function () {
                         $scope.errorData = "An Error has occured while loading related products!";
@@ -822,7 +822,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
         }
 
         $scope.addToPrescriptionList = function (value, loop_total, loop_start) {
-            $scope.getRelatedProducts(value.generic_id).then(function () {
+            //$scope.getRelatedProducts(value.generic_id).then(function () {
                 qty_count = $scope.calculate_qty(value.frequency_name, value.number_of_days, value.product.product_description_id, value.product.description_name);
                 var no_of_days = $scope.data.number_of_days;
                 if (!$scope.data.number_of_days) {
@@ -878,17 +878,17 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 //if (items.all_products.length != 0) {
                     PrescriptionService.addPrescriptionItem(items);
                 //}
-                if (loop_total == loop_start) {
-                    $timeout(function () {
-                        $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
-                    }, 1000);
-                    $timeout(function () {
-                        $scope.showOrhideFrequency();
-                        $scope.commonCheckAvailable();
-                    }, 2000);
-                }
+//                if (loop_total == loop_start) {
+//                    $timeout(function () {
+//                        $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+//                    }, 1000);
+//                    $timeout(function () {
+//                        $scope.showOrhideFrequency();
+//                        $scope.commonCheckAvailable();
+//                    }, 2000);
+//                }
                 $scope.msg.successMessage = "Medicine has been added to the current prescription";
-            });
+            //});
         }
         $scope.addToCurrentPrescription = function () {
             if ($scope.previousPresSelected > 0) {
@@ -908,17 +908,18 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         }
                     }
 
-                    loop_start = parseFloat(loop_start) + parseFloat(1);
-                    if (loop_total == loop_start) {
-                        $timeout(function () {
-                            $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
-                        }, 1000);
-                        $timeout(function () {
-                            $scope.showOrhideFrequency();
-                            $scope.commonCheckAvailable();
-                        }, 2000);
-                    }
+//                    loop_start = parseFloat(loop_start) + parseFloat(1);
+//                    if (loop_total == loop_start) {
+//                        $timeout(function () {
+//                            $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+//                        }, 1000);
+//                        $timeout(function () {
+//                            $scope.showOrhideFrequency();
+//                            $scope.commonCheckAvailable();
+//                        }, 2000);
+//                    }
                 });
+                $scope.relatedProductPush();
                 $scope.pres_status = 'current';
                 $("#current_prescription").focus();
                 //$scope.msg.successMessage = "Medicine has been added to the current prescription";
@@ -943,6 +944,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         $scope.addToPrescriptionList(value, loop_total, loop_start);
                     }
                 });
+                $scope.relatedProductPush();
                 $scope.pres_status = 'current';
                 $("#current_prescription").focus();
                 //toaster.clear();
@@ -968,6 +970,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                         loop_start = parseFloat(loop_start) + parseFloat(1);
                         $scope.addToPrescriptionEditList(value, loop_total, loop_start);
                     });
+                    $scope.relatedProductPush();
                     $scope.pres_status = 'current';
                     $("#current_prescription").focus();
                     //$scope.msg.successMessage = "Medicine has been added to the represcribe";
@@ -977,7 +980,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
 
         $scope.addToPrescriptionEditList = function (value, loop_total, loop_start) {
             $scope.pres_id = value.pres_id;
-            $scope.getRelatedProducts(value.generic_id).then(function () {
+           // $scope.getRelatedProducts(value.generic_id).then(function () {
 
                 if (value.food_type) {
                     var food_type = value.food_type;
@@ -1007,7 +1010,7 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                     'freqMaskCount': 4,
                     'available_quantity': value.product.availableQuantity,
                     'item_key': $scope.data.prescriptionItems.length,
-                    'all_products': $scope.products,
+                    //'all_products': $scope.products,
                     'qty': value.quantity,
                     'product_description_id': value.product.product_description_id,
                     'description_name': value.product.description_name,
@@ -1025,18 +1028,38 @@ app.controller('PrescriptionController', ['$rootScope', '$scope', '$anchorScroll
                 //if (chkProduct.length != 0) {
                     PrescriptionService.addPrescriptionItem(items);
                 //}
-                if (loop_total == loop_start) {
-                    $timeout(function () {
-                        $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
-                    }, 1000);
-                    $timeout(function () {
-                        $scope.showOrhideFrequency();
-                        $scope.commonCheckAvailable();
-                    }, 2000);
-                }
+                
 
-            });
+           // });
         }
+        
+        $scope.relatedProductPush = function() {
+            $timeout(function () {
+                var pres_item = PrescriptionService.getPrescriptionItems();
+                angular.forEach(pres_item, function (value, key) {
+                    $scope.getRelatedProducts(value.generic_id).then(function () {
+                        value.all_products = $scope.products;
+                    });
+                });
+                $timeout(function () {
+                    $scope.data.prescriptionItems = pres_item;
+                },1000);
+                $timeout(function () {
+                    $scope.showOrhideFrequency();
+                    $scope.commonCheckAvailable();
+                }, 2000);
+            },200);
+        }
+        
+//        if (loop_total == loop_start) {
+//                    $timeout(function () {
+//                        $scope.data.prescriptionItems = PrescriptionService.getPrescriptionItems();
+//                    }, 1000);
+//                    $timeout(function () {
+//                        $scope.showOrhideFrequency();
+//                        $scope.commonCheckAvailable();
+//                    }, 2000);
+//                }
 
         $scope.addGlobalSearch = function (prescription) {
             var result = $filter('filter')($scope.data.prescriptionItems, {product_id: parseInt(prescription.product_id)}, true);
