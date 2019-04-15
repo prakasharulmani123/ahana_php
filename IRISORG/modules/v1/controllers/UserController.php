@@ -775,9 +775,9 @@ class UserController extends ActiveController {
                         if ($discharge_date <= $clinical_discharge_date)
                             return ['success' => false, 'message' => "Administrative Discharge Date must be greeter than Clinical Discharge date( {$encounter->patCurrentAdmission->status_date} )"];
                     }
-                    //$patient = $encounter->patient;
-                    //if($patient['patient_mobile'])
-                        //Yii::$app->hepler->sendSurveysms($patient['patient_title_code'],$patient['patient_firstname'],$patient['patient_mobile']);
+                    $patient = $encounter->patient;
+                    if($patient['patient_mobile'])
+                        Yii::$app->hepler->sendSurveysms($patient['patient_title_code'],$patient['patient_firstname'],$patient['patient_mobile'], 'admission');
                 }
                     
                 if ($column == 'finalize') {

@@ -456,6 +456,19 @@ class HelperComponent extends Component {
             }
             $url = str_replace(" ", '%20', $url);
         }
+        if($module == 'admission') {
+            if(Yii::$app->user->identity->logged_tenant_id == '1') { //Gandhi nagar
+                $url = "http://smssparkalerts.in/api/sendmsg.php?user=ahana&pass=123456&service=TRANS&sender=AHANAA&phone=".$mobile."&text=Thank you for visiting Ahana Hospitals. Kindly, spend a minute to provide your valuable feedback. "
+            . "https://www.surveymonkey.com/r/D8KKVKS&stype=normal";
+            } else if(Yii::$app->user->identity->logged_tenant_id == '7') { //Managiri
+                $url = "http://smssparkalerts.in/api/sendmsg.php?user=ahana&pass=123456&service=TRANS&sender=AHANAA&phone=".$mobile."&text=Thank you for visiting Ahana Hospitals. Kindly, spend a minute to provide your valuable feedback. "
+            . "https://www.surveymonkey.com/r/YPQ572L&stype=normal";
+            } else  { //Acute care
+                $url = "http://smssparkalerts.in/api/sendmsg.php?user=ahana&pass=123456&service=TRANS&sender=AHANAA&phone=".$mobile."&text=Thank you for visiting Ahana Hospitals. Kindly, spend a minute to provide your valuable feedback. "
+            . "https://www.surveymonkey.com/r/YPZNX2D&stype=normal";
+            }
+            $url = str_replace(" ", '%20', $url);
+        }
         
         $headers = array();
         $ch = curl_init();
