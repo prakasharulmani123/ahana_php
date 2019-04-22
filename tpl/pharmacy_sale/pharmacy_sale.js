@@ -255,7 +255,7 @@ app.controller('SaleController', ['$rootScope', '$scope', '$timeout', '$http', '
             $scope.data = {};
             if (formtype == 'add') {
                 $scope.formtype = 'add';
-                $scope.data.payment_type = 'CA';
+                //$scope.data.payment_type = 'CA';
                 $scope.data.payment_mode = 'CA';
                 $scope.data.sale_date = moment().format('YYYY-MM-DD');
                 $scope.data.formtype = 'add';
