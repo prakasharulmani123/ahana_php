@@ -69,7 +69,7 @@ class PhaSale extends PActiveRecord {
      */
     public function rules() {
         return [
-                [['sale_date'], 'required'],
+                [['sale_date', 'payment_type'], 'required'],
                 [['tenant_id', 'patient_id', 'consultant_id', 'created_by', 'modified_by'], 'integer'],
                 [['sale_date', 'created_at', 'modified_at', 'deleted_at', 'encounter_id', 'patient_name', 'patient_group_id', 'patient_group_name', 'consultant_name', 'payment_mode', 'card_type', 'card_number', 'bank_name', 'bank_date', 'cheque_no', 'ref_no'], 'safe'],
                 [['payment_type', 'payment_status', 'status'], 'string'],
