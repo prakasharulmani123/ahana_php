@@ -52,7 +52,7 @@
                                 <i ng-if="allExpanded" class="fa fa-minus text"></i>
                             </button>
                         </th>
-                        <th>Group name</th>
+                        <th colspan="2">Group name</th>
                     </tr>
                 </thead>
                 <tbody ng-if="isLoading == false">
@@ -65,6 +65,9 @@
                         </td>
                         <td>
                             {{row.group_name}}
+                        </td>
+                        <td>
+                            <button ng-click="removeRow(row);" class="badge bg-danger ng-binding">Delete</button>
                         </td>
                     </tr>
 
@@ -121,12 +124,12 @@
                 </tbody>
                 <tbody ng-if="isLoading == true">
                     <tr>
-                        <td colspan="2" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+                        <td colspan="3" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>  
-                        <td align="center" colspan="2">  
+                        <td align="center" colspan="3">  
                             <div class="pull-right">  
                                 <pagination total-items="totalCount" ng-change="pageChanged()" items-per-page="pageSizeSelected" direction-links="true" ng-model="pageIndex" max-size="maxSize" class="pagination" boundary-links="true" rotate="false" num-pages="numPages"></pagination>  
                             </div>  
