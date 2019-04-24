@@ -123,16 +123,33 @@ class PatientgroupController extends ActiveController {
         $id = Yii::$app->getRequest()->post('id');
         if ($id) {
             //check any patients assigned to this group
-            $patients_assigned = CoPatientGroupsPatients::find()->where(['patient_group_id' => $id])->count();
-            if ($patients_assigned > 0) {
-                return ['success' => false, 'message' => $patients_assigned . ' Patient(s) are assigned to this group, you can not delete this group'];
-            } else {
-                $model = CoPatientGroup::find()->where(['patient_group_id' => $id])->one();
-                $model->remove();
-                $activity = 'Patient Group Deleted Successfully (#' . $model->group_name . ' )';
-                CoAuditLog::insertAuditLog(CoPatientGroup::tableName(), $id, $activity);
-                return ['success' => true];
+            
+            //Hide by Nad. 24-04-2019
+//            $patients_assigned = CoPatientGroupsPatients::find()->where(['patient_group_id' => $id])->count();
+//            if ($patients_assigned > 0) {
+//                return ['success' => false, 'message' => $patients_assigned . ' Patient(s) are assigned to this group, you can not delete this group'];
+//            } else {
+//                $model = CoPatientGroup::find()->where(['patient_group_id' => $id])->one();
+//                $model->remove();
+//                $activity = 'Patient Group Deleted Successfully (#' . $model->group_name . ' )';
+//                CoAuditLog::insertAuditLog(CoPatientGroup::tableName(), $id, $activity);
+//                return ['success' => true];
+//            }
+            
+            //Group Remove & Patient Remove from group 
+            $model = CoPatientGroup::find()->where(['patient_group_id' => $id])->one();
+            $patients_assigned = $model->patientGroupsPatients;
+            
+            if(!empty($patients_assigned)){
+                foreach($patients_assigned as $value){
+                    PatGlobalPatient::syncPatientGroup($value['global_patient_id'], [$id], 'unlink');
+                }
             }
+            
+            $model->remove();
+            $activity = 'Patient Group Deleted Successfully (#' . $model->group_name . ' )';
+            CoAuditLog::insertAuditLog(CoPatientGroup::tableName(), $id, $activity);
+            return ['success' => true];
         }
     }
 
