@@ -287,7 +287,7 @@ app.controller('PatientGroupsController', ['$rootScope', '$scope', '$timeout', '
                                 $scope.msg.errorMessage = response.message;
                             }
                             $scope.loadbar('hide');
-                            $scope.loadPatientGroupsList();
+                            $scope.loadPharmacyPatientGroupsList();
                         }
                 ).error(function (data, status) {
                     $scope.loadbar('hide');
