@@ -96,17 +96,25 @@ class CoPatientGroup extends PActiveRecord {
                 return (isset($model->patients) ? $model->patients : '-');
             },
         ];
-        if ($addtField = Yii::$app->request->get('addtfields')) {
+        $parent_fields = parent::fields();
+        $addt_keys = $extFields = [];
+        if ($addtField = Yii::$app->request->get('onlyfields')) {
             switch ($addtField):
                 case 'pharmacylist':
                     $addt_keys = ['patients'];
+                    $parent_fields = [
+                        'patient_group_id' => 'patient_group_id',
+                        'group_name' => 'group_name',
+                    ];
                     break;
             endswitch;
 
-            return array_merge(parent::fields(), array_intersect_key($extend, array_flip($addt_keys)));
+            //return array_merge(parent::fields(), array_intersect_key($extend, array_flip($addt_keys)));
         }
-        $fields = array_merge(parent::fields(), $extend);
-        return $fields;
+        if ($addt_keys !== false)
+            $extFields = ($addt_keys) ? array_intersect_key($extend, array_flip($addt_keys)) : $extend;
+
+        return array_merge($parent_fields, $extFields);
     }
     
     public function afterSave($insert, $changedAttributes) {
