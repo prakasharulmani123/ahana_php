@@ -316,6 +316,7 @@ class EncounterController extends ActiveController {
 
     //Reducing query for speed up. In-Progress
     public function actionOutpatients() {
+	ini_set('memory_limit','800M');
         $GET = Yii::$app->getRequest()->get();
         $GET['date'] = date('Y-m-d');
         $GET['tenant_id'] = Yii::$app->user->identity->logged_tenant_id;
