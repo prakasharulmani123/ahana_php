@@ -915,6 +915,7 @@ class UserController extends ActiveController {
             $model = CoLogin::find()->where(['login_id' => Yii::$app->user->identity->login_id])->one();
             $model->user_timeout = $post['user_session_timeout'];
             $model->save(false);
+		ini_set('memory_limit','800M');
             return ['success' => true, 'memory' => ini_get('memory_limit'), 'date' => date("Y-m-d H:i:s")];
         } else {
             return ['success' => false, 'message' => 'Please Fill the Form'];
