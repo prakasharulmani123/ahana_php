@@ -178,6 +178,7 @@ class MyworkreportsController extends ActiveController {
     }
 
     public function actionDischargedpatientbills() {
+	ini_set('memory_limit','800M');
         $post = Yii::$app->getRequest()->post();
 
         $encounters = PatEncounter::find()
@@ -203,6 +204,7 @@ class MyworkreportsController extends ActiveController {
     }
     
     public function actionDischargedpatientdues() {
+	ini_set('memory_limit','800M');
         $post = Yii::$app->getRequest()->post();
 
         $encounters = PatEncounter::find()
