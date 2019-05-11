@@ -55,6 +55,7 @@ class PatientgroupController extends ActiveController {
     }
     
     public function actionPatientgroup() {
+	ini_set('memory_limit','800M');
         $GET = Yii::$app->getRequest()->get();
         $limit = isset($GET['l']) ? $GET['l'] : 10;
         $page = isset($GET['p']) ? $GET['p'] : 1;
