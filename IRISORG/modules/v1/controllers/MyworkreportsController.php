@@ -157,6 +157,7 @@ class MyworkreportsController extends ActiveController {
     }
 
     public function actionIpbillstatus() {
+	ini_set('memory_limit','800M');
         $post = Yii::$app->getRequest()->post();
 
         if (isset($post['consultant_id']) && isset($post['tenant_id'])) {
