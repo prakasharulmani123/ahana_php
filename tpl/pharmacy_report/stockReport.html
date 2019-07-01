@@ -103,6 +103,7 @@
                             <tr>
                                 <th>S.No</th>
                                 <th>Product Name</th>
+                                <th>Category</th>
                                 <th>Batch</th>
                                 <th>Expiry Date</th>
                                 <th>Qty</th>
@@ -113,6 +114,7 @@
                             <tr ng-repeat="(key, record) in records">
                                 <td>{{key + 1}}</td>
                                 <td>{{record.product_name}}</td>
+                                <td>{{record.category}}</td>
                                 <td>{{record.batch_no}}</td>
                                 <td>{{record.expiry_date | date:'MMM yyyy' }}</td>
                                 <td>{{record.stock}}</td>
@@ -121,6 +123,7 @@
                                 <td ng-init="stock.total_amount = stock.total_amount + parseFloatIgnoreCommas(record.total_rate);">{{record.total_rate}}</td>
                             </tr>
                             <tr>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
