@@ -378,7 +378,14 @@ class PharmacysaleController extends ActiveController {
                     ON a.sale_id = b.sale_id 
                     WHERE b.sale_date BETWEEN '" . $previous_date . "' AND '" . $current_date . "'
                     AND a.tenant_id = '" . $tenant_id . "'
-                    GROUP BY a.product_id) 
+                    GROUP BY a.product_id) AND c.product_id NOT IN (SELECT 
+                    product_id 
+                    FROM pha_purchase_item h 
+                    LEFT JOIN pha_purchase i 
+                    ON h.purchase_id = i.purchase_id 
+                    WHERE i.invoice_date BETWEEN '" . $previous_date . "' AND '" . $current_date . "'
+                    AND i.tenant_id = '" . $tenant_id . "'
+                    GROUP BY h.product_id) 
                     AND c.tenant_id = '" . $tenant_id . "' AND g.available_qty != '0'
                     GROUP BY c.product_id";
         $command = Yii::$app->client_pharmacy->createCommand($sql);
