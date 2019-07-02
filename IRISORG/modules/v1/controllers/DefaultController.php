@@ -197,31 +197,31 @@ class DefaultController extends Controller {
             }
 
             //Cancel Old Active Appointments
-            $today = date("Y-m-d");
-            $op_encounters = PatEncounter::find()
-                    ->andWhere(['current_tenant_id' => $post['tenant_id']])
-                    ->status()
-                    ->active()
-                    ->encounterType("OP")
-                    ->andWhere(["<", "DATE(encounter_date)", $today])
-                    ->all();
+            // $today = date("Y-m-d");
+            // $op_encounters = PatEncounter::find()
+            //         ->andWhere(['current_tenant_id' => $post['tenant_id']])
+            //         ->status()
+            //         ->active()
+            //         ->encounterType("OP")
+            //         ->andWhere(["<", "DATE(encounter_date)", $today])
+            //         ->all();
 
-            foreach ($op_encounters as $op_encounter) {
-                $user = CoLogin::findOne(['user_id' => $op_encounter->created_by]);
-                Yii::$app->user->login($user);
-                $data = array();
-                $data['appt_status'] = "C";
-                $data['encounter_id'] = $op_encounter->encounter_id;
-                $data['status_time'] = date("H:i:s");
-                $data['status_date'] = date("Y-m-d");
-                $data['patient_id'] = $op_encounter->patient_id;
-                $data['tenant_id'] = $post['tenant_id'];
+            // foreach ($op_encounters as $op_encounter) {
+            //     $user = CoLogin::findOne(['user_id' => $op_encounter->created_by]);
+            //     Yii::$app->user->login($user);
+            //     $data = array();
+            //     $data['appt_status'] = "C";
+            //     $data['encounter_id'] = $op_encounter->encounter_id;
+            //     $data['status_time'] = date("H:i:s");
+            //     $data['status_date'] = date("Y-m-d");
+            //     $data['patient_id'] = $op_encounter->patient_id;
+            //     $data['tenant_id'] = $post['tenant_id'];
 
-                $model = new PatAppointment;
-                $model->attributes = $data;
-                $model->save(false);
-                Yii::$app->user->logout();
-            }
+            //     $model = new PatAppointment;
+            //     $model->attributes = $data;
+            //     $model->save(false);
+            //     Yii::$app->user->logout();
+            // }
             //Run Active schedule Charge
 //            $active_scheduleCharges = PatScheduleCharge::find()->tenant($post['tenant_id'])->andWhere(['cron_status' => '1'])->all();
 //
